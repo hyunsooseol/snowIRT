@@ -1,0 +1,93 @@
+---
+name:  polytomous
+title: Polytomous Model
+jrs:   '1.1'
+
+items:
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
+      refs: snowIRT
+
+    - name: scale
+      title: Model Fit
+      type: Table
+      rows: 1
+      clearWith:
+        - vars
+      refs: TAM
+
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: scale
+
+        - name: reliability
+          title: Person Reliability
+          visible: (reliability)
+       
+        - name: modelfit
+          title: MADaQ3
+          visible: (modelfit)
+
+        - name: modelfitp
+          title: p
+          visible: (modelfitp)
+
+    - name:  items
+      title: Item Statistics
+      type:  Table
+      visible: (imeasure || ise || infit || outfit)
+      rows: (vars)
+      clearWith:
+        - vars
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: measure
+          title: Measure
+          visible: (imeasure) 
+          
+        - name: ise
+          title: S.E.Measure
+          visible: (ise)  
+
+        - name: infit
+          title: Infit 
+          visible: (infit)  
+
+        - name: outfit
+          title: Outfit 
+          visible: (outfit)            
+     
+    - name: plot
+      title: 'Item Characteristic Curve'
+      type: Array
+      description: an array of plots
+      items: (vars)
+      template:
+          type: Image
+          title: $key
+          description: ICC plot
+          width:  300
+          height: 300
+          visible: (icc)
+          renderFun: .plot
+          clearWith: []
+          
+    - name: wrightmap
+      title: 'Wright Map'
+      type: Image
+      width: 500
+      height: 500
+      renderFun: .wrightmapPlot
+      visible: (wrightmap)
+      refs: TAM
+...

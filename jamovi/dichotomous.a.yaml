@@ -1,0 +1,74 @@
+---
+name:  dichotomous
+title: Dichotomous Model
+menuGroup: snowIRT
+menuSubgroup: Dichotomous
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+      description:
+          R: >
+            The data as a data frame.
+            
+    - name: vars
+      title: Variables
+      type: Variables
+      suggested:
+         - continuous
+      permitted:
+        - numeric        
+
+    - name: itotal
+      title: Total score
+      type: Bool
+      default: True
+
+    - name: prop
+      title: Proportion
+      type: Bool
+      default: True
+
+    - name: imeasure
+      title: Measure
+      type: Bool
+      default: false
+
+    - name: ise
+      title: S.E. Measure 
+      type: Bool
+      default: false
+
+    - name: infit
+      title: Infit
+      type: Bool
+      default: false
+
+    - name: outfit
+      title: Outfit
+      type: Bool
+      default: false
+
+    - name: reliability
+      title: Reliability
+      type: Bool
+      default: True
+
+    - name: modelfit
+      title: MADaQ3
+      type: Bool
+      default: false
+      
+    - name: modelfitp
+      title: p value
+      type: Bool
+      default: false
+
+    - name: wrightmap
+      title: Wright Map
+      type: Bool
+      default: false      
+
+...

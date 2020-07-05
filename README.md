@@ -1,2 +1,2 @@
-# snowIRT
-This module includes Item Statistics, Model fit, Wright Map, and Item Characteristic Curves using JML and MML estimation of the Rasch measurement model.
+# Rasch
+This module includes item statistics, model fit,and item characteristic curves using JML and MML estimation for Rasch measurement model.
