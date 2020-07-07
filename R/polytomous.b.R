@@ -68,11 +68,12 @@ adjustment; Ho= the data fit the Rasch model.")
             
             .run = function() {
                
-                # for (varName in self$options$vars) {
-                #     var <- self$data[[varName]]
-                #     if (all(var == 0 && 1))
-                #         stop('please run dichotomous model')
-                # }
+                 for (varName in self$options$vars) {
+                     var <- self$data[[varName]]
+                     
+                     if (all(0>= var) || all(var<2))
+                         stop('pleas run dichotomous model') }
+                 
                 
                 
                 # get variables-------
