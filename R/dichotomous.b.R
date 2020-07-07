@@ -4,6 +4,7 @@
 #' @import jmvcore
 #' @importFrom TAM tam.jml
 #' @importFrom TAM tam.jml.fit
+#' @importFrom TAM tam.fit
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.modelfit
 #' @importFrom TAM IRT.WrightMap
@@ -149,14 +150,15 @@ adjustment; Ho= the data fit the Rasch model.")
         ise <- tamobj$errorP
         
         
-        # computing infit statistics---------------------
+        # computing infit and outfit statistics---------------------
+       
+        fit <- TAM::tam.fit(tamobj)
         
-        infit <- TAM::tam.jml.fit(tamobj = tamobj)$fit.item$infitItem
+        infit <- fit$fit.item$infitItem
         
-        # computing outfit statistics-----------------------
+        outfit <- fit$fit.item$outfitItem
         
-        outfit <- TAM::tam.jml.fit(tamobj = tamobj)$fit.item$outfitItem
-        
+       
         # computing person separation reliability-------
         
         reliability <- tamobj$WLEreliability
@@ -226,17 +228,7 @@ adjustment; Ho= the data fit the Rasch model.")
         
         table$setRow(rowNo = 1, values = row)
         
-#         #setNote--------
-#         
-#         table$setNote("Note", paste0(
-#           ifelse(
-#             self$options$get('modelfitp'),
-#             "MADaQ3= Mean of absolute values of centered Q_3 statistic with p value obtained by Holm
-# adjustment; Ho= the data fit the Rasch model.",
-#             ""
-#           )
-#         ))
-        
+
       },
 
 
@@ -347,22 +339,6 @@ adjustment; Ho= the data fit the Rasch model.")
           
           table$setRow(rowKey = items[i], values = row)
         }
-        
-        #setNote--------
-        
-        # table$setNote("Note", paste0(
-        #   ifelse(
-        #     self$options$get('infit'),
-        #     "Infit= Information-weighted mean square statistic.",
-        #     ""
-        #   ),
-        #   
-        #   ifelse(
-        #     self$options$get('outfit'),
-        #     "Outfit= Outlier-sensitive means square statistic.",
-        #     ""
-        #   )
-        # ))
         
       },
       

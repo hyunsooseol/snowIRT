@@ -40,6 +40,7 @@ items:
       title: Q3 Correlation Matrix
       type: Table
       rows: (vars)
+      visible: (mat)
       refs: TAM
       
       columns:

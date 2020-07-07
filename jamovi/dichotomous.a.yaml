@@ -37,7 +37,7 @@ options:
       default: false
 
     - name: ise
-      title: S.E. Measure 
+      title: S.E. measure 
       type: Bool
       default: false
 
@@ -67,12 +67,12 @@ options:
       default: false
 
     - name: mat
-      title: Q3 Matrix
+      title: Q3 matrix
       type: Bool
       default: false
 
     - name: wrightmap
-      title: Wright Map
+      title: Wright map
       type: Bool
       default: false      
 

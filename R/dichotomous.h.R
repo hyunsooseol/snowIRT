@@ -170,6 +170,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 name="mat",
                 title="Q3 Correlation Matrix",
                 rows="(vars)",
+                visible="(mat)",
                 refs="TAM",
                 columns=list(
                     list(

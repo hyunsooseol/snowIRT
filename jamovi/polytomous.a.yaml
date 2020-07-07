@@ -26,7 +26,7 @@ options:
       default: True
 
     - name: ise
-      title: S.E.Measure 
+      title: S.E.measure 
       type: Bool
       default: True
 
@@ -56,18 +56,18 @@ options:
       default: false
 
     - name: mat
-      title: Q3 Matrix
+      title: Q3 matrix
       type: Bool
       default: false
       
     - name: icc
-      title: Item Characteristic Curve
+      title: Item characteristic curve
       type: Bool
       default: false
 
 
     - name: wrightmap
-      title: Wright Map
+      title: Wright map
       type: Bool
       default: false
 ...

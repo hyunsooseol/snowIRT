@@ -70,8 +70,8 @@ adjustment; Ho= the data fit the Rasch model.")
                
                 for (varName in self$options$vars) {
                     var <- self$data[[varName]]
-                    if (any(var < 0))
-                        stop('the bottom category should be coded as 0')
+                    if (all(var == 0 && 1))
+                        stop('please run dichotomous model')
                 }
                 
                 
@@ -147,14 +147,13 @@ adjustment; Ho= the data fit the Rasch model.")
                 ise <- tamobj$xsi$se.xsi
                 
                 
-                # computing infit statistics---------------------
+              # computing infit and outfit statistics---------------------
                 
                 infit <- TAM::tam.fit(tamobj)$itemfit$Infit
                 
                 
-                # computing outfit statistics-----------------------
-                
                 outfit <- TAM::tam.fit(tamobj)$itemfit$Infit
+                
                 
                 # computing person separation reliability-------
                 
@@ -221,17 +220,7 @@ adjustment; Ho= the data fit the Rasch model.")
                 
                 table$setRow(rowNo = 1, values = row)
                 
-#                 #setNote--------
-#                 
-#                 table$setNote("Note", paste0(
-#                     ifelse(
-#                         self$options$get('modelfitp'),
-#                         "MADaQ3= Mean of absolute values of centered Q_3 statistic with p value obtained by Holm
-# adjustment; Ho= the data fit the Rasch model.",
-#                         ""
-#                     )
-#                 ))
-                
+
             },
             
             
@@ -266,21 +255,6 @@ adjustment; Ho= the data fit the Rasch model.")
                     table$setRow(rowKey = items[i], values = row)
                 }
                 
-                # #setNote--------
-                # 
-                # table$setNote("Note", paste0(
-                #     ifelse(
-                #         self$options$get('infit'),
-                #         "Infit= Information-weighted mean square statistic.",
-                #         ""
-                #     ),
-                #     
-                #     ifelse(
-                #         self$options$get('outfit'),
-                #         "Outfit= Outlier-sensitive means square statistic.",
-                #         ""
-                #     )
-                # ))
                 
             },
 
