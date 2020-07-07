@@ -35,6 +35,24 @@ items:
         - name: modelfitp
           title: p
           visible: (modelfitp)
+          
+    - name: mat
+      title: Q3 Correlation Matrix
+      type: Table
+      rows: (vars)
+      refs: TAM
+      
+      columns:
+          - name: .name[r]
+            title: ""
+            type: text
+            content: ($key)
+            combineBelow: true
+
+          - name: .stat[r]
+            title: ""
+            type: text
+            content: r  
 
     - name:  items
       title: Item Statistics

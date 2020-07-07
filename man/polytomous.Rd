@@ -14,6 +14,7 @@ polytomous(
   reliability = TRUE,
   modelfit = FALSE,
   modelfitp = FALSE,
+  mat = FALSE,
   icc = FALSE,
   wrightmap = FALSE
 )
@@ -37,6 +38,8 @@ polytomous(
 
 \item{modelfitp}{.}
 
+\item{mat}{.}
+
 \item{icc}{.}
 
 \item{wrightmap}{.}
@@ -46,6 +49,7 @@ A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr

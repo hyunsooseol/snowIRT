@@ -33,7 +33,7 @@ children:
               - type: CheckBox
                 name: itotal
               - type: CheckBox
-                name: prop  
+                name: prop
               - type: CheckBox
                 name: imeasure
               - type: CheckBox
@@ -41,7 +41,7 @@ children:
               - type: CheckBox
                 name: infit
               - type: CheckBox
-                name: outfit  
+                name: outfit
           - type: Label
             label: Model Fit
             fitToGrid: true
@@ -55,17 +55,19 @@ children:
                 name: modelfit
               - type: CheckBox
                 name: modelfitp
+              - type: CheckBox
+                name: mat
   - type: CollapseBox
     label: Plot
     margin: normal
     collapsed: true
-    children:                
+    children:
       - type: LayoutBox
         stretchFactor: 1
         margin: large
         children:
           - type: Label
-            label: ""
+            label: ''
             fitToGrid: true
             cell:
               column: 0
@@ -73,5 +75,3 @@ children:
             children:
               - type: CheckBox
                 name: wrightmap
-
-  

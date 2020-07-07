@@ -16,6 +16,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             reliability = TRUE,
             modelfit = FALSE,
             modelfitp = FALSE,
+            mat = FALSE,
             wrightmap = FALSE, ...) {
 
             super$initialize(
@@ -67,6 +68,10 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "modelfitp",
                 modelfitp,
                 default=FALSE)
+            private$..mat <- jmvcore::OptionBool$new(
+                "mat",
+                mat,
+                default=FALSE)
             private$..wrightmap <- jmvcore::OptionBool$new(
                 "wrightmap",
                 wrightmap,
@@ -82,6 +87,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..reliability)
             self$.addOption(private$..modelfit)
             self$.addOption(private$..modelfitp)
+            self$.addOption(private$..mat)
             self$.addOption(private$..wrightmap)
         }),
     active = list(
@@ -95,6 +101,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         reliability = function() private$..reliability$value,
         modelfit = function() private$..modelfit$value,
         modelfitp = function() private$..modelfitp$value,
+        mat = function() private$..mat$value,
         wrightmap = function() private$..wrightmap$value),
     private = list(
         ..vars = NA,
@@ -107,6 +114,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..reliability = NA,
         ..modelfit = NA,
         ..modelfitp = NA,
+        ..mat = NA,
         ..wrightmap = NA)
 )
 
@@ -115,6 +123,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         scale = function() private$.items[["scale"]],
+        mat = function() private$.items[["mat"]],
         items = function() private$.items[["items"]],
         plot = function() private$.items[["plot"]]),
     private = list(),
@@ -156,6 +165,24 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `name`="modelfitp", 
                         `title`="p", 
                         `visible`="(modelfitp)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="mat",
+                title="Q3 Correlation Matrix",
+                rows="(vars)",
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`=".name[r]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`=".stat[r]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="r"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="items",
@@ -239,11 +266,13 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param reliability .
 #' @param modelfit .
 #' @param modelfitp .
+#' @param mat .
 #' @param wrightmap .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #' }
@@ -267,6 +296,7 @@ dichotomous <- function(
     reliability = TRUE,
     modelfit = FALSE,
     modelfitp = FALSE,
+    mat = FALSE,
     wrightmap = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
@@ -290,6 +320,7 @@ dichotomous <- function(
         reliability = reliability,
         modelfit = modelfit,
         modelfitp = modelfitp,
+        mat = mat,
         wrightmap = wrightmap)
 
     analysis <- dichotomousClass$new(

@@ -14,6 +14,7 @@ Imports:
     jmvcore (>= 0.8),
     R6,
     stats,
-    tidyverse,
+    plyr,
+    WrightMap,
     TAM
     

@@ -54,6 +54,11 @@ options:
       title: p value
       type: Bool
       default: false
+
+    - name: mat
+      title: Q3 Matrix
+      type: Bool
+      default: false
       
     - name: icc
       title: Item Characteristic Curve

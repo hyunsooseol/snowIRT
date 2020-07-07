@@ -14,6 +14,7 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             reliability = TRUE,
             modelfit = FALSE,
             modelfitp = FALSE,
+            mat = FALSE,
             icc = FALSE,
             wrightmap = FALSE, ...) {
 
@@ -58,6 +59,10 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "modelfitp",
                 modelfitp,
                 default=FALSE)
+            private$..mat <- jmvcore::OptionBool$new(
+                "mat",
+                mat,
+                default=FALSE)
             private$..icc <- jmvcore::OptionBool$new(
                 "icc",
                 icc,
@@ -75,6 +80,7 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..reliability)
             self$.addOption(private$..modelfit)
             self$.addOption(private$..modelfitp)
+            self$.addOption(private$..mat)
             self$.addOption(private$..icc)
             self$.addOption(private$..wrightmap)
         }),
@@ -87,6 +93,7 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         reliability = function() private$..reliability$value,
         modelfit = function() private$..modelfit$value,
         modelfitp = function() private$..modelfitp$value,
+        mat = function() private$..mat$value,
         icc = function() private$..icc$value,
         wrightmap = function() private$..wrightmap$value),
     private = list(
@@ -98,6 +105,7 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..reliability = NA,
         ..modelfit = NA,
         ..modelfitp = NA,
+        ..mat = NA,
         ..icc = NA,
         ..wrightmap = NA)
 )
@@ -107,6 +115,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         scale = function() private$.items[["scale"]],
+        mat = function() private$.items[["mat"]],
         items = function() private$.items[["items"]],
         plot = function() private$.items[["plot"]],
         wrightmap = function() private$.items[["wrightmap"]]),
@@ -149,6 +158,24 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `name`="modelfitp", 
                         `title`="p", 
                         `visible`="(modelfitp)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="mat",
+                title="Q3 Correlation Matrix",
+                rows="(vars)",
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`=".name[r]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`=".stat[r]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="r"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="items",
@@ -235,12 +262,14 @@ polytomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param reliability .
 #' @param modelfit .
 #' @param modelfitp .
+#' @param mat .
 #' @param icc .
 #' @param wrightmap .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
 #'   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
@@ -263,6 +292,7 @@ polytomous <- function(
     reliability = TRUE,
     modelfit = FALSE,
     modelfitp = FALSE,
+    mat = FALSE,
     icc = FALSE,
     wrightmap = FALSE) {
 
@@ -285,6 +315,7 @@ polytomous <- function(
         reliability = reliability,
         modelfit = modelfit,
         modelfitp = modelfitp,
+        mat = mat,
         icc = icc,
         wrightmap = wrightmap)
 

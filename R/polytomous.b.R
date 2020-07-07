@@ -6,6 +6,7 @@
 #' @importFrom TAM tam.jml.fit
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.fit
+#' @importFrom TAM tam.modelfit
 #' @importFrom TAM IRT.WrightMap
 #' @export
 
@@ -34,7 +35,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
 
             <p><b>To get started:</b></p>
 
-            <p>- The input dataset require polytomous data<b>(Likert-type scale)</b> with the type of <b>numeric-continuous</b> in jamovi.</p>
+            <p>- The input dataset require polytomous data with the type of <b>numeric-continuous</b> in jamovi.</p>
             <p>- Note that Polytomous model needs <b>the bottom category to be coded as 0</b>, so you may need to recode.
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
             <p>- The item and model fit statistics are estimated by Andrich's rating scale model based on Marginal Maximum Likelihood(MML).</P> 
@@ -67,7 +68,14 @@ adjustment; Ho= the data fit the Rasch model.")
             
             .run = function() {
                
-                 # get variables-------
+                for (varName in self$options$vars) {
+                    var <- self$data[[varName]]
+                    if (any(var < 0))
+                        stop('the bottom category should be coded as 0')
+                }
+                
+                
+                # get variables-------
                 
                 data <- self$data
                 
@@ -96,6 +104,10 @@ adjustment; Ho= the data fit the Rasch model.")
                     # populate item table----
                     
                     private$.populateItemsTable(results)
+                    
+                    # Populate q3 matrix table-----
+                    
+                    private$.populateMatrixTable(results)
                     
                     #prepare plot-----
                     
@@ -160,6 +172,11 @@ adjustment; Ho= the data fit the Rasch model.")
                 # pvalue--------
                 modelfitp <- res$stat.MADaQ3$p
                 
+                # q3 matrix----------
+                
+                mat <- res$Q3.matr
+                
+                
                 
                 results <-
                     list(
@@ -169,7 +186,8 @@ adjustment; Ho= the data fit the Rasch model.")
                         'outfit' = outfit,
                         'reliability' = reliability,
                         'modelfit' = modelfit,
-                        'modelfitp' = modelfitp
+                        'modelfitp' = modelfitp,
+                        'mat'= mat
                     )
                 
             },
@@ -265,9 +283,77 @@ adjustment; Ho= the data fit the Rasch model.")
                 # ))
                 
             },
+
+
+# Populate q3 matrix table-----
+
+.populateMatrixTable= function(results) {
+    
+# get variables---------------------------------
+
+matrix <- self$results$get('mat')
+vars <- self$options$get('vars')
+nVars <- length(vars)
+
+# add columns--------
+
+for (i in seq_along(vars)) {
+    
+    var <- vars[[i]]
+    
+    matrix$addColumn(
+        name = paste0(var, '[r]'),
+        title = var,
+        type = 'number',
+        format = 'zto'
+    )
+    
+    # empty cells above and put "-" in the main diagonal
+    
+    for (i in seq_along(vars)) {
+        
+        var <- vars[[i]]
+        
+        values <- list()
+        
+        for (j in seq(i, nVars)) {
             
+            v <- vars[[j]]
             
+            values[[paste0(v, '[r]')]]  <- ''
             
+        }
+        values[[paste0(var, '[r]')]]  <- '\u2014'  
+        matrix$setRow(rowKey = var, values)
+        
+    }
+    
+    
+    data <- self$data
+    
+    for(v in vars)
+        data[[v]] <- jmvcore::toNumeric(data[[v]])
+    
+    #compute again------
+    
+    mat <- results$mat
+    
+    # populate result----------------------------------------
+    
+    for (i in 2:nVars) {
+        for (j in seq_len(i - 1)) {
+            values <- list()
+            
+            values[[paste0(vars[[j]], '[r]')]] <- mat[i, j]
+            
+            matrix$setRow(rowNo = i, values)
+        }
+    }
+}
+
+},  
+
+
             #### Plot functions ----
             
             .prepareIccPlot = function(data) {

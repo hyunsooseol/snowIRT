@@ -5,6 +5,7 @@
 #' @importFrom TAM tam.jml
 #' @importFrom TAM tam.jml.fit
 #' @importFrom TAM tam.mml
+#' @importFrom TAM tam.modelfit
 #' @importFrom TAM IRT.WrightMap
 #' @export
 
@@ -32,7 +33,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
 
             <p><b>To get started:</b></p>
 
-            <p>- The input dataset require dichotomous data with the type of <b>numeric-continuous</b> in jamovi.</p>
+            <p>- Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
             <p>- The result tables are estimated by Rasch  model with Joint Maximum Likelihood(JML) estimation.</p>
             <p>- MADaQ3 statistic(an effect size of model fit) is estimated based on Marginal Maximum Likelihood(MML) estimation.</P>
@@ -60,6 +61,14 @@ adjustment; Ho= the data fit the Rasch model.")
       
       #======================================++++++++++++++++++++++
       .run = function() {
+        
+        for (varName in self$options$vars) {
+          var <- self$data[[varName]]
+          if (any(var < 0) | any(var>=2) )
+            stop('Each variable must be coded as 0 or 1')
+        }
+        
+        
         
         # get variables-------
         
@@ -89,6 +98,10 @@ adjustment; Ho= the data fit the Rasch model.")
           # populate item table----
           
           private$.populateItemsTable(results)
+          
+          # Populate q3 matrix table-----
+          
+          private$.populateMatrixTable(results)
           
           # prepare plot-----
           
@@ -162,6 +175,10 @@ adjustment; Ho= the data fit the Rasch model.")
         
         modelfitp <- res$stat.MADaQ3$p
         
+        # q3 matrix----------
+        
+        mat <- res$Q3.matr
+        
       
         results <-
           list(
@@ -173,7 +190,8 @@ adjustment; Ho= the data fit the Rasch model.")
             'outfit' = outfit,
             'reliability' = reliability,
             'modelfit' = modelfit,
-            'modelfitp' = modelfitp
+            'modelfitp' = modelfitp,
+            'mat'= mat
             
           )
         
@@ -220,8 +238,77 @@ adjustment; Ho= the data fit the Rasch model.")
 #         ))
         
       },
+
+
+
+# Populate q3 matrix table-----
+
+.populateMatrixTable= function(results) {
+
+  # get variables---------------------------------
+  
+  matrix <- self$results$get('mat')
+  vars <- self$options$get('vars')
+  nVars <- length(vars)
+  
+  # add columns--------
+  
+  for (i in seq_along(vars)) {
+    
+    var <- vars[[i]]
+    
+    matrix$addColumn(
+      name = paste0(var, '[r]'),
+      title = var,
+      type = 'number',
+      format = 'zto'
+    )
+  
+    # empty cells above and put "-" in the main diagonal
+    
+    for (i in seq_along(vars)) {
       
+      var <- vars[[i]]
       
+      values <- list()
+      
+      for (j in seq(i, nVars)) {
+        
+        v <- vars[[j]]
+        
+        values[[paste0(v, '[r]')]]  <- ''
+        
+      }
+      values[[paste0(var, '[r]')]]  <- '\u2014'  
+      matrix$setRow(rowKey = var, values)
+      
+    }
+  
+  
+    data <- self$data
+
+  for(v in vars)
+    data[[v]] <- jmvcore::toNumeric(data[[v]])
+
+#compute again------
+  
+  mat <- results$mat
+  
+  # populate result----------------------------------------
+  
+  for (i in 2:nVars) {
+    for (j in seq_len(i - 1)) {
+      values <- list()
+      
+      values[[paste0(vars[[j]], '[r]')]] <- mat[i, j]
+      
+      matrix$setRow(rowNo = i, values)
+    }
+  }
+  }
+
+},  
+  
       # populate item tables==============================================
       
       .populateItemsTable = function(results) {

@@ -66,6 +66,11 @@ options:
       type: Bool
       default: false
 
+    - name: mat
+      title: Q3 Matrix
+      type: Bool
+      default: false
+
     - name: wrightmap
       title: Wright Map
       type: Bool
