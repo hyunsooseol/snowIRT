@@ -42,12 +42,16 @@ children:
                 name: infit
               - type: CheckBox
                 name: outfit
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
           - type: Label
             label: Model Fit
-            fitToGrid: true
-            cell:
-              column: 1
-              row: 0
             children:
               - type: CheckBox
                 name: reliability
