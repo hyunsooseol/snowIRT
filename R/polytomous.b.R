@@ -68,11 +68,13 @@ adjustment; Ho= the data fit the Rasch model.")
             
             .run = function() {
                
-                 for (varName in self$options$vars) {
-                     var <- self$data[[varName]]
-                     
-                     if (all(0>= var) || all(var<2))
-                         stop('pleas run dichotomous model') }
+                 # for (varName in self$options$vars) {
+                 #     var <- self$data[[varName]]
+                 #     
+                 #     if (all(0>= var) || all(var<2))
+                 #         stop('The polytomous model requires Likert-type items, 
+                 #              for binary data use the dichotomous model instead.') 
+                 #         }
                  
                 
                 

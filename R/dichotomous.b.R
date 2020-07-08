@@ -66,7 +66,7 @@ adjustment; Ho= the data fit the Rasch model.")
         for (varName in self$options$vars) {
           var <- self$data[[varName]]
           if (any(var < 0) | any(var>=2) )
-            stop('Each variable must be coded as 0 or 1')
+            stop('The dichotomous model requires dichotomos items(values 0 and 1)')
         }
         
         
