@@ -38,7 +38,10 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
             <p>- The result tables are estimated by Rasch  model with Joint Maximum Likelihood(JML) estimation.</p>
             <p>- MADaQ3 statistic(an effect size of model fit) is estimated based on Marginal Maximum Likelihood(MML) estimation.</P>
-            <p>If you encounter any errors, or have questions, please e-mail me: snow@cau.ac.kr</a></p>
+            <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
+            <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
+            
+            <p>If you have any questions, please e-mail me: snow@cau.ac.kr</a></p>
             </div>
             </body>
             </html>"

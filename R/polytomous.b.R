@@ -41,8 +41,10 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             <p>- The item and model fit statistics are estimated by Andrich's rating scale model based on Marginal Maximum Likelihood(MML).</P> 
             <p>- MADaQ3 statistic(an effect size of model fit) is estimated based on Marginal Maximum Likelihood(MML) estimation.</P>
             <P>- Item characteristic curves are visualized using Partial Credit Model.</p>
-            
-            <p>If you encounter any errors, or have questions, please e-mail me: snow@cau.ac.kr</a></p>
+            <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
+            <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
+           
+            <p>If you have any questions, please e-mail me: snow@cau.ac.kr</a></p>
             </div>
             </body>
             </html>"
