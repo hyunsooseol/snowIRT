@@ -1,6 +1,6 @@
 ---
 name:  dichotomous
-title: Dichotomous Model
+title: Dichotomous Rasch Model
 menuGroup: snowIRT
 menuSubgroup: Dichotomous
 version: '1.0.0'

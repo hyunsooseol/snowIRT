@@ -1,5 +1,6 @@
 
-# Dichotomous Model based on Rasch Measurement
+
+# Dichotomous Rasch model
 #' @importFrom R6 R6Class
 #' @import jmvcore
 #' @importFrom TAM tam.jml
@@ -16,7 +17,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
     "dichotomousClass",
     inherit = dichotomousBase,
     private = list(
- #=============================================================
+      #=============================================================
       
       .init = function() {
         if (is.null(self$data) | is.null(self$options$vars)) {
@@ -36,11 +37,11 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
 
             <p>- Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
-            <p>- The result tables are estimated by Rasch  model with Joint Maximum Likelihood(JML) estimation.</p>
+            <p>- The result tables are estimated by Joint Maximum Likelihood(JML) estimation.</p>
             <p>- MADaQ3 statistic(an effect size of model fit) is estimated based on Marginal Maximum Likelihood(MML) estimation.</P>
             <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
-            
+
             <p>If you have any questions, please e-mail me: snow@cau.ac.kr</a></p>
             </div>
             </body>
@@ -49,14 +50,20 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
         
         #  private$.initItemsTable()
         
-        if(self$options$modelfitp)
-          self$results$scale$setNote("Note","MADaQ3= Mean of absolute values of centered Q_3 statistic with p value obtained by Holm
-adjustment; Ho= the data fit the Rasch model.")
-       
-        if(self$options$infit)
-          self$results$items$setNote("Note","Infit= Information-weighted mean square statistic; Outfit= Outlier-sensitive means square statistic.")
+        if (self$options$modelfitp)
+          self$results$scale$setNote(
+            "Note",
+            "MADaQ3= Mean of absolute values of centered Q_3 statistic with p value obtained by Holm
+adjustment; Ho= the data fit the Rasch model."
+          )
         
-         
+        if (self$options$infit)
+          self$results$items$setNote(
+            "Note",
+            "Infit= Information-weighted mean square statistic; Outfit= Outlier-sensitive means square statistic."
+          )
+        
+        
         if (length(self$options$vars) <= 1)
           self$setStatus('complete')
       },
@@ -65,10 +72,9 @@ adjustment; Ho= the data fit the Rasch model.")
       
       #======================================++++++++++++++++++++++
       .run = function() {
-        
         for (varName in self$options$vars) {
           var <- self$data[[varName]]
-          if (any(var < 0) | any(var>=2) )
+          if (any(var < 0) | any(var >= 2))
             stop('The dichotomous model requires dichotomos items(values 0 and 1)')
         }
         
@@ -120,7 +126,6 @@ adjustment; Ho= the data fit the Rasch model.")
       # compute results=====================================================
       
       .compute = function(data) {
-        
         # get variables------
         
         data <- self$data
@@ -154,14 +159,14 @@ adjustment; Ho= the data fit the Rasch model.")
         
         
         # computing infit and outfit statistics---------------------
-       
+        
         fit <- TAM::tam.fit(tamobj)
         
         infit <- fit$fit.item$infitItem
         
         outfit <- fit$fit.item$outfitItem
         
-       
+        
         # computing person separation reliability-------
         
         reliability <- tamobj$WLEreliability
@@ -170,7 +175,7 @@ adjustment; Ho= the data fit the Rasch model.")
         
         tamobj1 = TAM::tam.mml(resp = as.matrix(data))
         
-        # assess model fit---- 
+        # assess model fit----
         
         res <- TAM::tam.modelfit(tamobj = tamobj1)
         
@@ -184,7 +189,7 @@ adjustment; Ho= the data fit the Rasch model.")
         
         mat <- res$Q3.matr
         
-      
+        
         results <-
           list(
             'itotal' = itotal,
@@ -196,7 +201,7 @@ adjustment; Ho= the data fit the Rasch model.")
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
-            'mat'= mat
+            'mat' = mat
             
           )
         
@@ -205,8 +210,7 @@ adjustment; Ho= the data fit the Rasch model.")
       #### Init. tables ====================================================
       
       .initItemsTable = function() {
-       
-         table <- self$results$items
+        table <- self$results$items
         
         for (i in seq_along(items))
           table$addFootnote(rowKey = items[i], 'name')
@@ -231,83 +235,78 @@ adjustment; Ho= the data fit the Rasch model.")
         
         table$setRow(rowNo = 1, values = row)
         
-
+        
       },
-
-
-
-# Populate q3 matrix table-----
-
-.populateMatrixTable= function(results) {
-
-  # get variables---------------------------------
-  
-  matrix <- self$results$get('mat')
-  vars <- self$options$get('vars')
-  nVars <- length(vars)
-  
-  # add columns--------
-  
-  for (i in seq_along(vars)) {
-    
-    var <- vars[[i]]
-    
-    matrix$addColumn(
-      name = paste0(var, '[r]'),
-      title = var,
-      type = 'number',
-      format = 'zto'
-    )
-  
-    # empty cells above and put "-" in the main diagonal
-    
-    for (i in seq_along(vars)) {
       
-      var <- vars[[i]]
       
-      values <- list()
       
-      for (j in seq(i, nVars)) {
+      # Populate q3 matrix table-----
+      
+      .populateMatrixTable = function(results) {
+        # get variables---------------------------------
         
-        v <- vars[[j]]
+        matrix <- self$results$get('mat')
+        vars <- self$options$get('vars')
+        nVars <- length(vars)
         
-        values[[paste0(v, '[r]')]]  <- ''
+        # add columns--------
         
-      }
-      values[[paste0(var, '[r]')]]  <- '\u2014'  
-      matrix$setRow(rowKey = var, values)
+        for (i in seq_along(vars)) {
+          var <- vars[[i]]
+          
+          matrix$addColumn(
+            name = paste0(var, '[r]'),
+            title = var,
+            type = 'number',
+            format = 'zto'
+          )
+          
+          # empty cells above and put "-" in the main diagonal
+          
+          for (i in seq_along(vars)) {
+            var <- vars[[i]]
+            
+            values <- list()
+            
+            for (j in seq(i, nVars)) {
+              v <- vars[[j]]
+              
+              values[[paste0(v, '[r]')]]  <- ''
+              
+            }
+            values[[paste0(var, '[r]')]]  <- '\u2014'
+            matrix$setRow(rowKey = var, values)
+            
+          }
+          
+          
+          data <- self$data
+          
+          for (v in vars)
+            data[[v]] <- jmvcore::toNumeric(data[[v]])
+          
+          #compute again------
+          
+          mat <- results$mat
+          
+          # populate result----------------------------------------
+          
+          for (i in 2:nVars) {
+            for (j in seq_len(i - 1)) {
+              values <- list()
+              
+              values[[paste0(vars[[j]], '[r]')]] <- mat[i, j]
+              
+              matrix$setRow(rowNo = i, values)
+            }
+          }
+        }
+        
+      },
       
-    }
-  
-  
-    data <- self$data
-
-  for(v in vars)
-    data[[v]] <- jmvcore::toNumeric(data[[v]])
-
-#compute again------
-  
-  mat <- results$mat
-  
-  # populate result----------------------------------------
-  
-  for (i in 2:nVars) {
-    for (j in seq_len(i - 1)) {
-      values <- list()
-      
-      values[[paste0(vars[[j]], '[r]')]] <- mat[i, j]
-      
-      matrix$setRow(rowNo = i, values)
-    }
-  }
-  }
-
-},  
-  
       # populate item tables==============================================
       
       .populateItemsTable = function(results) {
-  
         table <- self$results$items
         
         items <- self$options$vars
@@ -324,8 +323,7 @@ adjustment; Ho= the data fit the Rasch model.")
         
         
         for (i in seq_along(items)) {
-     
-               row <- list()
+          row <- list()
           
           
           row[["total"]] <- itotal[i, 1]
@@ -345,43 +343,40 @@ adjustment; Ho= the data fit the Rasch model.")
         
       },
       
- 
- #### Plot functions ----
- 
- .prepareWrightmapPlot = function(data) {
-   
-   
-   wright = TAM::tam.mml(resp = as.matrix(data))
-   
-   
-   # Prepare Data For Plot -------
-   
-   image <- self$results$plot
-   image$setState(wright)
-   
- 
- },
- 
- #================================================================
- 
- .plot = function(image, ...) {
- 
-    wrightmap <- self$options$wrightmap
-    
-    if (!wrightmap)
-      return()
-   
-   
-   wright <- image$state
-   
-   plot <- TAM::IRT.WrightMap(wright ) 
-   
-   print(plot)
-   TRUE
- },
- 
- 
- #### Helper functions =================================
+      
+      #### Plot functions ----
+      
+      .prepareWrightmapPlot = function(data) {
+        wright = TAM::tam.mml(resp = as.matrix(data))
+        
+        
+        # Prepare Data For Plot -------
+        
+        image <- self$results$plot
+        image$setState(wright)
+        
+        
+      },
+      
+      #================================================================
+      
+      .plot = function(image, ...) {
+        wrightmap <- self$options$wrightmap
+        
+        if (!wrightmap)
+          return()
+        
+        
+        wright <- image$state
+        
+        plot <- TAM::IRT.WrightMap(wright)
+        
+        print(plot)
+        TRUE
+      },
+      
+      
+      #### Helper functions =================================
       
       .cleanData = function() {
         items <- self$options$vars

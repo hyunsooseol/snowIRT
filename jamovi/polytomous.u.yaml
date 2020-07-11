@@ -1,4 +1,4 @@
-title: Polytomous Model
+title: Polytomous Rasch Model
 name: polytomous
 jus: '3.0'
 stage: 0
@@ -38,6 +38,13 @@ children:
                 name: infit
               - type: CheckBox
                 name: outfit
+          - type: Label
+            label: Partical Credit Model      
+            children:    
+              - type: CheckBox
+                name: thresh
+              - type: CheckBox
+                name: pmeasure  
       - type: LayoutBox
         stretchFactor: 1
         margin: large

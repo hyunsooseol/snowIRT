@@ -1,6 +1,6 @@
 ---
 name:  polytomous
-title: Polytomous Model
+title: Polytomous Rasch Model
 menuGroup: snowIRT
 version: '1.0.0'
 jas: '1.2'
@@ -21,7 +21,7 @@ options:
         - numeric        
 
     - name: imeasure
-      title: Measure
+      title: Rating scale measure
       type: Bool
       default: True
 
@@ -59,12 +59,21 @@ options:
       title: Q3 matrix
       type: Bool
       default: false
+
+    - name: thresh
+      title: Thurstonian thresholds
+      type: Bool
+      default: false
+
+    - name: pmeasure
+      title: Partial credit measure
+      type: Bool
+      default: false
       
     - name: icc
       title: Item characteristic curve
       type: Bool
       default: false
-
 
     - name: wrightmap
       title: Wright map

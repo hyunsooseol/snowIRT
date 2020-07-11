@@ -2,7 +2,7 @@
 % Please edit documentation in R/polytomous.h.R
 \name{polytomous}
 \alias{polytomous}
-\title{Polytomous Model}
+\title{Polytomous Rasch Model}
 \usage{
 polytomous(
   data,
@@ -15,6 +15,8 @@ polytomous(
   modelfit = FALSE,
   modelfitp = FALSE,
   mat = FALSE,
+  thresh = FALSE,
+  pmeasure = FALSE,
   icc = FALSE,
   wrightmap = FALSE
 )
@@ -40,6 +42,10 @@ polytomous(
 
 \item{mat}{.}
 
+\item{thresh}{.}
+
+\item{pmeasure}{.}
+
 \item{icc}{.}
 
 \item{wrightmap}{.}
@@ -50,6 +56,7 @@ A results object containing:
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
+  \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
@@ -62,5 +69,5 @@ Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.f
 \code{as.data.frame(results$scale)}
 }
 \description{
-Polytomous Model
+Polytomous Rasch Model
 }

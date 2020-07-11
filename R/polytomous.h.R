@@ -15,6 +15,8 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             modelfit = FALSE,
             modelfitp = FALSE,
             mat = FALSE,
+            thresh = FALSE,
+            pmeasure = FALSE,
             icc = FALSE,
             wrightmap = FALSE, ...) {
 
@@ -63,6 +65,14 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "mat",
                 mat,
                 default=FALSE)
+            private$..thresh <- jmvcore::OptionBool$new(
+                "thresh",
+                thresh,
+                default=FALSE)
+            private$..pmeasure <- jmvcore::OptionBool$new(
+                "pmeasure",
+                pmeasure,
+                default=FALSE)
             private$..icc <- jmvcore::OptionBool$new(
                 "icc",
                 icc,
@@ -81,6 +91,8 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..modelfit)
             self$.addOption(private$..modelfitp)
             self$.addOption(private$..mat)
+            self$.addOption(private$..thresh)
+            self$.addOption(private$..pmeasure)
             self$.addOption(private$..icc)
             self$.addOption(private$..wrightmap)
         }),
@@ -94,6 +106,8 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         modelfit = function() private$..modelfit$value,
         modelfitp = function() private$..modelfitp$value,
         mat = function() private$..mat$value,
+        thresh = function() private$..thresh$value,
+        pmeasure = function() private$..pmeasure$value,
         icc = function() private$..icc$value,
         wrightmap = function() private$..wrightmap$value),
     private = list(
@@ -106,6 +120,8 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..modelfit = NA,
         ..modelfitp = NA,
         ..mat = NA,
+        ..thresh = NA,
+        ..pmeasure = NA,
         ..icc = NA,
         ..wrightmap = NA)
 )
@@ -116,6 +132,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
         instructions = function() private$.items[["instructions"]],
         scale = function() private$.items[["scale"]],
         mat = function() private$.items[["mat"]],
+        thresh = function() private$.items[["thresh"]],
         items = function() private$.items[["items"]],
         plot = function() private$.items[["plot"]],
         wrightmap = function() private$.items[["wrightmap"]]),
@@ -125,7 +142,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Polytomous Model")
+                title="Polytomous Rasch Model")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
@@ -179,6 +196,23 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `content`="r"))))
             self$add(jmvcore::Table$new(
                 options=options,
+                name="thresh",
+                title="Partial credit model",
+                rows="(vars)",
+                visible="(thresh)",
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="number", 
+                        `content`="($key)"),
+                    list(
+                        `name`="pmeasure", 
+                        `title`="Partial credit measure", 
+                        `visible`="(pmeasure)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
                 name="items",
                 title="Item Statistics",
                 visible="(imeasure || ise || infit || outfit)",
@@ -194,7 +228,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="measure", 
-                        `title`="Measure", 
+                        `title`="Rating scale measure", 
                         `visible`="(imeasure)"),
                     list(
                         `name`="ise", 
@@ -251,7 +285,7 @@ polytomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
                 requiresMissings = FALSE)
         }))
 
-#' Polytomous Model
+#' Polytomous Rasch Model
 #'
 #' 
 #' @param data The data as a data frame.
@@ -264,6 +298,8 @@ polytomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param modelfit .
 #' @param modelfitp .
 #' @param mat .
+#' @param thresh .
+#' @param pmeasure .
 #' @param icc .
 #' @param wrightmap .
 #' @return A results object containing:
@@ -271,6 +307,7 @@ polytomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
 #'   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
@@ -294,6 +331,8 @@ polytomous <- function(
     modelfit = FALSE,
     modelfitp = FALSE,
     mat = FALSE,
+    thresh = FALSE,
+    pmeasure = FALSE,
     icc = FALSE,
     wrightmap = FALSE) {
 
@@ -317,6 +356,8 @@ polytomous <- function(
         modelfit = modelfit,
         modelfitp = modelfitp,
         mat = mat,
+        thresh = thresh,
+        pmeasure = pmeasure,
         icc = icc,
         wrightmap = wrightmap)
 
