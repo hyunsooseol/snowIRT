@@ -459,6 +459,8 @@ adjustment; Ho= the data fit the Rasch model."
         TRUE
         
       },
+ 
+      # wright map plot--------------
       
       .wrightmapPlot = function(image, ...) {
         wrightmap <- self$options$wrightmap

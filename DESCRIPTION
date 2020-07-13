@@ -1,11 +1,11 @@
 Package: snowIRT
 Type: Package
 Title: Rasch Measurement Model for jamovi
-Version: 1.5.0
+Version: 1.6.0
 Date: 2020-07-09
 Author: Hyunsoo Seol
 Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-Description: This package includes Item statistics, Model fit, Wright Map, and Item Characteristic Curves using JML and MML estimation of the Rasch measurement model.
+Description: This package includes Item statistics, Model fit, Wright Map, Expected Score Curve, and Item Characteristic Curves using JML and MML estimation of the Rasch measurement model.
 License: GPL3
 LazyData: TRUE
 Encoding: UTF-8

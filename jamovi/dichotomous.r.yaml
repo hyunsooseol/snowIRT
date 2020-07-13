@@ -102,5 +102,19 @@ items:
       renderFun: .plot
       visible: (wrightmap)
       refs: TAM      
-     
+
+    - name: esc
+      title: 'Expected Score Curve'
+      type: Array
+      description: an array of plots
+      items: (vars)
+      template:
+          type: Image
+          title: $key
+          description: ESC plot
+          width:  300
+          height: 300
+          visible: (esc)
+          renderFun: .escPlot
+          clearWith: []         
 ...

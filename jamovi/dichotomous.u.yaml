@@ -79,3 +79,5 @@ children:
             children:
               - type: CheckBox
                 name: wrightmap
+              - type: CheckBox
+                name: esc

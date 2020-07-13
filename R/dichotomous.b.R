@@ -9,6 +9,7 @@
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.modelfit
 #' @importFrom TAM IRT.WrightMap
+#' @importFrom TAM tam
 #' @export
 
 
@@ -117,7 +118,9 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.prepareWrightmapPlot(data)
           
+          # prepare Expected score curve plot---------
           
+          private$.prepareEscPlot(data)
         }
         
       },
@@ -203,7 +206,7 @@ adjustment; Ho= the data fit the Rasch model."
             'modelfitp' = modelfitp,
             'mat' = mat
             
-          )
+            )
         
       },
       
@@ -237,7 +240,6 @@ adjustment; Ho= the data fit the Rasch model."
         
         
       },
-      
       
       
       # Populate q3 matrix table-----
@@ -344,7 +346,7 @@ adjustment; Ho= the data fit the Rasch model."
       },
       
       
-      #### Plot functions ----
+  #### Prepare Plot functions ----
       
       .prepareWrightmapPlot = function(data) {
         wright = TAM::tam.mml(resp = as.matrix(data))
@@ -358,14 +360,68 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
-      #================================================================
+ # Prepare Expected score curve functions------------
+      
+ .prepareEscPlot = function(data) {
+   
+   es = TAM::tam(resp =as.matrix(data))
+   
+  
+   # Prepare Data For ESC Plot -------
+   
+   image <- self$results$get('esc')
+   
+   image$setState(es)
+   
+   
+ },
+
+ 
+ # Expected score curve plot----------
+ 
+ 
+ .escPlot = function(image, ...) {
+   
+   es <- image$parent$state
+   
+   if (is.null(es))
+     return()
+   
+   images <- self$results$esc
+   
+   index <- 1
+
+   for (item in images$items) {
+     if (identical(image, item))
+       break()
+
+     index <- index + 1
+   }
+
+   
+     plot1 <- plot(es, 
+                  items = index,
+                  #type="items" produce item response curve
+                  type = "expected", 
+                  export = FALSE)
+   
+   
+   print(plot1)
+   TRUE
+   
+   
+ },
+ 
+ 
+ #================================================================
       
       .plot = function(image, ...) {
+   
         wrightmap <- self$options$wrightmap
         
         if (!wrightmap)
           return()
-        
+       
         
         wright <- image$state
         
@@ -375,8 +431,9 @@ adjustment; Ho= the data fit the Rasch model."
         TRUE
       },
       
-      
-      #### Helper functions =================================
+ 
+ 
+ #### Helper functions =================================
       
       .cleanData = function() {
         items <- self$options$vars

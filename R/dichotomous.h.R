@@ -17,7 +17,8 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             modelfit = FALSE,
             modelfitp = FALSE,
             mat = FALSE,
-            wrightmap = FALSE, ...) {
+            wrightmap = FALSE,
+            esc = FALSE, ...) {
 
             super$initialize(
                 package='snowIRT',
@@ -76,6 +77,10 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "wrightmap",
                 wrightmap,
                 default=FALSE)
+            private$..esc <- jmvcore::OptionBool$new(
+                "esc",
+                esc,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..itotal)
@@ -89,6 +94,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..modelfitp)
             self$.addOption(private$..mat)
             self$.addOption(private$..wrightmap)
+            self$.addOption(private$..esc)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -102,7 +108,8 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         modelfit = function() private$..modelfit$value,
         modelfitp = function() private$..modelfitp$value,
         mat = function() private$..mat$value,
-        wrightmap = function() private$..wrightmap$value),
+        wrightmap = function() private$..wrightmap$value,
+        esc = function() private$..esc$value),
     private = list(
         ..vars = NA,
         ..itotal = NA,
@@ -115,7 +122,8 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..modelfit = NA,
         ..modelfitp = NA,
         ..mat = NA,
-        ..wrightmap = NA)
+        ..wrightmap = NA,
+        ..esc = NA)
 )
 
 dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -125,7 +133,8 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
         scale = function() private$.items[["scale"]],
         mat = function() private$.items[["mat"]],
         items = function() private$.items[["items"]],
-        plot = function() private$.items[["plot"]]),
+        plot = function() private$.items[["plot"]],
+        esc = function() private$.items[["esc"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -231,7 +240,20 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 height=500,
                 renderFun=".plot",
                 visible="(wrightmap)",
-                refs="TAM"))}))
+                refs="TAM"))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="esc",
+                title="Expected Score Curve",
+                items="(vars)",
+                template=jmvcore::Image$new(
+                    options=options,
+                    title="$key",
+                    width=300,
+                    height=300,
+                    visible="(esc)",
+                    renderFun=".escPlot",
+                    clearWith=list())))}))
 
 dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "dichotomousBase",
@@ -269,6 +291,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param modelfitp .
 #' @param mat .
 #' @param wrightmap .
+#' @param esc .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -276,6 +299,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -298,7 +322,8 @@ dichotomous <- function(
     modelfit = FALSE,
     modelfitp = FALSE,
     mat = FALSE,
-    wrightmap = FALSE) {
+    wrightmap = FALSE,
+    esc = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('dichotomous requires jmvcore to be installed (restart may be required)')
@@ -322,7 +347,8 @@ dichotomous <- function(
         modelfit = modelfit,
         modelfitp = modelfitp,
         mat = mat,
-        wrightmap = wrightmap)
+        wrightmap = wrightmap,
+        esc = esc)
 
     analysis <- dichotomousClass$new(
         options = options,

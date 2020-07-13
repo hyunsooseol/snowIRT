@@ -2,6 +2,7 @@
 name:  polytomous
 title: Polytomous Rasch Model
 menuGroup: snowIRT
+menuSubgroup: Polytomous
 version: '1.0.0'
 jas: '1.2'
 
