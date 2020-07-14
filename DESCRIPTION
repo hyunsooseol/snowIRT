@@ -16,5 +16,6 @@ Imports:
     stats,
     plyr,
     WrightMap,
-    TAM
+Remotes: alexanderrobitzsch/TAM
+    
     
