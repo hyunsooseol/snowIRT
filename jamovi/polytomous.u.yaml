@@ -81,6 +81,9 @@ children:
               row: 0
             children:
               - type: CheckBox
-                name: icc
-              - type: CheckBox
                 name: wrightmap
+              - type: CheckBox
+                name: esc
+              - type: CheckBox
+                name: icc
+             

@@ -9,6 +9,7 @@
 #' @importFrom TAM tam.modelfit
 #' @importFrom TAM IRT.WrightMap
 #' @importFrom TAM tam.threshold
+#' @importFrom TAM tam
 #' @export
 
 
@@ -137,6 +138,10 @@ adjustment; Ho= the data fit the Rasch model."
           # prepare plot-----
           
           private$.prepareWrightmapPlot(data)
+          
+          # prepare Expected score curve plot---------
+          
+          private$.prepareEscPlot(data)
           
         }
         
@@ -478,6 +483,55 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
+      # Prepare Expected score curve functions------------
+      
+      .prepareEscPlot = function(data) {
+        
+        tamp = TAM::tam(resp =as.matrix(data))
+        
+        
+        # Prepare Data For ESC Plot -------
+        
+        image <- self$results$get('esc')
+        
+        image$setState(tamp)
+        
+        
+      },
+      
+      
+      # Expected score curve plot----------
+      
+      
+      .escPlot = function(image, ...) {
+        
+        tamp <- image$parent$state
+        
+        if (is.null(tamp))
+          return()
+        
+        images <- self$results$esc
+        
+        index <- 1
+        
+        for (item in images$items) {
+          if (identical(image, item))
+            break()
+          
+          index <- index + 1
+        }
+        
+        plot2 <- plot(tamp,
+                      items = index,
+                      #type="items" produce item response curve not expected curve
+                      type = "expected",
+                      export = FALSE)
+        
+        print(plot2)
+        TRUE
+        
+        
+      },
       
       
       ### Helper functions =================================

@@ -80,4 +80,9 @@ options:
       title: Wright map
       type: Bool
       default: false
+
+    - name: esc
+      title: Expected scores curve
+      type: Bool
+      default: false
 ...

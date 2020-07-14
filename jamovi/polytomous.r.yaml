@@ -102,6 +102,30 @@ items:
         - name: outfit
           title: Outfit 
           visible: (outfit)            
+
+    - name: wrightmap
+      title: 'Wright Map'
+      type: Image
+      width: 500
+      height: 500
+      renderFun: .wrightmapPlot
+      visible: (wrightmap)
+      refs: TAM
+      
+    - name: esc
+      title: 'Expected Score Curve'
+      type: Array
+      description: an array of plots
+      items: (vars)
+      template:
+          type: Image
+          title: $key
+          description: ESC plot
+          width:  300
+          height: 300
+          visible: (esc)
+          renderFun: .escPlot
+          clearWith: []     
      
     - name: plot
       title: 'Item Characteristic Curve'
@@ -118,12 +142,5 @@ items:
           renderFun: .plot
           clearWith: []
           
-    - name: wrightmap
-      title: 'Wright Map'
-      type: Image
-      width: 500
-      height: 500
-      renderFun: .wrightmapPlot
-      visible: (wrightmap)
-      refs: TAM
+
 ...

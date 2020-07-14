@@ -18,7 +18,8 @@ polytomous(
   thresh = FALSE,
   pmeasure = FALSE,
   icc = FALSE,
-  wrightmap = FALSE
+  wrightmap = FALSE,
+  esc = FALSE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ polytomous(
 \item{icc}{.}
 
 \item{wrightmap}{.}
+
+\item{esc}{.}
 }
 \value{
 A results object containing:
@@ -58,8 +61,9 @@ A results object containing:
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
-  \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
+  \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+  \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

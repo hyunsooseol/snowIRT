@@ -18,7 +18,8 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             thresh = FALSE,
             pmeasure = FALSE,
             icc = FALSE,
-            wrightmap = FALSE, ...) {
+            wrightmap = FALSE,
+            esc = FALSE, ...) {
 
             super$initialize(
                 package='snowIRT',
@@ -81,6 +82,10 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "wrightmap",
                 wrightmap,
                 default=FALSE)
+            private$..esc <- jmvcore::OptionBool$new(
+                "esc",
+                esc,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -95,6 +100,7 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..pmeasure)
             self$.addOption(private$..icc)
             self$.addOption(private$..wrightmap)
+            self$.addOption(private$..esc)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -109,7 +115,8 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         thresh = function() private$..thresh$value,
         pmeasure = function() private$..pmeasure$value,
         icc = function() private$..icc$value,
-        wrightmap = function() private$..wrightmap$value),
+        wrightmap = function() private$..wrightmap$value,
+        esc = function() private$..esc$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -123,7 +130,8 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..thresh = NA,
         ..pmeasure = NA,
         ..icc = NA,
-        ..wrightmap = NA)
+        ..wrightmap = NA,
+        ..esc = NA)
 )
 
 polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -134,8 +142,9 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
         mat = function() private$.items[["mat"]],
         thresh = function() private$.items[["thresh"]],
         items = function() private$.items[["items"]],
-        plot = function() private$.items[["plot"]],
-        wrightmap = function() private$.items[["wrightmap"]]),
+        wrightmap = function() private$.items[["wrightmap"]],
+        esc = function() private$.items[["esc"]],
+        plot = function() private$.items[["plot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -242,6 +251,28 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `name`="outfit", 
                         `title`="Outfit", 
                         `visible`="(outfit)"))))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="wrightmap",
+                title="Wright Map",
+                width=500,
+                height=500,
+                renderFun=".wrightmapPlot",
+                visible="(wrightmap)",
+                refs="TAM"))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="esc",
+                title="Expected Score Curve",
+                items="(vars)",
+                template=jmvcore::Image$new(
+                    options=options,
+                    title="$key",
+                    width=300,
+                    height=300,
+                    visible="(esc)",
+                    renderFun=".escPlot",
+                    clearWith=list())))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="plot",
@@ -254,16 +285,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                     height=300,
                     visible="(icc)",
                     renderFun=".plot",
-                    clearWith=list())))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="wrightmap",
-                title="Wright Map",
-                width=500,
-                height=500,
-                renderFun=".wrightmapPlot",
-                visible="(wrightmap)",
-                refs="TAM"))}))
+                    clearWith=list())))}))
 
 polytomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "polytomousBase",
@@ -302,6 +324,7 @@ polytomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param pmeasure .
 #' @param icc .
 #' @param wrightmap .
+#' @param esc .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -309,8 +332,9 @@ polytomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
 #'   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+#'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -334,7 +358,8 @@ polytomous <- function(
     thresh = FALSE,
     pmeasure = FALSE,
     icc = FALSE,
-    wrightmap = FALSE) {
+    wrightmap = FALSE,
+    esc = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('polytomous requires jmvcore to be installed (restart may be required)')
@@ -359,7 +384,8 @@ polytomous <- function(
         thresh = thresh,
         pmeasure = pmeasure,
         icc = icc,
-        wrightmap = wrightmap)
+        wrightmap = wrightmap,
+        esc = esc)
 
     analysis <- polytomousClass$new(
         options = options,
