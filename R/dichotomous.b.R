@@ -398,15 +398,12 @@ adjustment; Ho= the data fit the Rasch model."
      index <- index + 1
    }
 
-    # plot1 <- plot(tamp, 
-    #               items = index,
-    #               #type="items" produce item response curve not expected curve
-    #               type = "expected", 
-    #               export = FALSE)
-   
-   plot1 <- plot(TAM::tam(as.matrix(data)))
-  
-  
+    plot1 <- plot(tamp,
+                  items = index,
+                  #type="items" produce item response curve not expected curve
+                  type = "expected",
+                  export = FALSE)
+
   print(plot1)
    TRUE
    
@@ -432,7 +429,6 @@ adjustment; Ho= the data fit the Rasch model."
         TRUE
       },
       
- 
  
  #### Helper functions =================================
       
