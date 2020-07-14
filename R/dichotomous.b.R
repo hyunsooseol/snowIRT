@@ -364,14 +364,14 @@ adjustment; Ho= the data fit the Rasch model."
       
  .prepareEscPlot = function(data) {
    
-   es = TAM::tam(resp =as.matrix(data))
+   tamp = TAM::tam(resp =as.matrix(data))
    
   
    # Prepare Data For ESC Plot -------
    
    image <- self$results$get('esc')
    
-   image$setState(es)
+   image$setState(tamp)
    
    
  },
@@ -382,9 +382,9 @@ adjustment; Ho= the data fit the Rasch model."
  
  .escPlot = function(image, ...) {
    
-   es <- image$parent$state
+   tamp <- image$parent$state
    
-   if (is.null(es))
+   if (is.null(tamp))
      return()
    
    images <- self$results$esc
@@ -398,15 +398,16 @@ adjustment; Ho= the data fit the Rasch model."
      index <- index + 1
    }
 
+    # plot1 <- plot(tamp, 
+    #               items = index,
+    #               #type="items" produce item response curve not expected curve
+    #               type = "expected", 
+    #               export = FALSE)
    
-     plot1 <- plot(es, 
-                  items = index,
-                  #type="items" produce item response curve
-                  type = "expected", 
-                  export = FALSE)
-   
-   
-   print(plot1)
+   plot1 <- plot(TAM::tam(as.matrix(data)))
+  
+  
+  print(plot1)
    TRUE
    
    

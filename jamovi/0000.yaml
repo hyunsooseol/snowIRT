@@ -24,6 +24,7 @@ analyses:
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: Polytomous Rasch Model
+    menuSubgroup: Polytomous
 usesNative: true
 minApp: 1.0.8
 
