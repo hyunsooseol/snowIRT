@@ -16,6 +16,8 @@ Imports:
     stats,
     plyr,
     WrightMap,
-    TAM   
+    CDM,
+    RcppArmadillo
+Remotes: alexanderrobitzsch/TAM@3.6-8       
     
     
