@@ -7,8 +7,8 @@
         `author`="Seol, H.", 
         `year`=2020, 
         `title`="snowIRT", 
-        `publisher`="[jamovi module]. Retrieved from https://github.com/hyunsooseol/Rasch/", 
-        `url`="https://github.com/hyunsooseol/Rasch"), 
+        `publisher`="[jamovi module]. Retrieved from https://github.com/hyunsooseol/snowIRT/", 
+        `url`="https://github.com/hyunsooseol/snowIRT"), 
     `TAM`=list(
         `type`="software", 
         `author`="Alexander Robitzsch and Thomas Kiefer and Margaret Wu", 
