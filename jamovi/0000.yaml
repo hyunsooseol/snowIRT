@@ -1,12 +1,12 @@
 ---
 title: Rasch Measurement Model for jamovi
 name: snowIRT
-version: 1.6.0
+version: 1.7.0
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2020-07-09'
+date: '2020-08-19'
 type: R
 description: >-
   This module includes Item Statistics, Model fit, Wright Map, Expected Scores

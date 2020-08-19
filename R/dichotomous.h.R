@@ -7,6 +7,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
+            group = NULL,
             itotal = TRUE,
             prop = TRUE,
             imeasure = FALSE,
@@ -17,6 +18,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             modelfit = FALSE,
             modelfitp = FALSE,
             mat = FALSE,
+            raju = FALSE,
             wrightmap = FALSE,
             esc = FALSE, ...) {
 
@@ -32,6 +34,14 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 suggested=list(
                     "continuous"),
                 permitted=list(
+                    "numeric"))
+            private$..group <- jmvcore::OptionVariable$new(
+                "group",
+                group,
+                suggested=list(
+                    "nominal"),
+                permitted=list(
+                    "factor",
                     "numeric"))
             private$..itotal <- jmvcore::OptionBool$new(
                 "itotal",
@@ -73,6 +83,10 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "mat",
                 mat,
                 default=FALSE)
+            private$..raju <- jmvcore::OptionBool$new(
+                "raju",
+                raju,
+                default=FALSE)
             private$..wrightmap <- jmvcore::OptionBool$new(
                 "wrightmap",
                 wrightmap,
@@ -83,6 +97,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 default=FALSE)
 
             self$.addOption(private$..vars)
+            self$.addOption(private$..group)
             self$.addOption(private$..itotal)
             self$.addOption(private$..prop)
             self$.addOption(private$..imeasure)
@@ -93,11 +108,13 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..modelfit)
             self$.addOption(private$..modelfitp)
             self$.addOption(private$..mat)
+            self$.addOption(private$..raju)
             self$.addOption(private$..wrightmap)
             self$.addOption(private$..esc)
         }),
     active = list(
         vars = function() private$..vars$value,
+        group = function() private$..group$value,
         itotal = function() private$..itotal$value,
         prop = function() private$..prop$value,
         imeasure = function() private$..imeasure$value,
@@ -108,10 +125,12 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         modelfit = function() private$..modelfit$value,
         modelfitp = function() private$..modelfitp$value,
         mat = function() private$..mat$value,
+        raju = function() private$..raju$value,
         wrightmap = function() private$..wrightmap$value,
         esc = function() private$..esc$value),
     private = list(
         ..vars = NA,
+        ..group = NA,
         ..itotal = NA,
         ..prop = NA,
         ..imeasure = NA,
@@ -122,6 +141,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..modelfit = NA,
         ..modelfitp = NA,
         ..mat = NA,
+        ..raju = NA,
         ..wrightmap = NA,
         ..esc = NA)
 )
@@ -133,6 +153,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
         scale = function() private$.items[["scale"]],
         mat = function() private$.items[["mat"]],
         items = function() private$.items[["items"]],
+        raju = function() private$.items[["raju"]],
         plot = function() private$.items[["plot"]],
         esc = function() private$.items[["esc"]]),
     private = list(),
@@ -232,6 +253,37 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `name`="outfit", 
                         `title`="Outfit", 
                         `visible`="(outfit)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="raju",
+                title="Raju\u2019s area method",
+                visible="(raju)",
+                rows="(vars)",
+                clearWith=list(
+                    "vars"),
+                refs="difR",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="zstat", 
+                        `title`="z"),
+                    list(
+                        `name`="pvalue", 
+                        `title`="p"),
+                    list(
+                        `name`="diff", 
+                        `title`="Difference"),
+                    list(
+                        `name`="delta", 
+                        `title`="deltaRaju"),
+                    list(
+                        `name`="es", 
+                        `title`="Effect size", 
+                        `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -280,6 +332,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' 
 #' @param data The data as a data frame.
 #' @param vars .
+#' @param group .
 #' @param itotal .
 #' @param prop .
 #' @param imeasure .
@@ -290,6 +343,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param modelfit .
 #' @param modelfitp .
 #' @param mat .
+#' @param raju .
 #' @param wrightmap .
 #' @param esc .
 #' @return A results object containing:
@@ -298,6 +352,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 #' }
@@ -312,6 +367,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 dichotomous <- function(
     data,
     vars,
+    group,
     itotal = TRUE,
     prop = TRUE,
     imeasure = FALSE,
@@ -322,6 +378,7 @@ dichotomous <- function(
     modelfit = FALSE,
     modelfitp = FALSE,
     mat = FALSE,
+    raju = FALSE,
     wrightmap = FALSE,
     esc = FALSE) {
 
@@ -329,14 +386,17 @@ dichotomous <- function(
         stop('dichotomous requires jmvcore to be installed (restart may be required)')
 
     if ( ! missing(vars)) vars <- jmvcore::resolveQuo(jmvcore::enquo(vars))
+    if ( ! missing(group)) group <- jmvcore::resolveQuo(jmvcore::enquo(group))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
-            `if`( ! missing(vars), vars, NULL))
+            `if`( ! missing(vars), vars, NULL),
+            `if`( ! missing(group), group, NULL))
 
 
     options <- dichotomousOptions$new(
         vars = vars,
+        group = group,
         itotal = itotal,
         prop = prop,
         imeasure = imeasure,
@@ -347,6 +407,7 @@ dichotomous <- function(
         modelfit = modelfit,
         modelfitp = modelfitp,
         mat = mat,
+        raju = raju,
         wrightmap = wrightmap,
         esc = esc)
 

@@ -1,8 +1,9 @@
 
-
 # Dichotomous Rasch model
 #' @importFrom R6 R6Class
 #' @import jmvcore
+#' @import ltm
+#' @import difR
 #' @importFrom TAM tam.jml
 #' @importFrom TAM tam.jml.fit
 #' @importFrom TAM tam.fit
@@ -10,6 +11,7 @@
 #' @importFrom TAM tam.modelfit
 #' @importFrom TAM IRT.WrightMap
 #' @importFrom TAM tam
+#' @importFrom difR difRaju
 #' @export
 
 
@@ -73,20 +75,27 @@ adjustment; Ho= the data fit the Rasch model."
       
       #======================================++++++++++++++++++++++
       .run = function() {
-        for (varName in self$options$vars) {
-          var <- self$data[[varName]]
-          if (any(var < 0) | any(var >= 2))
-            stop('The dichotomous model requires dichotomos items(values 0 and 1)')
-        }
-        
-        
+        # 
+        # for (varName in self$options$vars) {
+        #   var <- self$data[[varName]]
+        #   if (any(var < 0) | any(var >= 2))
+        #     stop('The dichotomous model requires dichotomos items(values 0 and 1)')
+        # }
+        # 
         
         # get variables-------
         
         data <- self$data
         
-        vars <- self$options$get('vars')
+        vars <- self$options$vars
         
+        groupName<- self$options$group
+
+        # groupLevels <- base::levels(data[[groupName]])
+        # 
+        # if (length(groupLevels) != 2)
+        #   jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels", code="grouping_var_must_have_2_levels", a=groupName)
+
         
         # Ready--------
         
@@ -114,6 +123,12 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.populateMatrixTable(results)
           
+          # populate dif table-----------
+          
+          
+          private$.populateRajuTable(results)
+          
+          
           # prepare plot-----
           
           private$.prepareWrightmapPlot(data)
@@ -129,13 +144,16 @@ adjustment; Ho= the data fit the Rasch model."
       # compute results=====================================================
       
       .compute = function(data) {
+        
         # get variables------
         
         data <- self$data
         
-        vars <- self$options$get('vars')
+        vars <- self$options$vars
         
-        
+        groupName<- self$options$group
+       
+       
         # estimate the Rasch model with JML using function 'tam.jml'-----
         
         tamobj = TAM::tam.jml(resp = as.matrix(data))
@@ -192,6 +210,45 @@ adjustment; Ho= the data fit the Rasch model."
         
         mat <- res$Q3.matr
         
+       
+        
+        ### get difRaju------------
+        
+        
+        res1 <- difR::difRaju(data, group = "groupName", focal.name = 1,
+                              model = "1PL",
+                              p.adjust.method = "BH")
+        
+        
+        #dif result---------
+        
+        zstat<-as.vector(res1$RajuZ)
+       
+        pvalue <- as.vector(res1$adjusted.p)
+        
+        
+        # get ETS result--------
+        
+        itk <- 1:length(res1$RajuZ)
+        pars <- res1$itemParInit
+        J <- nrow(pars)/2
+        mR <- pars[1:J, 1]
+        mF <- itemRescale(pars[1:J, ], pars[(J + 1):(2 * J),])[, 1]
+        
+       
+        rr1 <- mF - mR
+        rr2<- -2.35 * rr1
+        
+        symb1 <- symnum(abs(rr2), c(0, 1, 1.5, Inf), 
+                        symbols = c("A", "B", "C"))
+        
+        #get result------                                                                                                                   
+        
+        diff <- as.vector(rr1)
+        delta <- as.vector(rr2)
+        es <- as.vector(symb1)
+       
+       
         
         results <-
           list(
@@ -205,11 +262,28 @@ adjustment; Ho= the data fit the Rasch model."
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
             'mat' = mat
-            
+            # 'zstat'=zstat,
+            # 'pvalue'=pvalue,
+            # 'diff'=diff,
+            # 'delta'=delta,
+            # 'es'=es
             )
+      
         
+        if(self$options$group){
+        
+        results$zstat <- zstat
+        results$pvaue <- pvalue
+        results$diff <- diff
+        results$delta <- delta
+        results$es <- es
+        
+        }
+          
       },
       
+  
+  
       #### Init. tables ====================================================
       
       .initItemsTable = function() {
@@ -309,6 +383,7 @@ adjustment; Ho= the data fit the Rasch model."
       # populate item tables==============================================
       
       .populateItemsTable = function(results) {
+        
         table <- self$results$items
         
         items <- self$options$vars
@@ -345,7 +420,50 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
+  
+  # populate dif table--------------
+  
+  .populateRajuTable=function(results){
+    
+  
+     items <- self$options$vars
+     group<- self$options$group
+    
+     table <- self$results$raju
+     
+     # get result---
+     
+     zstat<- results$zstat
+     pvalue<- results$pvalue
+     diff<- results$diff
+     delta<- results$delta
+     es<- results$es
+    
+    
+     for (i in seq_along(items)) {
       
+        row <- list()
+       
+       
+       row[["z"]] <- zstat[i]
+       row[["p"]] <- pvalue[i]
+       
+       row[["Difference"]] <- diff[i]
+       
+       row[["deltaRaju"]] <- delta[i]
+       
+       row[["Effect size"]] <- es[i]
+       
+      
+       table$setRow(rowKey = items[i], values = row)
+     }
+     
+    
+    
+    },
+      
+      
+  
   #### Prepare Plot functions ----
       
       .prepareWrightmapPlot = function(data) {

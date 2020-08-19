@@ -94,6 +94,37 @@ items:
           title: Outfit 
           visible: (outfit) 
           
+    - name: raju
+      title: Raju’s area method
+      type: Table
+      visible: (raju)
+      rows: (vars)
+      clearWith:
+        - vars
+      refs: difR
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: zstat
+          title: z
+          
+        - name: pvalue
+          title: p
+         
+        - name: diff
+          title: Difference
+          
+        - name: delta
+          title: deltaRaju
+          
+        - name: es
+          title: 'Effect size'
+          type: 'text'
+         
     - name: plot
       title: 'Wright Map'
       type: Image

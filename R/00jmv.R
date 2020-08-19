@@ -15,4 +15,11 @@
         `year`=2020, 
         `title`="TAM: Test Analysis Modules", 
         `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=TAM", 
-        `url`="https://CRAN.R-project.org/package=TAM"))
+        `url`="https://CRAN.R-project.org/package=TAM"), 
+    `difR`=list(
+        `type`="software", 
+        `author`="D. Magis, S. Beland, F. Tuerlinckx, P. De Boeck", 
+        `year`=2010, 
+        `title`="difR: A general framework and an R package for the detection of dichotomous differential item functioning", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=difR", 
+        `url`="https://CRAN.R-project.org/package=difR"))
