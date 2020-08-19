@@ -66,6 +66,7 @@ A results object containing:
   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+  \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

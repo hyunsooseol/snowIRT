@@ -155,7 +155,8 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
         items = function() private$.items[["items"]],
         raju = function() private$.items[["raju"]],
         plot = function() private$.items[["plot"]],
-        esc = function() private$.items[["esc"]]),
+        esc = function() private$.items[["esc"]],
+        text = function() private$.items[["text"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -305,7 +306,11 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                     height=300,
                     visible="(esc)",
                     renderFun=".escPlot",
-                    clearWith=list())))}))
+                    clearWith=list())))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="text",
+                title="res1"))}))
 
 dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "dichotomousBase",
@@ -355,6 +360,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

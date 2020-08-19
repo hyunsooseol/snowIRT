@@ -219,7 +219,7 @@ adjustment; Ho= the data fit the Rasch model."
                               model = "1PL",
                               p.adjust.method = "BH")
         
-        
+       
         #dif result---------
         
         zstat<-as.vector(res1$RajuZ)
@@ -261,24 +261,24 @@ adjustment; Ho= the data fit the Rasch model."
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
-            'mat' = mat
-            # 'zstat'=zstat,
-            # 'pvalue'=pvalue,
-            # 'diff'=diff,
-            # 'delta'=delta,
-            # 'es'=es
+            'mat' = mat,
+            'zstat'=zstat,
+            'pvalue'=pvalue,
+            'diff'=diff,
+            'delta'=delta,
+            'es'=es
             )
       
         
-        if(self$options$group){
-        
-        results$zstat <- zstat
-        results$pvaue <- pvalue
-        results$diff <- diff
-        results$delta <- delta
-        results$es <- es
-        
-        }
+        # if(self$options$group){
+        # 
+        # results$zstat <- zstat
+        # results$pvaue <- pvalue
+        # results$diff <- diff
+        # results$delta <- delta
+        # results$es <- es
+        # 
+        # }
           
       },
       
