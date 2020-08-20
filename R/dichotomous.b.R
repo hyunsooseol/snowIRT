@@ -78,13 +78,13 @@ adjustment; Ho= the data fit the Rasch model."
       
       #======================================++++++++++++++++++++++
       .run = function() {
-        # 
-        # for (varName in self$options$vars) {
-        #   var <- self$data[[varName]]
-        #   if (any(var < 0) | any(var >= 2))
-        #     stop('The dichotomous model requires dichotomos items(values 0 and 1)')
-        # }
-        # 
+
+        for (varName in self$options$vars) {
+          var <- self$data[[varName]]
+          if (any(var < 0) | any(var >= 2))
+            stop('The dichotomous model requires dichotomos items(values 0 and 1)')
+        }
+
         
         # get variables-------
         
@@ -92,7 +92,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         vars <- self$options$vars
         
-        groupName<- self$options$group
+        # groupName<- self$options$group
 
         # groupLevels <- base::levels(data[[groupName]])
         # 
@@ -110,6 +110,7 @@ adjustment; Ho= the data fit the Rasch model."
           ready <- FALSE
         
         if (ready) {
+          
           data <- private$.cleanData()
           
           results <- private$.compute(data)
@@ -154,10 +155,10 @@ adjustment; Ho= the data fit the Rasch model."
         
         vars <- self$options$vars
         
-        groupName<- self$options$group
        
-       
-        # estimate the Rasch model with JML using function 'tam.jml'-----
+        if(is.null(self$options$group)){
+        
+          # estimate the Rasch model with JML using function 'tam.jml'-----
         
         tamobj = TAM::tam.jml(resp = as.matrix(data))
         
@@ -213,6 +214,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         mat <- res$Q3.matr
         
+        } else {
        
         
         ### get difRaju------------
@@ -251,7 +253,7 @@ adjustment; Ho= the data fit the Rasch model."
         delta <- as.vector(rr2)
         es <- as.vector(symb1)
        
-       
+        }
         
         results <-
           list(
@@ -264,24 +266,24 @@ adjustment; Ho= the data fit the Rasch model."
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
-            'mat' = mat,
-            'zstat'=zstat,
-            'pvalue'=pvalue,
-            'diff'=diff,
-            'delta'=delta,
-            'es'=es
+            'mat' = mat
+            # 'zstat'=zstat,
+            # 'pvalue'=pvalue,
+            # 'diff'=diff,
+            # 'delta'=delta,
+            # 'es'=es
             )
       
         
-        # if(!is.null(groupName)){
-        # 
-        # results$zstat <- zstat
-        # results$pvaue <- pvalue
-        # results$diff <- diff
-        # results$delta <- delta
-        # results$es <- es
-        # 
-        # }
+        if(!is.null(self$options$group)){
+
+        results$zstat <- zstat
+        results$pvaue <- pvalue
+        results$diff <- diff
+        results$delta <- delta
+        results$es <- es
+
+        }
           
       },
       
@@ -290,7 +292,8 @@ adjustment; Ho= the data fit the Rasch model."
       #### Init. tables ====================================================
       
       .initItemsTable = function() {
-        table <- self$results$items
+        
+       table <- self$results$items
         
         for (i in seq_along(items))
           table$addFootnote(rowKey = items[i], 'name')
@@ -300,6 +303,8 @@ adjustment; Ho= the data fit the Rasch model."
       # populate scale table-------------------
       
       .populateScaleTable = function(results) {
+        
+       
         table <- self$results$scale
         
         reliability <- results$reliability
@@ -322,6 +327,8 @@ adjustment; Ho= the data fit the Rasch model."
       # Populate q3 matrix table-----
       
       .populateMatrixTable = function(results) {
+        
+        
         # get variables---------------------------------
         
         matrix <- self$results$get('mat')
@@ -427,44 +434,46 @@ adjustment; Ho= the data fit the Rasch model."
   # populate dif table--------------
   
   .populateRajuTable=function(results){
+
+    if(is.null(self$options$group))
     
-  
-     items <- self$options$vars
-     group<- self$options$group
+      return()
     
      table <- self$results$raju
-     
+
+     items <- self$options$vars
+
+
      # get result---
-     
+
      zstat<- results$zstat
      pvalue<- results$pvalue
      diff<- results$diff
      delta<- results$delta
      es<- results$es
-    
-    
+
+
      for (i in seq_along(items)) {
-      
+
         row <- list()
-       
-       
+    
        row[["z"]] <- zstat[i]
        row[["p"]] <- pvalue[i]
-       
+
        row[["Difference"]] <- diff[i]
-       
+
        row[["deltaRaju"]] <- delta[i]
-       
+
        row[["Effect size"]] <- es[i]
-       
-      
+
+
        table$setRow(rowKey = items[i], values = row)
      }
-     
-    
-    
+
+
+
     },
-      
+
       
   
   #### Prepare Plot functions ----
