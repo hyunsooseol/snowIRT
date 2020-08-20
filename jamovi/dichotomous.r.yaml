@@ -149,9 +149,7 @@ items:
           renderFun: .escPlot
           clearWith: []         
           
-    - name:  text
-      title: res1
-      type:  Preformatted      
+ 
           
           
 ...
