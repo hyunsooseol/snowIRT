@@ -20,7 +20,10 @@ Imports:
     RcppArmadillo,
     TAM,
     difR,
-    ltm
+    ltm,
+    MASS,
+    msm,
+    polycor
        
     
     

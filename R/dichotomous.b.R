@@ -4,6 +4,9 @@
 #' @import jmvcore
 #' @import ltm
 #' @import difR
+#' @import MASS
+#' @import msm
+#' @import polycor
 #' @importFrom TAM tam.jml
 #' @importFrom TAM tam.jml.fit
 #' @importFrom TAM tam.fit
@@ -216,7 +219,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         
         res1 <- difR::difRaju(data, group = "groupName", focal.name = 1,
-                              model = "1PL",
+                              model = "1PL", engine = "ltm",
                               p.adjust.method = "BH")
         
        
@@ -270,7 +273,7 @@ adjustment; Ho= the data fit the Rasch model."
             )
       
         
-        # if(self$options$group){
+        # if(!is.null(groupName)){
         # 
         # results$zstat <- zstat
         # results$pvaue <- pvalue
