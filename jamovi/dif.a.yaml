@@ -35,7 +35,7 @@ options:
             A string naming the grouping variable from `data`
 
     - name: raju
-      title: Raju's method
+      title: Raju
       type: Bool
       default: TRUE
  
