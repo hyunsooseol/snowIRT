@@ -5,12 +5,8 @@
 #' @importFrom R6 R6Class
 #' @import jmvcore
 #' @import difR
-#' @importFrom TAM tam.jml
-#' @importFrom TAM tam.jml.fit
-#' @importFrom TAM tam.fit
+#' @import TAM 
 #' @importFrom TAM tam.mml
-#' @importFrom TAM tam.modelfit
-#' @importFrom TAM tam
 #' @importFrom difR difRaju
 #' @export
 
@@ -39,12 +35,13 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
 
             <p><b>To get started:</b></p>
 
-            <p>- Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
-            <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
-            <p>- The result tables are estimated by Joint Maximum Likelihood(JML) estimation.</p>
-            <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
+            <p>- Each variable should be <b>coded as 0 or 1 with the 'Grouping variable'</b> in jamovi.</p>
+            <p>- Move items to be assessed for DIF into the 'Variable' box.</p>
+            <p>- Move the grouping variable into the 'Grouping variable'box.</p>
+            <p>- The focal group should be coded as 1 and Benjamini-Hochberg adjustments for multipl comparisons are provided.</p>
+            <p>- The result tables are estimated by Marginal Maximum Likelihood Estimation(JMLE).</p>
+            
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
-
             <p>If you have any questions, please e-mail me: snow@cau.ac.kr</a></p>
             </div>
             </body>

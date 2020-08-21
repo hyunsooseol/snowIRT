@@ -5,7 +5,7 @@ Version: 1.7.0
 Date: 2020-08-21
 Author: Hyunsoo Seol
 Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-Description: This package includes Item statistics, Model fit, Wright Map, Expected Score Curve, and Item Characteristic Curves using JML and MML estimation of the Rasch measurement model.
+Description: This package includes Item statistics, Model fit, Differential Item Functioning, Wright Map, Expected Score Curve, and Item Characteristic Curves using JML and MML estimation of the Rasch measurement model.
 License: GPL3
 LazyData: TRUE
 Encoding: UTF-8

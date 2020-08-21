@@ -9,9 +9,9 @@ maintainer: Hyunsoo Seol <snow@cau.ac.kr>
 date: '2020-08-21'
 type: R
 description: >-
-  This module includes Item Statistics, Model fit, Wright Map, Expected Scores
-  Curve, and Item Characteristic Curve using JML and MML estimation of the Rasch
-  measurement model.
+  This module includes Item Statistics, Model fit, Differential Item
+  Functioning, Wright Map, Expected Scores Curve,and Item Characteristic Curve
+  using JML and MML estimation of the Rasch measurement model.
 analyses:
   - title: Dichotomous Rasch Model
     name: dichotomous
