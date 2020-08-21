@@ -42,7 +42,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             <p>- Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
             <p>- The result tables are estimated by Joint Maximum Likelihood(JML) estimation.</p>
-            <p>- MADaQ3 statistic(an effect size of model fit) is estimated based on Marginal Maximum Likelihood(MML) estimation.</P>
             <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
 
@@ -76,13 +75,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             
             vars <- self$options$vars
             
-            # groupName<- self$options$group
-            
-            # groupLevels <- base::levels(data[[groupName]])
-            # 
-            # if (length(groupLevels) != 2)
-            #   jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels", code="grouping_var_must_have_2_levels", a=groupName)
-            
             
             # Ready--------
             
@@ -95,8 +87,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             
             if (ready) {
                 
-                data <- private$.cleanData()
-                
+               
                 results <- private$.compute(data)
                 
                 # populate dif table-----------
@@ -113,29 +104,43 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
 
 .compute = function(data) {
     
-    # get variables------
     
-    data <- self$data
+    groupVarName <- self$options$group
     
     vars <- self$options$vars
     
-    groupName <- self$options$group
+    varNames <- c(groupVarName, vars)
     
-   
-    if(is.null(self$options$group))
-        
+    if (is.null(groupVarName) || length(vars) == 0)
         return()
     
-    ## Splitting the data into reference and focal groups
+    data <- select(self$data, varNames)
     
-    nF<-sum(groupName)
+    for (var in vars)
+        
+        data[[var]] <- jmvcore::toNumeric(data[[var]])
     
+    data[[groupVarName]] <- droplevels(as.factor(data[[groupVarName]]))
+    
+    
+    # exclude rows with missings in the grouping variable
+    data <- data[ ! is.na(data[[groupVarName]]),]
+    
+    groupLevels <- base::levels(data[[groupVarName]])
+    
+    if (length(groupLevels) != 2)
+        jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels", code="grouping_var_must_have_2_levels", a=groupVarName)
+    
+  
+   # managing input data for dif--------------
+    
+    nF<-sum(groupVarName)
     nR<-nrow(data)-nF
     
-    data.ref<-data[,1:length(vars)][order(groupName),][1:nR,]
-   
+    data.ref<-data[,1:length(vars)][order(groupVarName),][1:nR,]
+    data.focal<-data[,1:length(vars)][order(groupVarName),][(nR+1):(nR+nF),]
     
-    data.focal<-data[,1:length(vars)][order(groupName),][(nR+1):(nR+nF),]
+    # calculating item parameter for each group----------
     
     ref <-  TAM::tam.mml(resp = data.ref)
     focal <-  TAM::tam.mml(resp = data.focal)
@@ -166,7 +171,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     pvalue <- as.vector(res1$adjusted.p)
     
     
-    # get ETS result--------
+    # get ETS delta scale--------
     
     itk <- 1:length(res1$RajuZ)
     pars <- res1$itemParInit
@@ -240,24 +245,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     
     
-},
+}
 
-#### Helper functions =================================
 
-.cleanData = function() {
-    items <- self$options$vars
-    
-    data <- list()
-    
-    for (item in items)
-        data[[item]] <- jmvcore::toNumeric(self$data[[item]])
-    
-    attr(data, 'row.names') <- seq_len(length(data[[1]]))
-    attr(data, 'class') <- 'data.frame'
-    data <- jmvcore::naOmit(data)
-    
-    return(data)
-     }
-
-   )
+  )
 )
