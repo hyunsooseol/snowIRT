@@ -1,0 +1,48 @@
+---
+name:  dif
+title: Differential Item Functioning
+jrs:   '1.1'
+
+items:
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
+      refs: snowIRT
+
+    - name:  text
+      title: Differential Item Functioning
+      type:  Preformatted
+
+    - name: raju
+      title: Raju’s area method
+      type: Table
+      visible: (raju)
+      rows: (vars)
+      clearWith:
+        - vars
+      refs: difR
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: zstat
+          title: z
+          
+        - name: pvalue
+          title: p
+         
+        - name: diff
+          title: Difference
+          
+        - name: delta
+          title: deltaRaju
+          
+        - name: es
+          title: 'Effect size'
+          type: 'text'
+
+...

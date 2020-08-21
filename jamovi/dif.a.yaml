@@ -1,0 +1,42 @@
+---
+name:  dif
+title: Differential Item Functioning
+menuGroup: snowIRT
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+      description:
+          R: >
+            The data as a data frame.
+            
+    - name: vars
+      title: Variables
+      type: Variables
+      suggested:
+         - continuous
+      permitted:
+        - numeric        
+
+    - name: group
+      title: Grouping Variable
+      type: Variable
+      suggested:
+         - nominal
+      permitted:
+        - factor
+        - numeric
+      description:
+          ui: >
+            The grouping variable.
+          R: >
+            A string naming the grouping variable from `data`
+
+    - name: raju
+      title: Raju's method
+      type: Bool
+      default: TRUE
+ 
+...

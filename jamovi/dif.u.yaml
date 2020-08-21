@@ -1,0 +1,37 @@
+title: Differential Item Functioning
+name: dif
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Variables
+        children:
+          - type: VariablesListBox
+            name: vars
+            isTarget: true
+      - type: TargetLayoutBox
+        children:
+          - type: VariablesListBox
+            name: group
+            isTarget: true
+            maxItemCount: 1
+  - type: LayoutBox
+    stretchFactor: 1
+    margin: large
+    children:
+      - type: Label
+        label: DIF
+        fitToGrid: true
+        cell:
+          column: 0
+          row: 0
+        children:
+          - type: CheckBox
+            name: raju
+      
+

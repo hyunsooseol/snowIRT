@@ -7,7 +7,6 @@
 dichotomous(
   data,
   vars,
-  group,
   itotal = TRUE,
   prop = TRUE,
   imeasure = FALSE,
@@ -18,7 +17,6 @@ dichotomous(
   modelfit = FALSE,
   modelfitp = FALSE,
   mat = FALSE,
-  raju = FALSE,
   wrightmap = FALSE,
   esc = FALSE
 )
@@ -27,8 +25,6 @@ dichotomous(
 \item{data}{The data as a data frame.}
 
 \item{vars}{.}
-
-\item{group}{.}
 
 \item{itotal}{.}
 
@@ -50,8 +46,6 @@ dichotomous(
 
 \item{mat}{.}
 
-\item{raju}{.}
-
 \item{wrightmap}{.}
 
 \item{esc}{.}
@@ -63,7 +57,6 @@ A results object containing:
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
-  \code{results$raju} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 }

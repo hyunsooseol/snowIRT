@@ -2,11 +2,7 @@
 # Dichotomous Rasch model
 #' @importFrom R6 R6Class
 #' @import jmvcore
-#' @import ltm
 #' @import difR
-#' @import MASS
-#' @import msm
-#' @import polycor
 #' @importFrom TAM tam.jml
 #' @importFrom TAM tam.jml.fit
 #' @importFrom TAM tam.fit
@@ -92,13 +88,6 @@ adjustment; Ho= the data fit the Rasch model."
         
         vars <- self$options$vars
         
-        # groupName<- self$options$group
-
-        # groupLevels <- base::levels(data[[groupName]])
-        # 
-        # if (length(groupLevels) != 2)
-        #   jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels", code="grouping_var_must_have_2_levels", a=groupName)
-
         
         # Ready--------
         
@@ -127,11 +116,6 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.populateMatrixTable(results)
           
-          # populate dif table-----------
-          
-          
-          private$.populateRajuTable(results)
-          
           
           # prepare plot-----
           
@@ -155,10 +139,8 @@ adjustment; Ho= the data fit the Rasch model."
         
         vars <- self$options$vars
         
-       
-        if(is.null(self$options$group)){
-        
-          # estimate the Rasch model with JML using function 'tam.jml'-----
+      
+        # estimate the Rasch model with JML using function 'tam.jml'-----
         
         tamobj = TAM::tam.jml(resp = as.matrix(data))
         
@@ -214,47 +196,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         mat <- res$Q3.matr
         
-        } else {
-       
-        
-        ### get difRaju------------
-        
-        
-        res1 <- difR::difRaju(data, group = "groupName", focal.name = 1,
-                              model = "1PL", engine = "ltm",
-                              p.adjust.method = "BH")
-        
-       
-        #dif result---------
-        
-        zstat<-as.vector(res1$RajuZ)
-       
-        pvalue <- as.vector(res1$adjusted.p)
-        
-        
-        # get ETS result--------
-        
-        itk <- 1:length(res1$RajuZ)
-        pars <- res1$itemParInit
-        J <- nrow(pars)/2
-        mR <- pars[1:J, 1]
-        mF <- itemRescale(pars[1:J, ], pars[(J + 1):(2 * J),])[, 1]
-        
-       
-        rr1 <- mF - mR
-        rr2<- -2.35 * rr1
-        
-        symb1 <- symnum(abs(rr2), c(0, 1, 1.5, Inf), 
-                        symbols = c("A", "B", "C"))
-        
-        #get result------                                                                                                                   
-        
-        diff <- as.vector(rr1)
-        delta <- as.vector(rr2)
-        es <- as.vector(symb1)
-       
-        }
-        
+      
         results <-
           list(
             'itotal' = itotal,
@@ -267,23 +209,10 @@ adjustment; Ho= the data fit the Rasch model."
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
             'mat' = mat
-            # 'zstat'=zstat,
-            # 'pvalue'=pvalue,
-            # 'diff'=diff,
-            # 'delta'=delta,
-            # 'es'=es
+          
             )
       
-        
-        if(!is.null(self$options$group)){
-
-        results$zstat <- zstat
-        results$pvaue <- pvalue
-        results$diff <- diff
-        results$delta <- delta
-        results$es <- es
-
-        }
+       
           
       },
       
@@ -390,7 +319,7 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
-      # populate item tables==============================================
+      # populate item table==============================================
       
       .populateItemsTable = function(results) {
         
@@ -431,50 +360,6 @@ adjustment; Ho= the data fit the Rasch model."
       },
       
   
-  # populate dif table--------------
-  
-  .populateRajuTable=function(results){
-
-    if(is.null(self$options$group))
-    
-      return()
-    
-     table <- self$results$raju
-
-     items <- self$options$vars
-
-
-     # get result---
-
-     zstat<- results$zstat
-     pvalue<- results$pvalue
-     diff<- results$diff
-     delta<- results$delta
-     es<- results$es
-
-
-     for (i in seq_along(items)) {
-
-        row <- list()
-    
-       row[["z"]] <- zstat[i]
-       row[["p"]] <- pvalue[i]
-
-       row[["Difference"]] <- diff[i]
-
-       row[["deltaRaju"]] <- delta[i]
-
-       row[["Effect size"]] <- es[i]
-
-
-       table$setRow(rowKey = items[i], values = row)
-     }
-
-
-
-    },
-
-      
   
   #### Prepare Plot functions ----
       

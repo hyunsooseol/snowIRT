@@ -21,15 +21,6 @@ options:
       permitted:
         - numeric        
 
-    - name: group
-      title: Grouping Variable
-      type: Variable
-      suggested:
-         - nominal
-      permitted:
-        - factor
-        - numeric
-
     - name: itotal
       title: Total score
       type: Bool
@@ -77,11 +68,6 @@ options:
 
     - name: mat
       title: Q3 matrix
-      type: Bool
-      default: false
-
-    - name: raju
-      title: Raju's method
       type: Bool
       default: false
 
