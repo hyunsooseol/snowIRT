@@ -111,7 +111,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     varNames <- c(groupVarName, vars)
     
-    if (is.null(groupVarName) || length(vars) == 0)
+    if (is.null(groupVarName))
+        
         return()
     
     data <- select(self$data, varNames)
@@ -120,10 +121,11 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
         
         data[[var]] <- jmvcore::toNumeric(data[[var]])
     
-    data[[groupVarName]] <- droplevels(as.factor(data[[groupVarName]]))
-    
+ 
+#     data[[groupVarName]] <- droplevels(as.factor(data[[groupVarName]]))
     
     # exclude rows with missings in the grouping variable
+    
     data <- data[ ! is.na(data[[groupVarName]]),]
     
     groupLevels <- base::levels(data[[groupVarName]])
@@ -134,7 +136,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
    # managing input data for dif--------------
     
-    nF<-sum(groupVarName)
+    nF<-sum(data$groupVarName)
     nR<-nrow(data)-nF
     
     data.ref<-data[,1:length(vars)][order(groupVarName),][1:nR,]
@@ -142,8 +144,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     # calculating item parameter for each group----------
     
-    ref <-  TAM::tam.mml(resp = data.ref)
-    focal <-  TAM::tam.mml(resp = data.focal)
+    ref <-  TAM::tam.mml(resp = as.matrix(data.ref))
+    focal <-  TAM::tam.mml(resp = as.matrix(data.focal))
     
     ref=ref$xsi
     focal=focal$xsi
@@ -164,6 +166,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     #                       p.adjust.method = "BH")
     # 
     # 
+    
+    
     #dif result---------
     
     zstat<-as.vector(res1$RajuZ)
@@ -186,7 +190,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     symb1 <- symnum(abs(rr2), c(0, 1, 1.5, Inf), 
                     symbols = c("A", "B", "C"))
     
-    #get result------                                                                                                                   
+    #get ETS delta result------                                                                                                                   
     
     diff <- as.vector(rr1)
     delta <- as.vector(rr2)
