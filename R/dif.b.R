@@ -39,6 +39,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             <p>- Move items to be assessed for DIF into the 'Variable' box.</p>
             <p>- Move the grouping variable into the 'Grouping variable'box.</p>
             <p>- The focal group should be coded as 1 and Benjamini-Hochberg adjustments for multipl comparisons are provided.</p>
+            <p>- the Raju's Z statistics are obtained by using the unsigned areas between the ICCs.</p>
             <p>- The result tables are estimated by Marginal Maximum Likelihood Estimation(JMLE).</p>
             
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
@@ -149,7 +150,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     item.1PL<-rbind(ref,focal)
     
-    res1<- difR::difRaju(irtParam = item.1PL,
+    res1<- difR::difRaju(irtParam = item.1PL,focal.name = 1,
                          p.adjust.method = "BH",
                          same.scale = FALSE)
     
