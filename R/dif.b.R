@@ -134,25 +134,17 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
         jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels", code="grouping_var_must_have_2_levels", a=groupVarName)
     
   
-   # managing input data for dif--------------
-    
-    # nF<-sum(data$groupVarName)
-    # nR<-nrow(data)-nF
-    # 
-    # data.ref<-data[,1:length(vars)][order(groupVarName),][1:nR,]
-    # data.focal<-data[,1:length(vars)][order(groupVarName),][(nR+1):(nR+nF),]
-    # 
-    
-    ref=dplyr::filter(data, groupVarName==0)
+   
+    ref=dplyr::filter(data, data[[groupVarName]]==0)
     ref.data=dplyr::select(ref, -groupVarName)
     tam.ref <-  TAM::tam.mml(resp = ref.data)
     ref1=tam.ref$xsi
     ref1
     
     
-    focal=dplyr::filter(data, groupVarName==1)
+    focal=dplyr::filter(data, data[[groupVarName]]==1)
     focal.data=dplyr::select(focal, -groupVarName)
-    tam.focal<-  TAM::tam.mml(resp = focal.data)
+    tam.focal<- TAM::tam.mml(resp = focal.data)
     focal1=tam.focal$xsi
     focal1
     
