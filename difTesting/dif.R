@@ -2,7 +2,7 @@
 library(difR)
 library(ltm)
 
-
+data(verbal)
 data<-verbal[colnames(verbal)!="Anger"]
 attach(data)
 
@@ -17,30 +17,24 @@ res
 ## Pre-estimation of the item parameters (1PL model, "ltm" engine)
 
 library(ltm)
-item.1PL<-rbind(itemParEst(data.ref,model = "1PL"),
-                itemParEst(data.focal,model = "1PL"))
 
-result<- difR::difRaju(irtParam = item.1PL,same.scale = FALSE)
-result
-
-#####################
 
 nF<-sum(Gender)
 nR<-nrow(data)-nF
 
-data.ref.model<-data[,1:24][order(Gender),][1:nR,]
-data.focal.model<-data[,1:24][order(Gender),][(nR+1):(nR+nF),]
+data.ref<-data[,1:24][order(Gender),][1:nR,]
+data.focal<-data[,1:24][order(Gender),][(nR+1):(nR+nF),]
 
-item.1PL<-rbind(itemParEst(data.ref,model = "1PL"),
-                itemParEst(data.focal,model = "1PL"))
+item.1PL<-rbind(itemParEst(data.ref, model = "1PL"),
+                itemParEst(data.focal, model = "1PL"))
 
 result<- difR::difRaju(irtParam = item.1PL,same.scale = FALSE)
 result
 
 
 #using TAM package----------
-ref <-  TAM::tam.mml(resp = as.matrix(data.ref.model))
-focal <-  TAM::tam.mml(resp = as.matrix(data.focal.model))
+ref <-  TAM::tam.mml(resp = as.matrix(data.ref))
+focal <-  TAM::tam.mml(resp = as.matrix(data.focal))
 
 ref=ref$xsi
 focal=focal$xsi
