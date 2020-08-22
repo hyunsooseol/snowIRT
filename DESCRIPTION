@@ -19,7 +19,8 @@ Imports:
     CDM,
     RcppArmadillo,
     TAM,
-    difR
+    difR,
+    dplyr
     
        
     

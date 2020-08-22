@@ -6,6 +6,8 @@
 #' @import jmvcore
 #' @import difR
 #' @import TAM 
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
 #' @importFrom TAM tam.mml
 #' @importFrom difR difRaju
 #' @export
@@ -134,21 +136,31 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
    # managing input data for dif--------------
     
-    nF<-sum(data$groupVarName)
-    nR<-nrow(data)-nF
+    # nF<-sum(data$groupVarName)
+    # nR<-nrow(data)-nF
+    # 
+    # data.ref<-data[,1:length(vars)][order(groupVarName),][1:nR,]
+    # data.focal<-data[,1:length(vars)][order(groupVarName),][(nR+1):(nR+nF),]
+    # 
     
-    data.ref<-data[,1:length(vars)][order(groupVarName),][1:nR,]
-    data.focal<-data[,1:length(vars)][order(groupVarName),][(nR+1):(nR+nF),]
+    ref=dplyr::filter(data, groupVarName==0)
+    ref.data=dplyr::select(ref, -groupVarName)
+    tam.ref <-  TAM::tam.mml(resp = ref.data)
+    ref1=tam.ref$xsi
+    ref1
     
+    
+    focal=dplyr::filter(data, groupVarName==1)
+    focal.data=dplyr::select(focal, -groupVarName)
+    tam.focal<-  TAM::tam.mml(resp = focal.data)
+    focal1=tam.focal$xsi
+    focal1
+    
+   
     # calculating item parameter for each group----------
+   
     
-    ref <-  TAM::tam.mml(resp = as.matrix(data.ref))
-    focal <-  TAM::tam.mml(resp = as.matrix(data.focal))
-    
-    ref=ref$xsi
-    focal=focal$xsi
-    
-    item.1PL<-rbind(ref,focal)
+    item.1PL<-rbind(ref1,focal1)
     
     res1<- difR::difRaju(irtParam = item.1PL,focal.name = 1,
                          p.adjust.method = "BH",
