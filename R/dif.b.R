@@ -160,7 +160,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     
     
-    # ### get difRaju------------
+    # ### get difRaju in R script------------
     # 
     # 
     # res1 <- difR::difRaju(data, group = "groupName", focal.name = 1,
@@ -236,14 +236,14 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
         
         row <- list()
         
-        row[["z"]] <- zstat[i]
-        row[["p"]] <- pvalue[i]
+        row[["zstat"]] <- zstat[i]
+        row[["pvalue"]] <- pvalue[i]
         
-        row[["Difference"]] <- diff[i]
+        row[["diff"]] <- diff[i]
         
-        row[["deltaRaju"]] <- delta[i]
+        row[["delta"]] <- delta[i]
         
-        row[["Effect size"]] <- es[i]
+        row[["es"]] <- es[i]
         
         
         table$setRow(rowKey = items[i], values = row)
