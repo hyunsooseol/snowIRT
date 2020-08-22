@@ -1,0 +1,79 @@
+
+## Pre-estimation of the item parameters (1PL model, "ltm" engine)
+            mF-mR   deltaRaju  
+S1wantCurse  0.4116 -0.9673   A
+S1WantScold  0.3749 -0.8810   A
+S1WantShout  0.4092 -0.9616   A
+S2WantCurse  0.6323 -1.4859   B
+S2WantScold  0.4608 -1.0829   B
+S2WantShout  0.9654 -2.2687   C
+S3WantCurse  0.1441 -0.3386   A
+S3WantScold -0.3703  0.8702   A
+S3WantShout  0.5685 -1.3360   B
+S4WantCurse  0.4431 -1.0413   B
+S4WantScold -0.0356  0.0837   A
+S4WantShout  0.6742 -1.5844   C
+
+
+           mF-mR   deltaRaju  
+S1wantCurse  0.4116 -0.9673   A
+S1WantScold  0.3749 -0.8810   A
+S1WantShout  0.4092 -0.9616   A
+S2WantCurse  0.6323 -1.4859   B
+S2WantScold  0.4608 -1.0829   B
+S2WantShout  0.9654 -2.2687   C
+S3WantCurse  0.1441 -0.3386   A
+S3WantScold -0.3703  0.8702   A
+S3WantShout  0.5685 -1.3360   B
+S4WantCurse  0.4431 -1.0413   B
+S4WantScold -0.0356  0.0837   A
+S4WantShout  0.6742 -1.5844   C
+
+
+-----------------------------using ltm with some modifications
+
+            mF-mR   deltaRaju  
+S1wantCurse  0.4116 -0.9673   A
+S1WantScold  0.3749 -0.8810   A
+S1WantShout  0.4092 -0.9616   A
+S2WantCurse  0.6323 -1.4859   B
+S2WantScold  0.4608 -1.0829   B
+S2WantShout  0.9654 -2.2687   C
+S3WantCurse  0.1441 -0.3386   A
+S3WantScold -0.3703  0.8702   A
+S3WantShout  0.5685 -1.3360   B
+S4WantCurse  0.4431 -1.0413   B
+S4WantScold -0.0356  0.0837   A
+S4WantShout  0.6742 -1.5844   C
+
+##################### Using TAM--------------
+
+           mF-mR   deltaRaju  
+S1wantCurse  0.4582 -1.0768   B
+S1WantScold  0.4047 -0.9510   A
+S1WantShout  0.4304 -1.0114   B
+S2WantCurse  0.7022 -1.6502   C
+S2WantScold  0.4966 -1.1670   B
+S2WantShout  1.0090 -2.3711   C
+S3WantCurse  0.1633 -0.3838   A
+S3WantScold -0.3980  0.9353   A
+S3WantShout  0.5672 -1.3329   B
+S4WantCurse  0.4878 -1.1463   B
+S4WantScold -0.0421  0.0989   A
+S4WantShout  0.6856 -1.6112   C
+
+
+### jamovi using TAM------------
+
+      mF-mR   deltaRaju  
+S1wantCurse  0.4582 -1.0768   B
+S1WantScold  0.4047 -0.9510   A
+S1WantShout  0.4304 -1.0114   B
+S2WantCurse  0.7022 -1.6502   C
+S2WantScold  0.4966 -1.1670   B
+S2WantShout  1.0090 -2.3711   C
+S3WantCurse  0.1633 -0.3838   A
+S3WantScold -0.3980  0.9353   A
+S3WantShout  0.5672 -1.3329   B
+S4WantCurse  0.4878 -1.1463   B
+S4WantScold -0.0421  0.0989   A

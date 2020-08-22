@@ -54,7 +54,6 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        text = function() private$.items[["text"]],
         raju = function() private$.items[["raju"]]),
     private = list(),
     public=list(
@@ -69,10 +68,6 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 title="Instructions",
                 visible=TRUE,
                 refs="snowIRT"))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="text",
-                title="Differential Item Functioning"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="raju",
@@ -93,10 +88,8 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `title`="z"),
                     list(
                         `name`="pvalue", 
-                        `title`="p"),
-                    list(
-                        `name`="diff", 
-                        `title`="Difference"),
+                        `title`="Adj.p", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="delta", 
                         `title`="deltaRaju"),
@@ -135,7 +128,6 @@ difBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'

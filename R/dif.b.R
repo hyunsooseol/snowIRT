@@ -33,16 +33,17 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             </head>
             <body>
             <div class='instructions'>
-            <p>Welcome to Dichotomous Rasch Model.</p>
-
+            <p>Welcome to DIF Rasch Model.</p>
+            
             <p><b>To get started:</b></p>
-
-            <p>- Each variable should be <b>coded as 0 or 1 with the 'Grouping variable'</b> in jamovi.</p>
+            
+            <p>- Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
+            <P>- The focal group should be coded as 1.</P>
             <p>- Move items to be assessed for DIF into the 'Variable' box.</p>
             <p>- Move the grouping variable into the 'Grouping variable'box.</p>
-            <p>- The focal group should be coded as 1 and Benjamini-Hochberg adjustments for multipl comparisons are provided.</p>
+            
+            <p>- The result tables are estimated by Marginal Maximum Likelihood Estimation(JMLE) using TAM package.</p>
             <p>- the Raju's Z statistics are obtained by using the unsigned areas between the ICCs.</p>
-            <p>- The result tables are estimated by Marginal Maximum Likelihood Estimation(JMLE).</p>
             
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
             <p>If you have any questions, please e-mail me: snow@cau.ac.kr</a></p>
@@ -51,6 +52,14 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             </html>"
             )
             
+            if (self$options$raju)
+              self$results$raju$setNote(
+                "Note",
+                "1. z = Raju's Z statistics. 2. Adj.p = Benjamini-Hochberg p-value adjustment. 3. Effect size(ETS Delta scale) for absolute values of 'deltaRaju' = A: negligible effect(<1.0), B: moderate effect(>1.0),C: large effect(>1.5)."
+ 
+              )
+            
+           
             if (length(self$options$vars) <= 1)
                 self$setStatus('complete')
             
@@ -139,14 +148,14 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     ref.data=dplyr::select(ref, -groupVarName)
     tam.ref <-  TAM::tam.mml(resp = ref.data)
     ref1=tam.ref$xsi
-    ref1
+   
     
     
     focal=dplyr::filter(data, data[[groupVarName]]==1)
     focal.data=dplyr::select(focal, -groupVarName)
     tam.focal<- TAM::tam.mml(resp = focal.data)
     focal1=tam.focal$xsi
-    focal1
+   
     
    
     # calculating item parameter for each group----------
@@ -158,18 +167,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
                          p.adjust.method = "BH",
                          same.scale = FALSE)
     
-    
-    
-    # ### get difRaju in R script------------
-    # 
-    # 
-    # res1 <- difR::difRaju(data, group = "groupName", focal.name = 1,
-    #                       model = "1PL", engine = "ltm",
-    #                       p.adjust.method = "BH")
-    # 
-    # 
-    
-    
+   
     #dif result---------
     
     zstat<-as.vector(res1$RajuZ)
@@ -194,7 +192,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     #get ETS delta result------                                                                                                                   
     
-    diff <- as.vector(rr1)
     delta <- as.vector(rr2)
     es <- as.vector(symb1)
     
@@ -202,7 +199,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
         list(
             'zstat'=zstat,
             'pvalue'=pvalue,
-            'diff'=diff,
             'delta'=delta,
             'es'=es
         )
@@ -227,7 +223,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     zstat<- results$zstat
     pvalue<- results$pvalue
-    diff<- results$diff
     delta<- results$delta
     es<- results$es
     
@@ -237,9 +232,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
         row <- list()
         
         row[["zstat"]] <- zstat[i]
-        row[["pvalue"]] <- pvalue[i]
         
-        row[["diff"]] <- diff[i]
+        row[["pvalue"]] <- pvalue[i]
         
         row[["delta"]] <- delta[i]
         

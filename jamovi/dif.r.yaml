@@ -10,10 +10,6 @@ items:
       visible: True
       refs: snowIRT
 
-    - name:  text
-      title: Differential Item Functioning
-      type:  Preformatted
-
     - name: raju
       title: Raju’s area method
       type: Table
@@ -33,11 +29,9 @@ items:
           title: z
           
         - name: pvalue
-          title: p
+          title: Adj.p
+          format: zto,pvalue
          
-        - name: diff
-          title: Difference
-          
         - name: delta
           title: deltaRaju
           
