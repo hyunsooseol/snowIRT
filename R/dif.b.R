@@ -39,8 +39,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             
             <p>- Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
             <P>- The focal group should be coded as 1.</P>
-            <p>- Move items to be assessed for DIF into the 'Variable' box.</p>
-            <p>- Move the grouping variable into the 'Grouping variable'box.</p>
             
             <p>- The result tables are estimated by Marginal Maximum Likelihood Estimation(JMLE) using TAM package.</p>
             <p>- the Raju's Z statistics are obtained by using the unsigned areas between the ICCs.</p>

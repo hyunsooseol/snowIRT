@@ -25,11 +25,20 @@ nR<-nrow(data)-nF
 data.ref<-data[,1:24][order(Gender),][1:nR,]
 data.focal<-data[,1:24][order(Gender),][(nR+1):(nR+nF),]
 
+
 item.1PL<-rbind(itemParEst(data.ref, model = "1PL"),
                 itemParEst(data.focal, model = "1PL"))
 
 result<- difR::difRaju(irtParam = item.1PL,same.scale = FALSE)
 result
+
+###########################################
+
+r<- itemParEst(data.ref, model='1PL')
+r
+
+rtam <-  TAM::tam.mml(resp = as.matrix(data.ref))
+rtam$xsi
 
 
 #using TAM package----------
