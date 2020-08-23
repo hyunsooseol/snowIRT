@@ -7,7 +7,6 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
-            itotal = TRUE,
             prop = TRUE,
             imeasure = FALSE,
             ise = FALSE,
@@ -33,10 +32,6 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                     "continuous"),
                 permitted=list(
                     "numeric"))
-            private$..itotal <- jmvcore::OptionBool$new(
-                "itotal",
-                itotal,
-                default=TRUE)
             private$..prop <- jmvcore::OptionBool$new(
                 "prop",
                 prop,
@@ -83,7 +78,6 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 default=FALSE)
 
             self$.addOption(private$..vars)
-            self$.addOption(private$..itotal)
             self$.addOption(private$..prop)
             self$.addOption(private$..imeasure)
             self$.addOption(private$..ise)
@@ -98,7 +92,6 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         }),
     active = list(
         vars = function() private$..vars$value,
-        itotal = function() private$..itotal$value,
         prop = function() private$..prop$value,
         imeasure = function() private$..imeasure$value,
         ise = function() private$..ise$value,
@@ -112,7 +105,6 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         esc = function() private$..esc$value),
     private = list(
         ..vars = NA,
-        ..itotal = NA,
         ..prop = NA,
         ..imeasure = NA,
         ..ise = NA,
@@ -198,7 +190,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="items",
                 title="Item Statistics",
-                visible="(itotal || prop || imeasure || ise || infit || outfit)",
+                visible="(prop || imeasure || ise || infit || outfit)",
                 rows="(vars)",
                 clearWith=list(
                     "vars"),
@@ -209,10 +201,6 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `title`="", 
                         `type`="text", 
                         `content`="($key)"),
-                    list(
-                        `name`="total", 
-                        `title`="Total", 
-                        `visible`="(itotal)"),
                     list(
                         `name`="prop", 
                         `title`="Proportion", 
@@ -281,7 +269,6 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' 
 #' @param data The data as a data frame.
 #' @param vars .
-#' @param itotal .
 #' @param prop .
 #' @param imeasure .
 #' @param ise .
@@ -313,7 +300,6 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 dichotomous <- function(
     data,
     vars,
-    itotal = TRUE,
     prop = TRUE,
     imeasure = FALSE,
     ise = FALSE,
@@ -338,7 +324,6 @@ dichotomous <- function(
 
     options <- dichotomousOptions$new(
         vars = vars,
-        itotal = itotal,
         prop = prop,
         imeasure = imeasure,
         ise = ise,

@@ -59,7 +59,7 @@ items:
     - name: items
       title: Item Statistics
       type: Table
-      visible: (itotal || prop || imeasure || ise || infit || outfit)
+      visible: (prop || imeasure || ise || infit || outfit)
       rows: (vars)
       clearWith:
         - vars
@@ -70,10 +70,6 @@ items:
           title: ''
           type: 'text'
           content: ($key)
-
-        - name: total
-          title: Total
-          visible: (itotal)
 
         - name: prop
           title: Proportion

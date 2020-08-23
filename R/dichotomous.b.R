@@ -2,9 +2,6 @@
 # Dichotomous Rasch model
 #' @importFrom R6 R6Class
 #' @import jmvcore
-#' @import difR
-#' @importFrom TAM tam.jml
-#' @importFrom TAM tam.jml.fit
 #' @importFrom TAM tam.fit
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.modelfit
@@ -39,8 +36,8 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
 
             <p>- Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
-            <p>- The result tables are estimated by Joint Maximum Likelihood(JML) estimation.</p>
-            <p>- MADaQ3 statistic(an effect size of model fit) is estimated based on Marginal Maximum Likelihood(MML) estimation.</P>
+            
+            <p>- The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE) using TAM package.</p>
             <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
 
@@ -140,66 +137,59 @@ adjustment; Ho= the data fit the Rasch model."
         vars <- self$options$vars
         
       
-        # estimate the Rasch model with JML using function 'tam.jml'-----
+        # estimate the Rasch model with MMLE-----
         
-        tamobj = TAM::tam.jml(resp = as.matrix(data))
+        tamobj = TAM::tam.mml(resp = as.matrix(data))
         
+        # computing item mean
         
-        # estimate Item Total Score(Sufficient Statistics)-------
+        prop <- tamobj$item$M
         
-        itotal <- tamobj$ItemScore
-        itotal <- -itotal
-        
-        # computing proportions for each item---------
-        
-        n <- tamobj$nstud
-        prop <- itotal / n
         
         # estimate item difficulty measure---------------
         
-        imeasure <-  tamobj$xsi
+        imeasure <-tamobj$xsi$xsi
         
         
         # estimate standard error of the item parameter-----
         
-        ise <- tamobj$errorP
+        ise <- tamobj$xsi$se.xsi
         
         
         # computing infit and outfit statistics---------------------
         
         fit <- TAM::tam.fit(tamobj)
         
-        infit <- fit$fit.item$infitItem
+        infit <- fit$itemfit$Infit
         
-        outfit <- fit$fit.item$outfitItem
+        outfit <- fit$itemfit$Outfit
         
         
         # computing person separation reliability-------
         
-        reliability <- tamobj$WLEreliability
+        abil<- tam.wle(tamobj)
+        
+        reliability<- abil$WLE.rel
         
         #computing an effect size of model fit(MADaQ3) using MML-------
         
-        tamobj1 = TAM::tam.mml(resp = as.matrix(data))
+       # assess model fit----
         
-        # assess model fit----
+        model <- TAM::tam.modelfit(tamobj)
         
-        res <- TAM::tam.modelfit(tamobj = tamobj1)
-        
-        modelfit <- res$stat.MADaQ3$MADaQ3
+        modelfit <- model$stat.MADaQ3$MADaQ3
         
         # pvalue--------
         
-        modelfitp <- res$stat.MADaQ3$p
+        modelfitp <- model$stat.MADaQ3$p
         
         # q3 matrix----------
         
-        mat <- res$Q3.matr
+        mat <- model$Q3.matr
         
       
         results <-
           list(
-            'itotal' = itotal,
             'prop' = prop,
             'imeasure' = imeasure,
             'ise' = ise,
@@ -243,7 +233,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         row <- list()
         
-        row[['reliability']] <- reliability
+        row[['reliability']] <- reliability[1]
         row[['modelfit']] <- modelfit
         row[['modelfitp']] <- modelfitp
         
@@ -328,7 +318,6 @@ adjustment; Ho= the data fit the Rasch model."
         items <- self$options$vars
         
         
-        itotal <- results$itotal
         prop <- results$prop
         
         imeasure <- results$imeasure
@@ -342,8 +331,7 @@ adjustment; Ho= the data fit the Rasch model."
           row <- list()
           
           
-          row[["total"]] <- itotal[i, 1]
-          row[["prop"]] <- prop[i, 1]
+          row[["prop"]] <- prop[i]
           
           row[["measure"]] <- imeasure[i]
           

@@ -7,7 +7,6 @@
 dichotomous(
   data,
   vars,
-  itotal = TRUE,
   prop = TRUE,
   imeasure = FALSE,
   ise = FALSE,
@@ -25,8 +24,6 @@ dichotomous(
 \item{data}{The data as a data frame.}
 
 \item{vars}{.}
-
-\item{itotal}{.}
 
 \item{prop}{.}
 

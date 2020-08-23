@@ -1,17 +1,17 @@
 ---
 title: Rasch Measurement Model for jamovi
 name: snowIRT
-version: 1.7.0
+version: 2.0.0
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2020-08-21'
+date: '2020-08-23'
 type: R
 description: >-
   This module includes Item Statistics, Model fit, Differential Item
   Functioning, Wright Map, Expected Scores Curve,and Item Characteristic Curve
-  using JML and MML estimation of the Rasch measurement model.
+  using MML estimation of the Rasch measurement model.
 analyses:
   - title: Dichotomous Rasch Model
     name: dichotomous

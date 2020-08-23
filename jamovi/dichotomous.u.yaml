@@ -31,8 +31,6 @@ children:
               row: 0
             children:
               - type: CheckBox
-                name: itotal
-              - type: CheckBox
                 name: prop
               - type: CheckBox
                 name: imeasure
