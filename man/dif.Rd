@@ -4,7 +4,7 @@
 \alias{dif}
 \title{Differential Item Functioning}
 \usage{
-dif(data, vars, group, raju = TRUE)
+dif(data, vars, group, raju = TRUE, difplot = FALSE)
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -14,12 +14,15 @@ dif(data, vars, group, raju = TRUE)
 \item{group}{A string naming the grouping variable from \code{data}}
 
 \item{raju}{.}
+
+\item{difplot}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
+  \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
