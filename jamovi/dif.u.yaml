@@ -33,5 +33,6 @@ children:
         children:
           - type: CheckBox
             name: raju
-      
+          - type: CheckBox
+            name: difplot
 

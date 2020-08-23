@@ -102,7 +102,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
                 
                 private$.populateRajuTable(results)
                 
+                
             }
+            
             
             },
         
@@ -127,9 +129,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     for (var in vars)
         
         data[[var]] <- jmvcore::toNumeric(data[[var]])
-    
- 
-#     data[[groupVarName]] <- droplevels(as.factor(data[[groupVarName]]))
     
     # exclude rows with missings in the grouping variable
     
@@ -200,7 +199,10 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             'delta'=delta,
             'es'=es
         )
-            
+
+    # Prepare Data For Plot -------
+    image <- self$results$plot
+    image$setState(res1)
 },
 
 
@@ -240,11 +242,20 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
         
         table$setRow(rowKey = items[i], values = row)
     }
+  
     
-    
-    
-}
+},
 
+.plot = function(image, ...) {
+  
+ 
+  plotData <- image$state
+  
+  plot <- plot(plotData)
+  
+  print(plot)
+  TRUE
+}
 
   )
 )

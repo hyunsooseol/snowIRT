@@ -8,7 +8,8 @@ difOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         initialize = function(
             vars = NULL,
             group = NULL,
-            raju = TRUE, ...) {
+            raju = TRUE,
+            difplot = FALSE, ...) {
 
             super$initialize(
                 package='snowIRT',
@@ -35,26 +36,34 @@ difOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "raju",
                 raju,
                 default=TRUE)
+            private$..difplot <- jmvcore::OptionBool$new(
+                "difplot",
+                difplot,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..raju)
+            self$.addOption(private$..difplot)
         }),
     active = list(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
-        raju = function() private$..raju$value),
+        raju = function() private$..raju$value,
+        difplot = function() private$..difplot$value),
     private = list(
         ..vars = NA,
         ..group = NA,
-        ..raju = NA)
+        ..raju = NA,
+        ..difplot = NA)
 )
 
 difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        raju = function() private$.items[["raju"]]),
+        raju = function() private$.items[["raju"]],
+        plot = function() private$.items[["plot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -96,7 +105,16 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                     list(
                         `name`="es", 
                         `title`="Effect size", 
-                        `type`="text"))))}))
+                        `type`="text"))))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot",
+                title="DIF plot",
+                width=500,
+                height=500,
+                renderFun=".plot",
+                visible="(difplot)",
+                refs="difR"))}))
 
 difBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "difBase",
@@ -125,10 +143,12 @@ difBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param vars .
 #' @param group A string naming the grouping variable from \code{data}
 #' @param raju .
+#' @param difplot .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -142,7 +162,8 @@ dif <- function(
     data,
     vars,
     group,
-    raju = TRUE) {
+    raju = TRUE,
+    difplot = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('dif requires jmvcore to be installed (restart may be required)')
@@ -159,7 +180,8 @@ dif <- function(
     options <- difOptions$new(
         vars = vars,
         group = group,
-        raju = raju)
+        raju = raju,
+        difplot = difplot)
 
     analysis <- difClass$new(
         options = options,

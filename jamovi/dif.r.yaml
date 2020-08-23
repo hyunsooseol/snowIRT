@@ -39,4 +39,14 @@ items:
           title: 'Effect size'
           type: 'text'
 
+    - name: plot
+      title: 'DIF plot'
+      type: Image
+      width:  500
+      height: 500
+      renderFun: .plot
+      visible: (difplot)
+      refs: difR  
+
+
 ...

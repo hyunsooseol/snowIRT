@@ -55,6 +55,9 @@ result<- difR::difRaju(irtParam = item.1PL,
                        same.scale = FALSE)
 result
 
+plot(result)
+
+
 ## jamovi-----------------
 
 library(dplyr)

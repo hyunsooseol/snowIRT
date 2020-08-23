@@ -38,5 +38,10 @@ options:
       title: Raju
       type: Bool
       default: TRUE
+      
+    - name: difplot
+      title: DIF plot
+      type: Bool
+      default: false
  
 ...
