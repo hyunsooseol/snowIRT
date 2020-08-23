@@ -173,6 +173,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                     list(
                         `name`="modelfitp", 
                         `title`="p", 
+                        `format`="zto,pvalue", 
                         `visible`="(modelfitp)"))))
             self$add(jmvcore::Table$new(
                 options=options,
