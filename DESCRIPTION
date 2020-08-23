@@ -18,9 +18,9 @@ Imports:
     WrightMap,
     CDM,
     RcppArmadillo,
-    TAM,
     difR,
-    dplyr
+    dplyr,
+Remotes: alexanderrobitzsch/TAM@3.6-8 
     
        
     
