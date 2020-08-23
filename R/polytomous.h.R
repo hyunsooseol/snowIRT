@@ -238,7 +238,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="measure", 
-                        `title`="Rating scale measure", 
+                        `title`="Item measure", 
                         `visible`="(imeasure)"),
                     list(
                         `name`="ise", 

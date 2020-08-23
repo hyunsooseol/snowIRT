@@ -89,7 +89,7 @@ items:
           content: ($key)
 
         - name: measure
-          title: Rating scale measure
+          title: Item measure
           visible: (imeasure) 
           
         - name: ise

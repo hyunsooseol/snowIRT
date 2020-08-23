@@ -22,7 +22,7 @@ options:
         - numeric        
 
     - name: imeasure
-      title: Rating scale measure
+      title: Item measure
       type: Bool
       default: True
 

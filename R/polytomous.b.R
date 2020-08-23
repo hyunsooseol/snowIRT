@@ -2,8 +2,6 @@
 # Polytomous Rasch model
 #' @importFrom R6 R6Class
 #' @import jmvcore
-#' @importFrom TAM tam.jml
-#' @importFrom TAM tam.jml.fit
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.fit
 #' @importFrom TAM tam.modelfit
@@ -39,8 +37,9 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             <p>- The input dataset require polytomous data with the type of <b>numeric-continuous</b> in jamovi.</p>
             <p>- Note that Polytomous model needs <b>the bottom category to be coded as 0</b>, so you may need to recode.
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
+            
+            <p>- The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE) using TAM package.</p>
             <p>- The item and model fit statistics are estimated by Andrich's rating scale model based on Marginal Maximum Likelihood(MML).</P>
-            <p>- MADaQ3 statistic(an effect size of model fit) and Partial Credit Model are estimated based on Marginal Maximum Likelihood(MML) estimation.</P>
             <P>- Item characteristic curves are visualized using Partial Credit Model.</p>
             <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
@@ -183,14 +182,16 @@ adjustment; Ho= the data fit the Rasch model."
         
         # computing person separation reliability-------
         
-        reliability <- tamobj$EAP.rel
+        # reliability <- tamobj$EAP.rel
+        
+        abil<- tam.wle(tamobj)
+        
+        reliability<- abil$WLE.rel
         
         #computing an effect size of model fit(MADaQ3)-------
         
-        tamobj1 = TAM::tam.mml(resp = as.matrix(data))
-        
-        # assess model fit
-        res <- TAM::tam.modelfit(tamobj = tamobj1)
+       # assess model fit
+        res <- TAM::tam.modelfit(tamobj)
         
         modelfit <- res$stat.MADaQ3$MADaQ3
         
@@ -203,12 +204,12 @@ adjustment; Ho= the data fit the Rasch model."
         
         # Calculation of Thurstonian thresholds----
         
-        thresh <- TAM::tam.threshold(tamobj1)
+        thresh <- TAM::tam.threshold(tamobj)
         nc <- ncol(thresh)
         
         # Partial credit model using MML estimation---
         
-        pmeasure <- tamobj1$item_irt$beta
+        pmeasure <- tamobj$item_irt$beta
         
         
         results <-
@@ -251,7 +252,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         row <- list()
         
-        row[['reliability']] <- reliability
+        row[['reliability']] <- reliability[1]
         row[['modelfit']] <- modelfit
         row[['modelfitp']] <- modelfitp
         
