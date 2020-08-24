@@ -219,7 +219,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="pmeasure", 
-                        `title`="Partial credit measure", 
+                        `title`="Measure", 
                         `visible`="(pmeasure)"))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -238,7 +238,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="measure", 
-                        `title`="Item measure", 
+                        `title`="Measure", 
                         `visible`="(imeasure)"),
                     list(
                         `name`="ise", 

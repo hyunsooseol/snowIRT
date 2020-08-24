@@ -22,7 +22,7 @@ options:
         - numeric        
 
     - name: imeasure
-      title: Item measure
+      title: Measure
       type: Bool
       default: True
 
@@ -67,7 +67,7 @@ options:
       default: false
 
     - name: pmeasure
-      title: Partial credit measure
+      title: Measure
       type: Bool
       default: false
       

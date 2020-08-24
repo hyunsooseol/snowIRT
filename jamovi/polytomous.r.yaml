@@ -70,7 +70,7 @@ items:
           content: ($key)
           
         - name: pmeasure
-          title: Partial credit measure
+          title: Measure
           visible: (pmeasure) 
 
     - name:  items
@@ -89,7 +89,7 @@ items:
           content: ($key)
 
         - name: measure
-          title: Item measure
+          title: Measure
           visible: (imeasure) 
           
         - name: ise
