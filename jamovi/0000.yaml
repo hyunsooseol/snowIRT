@@ -1,12 +1,12 @@
 ---
 title: Rasch Measurement Model for jamovi
 name: snowIRT
-version: 2.0.0
+version: 2.1.0
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2020-08-24'
+date: '2020-08-26'
 type: R
 description: >-
   This module includes Item Statistics, Model fit, Differential Item
@@ -31,6 +31,22 @@ analyses:
     menuGroup: snowIRT
     menuTitle: Differential Item Functioning
     menuSubgroup: Dichotomous
+datasets:
+  - name: dichotomous
+    path: dicho.omv
+    description: dichotomous data
+    tags:
+      - Dichotomous
+  - name: dif
+    path: dif.omv
+    description: DIF data
+    tags:
+      - Dichotomous
+  - name: Polytomous
+    path: poly.omv
+    description: Polytomous data
+    tags:
+      - Polytomous
 usesNative: true
 minApp: 1.0.8
 
