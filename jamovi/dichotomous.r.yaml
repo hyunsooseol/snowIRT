@@ -107,7 +107,7 @@ items:
 
         - name: total
           title: Total score
-          visible: (prop)
+          visible: (total)
 
         - name: pmeasure
           title: Measure

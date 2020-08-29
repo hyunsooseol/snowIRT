@@ -102,7 +102,33 @@ items:
 
         - name: outfit
           title: Outfit 
-          visible: (outfit)            
+          visible: (outfit)  
+          
+    - name: persons
+      title: Person Statistics
+      type: Table
+      visible: (total || personmeasure || pse)
+      clearWith:
+        - vars
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: total
+          title: Total score
+          visible: (total)
+
+        - name: personmeasure
+          title: Measure
+          visible: (personmeasure) 
+          
+        - name: pse
+          title: S.E.Measure
+          visible: (pse)  
 
     - name: wrightmap
       title: 'Wright Map'

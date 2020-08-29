@@ -263,7 +263,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                     list(
                         `name`="total", 
                         `title`="Total score", 
-                        `visible`="(prop)"),
+                        `visible`="(total)"),
                     list(
                         `name`="pmeasure", 
                         `title`="Measure", 

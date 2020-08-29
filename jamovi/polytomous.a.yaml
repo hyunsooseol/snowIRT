@@ -70,7 +70,22 @@ options:
       title: Measure
       type: Bool
       default: false
+
+    - name: total
+      title: Total score
+      type: Bool
+      default: false
       
+    - name: personmeasure
+      title: Measure
+      type: Bool
+      default: false
+
+    - name: pse
+      title: S.E.measure
+      type: Bool
+      default: false
+
     - name: icc
       title: Item characteristic curve
       type: Bool

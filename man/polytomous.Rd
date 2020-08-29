@@ -17,6 +17,9 @@ polytomous(
   mat = FALSE,
   thresh = FALSE,
   pmeasure = FALSE,
+  total = FALSE,
+  personmeasure = FALSE,
+  pse = FALSE,
   icc = FALSE,
   wrightmap = FALSE,
   esc = FALSE
@@ -47,6 +50,12 @@ polytomous(
 
 \item{pmeasure}{.}
 
+\item{total}{.}
+
+\item{personmeasure}{.}
+
+\item{pse}{.}
+
 \item{icc}{.}
 
 \item{wrightmap}{.}
@@ -61,6 +70,7 @@ A results object containing:
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+  \code{results$persons} \tab \tab \tab \tab \tab a table \cr
   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr

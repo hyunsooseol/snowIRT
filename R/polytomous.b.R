@@ -8,6 +8,7 @@
 #' @importFrom TAM IRT.WrightMap
 #' @importFrom TAM tam.threshold
 #' @importFrom TAM tam
+#' @importFrom TAM tam.wle
 #' @export
 
 
@@ -130,6 +131,10 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.populateThresholdsTable(results)
           
+          # populate person table------
+          
+          private$.populatePersonTable(results)
+          
           #prepare plot-----
           
           private$.prepareIccPlot(data)
@@ -182,11 +187,17 @@ adjustment; Ho= the data fit the Rasch model."
         
         # computing person separation reliability-------
         
-        # reliability <- tamobj$EAP.rel
+       
+        person<- tam.wle(tamobj)
         
-        abil<- tam.wle(tamobj)
+        reliability<- person$WLE.rel
         
-        reliability<- abil$WLE.rel
+        
+        # person statistics
+        
+        total<- person$PersonScores
+        personmeasure<- person$theta
+        pse <- person$error
         
         #computing an effect size of model fit(MADaQ3)-------
         
@@ -218,6 +229,9 @@ adjustment; Ho= the data fit the Rasch model."
             'ise' = ise,
             'infit' = infit,
             'outfit' = outfit,
+            'total' = total,
+            'personmeasure'=personmeasure,
+            'pse'=pse,
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
@@ -404,7 +418,42 @@ adjustment; Ho= the data fit the Rasch model."
         }
       },
       
+   
+      # populate person tables----------------------
       
+      .populatePersonTable = function(results) {
+        
+        table <- self$results$persons
+        
+         data<- self$data
+      
+         #result---
+         
+         total <- results$total
+         
+         personmeasure <- results$personmeasure
+         
+         pse <- results$pse
+         
+         
+         for (i in 1:nrow(data)) {
+           
+           row <- list()
+           
+           
+           row[["total"]] <- total[i]
+           
+           row[["personmeasure"]] <- personmeasure[i]
+           
+           row[["pse"]] <- pse[i]
+           
+           table$addRow(rowKey = i, values = row)
+           
+         }
+         
+         
+      },
+         
       
       #### Plot functions ------------------------
       
