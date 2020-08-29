@@ -8,6 +8,7 @@
 #' @importFrom TAM IRT.WrightMap
 #' @importFrom TAM tam
 #' @importFrom difR difRaju
+#' @importFrom TAM tam.wle
 #' @export
 
 
@@ -113,6 +114,10 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.populateMatrixTable(results)
           
+          # Populate person table-----
+          
+          private$.populatePersonTable(results)
+          
           
           # prepare plot-----
           
@@ -167,9 +172,16 @@ adjustment; Ho= the data fit the Rasch model."
         
         # computing person separation reliability-------
         
-        abil<- tam.wle(tamobj)
+        person<- tam.wle(tamobj)
         
-        reliability<- abil$WLE.rel
+        reliability<- person$WLE.rel
+        
+        # person statistics
+        
+        total<- person$PersonScores
+        pmeasure<- person$theta
+        pse <- person$error
+        
         
         #computing an effect size of model fit(MADaQ3) using MML-------
         
@@ -195,6 +207,9 @@ adjustment; Ho= the data fit the Rasch model."
             'ise' = ise,
             'infit' = infit,
             'outfit' = outfit,
+            'total' = total,
+            'pmeasure'=pmeasure,
+            'pse'=pse,
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
@@ -347,7 +362,45 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
-  
+ # person statistics
+ 
+      .populatePersonTable = function(results) {  
+      
+        data <- self$data
+        
+        table <- self$results$persons
+        
+        
+        #result---
+        
+        total <- results$total
+        
+        pmeasure <- results$pmeasure
+        
+        pse <- results$pse
+        
+        
+        for (i in 1:nrow(data)) {
+          
+          row <- list()
+          
+          
+          row[["total"]] <- total[i]
+          
+          row[["pmeasure"]] <- pmeasure[i]
+          
+          row[["pse"]] <- pse[i]
+         
+          table$addRow(rowKey = i, values = row)
+          
+        }
+        
+      
+        
+      },
+      
+      
+      
   
   #### Prepare Plot functions ----
       

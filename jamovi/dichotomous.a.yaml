@@ -66,6 +66,21 @@ options:
       type: Bool
       default: false
 
+    - name: total
+      title: Total score
+      type: Bool
+      default: false
+      
+    - name: pmeasure
+      title: Measure
+      type: Bool
+      default: false
+
+    - name: pse
+      title: S.E.measure
+      type: Bool
+      default: false
+
     - name: wrightmap
       title: Wright map
       type: Bool

@@ -15,7 +15,7 @@ children:
             name: vars
             isTarget: true
   - type: CollapseBox
-    label: Item Analysis
+    label: IRT Analysis
     margin: normal
     collapsed: true
     children:
@@ -40,6 +40,19 @@ children:
                 name: infit
               - type: CheckBox
                 name: outfit
+          - type: Label
+            label: Person Statistics
+            fitToGrid: true
+            cell:
+              column: 0
+              row: 1
+            children:
+              - type: CheckBox
+                name: total
+              - type: CheckBox
+                name: pmeasure
+              - type: CheckBox
+                name: pse
       - type: LayoutBox
         stretchFactor: 1
         margin: large

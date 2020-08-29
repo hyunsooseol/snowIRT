@@ -16,6 +16,9 @@ dichotomous(
   modelfit = FALSE,
   modelfitp = FALSE,
   mat = FALSE,
+  total = FALSE,
+  pmeasure = FALSE,
+  pse = FALSE,
   wrightmap = FALSE,
   esc = FALSE
 )
@@ -43,6 +46,12 @@ dichotomous(
 
 \item{mat}{.}
 
+\item{total}{.}
+
+\item{pmeasure}{.}
+
+\item{pse}{.}
+
 \item{wrightmap}{.}
 
 \item{esc}{.}
@@ -54,6 +63,7 @@ A results object containing:
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+  \code{results$persons} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 }

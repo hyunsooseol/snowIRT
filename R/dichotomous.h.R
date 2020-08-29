@@ -16,6 +16,9 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             modelfit = FALSE,
             modelfitp = FALSE,
             mat = FALSE,
+            total = FALSE,
+            pmeasure = FALSE,
+            pse = FALSE,
             wrightmap = FALSE,
             esc = FALSE, ...) {
 
@@ -68,6 +71,18 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "mat",
                 mat,
                 default=FALSE)
+            private$..total <- jmvcore::OptionBool$new(
+                "total",
+                total,
+                default=FALSE)
+            private$..pmeasure <- jmvcore::OptionBool$new(
+                "pmeasure",
+                pmeasure,
+                default=FALSE)
+            private$..pse <- jmvcore::OptionBool$new(
+                "pse",
+                pse,
+                default=FALSE)
             private$..wrightmap <- jmvcore::OptionBool$new(
                 "wrightmap",
                 wrightmap,
@@ -87,6 +102,9 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..modelfit)
             self$.addOption(private$..modelfitp)
             self$.addOption(private$..mat)
+            self$.addOption(private$..total)
+            self$.addOption(private$..pmeasure)
+            self$.addOption(private$..pse)
             self$.addOption(private$..wrightmap)
             self$.addOption(private$..esc)
         }),
@@ -101,6 +119,9 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         modelfit = function() private$..modelfit$value,
         modelfitp = function() private$..modelfitp$value,
         mat = function() private$..mat$value,
+        total = function() private$..total$value,
+        pmeasure = function() private$..pmeasure$value,
+        pse = function() private$..pse$value,
         wrightmap = function() private$..wrightmap$value,
         esc = function() private$..esc$value),
     private = list(
@@ -114,6 +135,9 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..modelfit = NA,
         ..modelfitp = NA,
         ..mat = NA,
+        ..total = NA,
+        ..pmeasure = NA,
+        ..pse = NA,
         ..wrightmap = NA,
         ..esc = NA)
 )
@@ -125,6 +149,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
         scale = function() private$.items[["scale"]],
         mat = function() private$.items[["mat"]],
         items = function() private$.items[["items"]],
+        persons = function() private$.items[["persons"]],
         plot = function() private$.items[["plot"]],
         esc = function() private$.items[["esc"]]),
     private = list(),
@@ -221,6 +246,32 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `name`="outfit", 
                         `title`="Outfit", 
                         `visible`="(outfit)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="persons",
+                title="Person Statistics",
+                visible="(total || pmeasure || pse)",
+                clearWith=list(
+                    "vars"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="total", 
+                        `title`="Total score", 
+                        `visible`="(prop)"),
+                    list(
+                        `name`="pmeasure", 
+                        `title`="Measure", 
+                        `visible`="(pmeasure)"),
+                    list(
+                        `name`="pse", 
+                        `title`="S.E.Measure", 
+                        `visible`="(pse)"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -278,6 +329,9 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param modelfit .
 #' @param modelfitp .
 #' @param mat .
+#' @param total .
+#' @param pmeasure .
+#' @param pse .
 #' @param wrightmap .
 #' @param esc .
 #' @return A results object containing:
@@ -286,6 +340,7 @@ dichotomousBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$persons} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 #' }
@@ -309,6 +364,9 @@ dichotomous <- function(
     modelfit = FALSE,
     modelfitp = FALSE,
     mat = FALSE,
+    total = FALSE,
+    pmeasure = FALSE,
+    pse = FALSE,
     wrightmap = FALSE,
     esc = FALSE) {
 
@@ -333,6 +391,9 @@ dichotomous <- function(
         modelfit = modelfit,
         modelfitp = modelfitp,
         mat = mat,
+        total = total,
+        pmeasure = pmeasure,
+        pse = pse,
         wrightmap = wrightmap,
         esc = esc)
 

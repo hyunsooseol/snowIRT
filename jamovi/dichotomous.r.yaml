@@ -91,6 +91,32 @@ items:
           title: Outfit 
           visible: (outfit) 
 
+    - name: persons
+      title: Person Statistics
+      type: Table
+      visible: (total || pmeasure || pse)
+      clearWith:
+        - vars
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: total
+          title: Total score
+          visible: (prop)
+
+        - name: pmeasure
+          title: Measure
+          visible: (pmeasure) 
+          
+        - name: pse
+          title: S.E.Measure
+          visible: (pse)  
+
     - name: plot
       title: 'Wright Map'
       type: Image
