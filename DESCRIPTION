@@ -20,7 +20,7 @@ Imports:
     RcppArmadillo,
     difR,
     dplyr,
-    TAM
+Remotes: alexanderrobitzsch/TAM@3.6-8   
 
     
        
