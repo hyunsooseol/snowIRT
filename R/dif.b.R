@@ -10,6 +10,7 @@
 #' @importFrom dplyr select
 #' @importFrom TAM tam.mml
 #' @importFrom difR difRaju
+#' @importFrom ShinyItemAnalysis plotDIFirt
 #' @export
 
 
@@ -123,6 +124,11 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     same.scale = FALSE
   )
   
+  # ICC PLOT RESULT----------
+  
+  # Coefficients for all items
+  itempar <- res1$itemParInit
+  
   
   #dif result---------
   
@@ -156,7 +162,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       'zstat' = zstat,
       'pvalue' = pvalue,
       'delta' = delta,
-      'es' = es
+      'es' = es,
+      'itempar'=itempar
     )
   
   
@@ -193,19 +200,56 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
   
   # Prepare Data For Plot -------
-  image <- self$results$plot
+  image <- self$results$zplot
   image$setState(res1)
+ 
+  # prepare dif icc plot--------
+  
+  image<- self$results$iccplot
+  image$setState(itempar)
+  
   
 },
 
+
 .plot = function(image, ...) {
+  
   plotData <- image$state
   
   plot <- plot(plotData)
   
   print(plot)
   TRUE
+},
+
+.iccplot=function(image,...){
+
+  itempar <- image$parent$state
+  
+  if (is.null(itempar))
+    return()
+  
+  images <- self$results$iccplot
+  
+  index <- 1
+  
+  for (item in images$items) {
+    if (identical(image, item))
+      break()
+    
+    index <- index + 1
+  }
+  
+  
+  plot2 <- ShinyItemAnalysis::plotDIFirt(parameters = itempar, 
+                                         item = index, 
+                                         test = "Raju")
+  
+  print(plot2)
+  TRUE
+  
 }
+
 
     )
 )

@@ -9,7 +9,8 @@ difOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             vars = NULL,
             group = NULL,
             raju = TRUE,
-            difplot = FALSE, ...) {
+            zplot = FALSE,
+            iccplot = FALSE, ...) {
 
             super$initialize(
                 package='snowIRT',
@@ -36,26 +37,33 @@ difOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 "raju",
                 raju,
                 default=TRUE)
-            private$..difplot <- jmvcore::OptionBool$new(
-                "difplot",
-                difplot,
+            private$..zplot <- jmvcore::OptionBool$new(
+                "zplot",
+                zplot,
+                default=FALSE)
+            private$..iccplot <- jmvcore::OptionBool$new(
+                "iccplot",
+                iccplot,
                 default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..raju)
-            self$.addOption(private$..difplot)
+            self$.addOption(private$..zplot)
+            self$.addOption(private$..iccplot)
         }),
     active = list(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
         raju = function() private$..raju$value,
-        difplot = function() private$..difplot$value),
+        zplot = function() private$..zplot$value,
+        iccplot = function() private$..iccplot$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..raju = NA,
-        ..difplot = NA)
+        ..zplot = NA,
+        ..iccplot = NA)
 )
 
 difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -63,7 +71,8 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         raju = function() private$.items[["raju"]],
-        plot = function() private$.items[["plot"]]),
+        zplot = function() private$.items[["zplot"]],
+        iccplot = function() private$.items[["iccplot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -94,7 +103,7 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="zstat", 
-                        `title`="z"),
+                        `title`="Statistic"),
                     list(
                         `name`="pvalue", 
                         `title`="Adj.p", 
@@ -108,13 +117,27 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
-                name="plot",
-                title="DIF plot",
+                name="zplot",
+                title="Z statistic",
                 width=500,
                 height=500,
                 renderFun=".plot",
-                visible="(difplot)",
-                refs="difR"))}))
+                visible="(zplot)",
+                refs="difR"))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="iccplot",
+                title="Item characteristic curve for DIF",
+                items="(vars)",
+                refs="ShinyItemAnalysis",
+                template=jmvcore::Image$new(
+                    options=options,
+                    title="$key",
+                    width=400,
+                    height=400,
+                    visible="(iccplot)",
+                    renderFun=".iccplot",
+                    clearWith=list())))}))
 
 difBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "difBase",
@@ -143,12 +166,14 @@ difBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param vars .
 #' @param group A string naming the grouping variable from \code{data}
 #' @param raju .
-#' @param difplot .
+#' @param zplot .
+#' @param iccplot .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$zplot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$iccplot} \tab \tab \tab \tab \tab an array of plots \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -163,7 +188,8 @@ dif <- function(
     vars,
     group,
     raju = TRUE,
-    difplot = FALSE) {
+    zplot = FALSE,
+    iccplot = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('dif requires jmvcore to be installed (restart may be required)')
@@ -181,7 +207,8 @@ dif <- function(
         vars = vars,
         group = group,
         raju = raju,
-        difplot = difplot)
+        zplot = zplot,
+        iccplot = iccplot)
 
     analysis <- difClass$new(
         options = options,

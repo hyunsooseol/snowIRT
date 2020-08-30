@@ -1,11 +1,11 @@
 Package: snowIRT
 Type: Package
 Title: Item Response Theory for jamovi
-Version: 3.0.0
-Date: 2020-08-29
+Version: 3.1.0
+Date: 2020-08-30
 Author: Hyunsoo Seol
 Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-Description: This package provides item and person statistics, Model fit, Differential Item Functioning, Wright Map, Expected Score Curve, and Item Characteristic Curves using the Rasch measurement model.
+Description: This package provides item and person statistics, Model fit, Differential Item Functioning, Wright Map, Expected Score Curve, and Item Characteristic Curves for DIF using the Rasch measurement model.
 License: GPL3
 LazyData: TRUE
 Encoding: UTF-8
@@ -20,7 +20,8 @@ Imports:
     RcppArmadillo,
     difR,
     dplyr,
-Remotes: alexanderrobitzsch/TAM@3.6-8   
+    ShinyItemAnalysis,
+    TAM  
 
     
        

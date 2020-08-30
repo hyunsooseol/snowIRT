@@ -4,7 +4,7 @@
 \alias{dif}
 \title{Differential Item Functioning}
 \usage{
-dif(data, vars, group, raju = TRUE, difplot = FALSE)
+dif(data, vars, group, raju = TRUE, zplot = FALSE, iccplot = FALSE)
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -15,14 +15,17 @@ dif(data, vars, group, raju = TRUE, difplot = FALSE)
 
 \item{raju}{.}
 
-\item{difplot}{.}
+\item{zplot}{.}
+
+\item{iccplot}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
-  \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+  \code{results$zplot} \tab \tab \tab \tab \tab an image \cr
+  \code{results$iccplot} \tab \tab \tab \tab \tab an array of plots \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

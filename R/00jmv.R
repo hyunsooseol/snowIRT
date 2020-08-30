@@ -6,7 +6,7 @@
         `type`="software", 
         `author`="Seol, H.", 
         `year`=2020, 
-        `title`="snowIRT: Rasch Measurement Model for jamovi", 
+        `title`="snowIRT: Item Response Theory for jamovi", 
         `publisher`="[jamovi module]. Retrieved from https://github.com/hyunsooseol/snowIRT/", 
         `url`="https://github.com/hyunsooseol/snowIRT"), 
     `TAM`=list(
@@ -22,4 +22,11 @@
         `year`=2010, 
         `title`="difR: A general framework and an R package for the detection of dichotomous differential item functioning", 
         `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=difR", 
-        `url`="https://CRAN.R-project.org/package=difR"))
+        `url`="https://CRAN.R-project.org/package=difR"), 
+    `ShinyItemAnalysis`=list(
+        `type`="software", 
+        `author`="Patricia Martinkova and Adela Drabinova", 
+        `year`=2018, 
+        `title`="ShinyItemAnalysis: for teaching psychometrics and to enforce routine analysis of educational tests", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=ShinyItemAnalysis", 
+        `url`="https://CRAN.R-project.org/package=ShinyItemAnalysis"))

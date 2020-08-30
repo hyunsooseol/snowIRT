@@ -21,18 +21,59 @@ children:
             isTarget: true
             maxItemCount: 1
   - type: LayoutBox
-    stretchFactor: 1
     margin: large
+    stretchFactor: 1
     children:
-      - type: Label
-        label: Method
-        fitToGrid: true
+      - type: LayoutBox
         cell:
           column: 0
           row: 0
+        stretchFactor: 1
         children:
-          - type: CheckBox
-            name: raju
-          - type: CheckBox
-            name: difplot
+          - type: Label
+            label: Method
+            children:
+              - type: CheckBox
+                name: raju
+      - type: LayoutBox
+        cell:
+          column: 1
+          row: 0
+        stretchFactor: 1 
+        margin: large
+        children:
+         - type: Label
+           label: 'Plot'
+           children:
+             - type: CheckBox
+               name: zplot
+             - type: CheckBox
+               name: iccplot
+    
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
 

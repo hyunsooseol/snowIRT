@@ -77,10 +77,12 @@ focal1=tam.focal$xsi
 focal1
 
 item.1PL<-rbind(ref1,focal1)
+item.1PL
 
 result<- difR::difRaju(irtParam = item.1PL,same.scale = FALSE)
 result
 
+result$itemParInit
 
 
 

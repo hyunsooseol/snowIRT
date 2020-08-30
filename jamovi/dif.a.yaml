@@ -39,8 +39,13 @@ options:
       type: Bool
       default: TRUE
       
-    - name: difplot
-      title: DIF plot
+    - name: zplot
+      title: Z statistic
+      type: Bool
+      default: false
+ 
+    - name: iccplot
+      title: Item characteristic curve for DIF
       type: Bool
       default: false
  

@@ -26,7 +26,7 @@ items:
           content: ($key)
 
         - name: zstat
-          title: z
+          title: Statistic
           
         - name: pvalue
           title: Adj.p
@@ -39,14 +39,28 @@ items:
           title: 'Effect size'
           type: 'text'
 
-    - name: plot
-      title: 'DIF plot'
+    - name: zplot
+      title: 'Z statistic'
       type: Image
       width:  500
       height: 500
       renderFun: .plot
-      visible: (difplot)
+      visible: (zplot)
       refs: difR  
 
-
+    - name: iccplot
+      title: 'Item characteristic curve for DIF'
+      type: Array
+      description: an array of plots
+      items: (vars)
+      refs: ShinyItemAnalysis
+      template:
+          type: Image
+          title: $key
+          description: ICC plot
+          width:  400
+          height: 400
+          visible: (iccplot)
+          renderFun: .iccplot
+          clearWith: []
 ...
