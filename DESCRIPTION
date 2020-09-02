@@ -21,6 +21,7 @@ Imports:
     difR,
     dplyr,
     ShinyItemAnalysis,
+    mnormt
 Remotes: alexanderrobitzsch/TAM@3.6-8   
 
     
