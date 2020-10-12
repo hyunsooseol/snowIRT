@@ -84,7 +84,7 @@ adjustment; Ho= the data fit the Rasch model."
         allDicho <- TRUE
         for (varName in self$options$vars) {
           var <- self$data[[varName]]
-          if (any(var != 0 && var != 1))
+          if (any(var != 0 || var != 1))
             allDicho <- FALSE
         }
         if (allDicho)

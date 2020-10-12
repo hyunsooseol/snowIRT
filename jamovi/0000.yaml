@@ -1,12 +1,12 @@
 ---
 title: Item Response Theory for jamovi
 name: snowIRT
-version: 3.1.0
+version: 3.1.1
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2020-08-30'
+date: '2020-10-13'
 type: R
 description: >-
   This module includes item and person Statistics, Model fit, Differential Item
