@@ -19,7 +19,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             total = FALSE,
             pmeasure = FALSE,
             pse = FALSE,
-            wrightmap = FALSE,
+            wrightmap = TRUE,
             esc = FALSE, ...) {
 
             super$initialize(
@@ -86,7 +86,7 @@ dichotomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             private$..wrightmap <- jmvcore::OptionBool$new(
                 "wrightmap",
                 wrightmap,
-                default=FALSE)
+                default=TRUE)
             private$..esc <- jmvcore::OptionBool$new(
                 "esc",
                 esc,
@@ -367,7 +367,7 @@ dichotomous <- function(
     total = FALSE,
     pmeasure = FALSE,
     pse = FALSE,
-    wrightmap = FALSE,
+    wrightmap = TRUE,
     esc = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
