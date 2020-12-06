@@ -1,12 +1,12 @@
 ---
 title: Item Response Theory for jamovi
 name: snowIRT
-version: 3.1.1
+version: 3.3.0
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2020-10-13'
+date: '2020-12-06'
 type: R
 description: >-
   This module includes item and person Statistics, Model fit, Differential Item
@@ -34,17 +34,18 @@ analyses:
 datasets:
   - name: dichotomous
     path: dicho.omv
-    description: dichotomous data
+    description: binary data
     tags:
       - Dichotomous
   - name: dif
     path: dif.omv
-    description: DIF data
+    description: Differential Item Functioning
     tags:
       - Dichotomous
+      - DIF
   - name: Polytomous
     path: poly.omv
-    description: Polytomous data
+    description: rating scale data
     tags:
       - Polytomous
 usesNative: true

@@ -5,7 +5,8 @@
 #' @importFrom TAM tam.fit
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.modelfit
-#' @importFrom TAM IRT.WrightMap
+#' @importFrom WrightMap wrightMap
+#' @import RColorBrewer
 #' @importFrom TAM tam
 #' @importFrom difR difRaju
 #' @importFrom TAM tam.wle
@@ -172,7 +173,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         # computing person separation reliability-------
         
-        person<- tam.wle(tamobj)
+        person<- TAM::tam.wle(tamobj)
         
         reliability<- person$WLE.rel
         
@@ -405,14 +406,26 @@ adjustment; Ho= the data fit the Rasch model."
   #### Prepare Plot functions ----
       
       .prepareWrightmapPlot = function(data) {
-        wright = TAM::tam.mml(resp = as.matrix(data))
+       
+        tamobj = TAM::tam.mml(resp = as.matrix(data))
         
+        # item difficulty ---------------
         
-        # Prepare Data For Plot -------
+        imeasure <- tamobj$xsi$xsi
+        
+        # person statistics--------
+        
+        person<- TAM:: tam.wle(tamobj)
+        
+        pmeasure<- person$theta
+        
+        # plot---------
         
         image <- self$results$plot
-        image$setState(wright)
         
+        state <- list(pmeasure, imeasure)
+        
+        image$setState(state)
         
       },
       
@@ -476,10 +489,15 @@ adjustment; Ho= the data fit the Rasch model."
         if (!wrightmap)
           return()
        
+        pmeasure <- image$state[[1]]
+        imeasure <- image$state[[2]]
         
-        wright <- image$state
-        
-        plot <- TAM::IRT.WrightMap(wright)
+        plot <- WrightMap::wrightMap(pmeasure,imeasure,
+                                     show.thr.lab= FALSE,
+                                     thr.sym.cex = 2.0,
+                                     thr.sym.pch = 17,
+                                     axis.persons = "Person distribution",
+                                     thr.sym.col.fg = RColorBrewer::brewer.pal(10, "Paired"))
         
         print(plot)
         TRUE

@@ -2,14 +2,13 @@
 name:  dichotomous
 title: Dichotomous Rasch Model
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name: instructions
       title: Instructions
       type: Html
       visible: True
-      refs: snowIRT
-
+      
     - name: scale
       title: Model Fit
       type: Table
@@ -124,7 +123,7 @@ items:
       height: 500
       renderFun: .plot
       visible: (wrightmap)
-      refs: TAM      
+      refs: WrightMap      
 
     - name: esc
       title: 'Expected Score Curve'

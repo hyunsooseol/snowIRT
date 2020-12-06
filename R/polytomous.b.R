@@ -5,7 +5,8 @@
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.fit
 #' @importFrom TAM tam.modelfit
-#' @importFrom TAM IRT.WrightMap
+#' @importFrom WrightMap wrightMap
+#' @import RColorBrewer
 #' @importFrom TAM tam.threshold
 #' @importFrom TAM tam
 #' @importFrom TAM tam.wle
@@ -169,12 +170,12 @@ adjustment; Ho= the data fit the Rasch model."
         
         # estimate item difficulty measure---------------
         
-        imeasure <- tamobj$xsi$xsi
+        imeasure <- tamobj$item_irt[[3]]
         
         
         # estimate standard error of the item parameter-----
         
-        ise <- tamobj$xsi$se.xsi
+        ise <- tamobj$se.AXsi[,2]
         
         
         # computing infit and outfit statistics---------------------
@@ -188,12 +189,12 @@ adjustment; Ho= the data fit the Rasch model."
         # computing person separation reliability-------
         
        
-        person<- tam.wle(tamobj)
+        person<- TAM::tam.wle(tamobj)
         
         reliability<- person$WLE.rel
         
         
-        # person statistics
+        # person statistics------------------
         
         total<- person$PersonScores
         personmeasure<- person$theta
@@ -220,7 +221,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         # Partial credit model using MML estimation---
         
-        pmeasure <- tamobj$item_irt$beta
+         pmeasure <- tamobj$item_irt$beta
         
         
         results <-
@@ -458,28 +459,47 @@ adjustment; Ho= the data fit the Rasch model."
       #### Plot functions ------------------------
       
       .prepareIccPlot = function(data) {
+        
         # item characteristic curves based on partial credit model--------
         
         tam <- TAM::tam.mml(resp = as.matrix(data))
         
+        
         # Prepare Data For Plot -------
         
-        image <- self$results$get('plot')
+        image <- self$results$plot
         image$setState(tam)
         
       },
       
-      ### wrightmap Plot functions ----
+      ### wrightmap Plot functions ----------------------------
       
       
       .prepareWrightmapPlot = function(data) {
-        wright = TAM::tam.mml(resp = as.matrix(data))
         
         
-        # Prepare Data For wrightmap Plot -------
+        tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+        
+        
+        # person statistics-----------  
+        
+        person<- TAM:: tam.wle(tamobj)
+       
+        pmeasure<- person$theta
+        
+       
+        # item difficulty for rating scale model---------------
+        
+       
+        imeasure <- tamobj$item_irt[[3]]
+        
+        # plot-----------------
         
         image <- self$results$wrightmap
-        image$setState(wright)
+        
+        state <- list(pmeasure, imeasure)
+        
+        image$setState(state)
         
       },
       
@@ -488,6 +508,7 @@ adjustment; Ho= the data fit the Rasch model."
       #================================================================
       
       .plot = function(image, ...) {
+        
         tam <- image$parent$state
         
         if (is.null(tam))
@@ -518,15 +539,21 @@ adjustment; Ho= the data fit the Rasch model."
       # wright map plot--------------
       
       .wrightmapPlot = function(image, ...) {
+        
         wrightmap <- self$options$wrightmap
         
         if (!wrightmap)
           return()
         
+        pmeasure <- image$state[[1]]
+        imeasure <- image$state[[2]]
         
-        wright <- image$state
-        
-        plot1 <- TAM::IRT.WrightMap(wright)
+        plot1 <- WrightMap::wrightMap(pmeasure,imeasure,
+                                     show.thr.lab= FALSE,
+                                     thr.sym.cex = 2.0,
+                                     thr.sym.pch = 17,
+                                     axis.persons = "Person distribution",
+                                     thr.sym.col.fg = RColorBrewer::brewer.pal(10, "Paired"))
         
         print(plot1)
         TRUE

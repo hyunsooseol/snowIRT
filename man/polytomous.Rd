@@ -21,7 +21,7 @@ polytomous(
   personmeasure = FALSE,
   pse = FALSE,
   icc = FALSE,
-  wrightmap = FALSE,
+  wrightmap = TRUE,
   esc = FALSE
 )
 }

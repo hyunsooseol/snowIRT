@@ -79,13 +79,13 @@ difResults <- if (requireNamespace('jmvcore')) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Differential Item Functioning")
+                title="Differential Item Functioning",
+                refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
                 title="Instructions",
-                visible=TRUE,
-                refs="snowIRT"))
+                visible=TRUE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="raju",

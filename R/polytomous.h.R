@@ -21,7 +21,7 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             personmeasure = FALSE,
             pse = FALSE,
             icc = FALSE,
-            wrightmap = FALSE,
+            wrightmap = TRUE,
             esc = FALSE, ...) {
 
             super$initialize(
@@ -96,7 +96,7 @@ polytomousOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             private$..wrightmap <- jmvcore::OptionBool$new(
                 "wrightmap",
                 wrightmap,
-                default=FALSE)
+                default=TRUE)
             private$..esc <- jmvcore::OptionBool$new(
                 "esc",
                 esc,
@@ -176,13 +176,13 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Polytomous Rasch Model")
+                title="Polytomous Rasch Model",
+                refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
                 title="Instructions",
-                visible=TRUE,
-                refs="snowIRT"))
+                visible=TRUE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="scale",
@@ -307,11 +307,11 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="wrightmap",
                 title="Wright Map",
-                width=500,
+                width=800,
                 height=500,
                 renderFun=".wrightmapPlot",
                 visible="(wrightmap)",
-                refs="TAM"))
+                refs="WrightMap"))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="esc",
@@ -328,7 +328,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$add(jmvcore::Array$new(
                 options=options,
                 name="plot",
-                title="Item Characteristic Curve",
+                title="Category Information",
                 items="(vars)",
                 template=jmvcore::Image$new(
                     options=options,
@@ -417,7 +417,7 @@ polytomous <- function(
     personmeasure = FALSE,
     pse = FALSE,
     icc = FALSE,
-    wrightmap = FALSE,
+    wrightmap = TRUE,
     esc = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))

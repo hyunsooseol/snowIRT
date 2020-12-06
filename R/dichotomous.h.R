@@ -158,13 +158,13 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Dichotomous Rasch Model")
+                title="Dichotomous Rasch Model",
+                refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
                 title="Instructions",
-                visible=TRUE,
-                refs="snowIRT"))
+                visible=TRUE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="scale",
@@ -280,7 +280,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 height=500,
                 renderFun=".plot",
                 visible="(wrightmap)",
-                refs="TAM"))
+                refs="WrightMap"))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="esc",

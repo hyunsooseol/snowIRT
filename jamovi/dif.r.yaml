@@ -2,13 +2,12 @@
 name:  dif
 title: Differential Item Functioning
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name: instructions
       title: Instructions
       type: Html
       visible: True
-      refs: snowIRT
 
     - name: raju
       title: Raju’s area method

@@ -87,14 +87,14 @@ options:
       default: false
 
     - name: icc
-      title: Item characteristic curve
+      title: Category information
       type: Bool
       default: false
 
     - name: wrightmap
       title: Wright map
       type: Bool
-      default: false
+      default: TRUE
 
     - name: esc
       title: Expected scores curve

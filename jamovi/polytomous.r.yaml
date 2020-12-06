@@ -2,14 +2,13 @@
 name:  polytomous
 title: Polytomous Rasch Model
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name: instructions
       title: Instructions
       type: Html
       visible: True
-      refs: snowIRT
-
+      
     - name: scale
       title: Model Fit
       type: Table
@@ -133,11 +132,11 @@ items:
     - name: wrightmap
       title: 'Wright Map'
       type: Image
-      width: 500
+      width: 800
       height: 500
       renderFun: .wrightmapPlot
       visible: (wrightmap)
-      refs: TAM
+      refs: WrightMap
       
     - name: esc
       title: 'Expected Score Curve'
@@ -155,7 +154,7 @@ items:
           clearWith: []     
      
     - name: plot
-      title: 'Item Characteristic Curve'
+      title: 'Category Information'
       type: Array
       description: an array of plots
       items: (vars)

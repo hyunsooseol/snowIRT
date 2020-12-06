@@ -29,4 +29,11 @@
         `year`=2018, 
         `title`="ShinyItemAnalysis: for teaching psychometrics and to enforce routine analysis of educational tests", 
         `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=ShinyItemAnalysis", 
-        `url`="https://CRAN.R-project.org/package=ShinyItemAnalysis"))
+        `url`="https://CRAN.R-project.org/package=ShinyItemAnalysis"), 
+    `WrightMap`=list(
+        `type`="software", 
+        `author`="Torres Irribarra, D. & Freund, R.", 
+        `year`=2020, 
+        `title`="Wright Map: IRT item-person map with ConQuest integration", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=WrightMap", 
+        `url`="http://github.com/david-ti/wrightmap"))
