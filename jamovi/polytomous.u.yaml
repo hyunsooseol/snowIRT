@@ -24,7 +24,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Item Statistics
+            label: Rating Scale Model
             fitToGrid: true
             cell:
               column: 0

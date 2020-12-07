@@ -41,8 +41,6 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
             
             <p>- The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE) using TAM package.</p>
-            <p>- The item and model fit statistics are obtained by Andrich's rating scale model using MMLE.</P>
-            <P>- Item characteristic curves are visualized using Partial Credit Model.</p>
             <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
             <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
 
@@ -221,7 +219,8 @@ adjustment; Ho= the data fit the Rasch model."
         
         # Partial credit model using MML estimation---
         
-         pmeasure <- tamobj$item_irt$beta
+        tampartial = TAM::tam.mml(resp = as.matrix(data))
+         pmeasure <- tampartial$item_irt$beta
         
         
         results <-

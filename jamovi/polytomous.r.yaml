@@ -21,7 +21,7 @@ items:
         - name: name
           title: ''
           type: 'text'
-          content: scale
+          content: Scale
 
         - name: reliability
           title: Person Reliability
@@ -73,7 +73,7 @@ items:
           visible: (pmeasure) 
 
     - name:  items
-      title: Item Statistics
+      title: Item Statistics(Rating Scale Model)
       type:  Table
       visible: (imeasure || ise || infit || outfit)
       rows: (vars)

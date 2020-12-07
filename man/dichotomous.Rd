@@ -19,7 +19,7 @@ dichotomous(
   total = FALSE,
   pmeasure = FALSE,
   pse = FALSE,
-  wrightmap = FALSE,
+  wrightmap = TRUE,
   esc = FALSE
 )
 }

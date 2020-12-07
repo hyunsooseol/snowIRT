@@ -196,7 +196,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                         `name`="name", 
                         `title`="", 
                         `type`="text", 
-                        `content`="scale"),
+                        `content`="Scale"),
                     list(
                         `name`="reliability", 
                         `title`="Person Reliability", 
@@ -249,7 +249,7 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="items",
-                title="Item Statistics",
+                title="Item Statistics(Rating Scale Model)",
                 visible="(imeasure || ise || infit || outfit)",
                 rows="(vars)",
                 clearWith=list(
