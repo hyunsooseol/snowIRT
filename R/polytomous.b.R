@@ -496,6 +496,12 @@ adjustment; Ho= the data fit the Rasch model."
         
         image <- self$results$wrightmap
         
+        nvars <- length(self$options$vars)
+        
+        width <- 400 + nvars * 30
+        
+        image$setSize(width, 400)
+        
         state <- list(pmeasure, imeasure)
         
         image$setState(state)

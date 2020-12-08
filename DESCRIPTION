@@ -1,7 +1,7 @@
 Package: snowIRT
 Type: Package
 Title: Item Response Theory for jamovi
-Version: 3.3.0
+Version: 3.3.1
 Date: 2020-12-06
 Author: Hyunsoo Seol
 Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
