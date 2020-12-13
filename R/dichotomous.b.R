@@ -34,16 +34,11 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             <div class='instructions'>
             <p>Welcome to Dichotomous Rasch Model.</p>
 
-            <p><b>To get started:</b></p>
+            <p> Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
+            <p> The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</p>
+            <p> The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
+            <p> Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub.</a></p>
 
-            <p>- Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
-            <p>- Just highlight the variables and click the arrow to move it across into the 'Variables' box.</p>
-            
-            <p>- The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE) using TAM package.</p>
-            <p>- The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a></p>
-            <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
-
-            <p>If you have any questions, please e-mail me: snow@cau.ac.kr</a></p>
             </div>
             </body>
             </html>"
@@ -276,7 +271,7 @@ adjustment; Ho= the data fit the Rasch model."
           var <- vars[[i]]
           
           matrix$addColumn(
-            name = paste0(var, '[r]'),
+            name = paste0(var),
             title = var,
             type = 'number',
             format = 'zto'
@@ -292,10 +287,10 @@ adjustment; Ho= the data fit the Rasch model."
             for (j in seq(i, nVars)) {
               v <- vars[[j]]
               
-              values[[paste0(v, '[r]')]]  <- ''
+              values[[paste0(v)]]  <- ''
               
             }
-            values[[paste0(var, '[r]')]]  <- '\u2014'
+            values[[paste0(var)]]  <- '\u2014'
             matrix$setRow(rowKey = var, values)
             
           }
@@ -316,7 +311,7 @@ adjustment; Ho= the data fit the Rasch model."
             for (j in seq_len(i - 1)) {
               values <- list()
               
-              values[[paste0(vars[[j]], '[r]')]] <- mat[i, j]
+              values[[paste0(vars[[j]])]] <- mat[i, j]
               
               matrix$setRow(rowNo = i, values)
             }

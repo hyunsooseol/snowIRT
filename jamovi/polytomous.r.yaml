@@ -44,16 +44,11 @@ items:
       refs: TAM
       
       columns:
-          - name: .name[r]
+          - name: .name
             title: ""
             type: text
             content: ($key)
             combineBelow: true
-
-          - name: .stat[r]
-            title: ""
-            type: text
-            content: r  
 
     - name: thresh
       title: Partial credit model

@@ -36,15 +36,11 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             <div class='instructions'>
             <p>Welcome to DIF Rasch Model.</p>
 
-            <p><b>To get started:</b></p>
-
-            <p>- Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
-            <P>- The focal group should be coded as 1.</P>
-
-            <p>- The Raju's Z statistics are estimated by Marginal Maximum Likelihood Estimation(JMLE) using TAM package and area method is obtained by using the unsigned areas between the ICCs.</p>
+            <p> Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
+            <P> The focal group should be coded as 1.</P>
+            <p> The Raju's Z statistics are estimated by Marginal Maximum Likelihood Estimation(MMLE),and area method is obtained by using the unsigned areas between the ICCs.</p>
+            <p> Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub.</a></p>
             
-            <p>- Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub</a></p>
-            <p>If you have any questions, please e-mail me: snow@cau.ac.kr</a></p>
             </div>
             </body>
             </html>"
