@@ -275,7 +275,7 @@ dichotomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 height=500,
                 renderFun=".plot",
                 visible="(wrightmap)",
-                refs="WrightMap"))
+                refs="ShinyItemAnalysis"))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="esc",

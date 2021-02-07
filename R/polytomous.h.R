@@ -302,11 +302,11 @@ polytomousResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="wrightmap",
                 title="Wright Map",
-                width=800,
+                width=500,
                 height=500,
                 renderFun=".wrightmapPlot",
                 visible="(wrightmap)",
-                refs="WrightMap"))
+                refs="ShinyItemAnalysis"))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="esc",

@@ -118,7 +118,7 @@ items:
       height: 500
       renderFun: .plot
       visible: (wrightmap)
-      refs: WrightMap      
+      refs: ShinyItemAnalysis      
 
     - name: esc
       title: 'Expected Score Curve'

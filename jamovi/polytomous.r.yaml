@@ -127,11 +127,11 @@ items:
     - name: wrightmap
       title: 'Wright Map'
       type: Image
-      width: 800
+      width: 500
       height: 500
       renderFun: .wrightmapPlot
       visible: (wrightmap)
-      refs: WrightMap
+      refs: ShinyItemAnalysis
       
     - name: esc
       title: 'Expected Score Curve'

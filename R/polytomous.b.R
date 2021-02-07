@@ -5,11 +5,11 @@
 #' @importFrom TAM tam.mml
 #' @importFrom TAM tam.fit
 #' @importFrom TAM tam.modelfit
-#' @importFrom WrightMap wrightMap
-#' @import RColorBrewer
 #' @importFrom TAM tam.threshold
 #' @importFrom TAM tam
 #' @importFrom TAM tam.wle
+#' @importFrom ShinyItemAnalysis ggWrightMap
+#' @import ggplot2
 #' @export
 
 
@@ -493,9 +493,9 @@ adjustment; Ho= the data fit the Rasch model."
         
         nvars <- length(self$options$vars)
         
-        width <- 400 + nvars * 30
-        
-        image$setSize(width, 400)
+        # width <- 400 + nvars * 30
+        # 
+        # image$setSize(width, 400)
         
         state <- list(pmeasure, imeasure)
         
@@ -538,7 +538,7 @@ adjustment; Ho= the data fit the Rasch model."
  
       # wright map plot--------------
       
-      .wrightmapPlot = function(image, ...) {
+      .wrightmapPlot = function(image,ggtheme, theme, ...) {
         
         wrightmap <- self$options$wrightmap
         
@@ -548,12 +548,22 @@ adjustment; Ho= the data fit the Rasch model."
         pmeasure <- image$state[[1]]
         imeasure <- image$state[[2]]
         
-        plot1 <- WrightMap::wrightMap(pmeasure,imeasure,
-                                     show.thr.lab= FALSE,
-                                     thr.sym.cex = 2.0,
-                                     thr.sym.pch = 17,
-                                     axis.persons = "Person distribution",
-                                     thr.sym.col.fg = RColorBrewer::brewer.pal(10, "Paired"))
+        # plot1 <- WrightMap::wrightMap(pmeasure,imeasure,
+        #                              show.thr.lab= FALSE,
+        #                              thr.sym.cex = 2.0,
+        #                              thr.sym.pch = 17,
+        #                              axis.persons = "Person distribution",
+        #                              thr.sym.col.fg = RColorBrewer::brewer.pal(10, "Paired"))
+        # 
+        
+        plot1<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
+                                              color = "green")
+        
+        
+        
+        plot1 <- plot1+ggtheme
+        
+        
         
         print(plot1)
         TRUE
