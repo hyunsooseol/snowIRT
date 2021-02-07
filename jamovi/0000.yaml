@@ -6,7 +6,7 @@ jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: 2020-2-7
+date: 2021-2-7
 type: R
 description: >-
   This module includes item and person Statistics, Model fit, Differential Item
