@@ -43,7 +43,7 @@ children:
         margin: large
         children:
          - type: Label
-           label: 'Plot'
+           label: 'Plots'
            children:
              - type: CheckBox
                name: zplot

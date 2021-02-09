@@ -32,8 +32,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             </head>
             <body>
             <div class='instructions'>
-            <p>Welcome to Dichotomous Rasch Model.</p>
-
+            
             <p> Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p> The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</p>
             <p> The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
@@ -501,7 +500,7 @@ adjustment; Ho= the data fit the Rasch model."
         # 
        
         plot<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
-                                              color = "green")
+                                              color = "deepskyblue")
                                               
                                               
         

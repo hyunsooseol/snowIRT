@@ -78,7 +78,7 @@ children:
               - type: CheckBox
                 name: pse
   - type: CollapseBox
-    label: Plot
+    label: Plots
     margin: normal
     collapsed: true
     children:

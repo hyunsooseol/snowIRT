@@ -73,7 +73,7 @@ children:
               - type: CheckBox
                 name: mat
   - type: CollapseBox
-    label: Plot
+    label: Plots
     margin: normal
     collapsed: true
     children:

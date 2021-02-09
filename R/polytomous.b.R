@@ -32,8 +32,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             </head>
             <body>
             <div class='instructions'>
-            <p> Welcome to Polytomous Rasch Model.</p>
-
+           
             <p> Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
             
             <p> The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
@@ -557,7 +556,7 @@ adjustment; Ho= the data fit the Rasch model."
         # 
         
         plot1<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
-                                              color = "green")
+                                              color = "deepskyblue")
         
         
         
