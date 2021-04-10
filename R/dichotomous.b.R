@@ -34,6 +34,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             <div class='instructions'>
             
             <p> Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
+            <p> The results of <b> Save </b> will be displayed in the datasheet.</p>
             <p> The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</p>
             <p> The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
             <p> Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub.</a></p>
@@ -370,6 +371,7 @@ adjustment; Ho= the data fit the Rasch model."
          
            total <- results$total
            
+           self$results$total$setRowNums(rownames(data))
            self$results$total$setValues(total)
            
          }
@@ -379,6 +381,7 @@ adjustment; Ho= the data fit the Rasch model."
            
            pmeasure <- results$pmeasure
            
+           self$results$pmeasure$setRowNums(rownames(data))
            self$results$pmeasure$setValues(pmeasure)
            
          }
@@ -388,6 +391,7 @@ adjustment; Ho= the data fit the Rasch model."
            
            pse <- results$pse
            
+           self$results$pse$setRowNums(rownames(data))
            self$results$pse$setValues(pse)
            
          }
