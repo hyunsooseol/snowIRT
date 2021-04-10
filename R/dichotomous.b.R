@@ -111,8 +111,11 @@ adjustment; Ho= the data fit the Rasch model."
           
           # Populate person table-----
           
-          private$.populatePersonTable(results)
+         # private$.populatePersonTable(results)
           
+          # populate output variables-----
+          
+          private$.populateOutputs(results)
           
           # prepare plot-----
           
@@ -357,42 +360,79 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
- # person statistics
  
-      .populatePersonTable = function(results) {  
-      
-        data <- self$data
-        
-        table <- self$results$persons
-        
-        
-        #result---
-        
-        total <- results$total
-        
-        pmeasure <- results$pmeasure
-        
-        pse <- results$pse
-        
-        
-        for (i in 1:nrow(data)) {
-          
-          row <- list()
-          
-          
-          row[["total"]] <- total[i]
-          
-          row[["pmeasure"]] <- pmeasure[i]
-          
-          row[["pse"]] <- pse[i]
+######### person output variables========================
+
+       .populateOutputs= function(results) {
          
-          table$addRow(rowKey = i, values = row)
-          
-        }
-        
+         if (self$options$total&& self$results$total$isNotFilled()){
+         
+         
+           total <- results$total
+           
+           self$results$total$setValues(total)
+           
+         }
+         
+         if (self$options$pmeasure&& self$results$pmeasure$isNotFilled()){
+           
+           
+           pmeasure <- results$pmeasure
+           
+           self$results$pmeasure$setValues(pmeasure)
+           
+         }
+         
+         if (self$options$pse&& self$results$pse$isNotFilled()){
+           
+           
+           pse <- results$pse
+           
+           self$results$pse$setValues(pse)
+           
+         }
+         
+         
+       },
+      
+      
+      
+      # person statistics
+ 
+      # .populatePersonTable = function(results) {  
+      # 
+      #   data <- self$data
+      #   
+      #   table <- self$results$persons
+      #   
+      #   
+      #   #result---
+      #   
+      #   total <- results$total
+      #   
+      #   pmeasure <- results$pmeasure
+      #   
+      #   pse <- results$pse
+      #   
+      #   
+      #   for (i in 1:nrow(data)) {
+      #     
+      #     row <- list()
+      #     
+      #     
+      #     row[["total"]] <- total[i]
+      #     
+      #     row[["pmeasure"]] <- pmeasure[i]
+      #     
+      #     row[["pse"]] <- pse[i]
+      #    
+      #     table$addRow(rowKey = i, values = row)
+      #     
+      #   }
+      #   
       
         
-      },
+      # },
       
       
       
@@ -482,7 +522,7 @@ adjustment; Ho= the data fit the Rasch model."
  
  #================================================================
       
-      .plot = function(image,ggtheme, theme, ...){
+      .plot = function(image,...){
         wrightmap <- self$options$wrightmap
         
         if (!wrightmap)
@@ -504,7 +544,7 @@ adjustment; Ho= the data fit the Rasch model."
                                               
                                               
         
-        plot <- plot+ggtheme
+       # plot <- plot+ggtheme
         
         
         print(plot)

@@ -16,9 +16,6 @@ dichotomous(
   modelfit = FALSE,
   modelfitp = FALSE,
   mat = FALSE,
-  total = FALSE,
-  pmeasure = FALSE,
-  pse = FALSE,
   wrightmap = TRUE,
   esc = FALSE
 )
@@ -46,12 +43,6 @@ dichotomous(
 
 \item{mat}{.}
 
-\item{total}{.}
-
-\item{pmeasure}{.}
-
-\item{pse}{.}
-
 \item{wrightmap}{.}
 
 \item{esc}{.}
@@ -63,9 +54,11 @@ A results object containing:
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
-  \code{results$persons} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+  \code{results$total} \tab \tab \tab \tab \tab an output \cr
+  \code{results$pmeasure} \tab \tab \tab \tab \tab an output \cr
+  \code{results$pse} \tab \tab \tab \tab \tab an output \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
