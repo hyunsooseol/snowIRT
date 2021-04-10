@@ -97,33 +97,7 @@ items:
         - name: outfit
           title: Outfit 
           visible: (outfit)  
-          
-    - name: persons
-      title: Person Statistics
-      type: Table
-      visible: (total || personmeasure || pse)
-      clearWith:
-        - vars
-      refs: TAM
-        
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
-
-        - name: total
-          title: Total score
-          visible: (total)
-
-        - name: personmeasure
-          title: Measure
-          visible: (personmeasure) 
-          
-        - name: pse
-          title: S.E.Measure
-          visible: (pse)  
-
+    
     - name: wrightmap
       title: 'Wright Map'
       type: Image
@@ -163,5 +137,27 @@ items:
           renderFun: .plot
           clearWith: []
           
-
+    - name: total
+      title: Total
+      type: Output
+      varTitle: Total
+      measureType: continuous
+      clearWith:
+        - vars
+  
+    - name: personmeasure
+      title: Measure
+      type: Output
+      varTitle: Measure
+      measureType: continuous
+      clearWith:
+        - vars
+        
+    - name: pse
+      title: SE
+      type: Output
+      varTitle: SE
+      measureType: continuous
+      clearWith:
+        - vars      
 ...

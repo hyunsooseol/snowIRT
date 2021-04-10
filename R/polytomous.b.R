@@ -34,7 +34,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             <div class='instructions'>
            
             <p> Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
-            
+            <p> The results of <b> Save </b> will be displayed in the datasheet.</p>
             <p> The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
             <p> The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
             <p> Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub.</a></p>
@@ -126,7 +126,11 @@ adjustment; Ho= the data fit the Rasch model."
           
           # populate person table------
           
-          private$.populatePersonTable(results)
+         # private$.populatePersonTable(results)
+          
+          # populate output variables-----
+          
+          private$.populateOutputs(results)
           
           #prepare plot-----
           
@@ -412,42 +416,78 @@ adjustment; Ho= the data fit the Rasch model."
         }
       },
       
-   
+   ##### person statistics for output variable-------------------
+      
+   .populateOutputs= function(results) {
+     
+     if (self$options$total&& self$results$total$isNotFilled()){
+       
+       
+       total <- results$total
+       
+       self$results$total$setRowNums(rownames(data))
+       self$results$total$setValues(total)
+       
+     }
+      
+     if (self$options$personmeasure&& self$results$personmeasure$isNotFilled()){
+       
+       
+       personmeasure <- results$personmeasure
+       
+       self$results$personmeasure$setRowNums(rownames(data))
+       self$results$personmeasure$setValues(personmeasure)
+       
+     }
+     
+     if (self$options$pse&& self$results$pse$isNotFilled()){
+       
+       
+       pse <- results$pse
+       
+       self$results$pse$setRowNums(rownames(data))
+       self$results$pse$setValues(pse)
+       
+     }
+     
+     
+   },
+      
       # populate person tables----------------------
       
-      .populatePersonTable = function(results) {
-        
-        table <- self$results$persons
-        
-         data<- self$data
-      
-         #result---
-         
-         total <- results$total
-         
-         personmeasure <- results$personmeasure
-         
-         pse <- results$pse
-         
-         
-         for (i in 1:nrow(data)) {
-           
-           row <- list()
-           
-           
-           row[["total"]] <- total[i]
-           
-           row[["personmeasure"]] <- personmeasure[i]
-           
-           row[["pse"]] <- pse[i]
-           
-           table$addRow(rowKey = i, values = row)
-           
-         }
-         
-         
-      },
-         
+      # .populatePersonTable = function(results) {
+      #   
+      #   table <- self$results$persons
+      #   
+      #    data<- self$data
+      # 
+      #    #result---
+      #    
+      #    total <- results$total
+      #    
+      #    personmeasure <- results$personmeasure
+      #    
+      #    pse <- results$pse
+      #    
+      #    
+      #    for (i in 1:nrow(data)) {
+      #      
+      #      row <- list()
+      #      
+      #      
+      #      row[["total"]] <- total[i]
+      #      
+      #      row[["personmeasure"]] <- personmeasure[i]
+      #      
+      #      row[["pse"]] <- pse[i]
+      #      
+      #      table$addRow(rowKey = i, values = row)
+      #      
+      #    }
+      #    
+      #    
+      # },
+      #    
       
       #### Plot functions ------------------------
       
@@ -478,7 +518,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         person<- TAM:: tam.wle(tamobj)
        
-        pmeasure<- person$theta
+        personmeasure<- person$theta
         
        
         # item difficulty for rating scale model---------------
@@ -496,7 +536,7 @@ adjustment; Ho= the data fit the Rasch model."
         # 
         # image$setSize(width, 400)
         
-        state <- list(pmeasure, imeasure)
+        state <- list(personmeasure, imeasure)
         
         image$setState(state)
         
@@ -537,14 +577,14 @@ adjustment; Ho= the data fit the Rasch model."
  
       # wright map plot--------------
       
-      .wrightmapPlot = function(image,ggtheme, theme, ...) {
+      .wrightmapPlot = function(image,...) {
         
         wrightmap <- self$options$wrightmap
         
         if (!wrightmap)
           return()
         
-        pmeasure <- image$state[[1]]
+        personmeasure <- image$state[[1]]
         imeasure <- image$state[[2]]
         
         # plot1 <- WrightMap::wrightMap(pmeasure,imeasure,
@@ -555,12 +595,12 @@ adjustment; Ho= the data fit the Rasch model."
         #                              thr.sym.col.fg = RColorBrewer::brewer.pal(10, "Paired"))
         # 
         
-        plot1<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
+        plot1<- ShinyItemAnalysis::ggWrightMap(personmeasure, imeasure,
                                               color = "deepskyblue")
         
         
         
-        plot1 <- plot1+ggtheme
+        # plot1 <- plot1+ggtheme
         
         
         

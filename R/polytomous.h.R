@@ -17,9 +17,6 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             mat = FALSE,
             thresh = FALSE,
             pmeasure = FALSE,
-            total = FALSE,
-            personmeasure = FALSE,
-            pse = FALSE,
             icc = FALSE,
             wrightmap = TRUE,
             esc = FALSE, ...) {
@@ -77,18 +74,6 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "pmeasure",
                 pmeasure,
                 default=FALSE)
-            private$..total <- jmvcore::OptionBool$new(
-                "total",
-                total,
-                default=FALSE)
-            private$..personmeasure <- jmvcore::OptionBool$new(
-                "personmeasure",
-                personmeasure,
-                default=FALSE)
-            private$..pse <- jmvcore::OptionBool$new(
-                "pse",
-                pse,
-                default=FALSE)
             private$..icc <- jmvcore::OptionBool$new(
                 "icc",
                 icc,
@@ -101,6 +86,12 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "esc",
                 esc,
                 default=FALSE)
+            private$..total <- jmvcore::OptionOutput$new(
+                "total")
+            private$..personmeasure <- jmvcore::OptionOutput$new(
+                "personmeasure")
+            private$..pse <- jmvcore::OptionOutput$new(
+                "pse")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -113,12 +104,12 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..mat)
             self$.addOption(private$..thresh)
             self$.addOption(private$..pmeasure)
-            self$.addOption(private$..total)
-            self$.addOption(private$..personmeasure)
-            self$.addOption(private$..pse)
             self$.addOption(private$..icc)
             self$.addOption(private$..wrightmap)
             self$.addOption(private$..esc)
+            self$.addOption(private$..total)
+            self$.addOption(private$..personmeasure)
+            self$.addOption(private$..pse)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -132,12 +123,12 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         mat = function() private$..mat$value,
         thresh = function() private$..thresh$value,
         pmeasure = function() private$..pmeasure$value,
-        total = function() private$..total$value,
-        personmeasure = function() private$..personmeasure$value,
-        pse = function() private$..pse$value,
         icc = function() private$..icc$value,
         wrightmap = function() private$..wrightmap$value,
-        esc = function() private$..esc$value),
+        esc = function() private$..esc$value,
+        total = function() private$..total$value,
+        personmeasure = function() private$..personmeasure$value,
+        pse = function() private$..pse$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -150,12 +141,12 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..mat = NA,
         ..thresh = NA,
         ..pmeasure = NA,
-        ..total = NA,
-        ..personmeasure = NA,
-        ..pse = NA,
         ..icc = NA,
         ..wrightmap = NA,
-        ..esc = NA)
+        ..esc = NA,
+        ..total = NA,
+        ..personmeasure = NA,
+        ..pse = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -167,10 +158,12 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         mat = function() private$.items[["mat"]],
         thresh = function() private$.items[["thresh"]],
         items = function() private$.items[["items"]],
-        persons = function() private$.items[["persons"]],
         wrightmap = function() private$.items[["wrightmap"]],
         esc = function() private$.items[["esc"]],
-        plot = function() private$.items[["plot"]]),
+        plot = function() private$.items[["plot"]],
+        total = function() private$.items[["total"]],
+        personmeasure = function() private$.items[["personmeasure"]],
+        pse = function() private$.items[["pse"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -273,32 +266,6 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="outfit", 
                         `title`="Outfit", 
                         `visible`="(outfit)"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="persons",
-                title="Person Statistics",
-                visible="(total || personmeasure || pse)",
-                clearWith=list(
-                    "vars"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="($key)"),
-                    list(
-                        `name`="total", 
-                        `title`="Total score", 
-                        `visible`="(total)"),
-                    list(
-                        `name`="personmeasure", 
-                        `title`="Measure", 
-                        `visible`="(personmeasure)"),
-                    list(
-                        `name`="pse", 
-                        `title`="S.E.Measure", 
-                        `visible`="(pse)"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="wrightmap",
@@ -333,7 +300,31 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     height=300,
                     visible="(icc)",
                     renderFun=".plot",
-                    clearWith=list())))}))
+                    clearWith=list())))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="total",
+                title="Total",
+                varTitle="Total",
+                measureType="continuous",
+                clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="personmeasure",
+                title="Measure",
+                varTitle="Measure",
+                measureType="continuous",
+                clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="pse",
+                title="SE",
+                varTitle="SE",
+                measureType="continuous",
+                clearWith=list(
+                    "vars")))}))
 
 polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "polytomousBase",
@@ -370,9 +361,6 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param mat .
 #' @param thresh .
 #' @param pmeasure .
-#' @param total .
-#' @param personmeasure .
-#' @param pse .
 #' @param icc .
 #' @param wrightmap .
 #' @param esc .
@@ -383,10 +371,12 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$persons} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
+#'   \code{results$total} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$personmeasure} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -409,9 +399,6 @@ polytomous <- function(
     mat = FALSE,
     thresh = FALSE,
     pmeasure = FALSE,
-    total = FALSE,
-    personmeasure = FALSE,
-    pse = FALSE,
     icc = FALSE,
     wrightmap = TRUE,
     esc = FALSE) {
@@ -438,9 +425,6 @@ polytomous <- function(
         mat = mat,
         thresh = thresh,
         pmeasure = pmeasure,
-        total = total,
-        personmeasure = personmeasure,
-        pse = pse,
         icc = icc,
         wrightmap = wrightmap,
         esc = esc)

@@ -64,19 +64,6 @@ children:
                 name: modelfitp
               - type: CheckBox
                 name: mat
-          - type: Label
-            label: Person Statistics
-            fitToGrid: true
-            cell:
-              column: 0
-              row: 1
-            children:
-              - type: CheckBox
-                name: total
-              - type: CheckBox
-                name: personmeasure
-              - type: CheckBox
-                name: pse
   - type: CollapseBox
     label: Plots
     margin: normal
@@ -99,4 +86,18 @@ children:
                 name: esc
               - type: CheckBox
                 name: icc
-             
+  - type: CollapseBox
+    label: Save
+    collapsed: true
+    stretchFactor: 1
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: Output
+            name: total
+          - type: Output
+            name: personmeasure
+          - type: Output
+            name: pse            
