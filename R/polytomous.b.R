@@ -74,23 +74,24 @@ adjustment; Ho= the data fit the Rasch model."
       #======================================++++++++++++++++++++++
       
       .run = function() {
-        allDicho <- TRUE
-        for (varName in self$options$vars) {
-          var <- self$data[[varName]]
-          if (any(var != 0 || var != 1))
-            allDicho <- FALSE
-        }
-        if (allDicho)
-          stop(
-            'The polytomous model requires Likert-type items,
-          for binary data use the dichotomous model instead.'
-          )
         
-        # get variables-------
-        
-        data <- self$data
-        
-        vars <- self$options$get('vars')
+        # allDicho <- TRUE
+        # for (varName in self$options$vars) {
+        #   var <- self$data[[varName]]
+        #   if (any(var != 0 || var != 1))
+        #     allDicho <- FALSE
+        # }
+        # if (allDicho)
+        #   stop(
+        #     'The polytomous model requires Likert-type items,
+        #   for binary data use the dichotomous model instead.'
+        #   )
+        # 
+        # # get variables-------
+        # 
+        # data <- self$data
+        # 
+        # vars <- self$options$get('vars')
         
         
         # Ready--------
@@ -130,7 +131,7 @@ adjustment; Ho= the data fit the Rasch model."
           
           # populate output variables-----
           
-          private$.populateOutputs(results)
+          private$.populateOutputs(data)
           
           #prepare plot-----
           
@@ -152,12 +153,12 @@ adjustment; Ho= the data fit the Rasch model."
       # compute results=====================================================
       
       .compute = function(data) {
-        # get variables------
-        
-        data <- self$data
-        
-        vars <- self$options$get('vars')
-        
+        # # get variables------
+        # 
+        # data <- self$data
+        # 
+        # vars <- self$options$get('vars')
+        # 
         
         # estimate the Rasch model with MML using function 'tam.mml'-----
         
@@ -192,10 +193,10 @@ adjustment; Ho= the data fit the Rasch model."
         
         # person statistics------------------
         
-        total<- person$PersonScores
-        personmeasure<- person$theta
-        pse <- person$error
-        
+        # total<- person$PersonScores
+        # personmeasure<- person$theta
+        # pse <- person$error
+        # 
         #computing an effect size of model fit(MADaQ3)-------
         
        # assess model fit
@@ -227,9 +228,9 @@ adjustment; Ho= the data fit the Rasch model."
             'ise' = ise,
             'infit' = infit,
             'outfit' = outfit,
-            'total' = total,
-            'personmeasure'=personmeasure,
-            'pse'=pse,
+            # 'total' = total,
+            # 'personmeasure'=personmeasure,
+            # 'pse'=pse,
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
@@ -418,12 +419,17 @@ adjustment; Ho= the data fit the Rasch model."
       
    ##### person statistics for output variable-------------------
       
-   .populateOutputs= function(results) {
+   .populateOutputs= function(data) {
      
      if (self$options$total&& self$results$total$isNotFilled()){
        
+       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+       person<- TAM::tam.wle(tamobj)
        
-       total <- results$total
+       total<- person$PersonScores
+      
+      
+       # total <- results$total
        
        self$results$total$setRowNums(rownames(data))
        self$results$total$setValues(total)
@@ -432,8 +438,11 @@ adjustment; Ho= the data fit the Rasch model."
       
      if (self$options$personmeasure&& self$results$personmeasure$isNotFilled()){
        
+       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+       person<- TAM::tam.wle(tamobj)
        
-       personmeasure <- results$personmeasure
+       personmeasure<- person$theta
+       # personmeasure <- results$personmeasure
        
        self$results$personmeasure$setRowNums(rownames(data))
        self$results$personmeasure$setValues(personmeasure)
@@ -442,8 +451,11 @@ adjustment; Ho= the data fit the Rasch model."
      
      if (self$options$pse&& self$results$pse$isNotFilled()){
        
+       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+       person<- TAM::tam.wle(tamobj)
        
-       pse <- results$pse
+       pse <- person$error
+       # pse <- results$pse
        
        self$results$pse$setRowNums(rownames(data))
        self$results$pse$setValues(pse)
