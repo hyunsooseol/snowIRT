@@ -69,19 +69,19 @@ adjustment; Ho= the data fit the Rasch model."
       #======================================++++++++++++++++++++++
       .run = function() {
 
-        for (varName in self$options$vars) {
-          var <- self$data[[varName]]
-          if (any(var < 0) | any(var >= 2))
-            stop('The dichotomous model requires dichotomos items(values 0 and 1)')
-        }
+        # for (varName in self$options$vars) {
+        #   var <- self$data[[varName]]
+        #   if (any(var < 0) | any(var >= 2))
+        #     stop('The dichotomous model requires dichotomos items(values 0 and 1)')
+        # }
 
         
-        # get variables-------
-        
-        data <- self$data
-        
-        vars <- self$options$vars
-        
+        # # get variables-------
+        # 
+        # data <- self$data
+        # 
+        # vars <- self$options$vars
+        # 
         
         # Ready--------
         
@@ -95,6 +95,7 @@ adjustment; Ho= the data fit the Rasch model."
         if (ready) {
           
           data <- private$.cleanData()
+          
           
           results <- private$.compute(data)
           
@@ -116,7 +117,7 @@ adjustment; Ho= the data fit the Rasch model."
           
           # populate output variables-----
           
-          private$.populateOutputs(results)
+          private$.populateOutputs(data)
           
           # prepare plot-----
           
@@ -135,11 +136,11 @@ adjustment; Ho= the data fit the Rasch model."
       .compute = function(data) {
         
         # get variables------
-        
-        data <- self$data
-        
-        vars <- self$options$vars
-        
+        # 
+        # data <- self$data
+        # 
+        # vars <- self$options$vars
+        # 
       
         # estimate the Rasch model with MMLE-----
         
@@ -177,10 +178,10 @@ adjustment; Ho= the data fit the Rasch model."
         
         # person statistics
         
-        total<- person$PersonScores
-        pmeasure<- person$theta
-        pse <- person$error
-        
+        # total<- person$PersonScores
+        # pmeasure<- person$theta
+        # pse <- person$error
+        # 
         
         #computing an effect size of model fit(MADaQ3) using MML-------
         
@@ -206,9 +207,9 @@ adjustment; Ho= the data fit the Rasch model."
             'ise' = ise,
             'infit' = infit,
             'outfit' = outfit,
-            'total' = total,
-            'pmeasure'=pmeasure,
-            'pse'=pse,
+            # 'total' = total,
+            # 'pmeasure'=pmeasure,
+            # 'pse'=pse,
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
@@ -364,41 +365,55 @@ adjustment; Ho= the data fit the Rasch model."
  
 ######### person output variables========================
 
-       .populateOutputs= function(results) {
+       .populateOutputs= function(data) {
          
-         if (self$options$total&& self$results$total$isNotFilled()){
+         if (self$options$total && self$results$total$isNotFilled()) {
          
-         
-           total <- results$total
+           tamobj = TAM::tam.mml(resp = as.matrix(data))
+           person<- TAM::tam.wle(tamobj)
+           
+          
+           # person statistics
+           
+           total<- person$PersonScores
+           
+           # total <- results$total
            
            self$results$total$setRowNums(rownames(data))
            self$results$total$setValues(total)
            
          }
          
-         if (self$options$pmeasure&& self$results$pmeasure$isNotFilled()){
+         if (self$options$pmeasure && self$results$pmeasure$isNotFilled()) {
            
+           tamobj = TAM::tam.mml(resp = as.matrix(data))
+           person<- TAM::tam.wle(tamobj)
+          
+            pmeasure<- person$theta
            
-           pmeasure <- results$pmeasure
+           # pmeasure <- results$pmeasure
            
            self$results$pmeasure$setRowNums(rownames(data))
            self$results$pmeasure$setValues(pmeasure)
            
          }
          
-         if (self$options$pse&& self$results$pse$isNotFilled()){
+         if (self$options$pse && self$results$pse$isNotFilled()) {
+           
+           tamobj = TAM::tam.mml(resp = as.matrix(data))
+           person<- TAM::tam.wle(tamobj)
            
            
-           pse <- results$pse
+            pse <- person$error
+           
+          # pse <- results$pse
            
            self$results$pse$setRowNums(rownames(data))
            self$results$pse$setValues(pse)
            
          }
          
-         
        },
-      
       
       
       # person statistics
