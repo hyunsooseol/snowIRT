@@ -74,7 +74,7 @@ adjustment; Ho= the data fit the Rasch model."
       #======================================++++++++++++++++++++++
       
       .run = function() {
-        
+        # 
         # allDicho <- TRUE
         # for (varName in self$options$vars) {
         #   var <- self$data[[varName]]
