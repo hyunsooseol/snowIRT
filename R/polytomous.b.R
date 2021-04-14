@@ -461,8 +461,34 @@ adjustment; Ho= the data fit the Rasch model."
        self$results$pse$setValues(pse)
        
      }
+    
+     if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
+       
+       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+       
+       fit <- TAM::tam.personfit(tamobj)
+       
+       pinfit <- fit$infitPerson
+       
+       self$results$pinfit$setRowNums(rownames(data))
+       self$results$pinfit$setValues(pinfit)
+       
+     }
      
+     if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
+       
+       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+       
+       fit <- TAM::tam.personfit(tamobj)
+       
+       poutfit <- fit$outfitPerson
+       
+       self$results$poutfit$setRowNums(rownames(data))
+       self$results$poutfit$setValues(poutfit)
+       
+     }
      
+    
    },
       
       # populate person tables----------------------

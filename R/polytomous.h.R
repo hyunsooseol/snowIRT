@@ -92,6 +92,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "personmeasure")
             private$..pse <- jmvcore::OptionOutput$new(
                 "pse")
+            private$..pinfit <- jmvcore::OptionOutput$new(
+                "pinfit")
+            private$..poutfit <- jmvcore::OptionOutput$new(
+                "poutfit")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -110,6 +114,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..total)
             self$.addOption(private$..personmeasure)
             self$.addOption(private$..pse)
+            self$.addOption(private$..pinfit)
+            self$.addOption(private$..poutfit)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -128,7 +134,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         esc = function() private$..esc$value,
         total = function() private$..total$value,
         personmeasure = function() private$..personmeasure$value,
-        pse = function() private$..pse$value),
+        pse = function() private$..pse$value,
+        pinfit = function() private$..pinfit$value,
+        poutfit = function() private$..poutfit$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -146,7 +154,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..esc = NA,
         ..total = NA,
         ..personmeasure = NA,
-        ..pse = NA)
+        ..pse = NA,
+        ..pinfit = NA,
+        ..poutfit = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -163,7 +173,9 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot = function() private$.items[["plot"]],
         total = function() private$.items[["total"]],
         personmeasure = function() private$.items[["personmeasure"]],
-        pse = function() private$.items[["pse"]]),
+        pse = function() private$.items[["pse"]],
+        pinfit = function() private$.items[["pinfit"]],
+        poutfit = function() private$.items[["poutfit"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -324,6 +336,22 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 varTitle="SE",
                 measureType="continuous",
                 clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="pinfit",
+                title="Infit",
+                varTitle="Infit",
+                measureType="continuous",
+                clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="poutfit",
+                title="Outfit",
+                varTitle="Outfit",
+                measureType="continuous",
+                clearWith=list(
                     "vars")))}))
 
 polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -377,6 +405,8 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$total} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$personmeasure} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

@@ -39,12 +39,12 @@ children:
               - type: CheckBox
                 name: outfit
           - type: Label
-            label: Partical Credit Model      
-            children:    
+            label: Partical Credit Model
+            children:
               - type: CheckBox
                 name: thresh
               - type: CheckBox
-                name: pmeasure  
+                name: pmeasure
       - type: LayoutBox
         stretchFactor: 1
         margin: large
@@ -88,16 +88,38 @@ children:
                 name: icc
   - type: CollapseBox
     label: Save
+    margin: normal
     collapsed: true
-    stretchFactor: 1
     children:
       - type: LayoutBox
-        margin: large
         stretchFactor: 1
+        margin: large
         children:
-          - type: Output
-            name: total
-          - type: Output
-            name: personmeasure
-          - type: Output
-            name: pse            
+          - type: Label
+            label: Person Statistics
+            fitToGrid: true
+            cell:
+              column: 0
+              row: 0
+            children:
+              - type: Output
+                name: total
+              - type: Output
+                name: personmeasure
+              - type: Output
+                name: pse
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
+          - type: Label
+            label: Person Fit
+            children:
+              - type: Output
+                name: pinfit
+              - type: Output
+                name: poutfit
