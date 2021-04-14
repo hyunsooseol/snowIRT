@@ -132,5 +132,21 @@ items:
       measureType: continuous
       clearWith:
         - vars      
+
+    - name: pinfit
+      title: Infit
+      type: Output
+      varTitle: Infit
+      measureType: continuous
+      clearWith:
+        - vars      
+        
+    - name: poutfit
+      title: Outfit
+      type: Output
+      varTitle: Outfit
+      measureType: continuous
+      clearWith:
+        - vars      
           
 ...

@@ -88,4 +88,11 @@ options:
       title: Std.error of person
       type: Output
 
+    - name: pinfit
+      title: Person infit
+      type: Output
+      
+    - name: poutfit
+      title: Person outfit
+      type: Output
 ...
