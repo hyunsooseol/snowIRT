@@ -1,0 +1,49 @@
+---
+name:  item
+title: Distractor analysis
+menuGroup: snowIRT
+menuSubgroup: Multiple choice
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+      description:
+          R: >
+            The data as a data frame.
+    - name: vars
+      title: Variables
+      type: Variables
+      suggested:
+         - nominal
+      permitted:
+         - factor
+
+    - name: key
+      title: Correct answers
+      type: String
+      default: 'D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B'
+
+    - name: num
+      title: Item number
+      default: 1
+      type: Integer
+      min: 1
+
+    - name: count
+      title: Counts of respondents
+      type: Bool
+      default: TRUE
+      
+    - name: prop
+      title: Proportions of respondents
+      type: Bool
+      default: FALSE    
+   
+   
+    - name: plot
+      title: Distractor analysis
+      type: Bool
+      default: FALSE
+...

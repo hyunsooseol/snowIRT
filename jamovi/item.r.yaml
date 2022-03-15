@@ -1,0 +1,36 @@
+---
+name:  item
+title: Distractor analysis
+jrs:   '1.1'
+
+items:
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
+      
+    - name: count
+      title: 'Counts of respondents'
+      type: Preformatted
+      visible: (count)
+
+    - name: prop
+      title: 'Proportions of respondents'
+      type: Preformatted
+      visible: (prop)
+
+    - name:  plot
+      title: 'Distractor plot'
+      type:  Image
+      requiresData: true
+      visible: (plot)
+      width: 400
+      height: 400
+      renderFun: .plot
+      clearWith:
+            - vars
+            - num  
+
+
+
+...
