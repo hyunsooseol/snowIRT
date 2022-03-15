@@ -5,7 +5,7 @@
     `snowIRT`=list(
         `type`="software", 
         `author`="Seol, H.", 
-        `year`=2020, 
+        `year`=2022, 
         `title`="snowIRT: Item Response Theory for jamovi", 
         `publisher`="[jamovi module]. Retrieved from https://github.com/hyunsooseol/snowIRT"), 
     `TAM`=list(
@@ -31,4 +31,10 @@
         `author`="Irribarra, T., & Freund, R.", 
         `year`=2020, 
         `title`="Wright Map: IRT item-person map with ConQuest integration", 
-        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=WrightMap"))
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=WrightMap"), 
+    `CTT`=list(
+        `type`="software", 
+        `author`="Willse, J.", 
+        `year`=2018, 
+        `title`="CTT: Classical Test Theory Functions", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=CTT"))

@@ -40,10 +40,9 @@ options:
       title: Proportions of respondents
       type: Bool
       default: FALSE    
-   
-   
+
     - name: plot
-      title: Distractor analysis
+      title: Distractor plot
       type: Bool
       default: FALSE
 ...

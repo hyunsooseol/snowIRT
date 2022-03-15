@@ -7,7 +7,7 @@
 item(
   data,
   vars,
-  key = "D, C,A, D,D,A, D, B, D, A, A,D,C, C, B, C, D, A, A, B",
+  key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
   num = 1,
   count = TRUE,
   prop = FALSE,
