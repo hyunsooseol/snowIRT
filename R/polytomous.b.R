@@ -32,13 +32,14 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             </head>
             <body>
             <div class='instructions'>
-           
-            <p> Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
-            <p> The results of <b> Save </b> will be displayed in the datasheet.</p>
-            <p> The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
-            <p> The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
-            <p> Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/'  target = '_blank'>GitHub.</a></p>
-
+            <p><b>Instructions</b></p>
+            <p>____________________________________________________________________________________</p>
+            <p>1. Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
+            <p>2. The results of <b> Save </b> will be displayed in the datasheet.</p>
+            <p>3. The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
+            <p>4. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
+            <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+            <p>____________________________________________________________________________________</p>
             </div>
             </body>
             </html>"

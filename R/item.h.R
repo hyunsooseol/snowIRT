@@ -85,7 +85,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Distractor analysis")
+                title="Distractor analysis",
+                refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
@@ -95,12 +96,14 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="count",
                 title="Counts of respondents",
-                visible="(count)"))
+                visible="(count)",
+                refs="CTT"))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="prop",
                 title="Proportions of respondents",
-                visible="(prop)"))
+                visible="(prop)",
+                refs="CTT"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -110,6 +113,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=400,
                 height=400,
                 renderFun=".plot",
+                refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars",
                     "num")))}))

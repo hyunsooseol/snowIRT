@@ -2,7 +2,7 @@
 name:  item
 title: Distractor analysis
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name: instructions
       title: Instructions
@@ -13,11 +13,13 @@ items:
       title: 'Counts of respondents'
       type: Preformatted
       visible: (count)
+      refs: CTT
 
     - name: prop
       title: 'Proportions of respondents'
       type: Preformatted
       visible: (prop)
+      refs: CTT
 
     - name:  plot
       title: 'Distractor plot'
@@ -27,6 +29,7 @@ items:
       width: 400
       height: 400
       renderFun: .plot
+      refs: ShinyItemAnalysis
       clearWith:
             - vars
             - num  

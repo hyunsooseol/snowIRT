@@ -5,6 +5,7 @@ refs:
        year: 2022
        title: "snowIRT: Item Response Theory for jamovi"
        publisher: '[jamovi module]. Retrieved from https://github.com/hyunsooseol/snowIRT'
+       url: https://github.com/hyunsooseol/snowIRT
 
    TAM:
        type: 'software'
@@ -12,6 +13,7 @@ refs:
        year: 2020
        title: "TAM: Test Analysis Modules"
        publisher: '[R package]. Retrieved from https://CRAN.R-project.org/package=TAM'
+       url: https://CRAN.R-project.org/package=TAM
        
    difR:
        type: 'software'
@@ -19,6 +21,7 @@ refs:
        year: 2010
        title: "difR: A general framework and an R package for the detection of dichotomous differential item functioning"
        publisher: '[R package]. Retrieved from https://CRAN.R-project.org/package=difR'
+       url: https://CRAN.R-project.org/package=difR
        
    ShinyItemAnalysis:
        type: 'software'
@@ -26,6 +29,7 @@ refs:
        year: 2018
        title: "ShinyItemAnalysis: for teaching psychometrics and to enforce routine analysis of educational tests"
        publisher: '[R package]. Retrieved from https://CRAN.R-project.org/package=ShinyItemAnalysis'
+       url: https://CRAN.R-project.org/package=ShinyItemAnalysis
        
    WrightMap:
        type: 'software'
@@ -33,6 +37,7 @@ refs:
        year: 2020
        title: "Wright Map: IRT item-person map with ConQuest integration"
        publisher: '[R package]. Retrieved from https://CRAN.R-project.org/package=WrightMap'
+       url: https://CRAN.R-project.org/package=WrightMap
        
    CTT:
        type: 'software'
@@ -40,4 +45,5 @@ refs:
        year: 2018
        title: "CTT: Classical Test Theory Functions"
        publisher: '[R package]. Retrieved from https://CRAN.R-project.org/package=CTT'
+       url: https://CRAN.R-project.org/package=CTT
  

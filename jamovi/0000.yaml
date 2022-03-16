@@ -55,9 +55,14 @@ datasets:
     description: rating scale data
     tags:
       - Polytomous
-  - name: MCQ
-    path: data.omv
+  - name: mcq
+    path: hci.omv
     description: Multiple choice data
+    tags:
+      - MCQ
+  - name: mcq1
+    path: item.omv
+    description: Multiple choice(Character)
     tags:
       - MCQ
 usesNative: true
