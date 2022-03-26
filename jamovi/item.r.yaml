@@ -56,15 +56,44 @@ items:
               type: 'text'
               content: ($key)
             - name: lower
-              title: 'lower'
+              title: 'Lower'
               type: number
             - name: middle
-              title: 'middle'
+              title: 'Middle'
               type: number
             - name: upper              
-              title: 'upper'
+              title: 'Upper'
               type: number 
 
+    - name: sum
+      title: 'Summary'
+      type: Array
+      visible: (sum)
+      refs: CTT
+
+      items: (vars)
+      template:
+          title: Item $key
+          type: Table
+          rows: 0
+          clearWith:
+            - vars
+          columns:
+            - name: correct
+              title: 'Correct'
+              type: 'text'
+              content: ($key)
+            - name: key
+              title: 'Response'
+              type: 'text'
+              content: ($key)
+            - name: n
+              title: 'Frequency'
+              type: integer
+            - name: rspP
+              title: 'Proportion'
+              type: number
+ 
     - name:  plot
       title: 'Distractor plot'
       type:  Image

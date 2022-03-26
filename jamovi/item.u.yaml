@@ -33,19 +33,50 @@ children:
             type: TextBox
             format: string
             stretchFactor: 2
+  - type: CollapseBox
+    label: Analysis
+    margin: normal
+    collapsed: true
+    children:
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        children:
           - type: Label
             label: Table
+            fitToGrid: true
+            cell:
+              column: 0
+              row: 0
             children:
               - type: CheckBox
                 name: count
               - type: CheckBox
                 name: prop
+              - type: CheckBox
+                name: sum
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
           - type: Label
             label: Plot
-            margin: large
             children:
               - name: num
                 type: TextBox
                 format: number
               - type: CheckBox
                 name: plot
+
+
+
+
+
+
+
+
+ 

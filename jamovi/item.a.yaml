@@ -41,6 +41,11 @@ options:
       type: Bool
       default: FALSE    
 
+    - name: sum
+      title: Summary
+      type: Bool
+      default: FALSE  
+
     - name: plot
       title: Distractor plot
       type: Bool

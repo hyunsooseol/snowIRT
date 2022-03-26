@@ -11,6 +11,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             num = 1,
             count = TRUE,
             prop = FALSE,
+            sum = FALSE,
             plot = FALSE, ...) {
 
             super$initialize(
@@ -43,6 +44,10 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "prop",
                 prop,
                 default=FALSE)
+            private$..sum <- jmvcore::OptionBool$new(
+                "sum",
+                sum,
+                default=FALSE)
             private$..plot <- jmvcore::OptionBool$new(
                 "plot",
                 plot,
@@ -53,6 +58,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..num)
             self$.addOption(private$..count)
             self$.addOption(private$..prop)
+            self$.addOption(private$..sum)
             self$.addOption(private$..plot)
         }),
     active = list(
@@ -61,6 +67,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         num = function() private$..num$value,
         count = function() private$..count$value,
         prop = function() private$..prop$value,
+        sum = function() private$..sum$value,
         plot = function() private$..plot$value),
     private = list(
         ..vars = NA,
@@ -68,6 +75,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..num = NA,
         ..count = NA,
         ..prop = NA,
+        ..sum = NA,
         ..plot = NA)
 )
 
@@ -78,6 +86,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         instructions = function() private$.items[["instructions"]],
         count = function() private$.items[["count"]],
         prop = function() private$.items[["prop"]],
+        sum = function() private$.items[["sum"]],
         plot = function() private$.items[["plot"]]),
     private = list(),
     public=list(
@@ -144,15 +153,47 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                             `content`="($key)"),
                         list(
                             `name`="lower", 
-                            `title`="lower", 
+                            `title`="Lower", 
                             `type`="number"),
                         list(
                             `name`="middle", 
-                            `title`="middle", 
+                            `title`="Middle", 
                             `type`="number"),
                         list(
                             `name`="upper", 
-                            `title`="upper", 
+                            `title`="Upper", 
+                            `type`="number")))))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="sum",
+                title="Summary",
+                visible="(sum)",
+                refs="CTT",
+                items="(vars)",
+                template=jmvcore::Table$new(
+                    options=options,
+                    title="Item $key",
+                    rows=0,
+                    clearWith=list(
+                        "vars"),
+                    columns=list(
+                        list(
+                            `name`="correct", 
+                            `title`="Correct", 
+                            `type`="text", 
+                            `content`="($key)"),
+                        list(
+                            `name`="key", 
+                            `title`="Response", 
+                            `type`="text", 
+                            `content`="($key)"),
+                        list(
+                            `name`="n", 
+                            `title`="Frequency", 
+                            `type`="integer"),
+                        list(
+                            `name`="rspP", 
+                            `title`="Proportion", 
                             `type`="number")))))
             self$add(jmvcore::Image$new(
                 options=options,
@@ -197,12 +238,14 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param num .
 #' @param count .
 #' @param prop .
+#' @param sum .
 #' @param plot .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
+#'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
@@ -214,6 +257,7 @@ item <- function(
     num = 1,
     count = TRUE,
     prop = FALSE,
+    sum = FALSE,
     plot = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
@@ -233,6 +277,7 @@ item <- function(
         num = num,
         count = count,
         prop = prop,
+        sum = sum,
         plot = plot)
 
     analysis <- itemClass$new(

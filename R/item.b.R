@@ -7,6 +7,7 @@
 #' @importFrom ShinyItemAnalysis DistractorAnalysis
 #' @importFrom ShinyItemAnalysis plotDistractorAnalysis
 #' @importFrom CTT distractor.analysis
+#' @importFrom CTT distractorAnalysis
 #' @export
 
 
@@ -109,7 +110,8 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               
             prop<- CTT::distractor.analysis(data,key1, p.table=TRUE)
               
-              
+             
+            
              # self$results$prop$setContent(prop)
              
              table <- self$results$prop
@@ -143,10 +145,47 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                }
              }
              
+      
+             
+             #summary-------------
+             
+             res<- CTT::distractorAnalysis(data,key1) 
              
              
-             
-  # #  # plot----------
+              table <- self$results$sum
+              
+              tab <- NULL
+              
+              for(i in seq_along(vars)){
+                
+                tab[[i]]<- as.data.frame.matrix(res[[i]][1:4]) 
+                
+                
+              }
+              
+              tab <- tab
+              
+              
+              for(i in seq_along(vars)){
+                
+                table <- self$results$sum[[i]]
+                names <- dimnames(tab[[i]])[[1]]
+                dims <- dimnames(tab[[i]])[[2]]
+                
+                for (name in names) {
+                  row <- list()
+                  
+                  for(j in seq_along(dims)){       
+                    row[[dims[j]]] <- tab[[i]][name,j]
+                  }
+                  
+                  table$addRow(rowKey=name, values=row)
+                }
+              }
+              
+              
+        
+             # plot----------
   # # 
   #  image <- self$results$plot
   #  image$setState(prop)

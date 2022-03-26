@@ -11,6 +11,7 @@ item(
   num = 1,
   count = TRUE,
   prop = FALSE,
+  sum = FALSE,
   plot = FALSE
 )
 }
@@ -27,6 +28,8 @@ item(
 
 \item{prop}{.}
 
+\item{sum}{.}
+
 \item{plot}{.}
 }
 \value{
@@ -35,6 +38,7 @@ A results object containing:
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
+  \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 }
 }
