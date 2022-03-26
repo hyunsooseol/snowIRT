@@ -31,7 +31,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <div class='instructions'>
             <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
-            <p> </p>
             <P>1. Enter the correct answer separated by commas, but there must be no spaces between commas.
             <p>2. Feature requests and bug reports can be made on the <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
@@ -57,8 +56,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              
              data <- na.omit(data)
  
-             # vars <- self$options$vars
-             
              
              key <- self$options$key
              key1 <- strsplit(self$options$key, ',')[[1]]
@@ -69,11 +66,48 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               counts<- CTT::distractor.analysis(data,key1)
                                                          
               
-              self$results$count$setContent(counts)
+              # self$results$count$setContent(counts)
               
-             # Proportions of respondents--------
+             vars <- self$options$vars
+             
+             table <- self$results$count
               
-              prop<- CTT::distractor.analysis(data,key1, p.table=TRUE)
+             tab <- NULL
+             
+             for(i in seq_along(vars)){
+               
+               tab[[i]]<- as.data.frame.matrix(counts[[i]]) 
+              
+               
+             }
+             
+             tab <- tab
+              
+           
+             for(i in seq_along(vars)){
+               
+               table <- self$results$count[[i]]
+               names <- dimnames(tab[[i]])[[1]]
+               dims <- dimnames(tab[[i]])[[2]]
+               
+               for (name in names) {
+                 row <- list()
+                 
+                 for(j in seq_along(dims)){       
+                   row[[dims[j]]] <- tab[[i]][name,j]
+                 }
+                 
+                 table$addRow(rowKey=name, values=row)
+               }
+             }
+             
+             
+               
+          
+              
+              # Proportions of respondents--------
+              
+            prop<- CTT::distractor.analysis(data,key1, p.table=TRUE)
               
               
               self$results$prop$setContent(prop)

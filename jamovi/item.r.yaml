@@ -11,9 +11,31 @@ items:
       
     - name: count
       title: 'Counts of respondents'
-      type: Preformatted
+      type: Array
       visible: (count)
       refs: CTT
+
+      items: (vars)
+      template:
+          title: Item $key
+          type: Table
+          rows: 0
+          clearWith:
+            - vars
+          columns:
+            - name: name
+              title: ''
+              type: 'text'
+              content: ($key)
+            - name: lower
+              title: 'lower'
+              type: integer
+            - name: middle
+              title: 'middle'
+              type: integer
+            - name: high              
+              title: 'high'
+              type: integer  
 
     - name: prop
       title: 'Proportions of respondents'

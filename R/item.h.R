@@ -92,12 +92,37 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Array$new(
                 options=options,
                 name="count",
                 title="Counts of respondents",
                 visible="(count)",
-                refs="CTT"))
+                refs="CTT",
+                items="(vars)",
+                template=jmvcore::Table$new(
+                    options=options,
+                    title="Item $key",
+                    rows=0,
+                    clearWith=list(
+                        "vars"),
+                    columns=list(
+                        list(
+                            `name`="name", 
+                            `title`="", 
+                            `type`="text", 
+                            `content`="($key)"),
+                        list(
+                            `name`="lower", 
+                            `title`="lower", 
+                            `type`="integer"),
+                        list(
+                            `name`="middle", 
+                            `title`="middle", 
+                            `type`="integer"),
+                        list(
+                            `name`="high", 
+                            `title`="high", 
+                            `type`="integer")))))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="prop",
@@ -151,7 +176,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$count} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$prop} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #' }
