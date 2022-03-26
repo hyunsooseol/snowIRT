@@ -34,7 +34,7 @@ A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
-  \code{results$prop} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 }
 }

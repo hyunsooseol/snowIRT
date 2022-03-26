@@ -120,15 +120,40 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                             `title`="middle", 
                             `type`="integer"),
                         list(
-                            `name`="high", 
-                            `title`="high", 
+                            `name`="upper", 
+                            `title`="upper", 
                             `type`="integer")))))
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Array$new(
                 options=options,
                 name="prop",
                 title="Proportions of respondents",
                 visible="(prop)",
-                refs="CTT"))
+                refs="CTT",
+                items="(vars)",
+                template=jmvcore::Table$new(
+                    options=options,
+                    title="Item $key",
+                    rows=0,
+                    clearWith=list(
+                        "vars"),
+                    columns=list(
+                        list(
+                            `name`="name", 
+                            `title`="", 
+                            `type`="text", 
+                            `content`="($key)"),
+                        list(
+                            `name`="lower", 
+                            `title`="lower", 
+                            `type`="number"),
+                        list(
+                            `name`="middle", 
+                            `title`="middle", 
+                            `type`="number"),
+                        list(
+                            `name`="upper", 
+                            `title`="upper", 
+                            `type`="number")))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -177,7 +202,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
-#'   \code{results$prop} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'

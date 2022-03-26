@@ -33,15 +33,37 @@ items:
             - name: middle
               title: 'middle'
               type: integer
-            - name: high              
-              title: 'high'
+            - name: upper              
+              title: 'upper'
               type: integer  
 
     - name: prop
       title: 'Proportions of respondents'
-      type: Preformatted
+      type: Array
       visible: (prop)
       refs: CTT
+
+      items: (vars)
+      template:
+          title: Item $key
+          type: Table
+          rows: 0
+          clearWith:
+            - vars
+          columns:
+            - name: name
+              title: ''
+              type: 'text'
+              content: ($key)
+            - name: lower
+              title: 'lower'
+              type: number
+            - name: middle
+              title: 'middle'
+              type: number
+            - name: upper              
+              title: 'upper'
+              type: number 
 
     - name:  plot
       title: 'Distractor plot'

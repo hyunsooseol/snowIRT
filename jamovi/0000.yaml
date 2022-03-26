@@ -56,7 +56,7 @@ datasets:
     tags:
       - Polytomous
   - name: mcq
-    path: hci.omv
+    path: mcq.omv
     description: Multiple choice data
     tags:
       - MCQ
