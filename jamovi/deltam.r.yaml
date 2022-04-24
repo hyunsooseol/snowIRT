@@ -1,0 +1,64 @@
+---
+name:  deltam
+title: Delta method
+jrs:   '1.1'
+
+items:
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
+
+    - name: fixed
+      title: Delta method(Fixed)
+      type: Table
+      visible: (fixed)
+      rows: (vars)
+      clearWith:
+        - vars
+      refs: ShinyItemAnalysis
+        
+      columns:
+        - name: name
+          title: 'Item'
+          type: 'text'
+          content: ($key)
+
+        - name: pr
+          title: Prop.Reference
+          
+        - name: pf
+          title: Prop.Focal
+          
+        - name: dr
+          title: Delta.Reference
+          
+        - name: df
+          title: Delta.Focal 
+          
+        - name: dist
+          title: Distance 
+
+    - name: normal
+      title: Iteration(Normal)
+      type: Table
+      visible: (normal)
+      rows: (vars)
+      clearWith:
+        - vars
+      refs: ShinyItemAnalysis
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+        - name: iter
+          title: '1'
+          type: number
+          
+
+...
+
+
+

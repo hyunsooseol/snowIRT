@@ -1,0 +1,35 @@
+title: Delta method
+name: deltam
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Variables
+        children:
+          - type: VariablesListBox
+            name: vars
+            isTarget: true
+      - type: TargetLayoutBox
+        children:
+          - type: VariablesListBox
+            name: group
+            isTarget: true
+            maxItemCount: 1
+  - type: CollapseBox
+    label: Delta method
+    margin: normal
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: fixed
+      - type: CheckBox
+        name: normal
+        children:
+          - type: ComboBox
+            name: puri
+            enable: (normal)

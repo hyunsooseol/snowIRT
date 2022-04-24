@@ -2,7 +2,7 @@
 % Please edit documentation in R/dif.h.R
 \name{dif}
 \alias{dif}
-\title{Differential Item Functioning}
+\title{Raju method}
 \usage{
 dif(data, vars, group, raju = TRUE, zplot = FALSE, iccplot = FALSE)
 }
@@ -35,5 +35,5 @@ Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.f
 \code{as.data.frame(results$raju)}
 }
 \description{
-Differential Item Functioning
+Raju method
 }

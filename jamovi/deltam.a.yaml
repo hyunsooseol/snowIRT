@@ -1,6 +1,6 @@
 ---
-name:  dif
-title: Raju method
+name:  deltam
+title: Delta method
 menuGroup: snowIRT
 menuSubgroup: Differential Item Functioning
 version: '1.0.0'
@@ -35,19 +35,25 @@ options:
           R: >
             A string naming the grouping variable from `data`
 
-    - name: raju
-      title: Raju
+    - name: fixed
+      title: Fixed
       type: Bool
       default: TRUE
       
-    - name: zplot
-      title: Z statistic
+    - name: normal
+      title: Normal
       type: Bool
       default: false
- 
-    - name: iccplot
-      title: Item characteristic curve for DIF
-      type: Bool
-      default: false
- 
+
+    - name: puri
+      title: Purification method
+      type: List
+      options:
+        - title: IPP1
+          name: ip1  
+        - title: IPP2
+          name:  ip2
+        - title: IPP3
+          name:  ip3
+
 ...
