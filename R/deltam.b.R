@@ -126,6 +126,9 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                        table$setRow(rowKey = items[i], values = row)
                    }
 
+                   
+                   if(self$options$normal==TRUE){
+                   
                    # delta scores with normal threshold
                    
                    puri <- self$options$puri
@@ -137,42 +140,44 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                    
                    dist<- normal$Dist
                    dist <- as.data.frame(dist)
+                   
                    names<- dimnames(dist)[[2]]
                    
-                  
+                   table1 <- self$results$normal
                    
                    
-                   # for (name in names)
-                   #     
-                   #     table$addColumn(
-                   #         name = paste0("iter", i),
-                   #         title = as.character(i),
-                   #         type = 'number',
-                   #         superTitle = 'Dimension'
-                   #     ) 
-                   
-                   
-                   table <- self$results$normal
-                   
-                   items <- self$options$vars
-                 
+                   for (name in names)
 
-                   for (name in names) {
+                       table1$addColumn(
+                           name = paste0("iter", name),
+                           title = as.character(name),
+                           type = 'number',
+                           superTitle = 'Iteration'
+                       )
+
+                   # 
+                   # for (i in seq_along(self$options$vars))
+                   #     table1$addRow(rowKey=i, values=list(iter = as.character(i)))
+                   # 
+                   
+
+                    for (i in seq_along(self$options$vars)) {
                        
-                       row <- list()
+                        row <- list()
                        
                        
-                       for (i in seq_along(items)) {
-                           
-                           row[["iter"]] <- dist[name, i]
+                       for (name in names) {
+                       
+                            row[[paste0("iter",name)]] <- dist[i,name]    
+                           #row[["iter"]] <- dist[i, name]
                        }
                        
                        
-                       table$addRow(rowKey=i, values=row)
+                       table1$addRow(rowKey=i, values=row)
                       
                    }
                    
-                 
+                   }
                    
                    
                    

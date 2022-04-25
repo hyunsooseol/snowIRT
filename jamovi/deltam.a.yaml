@@ -50,10 +50,10 @@ options:
       type: List
       options:
         - title: IPP1
-          name: ip1  
+          name:  IPP1
         - title: IPP2
-          name:  ip2
+          name:  IPP2
         - title: IPP3
-          name:  ip3
+          name:  IPP3
 
 ...

@@ -45,9 +45,9 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "puri",
                 puri,
                 options=list(
-                    "ip1",
-                    "ip2",
-                    "ip3"))
+                    "IPP1",
+                    "IPP2",
+                    "IPP3"))
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
@@ -123,7 +123,6 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="normal",
                 title="Iteration(Normal)",
                 visible="(normal)",
-                rows="(vars)",
                 clearWith=list(
                     "vars"),
                 refs="ShinyItemAnalysis",
@@ -135,8 +134,9 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="iter", 
-                        `title`="1", 
-                        `type`="number"))))}))
+                        `title`="", 
+                        `type`="number", 
+                        `superTitle`="Iteration"))))}))
 
 deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "deltamBase",

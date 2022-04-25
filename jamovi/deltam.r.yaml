@@ -43,7 +43,6 @@ items:
       title: Iteration(Normal)
       type: Table
       visible: (normal)
-      rows: (vars)
       clearWith:
         - vars
       refs: ShinyItemAnalysis
@@ -54,9 +53,9 @@ items:
           type: 'text'
           content: ($key)
         - name: iter
-          title: '1'
+          title: ''
           type: number
-          
+          superTitle: 'Iteration'
 
 ...
 
