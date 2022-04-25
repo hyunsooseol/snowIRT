@@ -4,7 +4,16 @@
 \alias{deltam}
 \title{Delta method}
 \usage{
-deltam(data, vars, group, fixed = TRUE, plot = FALSE, normal = FALSE, puri)
+deltam(
+  data,
+  vars,
+  group,
+  fixed = TRUE,
+  plot = FALSE,
+  normal = FALSE,
+  puri,
+  plot1 = FALSE
+)
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -20,6 +29,8 @@ deltam(data, vars, group, fixed = TRUE, plot = FALSE, normal = FALSE, puri)
 \item{normal}{.}
 
 \item{puri}{.}
+
+\item{plot1}{.}
 }
 \value{
 A results object containing:
@@ -29,6 +40,8 @@ A results object containing:
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$normal} \tab \tab \tab \tab \tab a table \cr
+  \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

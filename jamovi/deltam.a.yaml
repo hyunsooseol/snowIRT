@@ -61,4 +61,8 @@ options:
         - title: IPP3
           name:  IPP3
 
+    - name: plot1
+      title: Normal DIF plot 
+      type: Bool
+      default: FALSE
 ...

@@ -189,6 +189,18 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                        
                    }
                    
+                   # DIF ITEMS---------
+                   
+                   normal.dif<- normal$DIFitems
+                   
+                   self$results$text1$setContent(normal.dif)
+                   
+                   
+                   # Normal dif plot--------
+                   
+                   image1 <- self$results$plot1
+                   image1$setState(normal)
+                   
                    
                    }
                    
@@ -205,8 +217,22 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                        
                        print(plot)
                        TRUE
-                   }
-                   
+                   },
+        
+        
+        .plot1 = function(image, ...) {
+            
+            # if (is.null(self$options$facs))
+            #     return()
+            
+            
+            normal <- image$state
+            
+            plot1 <- deltaPlotR::diagPlot(normal, thr.draw = TRUE)
+            
+            print(plot1)
+            TRUE
+        }
                    
                    
                    

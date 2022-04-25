@@ -40,4 +40,5 @@ children:
           - type: ComboBox
             name: puri
             enable: (normal)
- 
+      - type: CheckBox
+        name: plot1

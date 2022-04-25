@@ -11,7 +11,8 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             fixed = TRUE,
             plot = FALSE,
             normal = FALSE,
-            puri = NULL, ...) {
+            puri = NULL,
+            plot1 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -53,6 +54,10 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "IPP1",
                     "IPP2",
                     "IPP3"))
+            private$..plot1 <- jmvcore::OptionBool$new(
+                "plot1",
+                plot1,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
@@ -60,6 +65,7 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..plot)
             self$.addOption(private$..normal)
             self$.addOption(private$..puri)
+            self$.addOption(private$..plot1)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -67,14 +73,16 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         fixed = function() private$..fixed$value,
         plot = function() private$..plot$value,
         normal = function() private$..normal$value,
-        puri = function() private$..puri$value),
+        puri = function() private$..puri$value,
+        plot1 = function() private$..plot1$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..fixed = NA,
         ..plot = NA,
         ..normal = NA,
-        ..puri = NA)
+        ..puri = NA,
+        ..plot1 = NA)
 )
 
 deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -85,7 +93,9 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         fixed = function() private$.items[["fixed"]],
         text = function() private$.items[["text"]],
         plot = function() private$.items[["plot"]],
-        normal = function() private$.items[["normal"]]),
+        normal = function() private$.items[["normal"]],
+        text1 = function() private$.items[["text1"]],
+        plot1 = function() private$.items[["plot1"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -153,7 +163,19 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="name", 
                         `title`="Item", 
                         `type`="text", 
-                        `content`="($key)"))))}))
+                        `content`="($key)"))))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="text1",
+                title="Normal DIF item(s)"))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot1",
+                title="Normal DIF plot",
+                visible="(plot1)",
+                width=400,
+                height=400,
+                renderFun=".plot1"))}))
 
 deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "deltamBase",
@@ -185,6 +207,7 @@ deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot .
 #' @param normal .
 #' @param puri .
+#' @param plot1 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -192,6 +215,8 @@ deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$normal} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -208,7 +233,8 @@ deltam <- function(
     fixed = TRUE,
     plot = FALSE,
     normal = FALSE,
-    puri) {
+    puri,
+    plot1 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("deltam requires jmvcore to be installed (restart may be required)")
@@ -228,7 +254,8 @@ deltam <- function(
         fixed = fixed,
         plot = plot,
         normal = normal,
-        puri = puri)
+        puri = puri,
+        plot1 = plot1)
 
     analysis <- deltamClass$new(
         options = options,

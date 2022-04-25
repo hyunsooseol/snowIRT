@@ -65,6 +65,17 @@ items:
           type: 'text'
           content: ($key)
 
+    - name:  text1
+      title: Normal DIF item(s)
+      type:  Preformatted
+
+    - name:  plot1
+      title: Normal DIF plot
+      type:  Image
+      visible: (plot1)
+      width: 400
+      height: 400
+      renderFun: .plot1
 ...
 
 
