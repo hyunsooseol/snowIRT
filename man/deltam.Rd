@@ -4,7 +4,7 @@
 \alias{deltam}
 \title{Delta method}
 \usage{
-deltam(data, vars, group, fixed = TRUE, normal = FALSE, puri)
+deltam(data, vars, group, fixed = TRUE, plot = FALSE, normal = FALSE, puri)
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -15,6 +15,8 @@ deltam(data, vars, group, fixed = TRUE, normal = FALSE, puri)
 
 \item{fixed}{.}
 
+\item{plot}{.}
+
 \item{normal}{.}
 
 \item{puri}{.}
@@ -24,6 +26,8 @@ A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$fixed} \tab \tab \tab \tab \tab a table \cr
+  \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$normal} \tab \tab \tab \tab \tab a table \cr
 }
 

@@ -21,15 +21,23 @@ children:
             isTarget: true
             maxItemCount: 1
   - type: CollapseBox
-    label: Delta method
+    label: Fixed method
     margin: normal
     collapsed: true
     children:
       - type: CheckBox
         name: fixed
       - type: CheckBox
+        name: plot
+  - type: CollapseBox
+    label: Normal method
+    margin: normal
+    collapsed: true
+    children:
+      - type: CheckBox
         name: normal
         children:
           - type: ComboBox
             name: puri
             enable: (normal)
+ 

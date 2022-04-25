@@ -39,7 +39,12 @@ options:
       title: Fixed
       type: Bool
       default: TRUE
-      
+    
+    - name: plot
+      title: Fixed DIF plot 
+      type: Bool
+      default: FALSE
+
     - name: normal
       title: Normal
       type: Bool

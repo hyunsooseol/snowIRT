@@ -9,6 +9,7 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             vars = NULL,
             group = NULL,
             fixed = TRUE,
+            plot = FALSE,
             normal = FALSE,
             puri = NULL, ...) {
 
@@ -37,6 +38,10 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "fixed",
                 fixed,
                 default=TRUE)
+            private$..plot <- jmvcore::OptionBool$new(
+                "plot",
+                plot,
+                default=FALSE)
             private$..normal <- jmvcore::OptionBool$new(
                 "normal",
                 normal,
@@ -52,6 +57,7 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..fixed)
+            self$.addOption(private$..plot)
             self$.addOption(private$..normal)
             self$.addOption(private$..puri)
         }),
@@ -59,12 +65,14 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
         fixed = function() private$..fixed$value,
+        plot = function() private$..plot$value,
         normal = function() private$..normal$value,
         puri = function() private$..puri$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..fixed = NA,
+        ..plot = NA,
         ..normal = NA,
         ..puri = NA)
 )
@@ -75,6 +83,8 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         fixed = function() private$.items[["fixed"]],
+        text = function() private$.items[["text"]],
+        plot = function() private$.items[["plot"]],
         normal = function() private$.items[["normal"]]),
     private = list(),
     public=list(
@@ -91,7 +101,7 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="fixed",
-                title="Delta method(Fixed)",
+                title="Fixed method",
                 visible="(fixed)",
                 rows="(vars)",
                 clearWith=list(
@@ -118,6 +128,18 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="dist", 
                         `title`="Distance"))))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="text",
+                title="Fixed DIF item(s)"))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot",
+                title="Fixed DIF plot",
+                visible="(plot)",
+                width=400,
+                height=400,
+                renderFun=".plot"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="normal",
@@ -129,14 +151,9 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="name", 
-                        `title`="", 
+                        `title`="Item", 
                         `type`="text", 
-                        `content`="($key)"),
-                    list(
-                        `name`="iter", 
-                        `title`="", 
-                        `type`="number", 
-                        `superTitle`="Iteration"))))}))
+                        `content`="($key)"))))}))
 
 deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "deltamBase",
@@ -165,12 +182,15 @@ deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param vars .
 #' @param group A string naming the grouping variable from \code{data}
 #' @param fixed .
+#' @param plot .
 #' @param normal .
 #' @param puri .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$fixed} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$normal} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
@@ -186,6 +206,7 @@ deltam <- function(
     vars,
     group,
     fixed = TRUE,
+    plot = FALSE,
     normal = FALSE,
     puri) {
 
@@ -205,6 +226,7 @@ deltam <- function(
         vars = vars,
         group = group,
         fixed = fixed,
+        plot = plot,
         normal = normal,
         puri = puri)
 

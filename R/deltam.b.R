@@ -5,6 +5,7 @@
 #' @import difR
 #' @import ShinyItemAnalysis
 #' @importFrom deltaPlotR deltaPlot
+#' @importFrom deltaPlotR diagPlot
 #' @export
 
 deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
@@ -81,6 +82,9 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                        jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels",
                                        code = "grouping_var_must_have_2_levels",
                                        a = groupVarName)
+                   
+                   if(self$options$fixed==TRUE){
+                   
                    #--------Delta method-------------------------------------------
                    
                    # delta scores with fixed threshold---------
@@ -125,7 +129,22 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                        table$setRow(rowKey = items[i], values = row)
                    }
-
+                   
+                   # DIF ITEMS---------
+                   
+                   fixed.dif<- fixed$DIFitems
+                   
+                   self$results$text$setContent(fixed.dif)
+                   
+                   # Fixed dif plot--------
+                   
+                   image <- self$results$plot
+                   image$setState(fixed)
+                   
+                   
+                   
+                   }
+                   
                    
                    if(self$options$normal==TRUE){
                    
@@ -136,51 +155,61 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                    #----------------------
                    normal <- deltaPlotR::deltaPlot(
                        data = data, group = groupVarName, focal.name = 1,
-                       thr = "norm",  purify = TRUE, purType = puri)
+                        thr = "norm",  purify = TRUE, purType = puri)
+                   
+                #--------------------------------
                    
                    dist<- normal$Dist
                    dist <- as.data.frame(dist)
                    
-                   names<- dimnames(dist)[[2]]
-                   
+                   names<- dimnames(dist)[[1]] #variables
+                   dims <- dimnames(dist)[[2]] # add column
+                  
                    table1 <- self$results$normal
                    
                    
-                   for (name in names)
-
-                       table1$addColumn(
-                           name = paste0("iter", name),
-                           title = as.character(name),
-                           type = 'number',
-                           superTitle = 'Iteration'
-                       )
-
-                   # 
-                   # for (i in seq_along(self$options$vars))
-                   #     table1$addRow(rowKey=i, values=list(iter = as.character(i)))
-                   # 
+                   for (dim in dims) {
+                       
+                       table1$addColumn(name = paste0(dim),
+                                       type = 'number')
+                   }
                    
-
-                    for (i in seq_along(self$options$vars)) {
+                   
+                   for (name in names) {
                        
-                        row <- list()
+                       row <- list()
                        
-                       
-                       for (name in names) {
-                       
-                            row[[paste0("iter",name)]] <- dist[i,name]    
-                           #row[["iter"]] <- dist[i, name]
+                       for(j in seq_along(dims)){
+                           
+                           row[[dims[j]]] <- dist[name,j]
+                           
                        }
                        
+                       table1$addRow(rowKey=name, values=row)
                        
-                       table1$addRow(rowKey=i, values=row)
-                      
-                   }
-                   
                    }
                    
                    
+                   }
+                   
+               },
+                   .plot = function(image, ...) {
+                       
+                       # if (is.null(self$options$facs))
+                       #     return()
+                       
+                       
+                       fixed <- image$state
+                       
+                       plot <- deltaPlotR::diagPlot(fixed, thr.draw = TRUE)
+                       
+                       print(plot)
+                       TRUE
+                   }
                    
                    
-        })
+                   
+                   
+                   
+)
 )
