@@ -38,7 +38,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
             <P>2. The focal group should be coded as 1.</P>
-            <p>3. The Raju's Z statistics are estimated by Marginal Maximum Likelihood Estimation(MMLE),and area method is obtained by using the unsigned areas between the ICCs.</p>
+            <p>3. The Raju's Z statistics are estimated by Marginal Maximum Likelihood Estimation(MMLE), and area method is obtained by using the unsigned areas between the ICCs.</p>
             <p>4. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
             </div>

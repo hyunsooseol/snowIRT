@@ -32,18 +32,17 @@ analyses:
     menuGroup: snowIRT
     menuTitle: Raju method
     menuSubgroup: Differential Item Functioning
+  - title: Delta method
+    name: deltam
+    ns: snowIRT
+    menuGroup: snowIRT
+    menuTitle: Delta method
   - title: Distractor analysis
     name: item
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: Distractor analysis
     menuSubgroup: Multiple choice
-  - title: Delta method
-    name: deltam
-    ns: snowIRT
-    menuGroup: snowIRT
-    menuTitle: Delta method
-    menuSubgroup: Differential Item Functioning
 datasets:
   - name: dichotomous
     path: dicho.omv
