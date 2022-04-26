@@ -69,6 +69,10 @@ items:
       title: Normal DIF item(s)
       type:  Preformatted
 
+    - name:  text2
+      title:  Threshold value(s) during the purification process
+      type:  Preformatted
+
     - name:  plot1
       title: Normal DIF plot
       type:  Image

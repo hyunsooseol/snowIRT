@@ -199,6 +199,11 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                    
                    self$results$text1$setContent(normal.dif)
                    
+                   # threshholds values---------
+                   
+                   thresh<- normal$thr
+                   
+                   self$results$text2$setContent(thresh)
                    
                    # Normal dif plot--------
                    

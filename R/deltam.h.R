@@ -95,6 +95,7 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot = function() private$.items[["plot"]],
         normal = function() private$.items[["normal"]],
         text1 = function() private$.items[["text1"]],
+        text2 = function() private$.items[["text2"]],
         plot1 = function() private$.items[["plot1"]]),
     private = list(),
     public=list(
@@ -169,6 +170,10 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="text1",
                 title="Normal DIF item(s)"))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="text2",
+                title="Threshold value(s) during the purification process"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
@@ -217,6 +222,7 @@ deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$normal} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
