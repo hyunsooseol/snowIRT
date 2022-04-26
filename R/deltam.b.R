@@ -20,7 +20,7 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             }
             
   self$results$instructions$setContent(
-      "<html>
+    "<html>
             <head>
             </head>
             <body>
@@ -29,7 +29,7 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
             <P>2. The focal group should be coded as 1.</P>
-            <p>3. The Angoff’s delta method is described in the <a href='https://ppw.kuleuven.be/okp/_pdf/Magis2011ADMRI.pdf'  target = '_blank'>paper.</a></p>  
+            <p>3. The Angoff delta method is described in the <a href='https://ppw.kuleuven.be/okp/_pdf/Magis2011ADMRI.pdf'  target = '_blank'>paper.</a></p>  
             <p>4. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
             </div>
@@ -37,8 +37,19 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>"
       
             )
-            
-        
+           
+  if (self$options$fixed)
+    self$results$fixed$setNote(
+      "Note",
+      "Detection threshold: 1.5"
+      
+    )
+  
+  
+  if (length(self$options$vars) <= 1)
+    self$setStatus('complete')
+      
+  
         },
         
         #----------------------------------
@@ -91,11 +102,7 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                    
                    #---------------------------------------
                    
-                #   self$results$text$setContent(fixed)
-                   
-                   
-                   
-                   df<- data.frame(fixed$Props,fixed$Deltas, fixed$Dist)
+                  df<- data.frame(fixed$Props,fixed$Deltas, fixed$Dist)
 
 
                    table <- self$results$fixed
@@ -145,7 +152,7 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                    
                    if(self$options$normal==TRUE){
                    
-                   # delta scores with normal threshold
+                   # delta scores with normal threshold-----------------
                    
                    puri <- self$options$puri
                    
@@ -204,8 +211,8 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                },
                    .plot = function(image, ...) {
                        
-                       # if (is.null(self$options$facs))
-                       #     return()
+                        if (is.null(self$options$vars))
+                            return()
                        
                        
                        fixed <- image$state
@@ -219,8 +226,8 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         .plot1 = function(image, ...) {
             
-            # if (is.null(self$options$facs))
-            #     return()
+             if (is.null(self$options$vars))
+                 return()
             
             
             normal <- image$state

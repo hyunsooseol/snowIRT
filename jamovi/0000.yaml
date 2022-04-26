@@ -37,6 +37,7 @@ analyses:
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: Delta method
+    menuSubgroup: Differential Item Functioning
   - title: Distractor analysis
     name: item
     ns: snowIRT
@@ -53,8 +54,8 @@ datasets:
     path: dif.omv
     description: Differential Item Functioning
     tags:
-      - Dichotomous
       - DIF
+      - Raju
   - name: Polytomous
     path: poly.omv
     description: rating scale data
@@ -70,6 +71,12 @@ datasets:
     description: Multiple choice(Character)
     tags:
       - MCQ
+  - name: gmat
+    path: GMAT.omv
+    description: GMAT data for DIF
+    tags:
+      - DIF
+      - Delta
 usesNative: true
 minApp: 1.8.0
 

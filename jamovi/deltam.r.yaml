@@ -2,7 +2,7 @@
 name:  deltam
 title: Delta method
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name: instructions
       title: Instructions
@@ -52,7 +52,7 @@ items:
       renderFun: .plot
 
     - name: normal
-      title: Iteration(Normal)
+      title: 'Perpendicular distances(after the last iteration)'
       type: Table
       visible: (normal)
       clearWith:

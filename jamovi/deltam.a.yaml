@@ -2,6 +2,7 @@
 name:  deltam
 title: Delta method
 menuGroup: snowIRT
+menuSubgroup: Differential Item Functioning
 version: '1.0.0'
 jas: '1.2'
 

@@ -102,7 +102,8 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Delta method")
+                title="Delta method",
+                refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
@@ -153,7 +154,7 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="normal",
-                title="Iteration(Normal)",
+                title="Perpendicular distances(after the last iteration)",
                 visible="(normal)",
                 clearWith=list(
                     "vars"),
