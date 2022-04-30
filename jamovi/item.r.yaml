@@ -94,6 +94,33 @@ items:
               title: 'Proportion'
               type: number
  
+    - name: disc
+      title: Item difficulty and discrimination index
+      type: Table
+      visible: (disc)
+      rows: (vars)
+      clearWith:
+        - vars
+      refs: ShinyItemAnalysis
+        
+      columns:
+        - name: name
+          title: 'Item'
+          type: 'text'
+          content: ($key)
+ 
+        - name: dif
+          title: Difficulty
+          
+        - name: ULI
+          title: ULI
+          
+        - name: RIT
+          title: RIT
+          
+        - name: RIR
+          title: RIR 
+
     - name:  plot
       title: 'Distractor plot'
       type:  Image
@@ -107,6 +134,16 @@ items:
             - vars
             - num  
 
-
+    - name:  plot1
+      title: 'Discrimination plot'
+      type:  Image
+      visible: (plot1)
+      width: 500
+      height: 500
+      renderFun: .plot1
+      refs: ShinyItemAnalysis
+      clearWith:
+            - vars
+            - disi
 
 ...

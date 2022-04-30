@@ -12,7 +12,11 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             count = TRUE,
             prop = FALSE,
             sum = FALSE,
-            plot = FALSE, ...) {
+            disc = FALSE,
+            plot = FALSE,
+            angle = 45,
+            plot1 = FALSE,
+            disi = NULL, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -48,10 +52,31 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "sum",
                 sum,
                 default=FALSE)
+            private$..disc <- jmvcore::OptionBool$new(
+                "disc",
+                disc,
+                default=FALSE)
             private$..plot <- jmvcore::OptionBool$new(
                 "plot",
                 plot,
                 default=FALSE)
+            private$..angle <- jmvcore::OptionNumber$new(
+                "angle",
+                angle,
+                min=0,
+                max=45,
+                default=45)
+            private$..plot1 <- jmvcore::OptionBool$new(
+                "plot1",
+                plot1,
+                default=FALSE)
+            private$..disi <- jmvcore::OptionList$new(
+                "disi",
+                disi,
+                options=list(
+                    "ULI",
+                    "RIT",
+                    "RIR"))
 
             self$.addOption(private$..vars)
             self$.addOption(private$..key)
@@ -59,7 +84,11 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..count)
             self$.addOption(private$..prop)
             self$.addOption(private$..sum)
+            self$.addOption(private$..disc)
             self$.addOption(private$..plot)
+            self$.addOption(private$..angle)
+            self$.addOption(private$..plot1)
+            self$.addOption(private$..disi)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -68,7 +97,11 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         count = function() private$..count$value,
         prop = function() private$..prop$value,
         sum = function() private$..sum$value,
-        plot = function() private$..plot$value),
+        disc = function() private$..disc$value,
+        plot = function() private$..plot$value,
+        angle = function() private$..angle$value,
+        plot1 = function() private$..plot1$value,
+        disi = function() private$..disi$value),
     private = list(
         ..vars = NA,
         ..key = NA,
@@ -76,7 +109,11 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..count = NA,
         ..prop = NA,
         ..sum = NA,
-        ..plot = NA)
+        ..disc = NA,
+        ..plot = NA,
+        ..angle = NA,
+        ..plot1 = NA,
+        ..disi = NA)
 )
 
 itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -87,7 +124,9 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         count = function() private$.items[["count"]],
         prop = function() private$.items[["prop"]],
         sum = function() private$.items[["sum"]],
-        plot = function() private$.items[["plot"]]),
+        disc = function() private$.items[["disc"]],
+        plot = function() private$.items[["plot"]],
+        plot1 = function() private$.items[["plot1"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -195,6 +234,33 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                             `name`="rspP", 
                             `title`="Proportion", 
                             `type`="number")))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="disc",
+                title="Item difficulty and discrimination index",
+                visible="(disc)",
+                rows="(vars)",
+                clearWith=list(
+                    "vars"),
+                refs="ShinyItemAnalysis",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="Item", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="dif", 
+                        `title`="Difficulty"),
+                    list(
+                        `name`="ULI", 
+                        `title`="ULI"),
+                    list(
+                        `name`="RIT", 
+                        `title`="RIT"),
+                    list(
+                        `name`="RIR", 
+                        `title`="RIR"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -207,7 +273,19 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars",
-                    "num")))}))
+                    "num")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot1",
+                title="Discrimination plot",
+                visible="(plot1)",
+                width=500,
+                height=500,
+                renderFun=".plot1",
+                refs="ShinyItemAnalysis",
+                clearWith=list(
+                    "vars",
+                    "disi")))}))
 
 itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "itemBase",
@@ -239,15 +317,28 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param count .
 #' @param prop .
 #' @param sum .
+#' @param disc .
 #' @param plot .
+#' @param angle a number from 0 to 45 defining the angle of the x-axis labels,
+#'   where 0 degrees represents completely horizontal labels.
+#' @param plot1 .
+#' @param disi .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
+#'   \code{results$disc} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$disc$asDF}
+#'
+#' \code{as.data.frame(results$disc)}
 #'
 #' @export
 item <- function(
@@ -258,7 +349,11 @@ item <- function(
     count = TRUE,
     prop = FALSE,
     sum = FALSE,
-    plot = FALSE) {
+    disc = FALSE,
+    plot = FALSE,
+    angle = 45,
+    plot1 = FALSE,
+    disi) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("item requires jmvcore to be installed (restart may be required)")
@@ -278,7 +373,11 @@ item <- function(
         count = count,
         prop = prop,
         sum = sum,
-        plot = plot)
+        disc = disc,
+        plot = plot,
+        angle = angle,
+        plot1 = plot1,
+        disi = disi)
 
     analysis <- itemClass$new(
         options = options,

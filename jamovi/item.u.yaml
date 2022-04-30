@@ -55,6 +55,8 @@ children:
                 name: prop
               - type: CheckBox
                 name: sum
+              - type: CheckBox
+                name: disc    
       - type: LayoutBox
         stretchFactor: 1
         margin: large
@@ -66,12 +68,23 @@ children:
           - type: Label
             label: Plot
             children:
+              - type: CheckBox
+                name: plot
               - name: num
                 type: TextBox
                 format: number
               - type: CheckBox
-                name: plot
-
+                name: plot1
+                children:
+                  - type: ComboBox
+                    name: disi
+                    enable: (plot1)
+                  - type: TextBox
+                    name: angle
+                    format: number
+                    suggestedValues:
+                      - value: 0
+                      - value: 45    
 
 
 

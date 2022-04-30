@@ -12,7 +12,11 @@ item(
   count = TRUE,
   prop = FALSE,
   sum = FALSE,
-  plot = FALSE
+  disc = FALSE,
+  plot = FALSE,
+  angle = 45,
+  plot1 = FALSE,
+  disi
 )
 }
 \arguments{
@@ -30,7 +34,16 @@ item(
 
 \item{sum}{.}
 
+\item{disc}{.}
+
 \item{plot}{.}
+
+\item{angle}{a number from 0 to 45 defining the angle of the x-axis labels,
+where 0 degrees represents completely horizontal labels.}
+
+\item{plot1}{.}
+
+\item{disi}{.}
 }
 \value{
 A results object containing:
@@ -39,8 +52,16 @@ A results object containing:
   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
+  \code{results$disc} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 }
+
+Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+
+\code{results$disc$asDF}
+
+\code{as.data.frame(results$disc)}
 }
 \description{
 Distractor analysis

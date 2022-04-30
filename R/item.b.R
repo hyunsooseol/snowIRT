@@ -8,6 +8,10 @@
 #' @importFrom ShinyItemAnalysis plotDistractorAnalysis
 #' @importFrom CTT distractor.analysis
 #' @importFrom CTT distractorAnalysis
+#' @importFrom CTT score
+#' @importFrom ShinyItemAnalysis ItemAnalysis
+#' @importFrom ShinyItemAnalysis DDplot
+#' @import ggplot2
 #' @export
 
 
@@ -103,9 +107,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              }
              
              
-               
-          
-              
               # Proportions of respondents--------
               
             prop<- CTT::distractor.analysis(data,key1, p.table=TRUE)
@@ -183,12 +184,64 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 }
               }
               
+          
+              # Scores, scored file-----------
               
-        
-             # plot----------
-  # # 
-  #  image <- self$results$plot
-  #  image$setState(prop)
+              dicho<- CTT::score(data,key1,output.scored=TRUE)
+              
+              dicho<- dicho$scored
+              
+              dicho <- as.data.frame(dicho)
+              
+              # traditional item analysis table
+              
+              it<- ShinyItemAnalysis::ItemAnalysis(dicho)
+              
+              dif <- it[1]
+              ULI <- it[10]
+              RIT <- it[11]
+              RIR <- it[12]
+              
+              discri <- data.frame(dif, ULI, RIT, RIR)
+              
+              
+              dif <- discri$Difficulty
+              ULI<- discri$ULI
+              RIT<- discri$RIT
+              RIR<- discri$RIR
+              
+              
+              # self$results$text$setContent(dis)
+              
+              disc <- self$options$disc
+              
+              table <- self$results$disc
+              
+              vars <- self$options$vars
+              
+            
+              
+              for (i in seq_along(vars)) {
+                
+                row <- list()
+                
+                row[["dif"]] <-  dif[i]
+                row[["ULI"]] <-  ULI[i]
+                row[["RIT"]] <-  RIT[i]
+                row[["RIR"]] <-  RIR[i]
+                
+                table$setRow(rowKey=vars[i], values=row)
+                
+              }
+              
+              
+            #  plot1----------
+              
+              disi<- self$options$disi
+             
+             image <- self$results$plot1
+     
+             image$setState(dicho)
 
           },
 
@@ -211,7 +264,31 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
  print(plot)
  TRUE
+},
+
+.plot1 = function(image, ggtheme, theme,...) {
+  
+ 
+  dicho <- image$state
+  
+  disi<- self$options$disi
+  
+  plot1 <- ShinyItemAnalysis::DDplot(dicho, discrim = disi, k = 3, l = 1, u = 3)
+   
+  
+  if (self$options$angle > 0) {
+    plot1 <- plot1 + ggplot2::theme(
+      axis.text.x = ggplot2::element_text(
+        angle = self$options$angle, hjust = 1
+      )
+    )
+  }
+   
+  
+  print(plot1)
+  TRUE
 }
+
 
        )
 )

@@ -42,7 +42,12 @@ options:
       default: FALSE    
 
     - name: sum
-      title: Summary
+      title: Item summary
+      type: Bool
+      default: FALSE  
+
+    - name: disc
+      title: Difficulty and Discrimination index
       type: Bool
       default: FALSE  
 
@@ -50,4 +55,31 @@ options:
       title: Distractor plot
       type: Bool
       default: FALSE
+
+    - name: angle
+      title: Angle of x-axis labels
+      type: Number
+      min: 0
+      max: 45
+      default: 45
+      description:
+          R: >
+            a number from 0 to 45 defining the angle of the x-axis labels, 
+            where 0 degrees represents completely horizontal labels.
+
+    - name: plot1
+      title: Discrimination plot
+      type: Bool
+      default: FALSE
+
+    - name: disi
+      title: Type
+      type: List
+      options:
+        - title: ULI
+          name:  ULI
+        - title: RIT
+          name:  RIT
+        - title: RIR
+          name:  RIR
 ...
