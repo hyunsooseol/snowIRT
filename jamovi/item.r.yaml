@@ -138,12 +138,13 @@ items:
       title: 'Discrimination plot'
       type:  Image
       visible: (plot1)
-      width: 500
+      width: 600
       height: 500
       renderFun: .plot1
       refs: ShinyItemAnalysis
       clearWith:
             - vars
             - disi
+            - angle
 
 ...

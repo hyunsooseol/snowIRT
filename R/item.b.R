@@ -37,13 +37,23 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
             <P>1. Enter the correct answer separated by commas, but there must be no spaces between commas.
-            <p>2. Feature requests and bug reports can be made on the <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+            <P>2. By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.
+            <p>3. Feature requests and bug reports can be made on the <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
             </div>
             </body>
             </html>"
             )
+           
+            if (self$options$disc)
+              self$results$disc$setNote(
+                "Note",
+                "ULI:Upper-Lower Index, RIT:Item-Total correlation, RIR: Item-Rest correlation."
+                
+                
+              )
             
+             
         },
         
         

@@ -14,7 +14,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             sum = FALSE,
             disc = FALSE,
             plot = FALSE,
-            angle = 45,
+            angle = 0,
             plot1 = FALSE,
             disi = NULL, ...) {
 
@@ -65,7 +65,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 angle,
                 min=0,
                 max=45,
-                default=45)
+                default=0)
             private$..plot1 <- jmvcore::OptionBool$new(
                 "plot1",
                 plot1,
@@ -279,13 +279,14 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="plot1",
                 title="Discrimination plot",
                 visible="(plot1)",
-                width=500,
+                width=600,
                 height=500,
                 renderFun=".plot1",
                 refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars",
-                    "disi")))}))
+                    "disi",
+                    "angle")))}))
 
 itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "itemBase",
@@ -351,7 +352,7 @@ item <- function(
     sum = FALSE,
     disc = FALSE,
     plot = FALSE,
-    angle = 45,
+    angle = 0,
     plot1 = FALSE,
     disi) {
 
