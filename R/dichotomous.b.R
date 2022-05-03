@@ -37,7 +37,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p>2. The results of <b> Save </b> will be displayed in the datasheet.</p>
-            <p>3. The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</p>
+            <p>3. The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE) with Rasch model.</p>
             <p>4. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
             <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
@@ -71,19 +71,6 @@ adjustment; Ho= the data fit the Rasch model."
       #======================================++++++++++++++++++++++
       .run = function() {
 
-        # for (varName in self$options$vars) {
-        #   var <- self$data[[varName]]
-        #   if (any(var < 0) | any(var >= 2))
-        #     stop('The dichotomous model requires dichotomos items(values 0 and 1)')
-        # }
-
-        
-        # # get variables-------
-        # 
-        # data <- self$data
-        # 
-        # vars <- self$options$vars
-        # 
         
         # Ready--------
         
@@ -128,7 +115,15 @@ adjustment; Ho= the data fit the Rasch model."
           # prepare Expected score curve plot---------
           
           private$.prepareEscPlot(data)
-        }
+        
+          # prepare item fit plot-------
+          
+          private$.prepareInfitPlot(data)
+          
+          private$.prepareOutfitPlot(data)
+          
+         
+          }
         
       },
       
@@ -220,7 +215,6 @@ adjustment; Ho= the data fit the Rasch model."
             )
       
        
-          
       },
       
   
@@ -442,50 +436,11 @@ adjustment; Ho= the data fit the Rasch model."
          }
          
          
+         
        },
       
       
-      # person statistics
- 
-      # .populatePersonTable = function(results) {  
-      # 
-      #   data <- self$data
-      #   
-      #   table <- self$results$persons
-      #   
-      #   
-      #   #result---
-      #   
-      #   total <- results$total
-      #   
-      #   pmeasure <- results$pmeasure
-      #   
-      #   pse <- results$pse
-      #   
-      #   
-      #   for (i in 1:nrow(data)) {
-      #     
-      #     row <- list()
-      #     
-      #     
-      #     row[["total"]] <- total[i]
-      #     
-      #     row[["pmeasure"]] <- pmeasure[i]
-      #     
-      #     row[["pse"]] <- pse[i]
-      #    
-      #     table$addRow(rowKey = i, values = row)
-      #     
-      #   }
-      #   
-      
-        
-      # },
-      
-      
-      
-  
-  #### Prepare Plot functions ----
+  #### Prepare Plot functions #######################
       
       .prepareWrightmapPlot = function(data) {
        
@@ -517,7 +472,29 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
- # Prepare Expected score curve functions------------
+ 
+.plot = function(image,...){
+  
+  wrightmap <- self$options$wrightmap
+  
+  if (!wrightmap)
+    return()
+  
+  pmeasure <- image$state[[1]]
+  imeasure <- image$state[[2]]
+  
+  plot<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
+                                        color = "deepskyblue")
+  
+  
+  
+  print(plot)
+  TRUE
+},
+
+
+
+# Prepare Expected score curve functions------------
       
  .prepareEscPlot = function(data) {
    
@@ -533,10 +510,7 @@ adjustment; Ho= the data fit the Rasch model."
    
  },
 
- 
- # Expected score curve plot----------
- 
- 
+
  .escPlot = function(image, ...) {
    
    tamp <- image$parent$state
@@ -568,39 +542,97 @@ adjustment; Ho= the data fit the Rasch model."
  },
  
  
- #================================================================
-      
-      .plot = function(image,...){
-        wrightmap <- self$options$wrightmap
-        
-        if (!wrightmap)
-          return()
-       
-        pmeasure <- image$state[[1]]
-        imeasure <- image$state[[2]]
-        
-        # plot <- WrightMap::wrightMap(pmeasure,imeasure,
-        #                              show.thr.lab= FALSE,
-        #                              thr.sym.cex = 2.0,
-        #                              thr.sym.pch = 17,
-        #                              axis.persons = "Person distribution",
-        #                              thr.sym.col.fg = RColorBrewer::brewer.pal(10, "Paired"))
-        # 
-       
-        plot<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
-                                              color = "deepskyblue")
-                                              
-                                              
-        
-       # plot <- plot+ggtheme
-        
-        
-        print(plot)
-        TRUE
-      },
-      
  
- #### Helper functions =================================
+.prepareInfitPlot=function(data){
+  
+  
+  tamobj = TAM::tam.mml(resp = as.matrix(data))
+  
+  # computing infit and outfit statistics---------------------
+  
+  fit <- TAM::tam.fit(tamobj)
+  
+  Item <- fit$itemfit$parameter
+  Infit <- fit$itemfit$Infit
+  
+  infit1 <- data.frame(Item,Infit)
+ 
+  
+  image <- self$results$inplot
+  image$setState(infit1)
+  
+  
+}, 
+
+
+.inPlot = function(image, ggtheme, theme,...) {
+  
+  inplot <- self$options$inplot
+  
+  if (!inplot)
+    return()
+  
+  infit1 <- image$state
+ 
+  
+  plot <- ggplot(infit1, aes(x = Item, y=Infit)) + geom_point() +
+    geom_hline(yintercept = 1.5) +
+    geom_hline(yintercept = 0.5) +
+    ggtitle("Item Infit")
+  
+  plot <- plot+ggtheme
+  
+  print(plot)
+  TRUE
+  
+  },
+
+.prepareOutfitPlot=function(data){
+  
+  
+  tamobj = TAM::tam.mml(resp = as.matrix(data))
+  
+  # computing infit and outfit statistics---------------------
+  
+  fit <- TAM::tam.fit(tamobj)
+  
+  Item <- fit$itemfit$parameter
+  Outfit <- fit$itemfit$Outfit
+  
+  outfit1 <- data.frame(Item,Outfit)
+  
+  
+  image <- self$results$outplot
+  image$setState(outfit1)
+  
+ 
+}, 
+
+.outPlot = function(image, ggtheme, theme,...) {
+  
+  outplot <- self$options$outplot
+  
+  if (!outplot)
+    return()
+  
+  outfit1 <- image$state
+  
+  
+  plot <- ggplot(outfit1, aes(x = Item, y=Outfit)) + geom_point() +
+    geom_hline(yintercept = 1.5) +
+    geom_hline(yintercept = 0.5) +
+    ggtitle("Item Outfit")
+  
+  plot <- plot+ggtheme
+  
+  print(plot)
+  TRUE
+  
+},
+
+
+
+#### Helper functions =================================
       
       .cleanData = function() {
         items <- self$options$vars

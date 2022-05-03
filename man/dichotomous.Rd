@@ -17,7 +17,9 @@ dichotomous(
   modelfitp = FALSE,
   mat = FALSE,
   wrightmap = TRUE,
-  esc = FALSE
+  esc = FALSE,
+  inplot = FALSE,
+  outplot = FALSE
 )
 }
 \arguments{
@@ -46,6 +48,10 @@ dichotomous(
 \item{wrightmap}{.}
 
 \item{esc}{.}
+
+\item{inplot}{.}
+
+\item{outplot}{.}
 }
 \value{
 A results object containing:
@@ -56,6 +62,8 @@ A results object containing:
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+  \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
+  \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$total} \tab \tab \tab \tab \tab an output \cr
   \code{results$pmeasure} \tab \tab \tab \tab \tab an output \cr
   \code{results$pse} \tab \tab \tab \tab \tab an output \cr

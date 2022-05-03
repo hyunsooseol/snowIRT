@@ -103,12 +103,26 @@ items:
           type: Image
           title: $key
           description: ESC plot
-          width:  300
-          height: 300
+          width:  400
+          height: 400
           visible: (esc)
           renderFun: .escPlot
           clearWith: []         
           
+    - name: inplot
+      title: 'Item Infit plot'
+      type: Image
+      width:  500
+      height: 500
+      renderFun: .inPlot
+
+    - name: outplot
+      title: 'Item Outfit plot'
+      type: Image
+      width:  500
+      height: 500
+      renderFun: .outPlot
+
     - name: total
       title: Total
       type: Output

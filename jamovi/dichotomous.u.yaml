@@ -79,6 +79,21 @@ children:
                 name: wrightmap
               - type: CheckBox
                 name: esc
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
+          - type: Label
+            label: ''
+            children: 
+              - type: CheckBox
+                name: inplot
+              - type: CheckBox
+                name: outplot             
   - type: CollapseBox
     label: Save
     margin: normal

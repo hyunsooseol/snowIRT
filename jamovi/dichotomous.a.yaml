@@ -95,4 +95,15 @@ options:
     - name: poutfit
       title: Outfit
       type: Output
+
+    - name: inplot
+      title: Infit plot 
+      type: Bool
+      default: false
+      
+    - name: outplot
+      title: Outfit plot
+      type: Bool
+      default: false
+
 ...

@@ -17,7 +17,9 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             modelfitp = FALSE,
             mat = FALSE,
             wrightmap = TRUE,
-            esc = FALSE, ...) {
+            esc = FALSE,
+            inplot = FALSE,
+            outplot = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -86,6 +88,14 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "pinfit")
             private$..poutfit <- jmvcore::OptionOutput$new(
                 "poutfit")
+            private$..inplot <- jmvcore::OptionBool$new(
+                "inplot",
+                inplot,
+                default=FALSE)
+            private$..outplot <- jmvcore::OptionBool$new(
+                "outplot",
+                outplot,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -104,6 +114,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..pse)
             self$.addOption(private$..pinfit)
             self$.addOption(private$..poutfit)
+            self$.addOption(private$..inplot)
+            self$.addOption(private$..outplot)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -122,7 +134,9 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         pmeasure = function() private$..pmeasure$value,
         pse = function() private$..pse$value,
         pinfit = function() private$..pinfit$value,
-        poutfit = function() private$..poutfit$value),
+        poutfit = function() private$..poutfit$value,
+        inplot = function() private$..inplot$value,
+        outplot = function() private$..outplot$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -140,7 +154,9 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..pmeasure = NA,
         ..pse = NA,
         ..pinfit = NA,
-        ..poutfit = NA)
+        ..poutfit = NA,
+        ..inplot = NA,
+        ..outplot = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -153,6 +169,8 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         items = function() private$.items[["items"]],
         plot = function() private$.items[["plot"]],
         esc = function() private$.items[["esc"]],
+        inplot = function() private$.items[["inplot"]],
+        outplot = function() private$.items[["outplot"]],
         total = function() private$.items[["total"]],
         pmeasure = function() private$.items[["pmeasure"]],
         pse = function() private$.items[["pse"]],
@@ -264,11 +282,25 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 template=jmvcore::Image$new(
                     options=options,
                     title="$key",
-                    width=300,
-                    height=300,
+                    width=400,
+                    height=400,
                     visible="(esc)",
                     renderFun=".escPlot",
                     clearWith=list())))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="inplot",
+                title="Item Infit plot",
+                width=500,
+                height=500,
+                renderFun=".inPlot"))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="outplot",
+                title="Item Outfit plot",
+                width=500,
+                height=500,
+                renderFun=".outPlot"))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="total",
@@ -346,6 +378,8 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param mat .
 #' @param wrightmap .
 #' @param esc .
+#' @param inplot .
+#' @param outplot .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -354,6 +388,8 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+#'   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$total} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$pmeasure} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
@@ -381,7 +417,9 @@ dichotomous <- function(
     modelfitp = FALSE,
     mat = FALSE,
     wrightmap = TRUE,
-    esc = FALSE) {
+    esc = FALSE,
+    inplot = FALSE,
+    outplot = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dichotomous requires jmvcore to be installed (restart may be required)")
@@ -405,7 +443,9 @@ dichotomous <- function(
         modelfitp = modelfitp,
         mat = mat,
         wrightmap = wrightmap,
-        esc = esc)
+        esc = esc,
+        inplot = inplot,
+        outplot = outplot)
 
     analysis <- dichotomousClass$new(
         options = options,

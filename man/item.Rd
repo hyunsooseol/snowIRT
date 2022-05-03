@@ -14,7 +14,7 @@ item(
   sum = FALSE,
   disc = FALSE,
   plot = FALSE,
-  angle = 45,
+  angle = 0,
   plot1 = FALSE,
   disi
 )
