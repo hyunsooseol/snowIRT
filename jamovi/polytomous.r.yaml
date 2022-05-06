@@ -198,4 +198,8 @@ items:
       measureType: continuous
       clearWith:
         - vars      
+
+    - name:  text
+      title: Rating Scale Deltas/thresholds
+      type:  Preformatted
 ...

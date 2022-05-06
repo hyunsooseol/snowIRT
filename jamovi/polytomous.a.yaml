@@ -64,7 +64,7 @@ options:
     - name: thresh
       title: Thurstonian thresholds
       type: Bool
-      default: false
+      default: TRUE
 
     - name: pmeasure
       title: Measure
@@ -126,5 +126,10 @@ options:
           R: >
             a number from 0 to 45 defining the angle of the x-axis labels, 
             where 0 degrees represents completely horizontal labels.
+
+    - name: tau
+      title: Rating Scale Deltas/thresholds
+      type: Bool
+      default: false
 
 ...

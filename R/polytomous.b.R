@@ -149,6 +149,16 @@ adjustment; Ho= the data fit the Rasch model."
         tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
         
         
+        if(self$options$tau==TRUE){
+        
+        tau <- tamobj$item_irt
+        
+        
+        self$results$text$setContent(tau)
+        
+        }
+        
+        
         # estimate item difficulty measure---------------
         
         imeasure <- tamobj$item_irt[[3]]
@@ -364,6 +374,7 @@ adjustment; Ho= the data fit the Rasch model."
       #  populate Thurstonian thresholds------------
       
       .populateThresholdsTable = function(results) {
+        
         table <- self$results$thresh
         
         thr <- results$thresh # matrix

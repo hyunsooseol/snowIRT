@@ -15,14 +15,15 @@ polytomous(
   modelfit = FALSE,
   modelfitp = FALSE,
   mat = FALSE,
-  thresh = FALSE,
+  thresh = TRUE,
   pmeasure = FALSE,
   icc = FALSE,
   wrightmap = TRUE,
   esc = FALSE,
   inplot = FALSE,
   outplot = FALSE,
-  angle = 0
+  angle = 0,
+  tau = FALSE
 )
 }
 \arguments{
@@ -62,6 +63,8 @@ polytomous(
 
 \item{angle}{a number from 0 to 45 defining the angle of the x-axis labels,
 where 0 degrees represents completely horizontal labels.}
+
+\item{tau}{.}
 }
 \value{
 A results object containing:
@@ -81,6 +84,7 @@ A results object containing:
   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
+  \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

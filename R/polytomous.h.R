@@ -15,14 +15,15 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             modelfit = FALSE,
             modelfitp = FALSE,
             mat = FALSE,
-            thresh = FALSE,
+            thresh = TRUE,
             pmeasure = FALSE,
             icc = FALSE,
             wrightmap = TRUE,
             esc = FALSE,
             inplot = FALSE,
             outplot = FALSE,
-            angle = 0, ...) {
+            angle = 0,
+            tau = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -72,7 +73,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..thresh <- jmvcore::OptionBool$new(
                 "thresh",
                 thresh,
-                default=FALSE)
+                default=TRUE)
             private$..pmeasure <- jmvcore::OptionBool$new(
                 "pmeasure",
                 pmeasure,
@@ -113,6 +114,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 min=0,
                 max=45,
                 default=0)
+            private$..tau <- jmvcore::OptionBool$new(
+                "tau",
+                tau,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -136,6 +141,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..inplot)
             self$.addOption(private$..outplot)
             self$.addOption(private$..angle)
+            self$.addOption(private$..tau)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -159,7 +165,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         poutfit = function() private$..poutfit$value,
         inplot = function() private$..inplot$value,
         outplot = function() private$..outplot$value,
-        angle = function() private$..angle$value),
+        angle = function() private$..angle$value,
+        tau = function() private$..tau$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -182,7 +189,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..poutfit = NA,
         ..inplot = NA,
         ..outplot = NA,
-        ..angle = NA)
+        ..angle = NA,
+        ..tau = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -203,7 +211,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         personmeasure = function() private$.items[["personmeasure"]],
         pse = function() private$.items[["pse"]],
         pinfit = function() private$.items[["pinfit"]],
-        poutfit = function() private$.items[["poutfit"]]),
+        poutfit = function() private$.items[["poutfit"]],
+        text = function() private$.items[["text"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -402,7 +411,11 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 varTitle="Outfit",
                 measureType="continuous",
                 clearWith=list(
-                    "vars")))}))
+                    "vars")))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="text",
+                title="Rating Scale Deltas/thresholds"))}))
 
 polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "polytomousBase",
@@ -446,6 +459,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param outplot .
 #' @param angle a number from 0 to 45 defining the angle of the x-axis labels,
 #'   where 0 degrees represents completely horizontal labels.
+#' @param tau .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -463,6 +477,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -483,14 +498,15 @@ polytomous <- function(
     modelfit = FALSE,
     modelfitp = FALSE,
     mat = FALSE,
-    thresh = FALSE,
+    thresh = TRUE,
     pmeasure = FALSE,
     icc = FALSE,
     wrightmap = TRUE,
     esc = FALSE,
     inplot = FALSE,
     outplot = FALSE,
-    angle = 0) {
+    angle = 0,
+    tau = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("polytomous requires jmvcore to be installed (restart may be required)")
@@ -519,7 +535,8 @@ polytomous <- function(
         esc = esc,
         inplot = inplot,
         outplot = outplot,
-        angle = angle)
+        angle = angle,
+        tau = tau)
 
     analysis <- polytomousClass$new(
         options = options,

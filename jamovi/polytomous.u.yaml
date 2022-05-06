@@ -108,7 +108,7 @@ children:
                   - value: 0
                   - value: 45   
   - type: CollapseBox
-    label: Save
+    label: Person Analysis
     margin: normal
     collapsed: true
     children:
@@ -144,3 +144,14 @@ children:
                 name: pinfit
               - type: Output
                 name: poutfit
+  - type: CollapseBox
+    label: Additional output
+    margin: normal
+    collapsed: true
+    children:
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        children:
+          - type: CheckBox
+            name: tau

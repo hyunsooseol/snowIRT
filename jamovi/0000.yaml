@@ -46,7 +46,7 @@ analyses:
     menuSubgroup: Multiple choice
 datasets:
   - name: dichotomous
-    path: dicho.omv
+    path: hls.omv
     description: binary data
     tags:
       - Dichotomous
@@ -57,8 +57,8 @@ datasets:
       - DIF
       - Raju
   - name: Polytomous
-    path: poly.omv
-    description: rating scale data
+    path: hls2.omv
+    description: Health Literacy Survey
     tags:
       - Polytomous
   - name: mcq
