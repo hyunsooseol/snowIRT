@@ -161,13 +161,16 @@ adjustment; Ho= the data fit the Rasch model."
         
         # estimate item difficulty measure---------------
         
-        imeasure <- tamobj$item_irt[[3]]
+        imeasure<- tamobj$xsi[,1]
+        
+        #imeasure <- tamobj$item_irt[[3]]
         
         
         # estimate standard error of the item parameter-----
         
-        ise <- tamobj$se.AXsi[,2]
+        #ise <- tamobj$se.AXsi[,2]
         
+        ise<- tamobj$xsi[,2]
         
         # computing infit and outfit statistics---------------------
         
