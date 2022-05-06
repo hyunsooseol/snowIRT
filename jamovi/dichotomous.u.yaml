@@ -15,7 +15,7 @@ children:
             name: vars
             isTarget: true
   - type: CollapseBox
-    label: IRT Analysis
+    label: Item Analysis
     margin: normal
     collapsed: true
     children:
@@ -24,7 +24,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Item Statistics
+            label: Statistics
             fitToGrid: true
             cell:
               column: 0
@@ -93,9 +93,15 @@ children:
               - type: CheckBox
                 name: inplot
               - type: CheckBox
-                name: outplot             
+                name: outplot  
+              - type: TextBox
+                name: angle
+                format: number
+                suggestedValues:
+                  - value: 0
+                  - value: 45   
   - type: CollapseBox
-    label: Save
+    label: Person Analysis
     margin: normal
     collapsed: true
     children:
@@ -104,7 +110,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Person Statistics
+            label: Statistics
             fitToGrid: true
             cell:
               column: 0
@@ -125,12 +131,13 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: Person Fit
+            label: Fit Measure 
             children:
               - type: Output
                 name: pinfit
               - type: Output
                 name: poutfit
+ 
 
 
 

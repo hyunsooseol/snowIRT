@@ -116,8 +116,8 @@ items:
           type: Image
           title: $key
           description: ESC plot
-          width:  300
-          height: 300
+          width:  400
+          height: 400
           visible: (esc)
           renderFun: .escPlot
           clearWith: []     
@@ -131,12 +131,34 @@ items:
           type: Image
           title: $key
           description: ICC plot
-          width:  300
-          height: 300
+          width:  400
+          height: 400
           visible: (icc)
           renderFun: .plot
           clearWith: []
-          
+
+    - name: inplot
+      title: 'Item Infit plot'
+      type: Image
+      width:  500
+      height: 500
+      visible: (inplot)
+      renderFun: .inPlot
+      clearWith:
+            - vars
+            - angle 
+
+    - name: outplot
+      title: 'Item Outfit plot'
+      type: Image
+      width:  500
+      height: 500
+      visible: (outplot)
+      renderFun: .outPlot
+      clearWith:
+            - vars
+            - angle 
+
     - name: total
       title: Total
       type: Output
@@ -176,5 +198,4 @@ items:
       measureType: continuous
       clearWith:
         - vars      
-    
 ...

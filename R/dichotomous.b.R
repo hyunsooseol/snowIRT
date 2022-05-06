@@ -36,8 +36,8 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
-            <p>2. The results of <b> Save </b> will be displayed in the datasheet.</p>
-            <p>3. The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE) with Rasch model.</p>
+            <p>2. The results of <b> Person Analysis </b> will be displayed in the datasheet.</p>
+            <p>3. The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</p>
             <p>4. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
             <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
@@ -575,12 +575,23 @@ adjustment; Ho= the data fit the Rasch model."
   infit1 <- image$state
  
   
-  plot <- ggplot(infit1, aes(x = Item, y=Infit)) + geom_point() +
+  plot <- ggplot(infit1, aes(x = Item, y=Infit)) + 
+    geom_point(shape = 21, color = 'skyblue', 
+               fill = 'white', size = 3, stroke = 2) +
     geom_hline(yintercept = 1.5) +
     geom_hline(yintercept = 0.5) +
     ggtitle("Item Infit")
   
   plot <- plot+ggtheme
+  
+  if (self$options$angle > 0) {
+    plot <- plot + ggplot2::theme(
+      axis.text.x = ggplot2::element_text(
+        angle = self$options$angle, hjust = 1
+      )
+    )
+  }
+  
   
   print(plot)
   TRUE
@@ -618,12 +629,24 @@ adjustment; Ho= the data fit the Rasch model."
   outfit1 <- image$state
   
   
-  plot <- ggplot(outfit1, aes(x = Item, y=Outfit)) + geom_point() +
+  plot <- ggplot(outfit1, aes(x = Item, y=Outfit)) + 
+    geom_point(shape = 21, color = 'skyblue', 
+               fill = 'white', size = 3, stroke = 2) +
     geom_hline(yintercept = 1.5) +
     geom_hline(yintercept = 0.5) +
     ggtitle("Item Outfit")
   
   plot <- plot+ggtheme
+  
+  if (self$options$angle > 0) {
+    plot <- plot + ggplot2::theme(
+      axis.text.x = ggplot2::element_text(
+        angle = self$options$angle, hjust = 1
+      )
+    )
+  }
+  
+  
   
   print(plot)
   TRUE

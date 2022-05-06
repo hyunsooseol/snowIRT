@@ -35,7 +35,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
             <p>1. Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
-            <p>2. The results of <b> Save </b> will be displayed in the datasheet.</p>
+            <p>2. The results of <b> Person Analysis </b> will be displayed in the datasheet.</p>
             <p>3. The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
             <p>4. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation.</a></p>
             <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
@@ -75,24 +75,6 @@ adjustment; Ho= the data fit the Rasch model."
       #======================================++++++++++++++++++++++
       
       .run = function() {
-        # 
-        # allDicho <- TRUE
-        # for (varName in self$options$vars) {
-        #   var <- self$data[[varName]]
-        #   if (any(var != 0 || var != 1))
-        #     allDicho <- FALSE
-        # }
-        # if (allDicho)
-        #   stop(
-        #     'The polytomous model requires Likert-type items,
-        #   for binary data use the dichotomous model instead.'
-        #   )
-        # 
-        # # get variables-------
-        # 
-        # data <- self$data
-        # 
-        # vars <- self$options$get('vars')
         
         
         # Ready--------
@@ -146,6 +128,12 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.prepareEscPlot(data)
           
+          # prepare item fit plot-------
+          
+          private$.prepareInfitPlot(data)
+          
+          private$.prepareOutfitPlot(data)
+          
         }
         
       },
@@ -154,12 +142,7 @@ adjustment; Ho= the data fit the Rasch model."
       # compute results=====================================================
       
       .compute = function(data) {
-        # # get variables------
-        # 
-        # data <- self$data
-        # 
-        # vars <- self$options$get('vars')
-        # 
+        
         
         # estimate the Rasch model with MML using function 'tam.mml'-----
         
@@ -181,7 +164,7 @@ adjustment; Ho= the data fit the Rasch model."
         infit <- TAM::tam.fit(tamobj)$itemfit$Infit
         
         
-        outfit <- TAM::tam.fit(tamobj)$itemfit$Infit
+        outfit <- TAM::tam.fit(tamobj)$itemfit$Outfit
         
         
         # computing person separation reliability-------
@@ -279,6 +262,7 @@ adjustment; Ho= the data fit the Rasch model."
       # populate item tables----------------------
       
       .populateItemsTable = function(results) {
+        
         table <- self$results$items
         
         items <- self$options$vars
@@ -492,43 +476,8 @@ adjustment; Ho= the data fit the Rasch model."
     
    },
       
-      # populate person tables----------------------
       
-      # .populatePersonTable = function(results) {
-      #   
-      #   table <- self$results$persons
-      #   
-      #    data<- self$data
-      # 
-      #    #result---
-      #    
-      #    total <- results$total
-      #    
-      #    personmeasure <- results$personmeasure
-      #    
-      #    pse <- results$pse
-      #    
-      #    
-      #    for (i in 1:nrow(data)) {
-      #      
-      #      row <- list()
-      #      
-      #      
-      #      row[["total"]] <- total[i]
-      #      
-      #      row[["personmeasure"]] <- personmeasure[i]
-      #      
-      #      row[["pse"]] <- pse[i]
-      #      
-      #      table$addRow(rowKey = i, values = row)
-      #      
-      #    }
-      #    
-      #    
-      # },
-      #    
-      
-      #### Plot functions ------------------------
+      #### Plot functions ###########################
       
       .prepareIccPlot = function(data) {
         
@@ -698,7 +647,151 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
-      
+   .prepareInfitPlot=function(data){
+     
+     
+     # estimate the Rasch model with MML using function 'tam.mml'-----
+     
+     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+     
+     
+     item <- tamobj$item$item
+     nitems <- length(item)
+     
+     
+     fit <- TAM::tam.fit(tamobj)
+     
+     # computing infit statistics---------------------
+     
+     Infit <- fit$itemfit$Infit
+     
+ 
+     infit <- NA
+     
+     for(i in 1:nitems){
+       
+       infit[i] <- fit$itemfit$Infit[i]
+       
+     }
+     
+     infit1<- data.frame(item,infit)
+     
+     
+ #    self$results$text$setContent(infit1)
+     
+     
+     image <- self$results$inplot
+     image$setState(infit1)
+     
+     
+   }, 
+   
+   
+   .inPlot = function(image, ggtheme, theme,...) {
+     
+     
+     inplot <- self$options$inplot
+     
+     if (!inplot)
+       return()
+     
+     infit1 <- image$state
+     
+     
+     plot <- ggplot(infit1, aes(x = item, y=infit)) + 
+       geom_point(shape = 21, color = 'skyblue', 
+                  fill = 'white', size = 3, stroke = 2) +
+       geom_hline(yintercept = 1.5) +
+       geom_hline(yintercept = 0.5) +
+       ggtitle("Item Infit")
+     
+     plot <- plot+ggtheme
+     
+     if (self$options$angle > 0) {
+       plot <- plot + ggplot2::theme(
+         axis.text.x = ggplot2::element_text(
+           angle = self$options$angle, hjust = 1
+         )
+       )
+     }
+     
+     
+     print(plot)
+     TRUE
+     
+   },
+   
+   .prepareOutfitPlot=function(data){
+     
+     # estimate the Rasch model with MML using function 'tam.mml'-----
+     
+     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+     
+     
+     item <- tamobj$item$item
+     nitems <- length(item)
+     
+     
+     fit <- TAM::tam.fit(tamobj)
+     
+     # computing outfit statistics---------------------
+     
+     Infit <- fit$itemfit$Outfit
+     
+     
+     outfit <- NA
+     
+     for(i in 1:nitems){
+       
+       outfit[i] <- fit$itemfit$Outfit[i]
+       
+     }
+     
+     outfit1<- data.frame(item,outfit)
+     
+     
+     image <- self$results$outplot
+     image$setState(outfit1)
+     
+     
+   }, 
+   
+   .outPlot = function(image, ggtheme, theme,...) {
+     
+     outplot <- self$options$outplot
+     
+     if (!outplot)
+       return()
+     
+     outfit1 <- image$state
+     
+     
+     plot <- ggplot(outfit1, aes(x = item, y=outfit)) + 
+       geom_point(shape = 21, color = 'skyblue', 
+                  fill = 'white', size = 3, stroke = 2) +
+       geom_hline(yintercept = 1.5) +
+       geom_hline(yintercept = 0.5) +
+       ggtitle("Item Outfit")
+     
+     plot <- plot+ggtheme
+     
+     if (self$options$angle > 0) {
+       plot <- plot + ggplot2::theme(
+         axis.text.x = ggplot2::element_text(
+           angle = self$options$angle, hjust = 1
+         )
+       )
+     }
+     
+     
+     
+     print(plot)
+     TRUE
+     
+   },
+   
+   
+   
       ### Helper functions =================================
       
       .cleanData = function() {

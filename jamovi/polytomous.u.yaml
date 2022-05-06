@@ -15,7 +15,7 @@ children:
             name: vars
             isTarget: true
   - type: CollapseBox
-    label: IRT Analysis
+    label: Item Analysis
     margin: normal
     collapsed: true
     children:
@@ -86,6 +86,27 @@ children:
                 name: esc
               - type: CheckBox
                 name: icc
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
+          - type: Label
+            label: ''
+            children: 
+              - type: CheckBox
+                name: inplot
+              - type: CheckBox
+                name: outplot  
+              - type: TextBox
+                name: angle
+                format: number
+                suggestedValues:
+                  - value: 0
+                  - value: 45   
   - type: CollapseBox
     label: Save
     margin: normal

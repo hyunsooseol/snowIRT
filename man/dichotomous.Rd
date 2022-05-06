@@ -19,7 +19,8 @@ dichotomous(
   wrightmap = TRUE,
   esc = FALSE,
   inplot = FALSE,
-  outplot = FALSE
+  outplot = FALSE,
+  angle = 0
 )
 }
 \arguments{
@@ -52,6 +53,9 @@ dichotomous(
 \item{inplot}{.}
 
 \item{outplot}{.}
+
+\item{angle}{a number from 0 to 45 defining the angle of the x-axis labels,
+where 0 degrees represents completely horizontal labels.}
 }
 \value{
 A results object containing:

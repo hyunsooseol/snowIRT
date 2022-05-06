@@ -19,7 +19,10 @@ polytomous(
   pmeasure = FALSE,
   icc = FALSE,
   wrightmap = TRUE,
-  esc = FALSE
+  esc = FALSE,
+  inplot = FALSE,
+  outplot = FALSE,
+  angle = 0
 )
 }
 \arguments{
@@ -52,6 +55,13 @@ polytomous(
 \item{wrightmap}{.}
 
 \item{esc}{.}
+
+\item{inplot}{.}
+
+\item{outplot}{.}
+
+\item{angle}{a number from 0 to 45 defining the angle of the x-axis labels,
+where 0 degrees represents completely horizontal labels.}
 }
 \value{
 A results object containing:
@@ -64,6 +74,8 @@ A results object containing:
   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
+  \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
+  \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$total} \tab \tab \tab \tab \tab an output \cr
   \code{results$personmeasure} \tab \tab \tab \tab \tab an output \cr
   \code{results$pse} \tab \tab \tab \tab \tab an output \cr

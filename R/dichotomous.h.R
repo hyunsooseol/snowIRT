@@ -19,7 +19,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             wrightmap = TRUE,
             esc = FALSE,
             inplot = FALSE,
-            outplot = FALSE, ...) {
+            outplot = FALSE,
+            angle = 0, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -96,6 +97,12 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "outplot",
                 outplot,
                 default=FALSE)
+            private$..angle <- jmvcore::OptionNumber$new(
+                "angle",
+                angle,
+                min=0,
+                max=45,
+                default=0)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -116,6 +123,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..poutfit)
             self$.addOption(private$..inplot)
             self$.addOption(private$..outplot)
+            self$.addOption(private$..angle)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -136,7 +144,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         pinfit = function() private$..pinfit$value,
         poutfit = function() private$..poutfit$value,
         inplot = function() private$..inplot$value,
-        outplot = function() private$..outplot$value),
+        outplot = function() private$..outplot$value,
+        angle = function() private$..angle$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -156,7 +165,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..pinfit = NA,
         ..poutfit = NA,
         ..inplot = NA,
-        ..outplot = NA)
+        ..outplot = NA,
+        ..angle = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -293,14 +303,22 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 title="Item Infit plot",
                 width=500,
                 height=500,
-                renderFun=".inPlot"))
+                visible="(inplot)",
+                renderFun=".inPlot",
+                clearWith=list(
+                    "vars",
+                    "angle")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="outplot",
                 title="Item Outfit plot",
                 width=500,
                 height=500,
-                renderFun=".outPlot"))
+                visible="(outplot)",
+                renderFun=".outPlot",
+                clearWith=list(
+                    "vars",
+                    "angle")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="total",
@@ -380,6 +398,8 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param esc .
 #' @param inplot .
 #' @param outplot .
+#' @param angle a number from 0 to 45 defining the angle of the x-axis labels,
+#'   where 0 degrees represents completely horizontal labels.
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -419,7 +439,8 @@ dichotomous <- function(
     wrightmap = TRUE,
     esc = FALSE,
     inplot = FALSE,
-    outplot = FALSE) {
+    outplot = FALSE,
+    angle = 0) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dichotomous requires jmvcore to be installed (restart may be required)")
@@ -445,7 +466,8 @@ dichotomous <- function(
         wrightmap = wrightmap,
         esc = esc,
         inplot = inplot,
-        outplot = outplot)
+        outplot = outplot,
+        angle = angle)
 
     analysis <- dichotomousClass$new(
         options = options,

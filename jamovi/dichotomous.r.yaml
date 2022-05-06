@@ -114,14 +114,22 @@ items:
       type: Image
       width:  500
       height: 500
+      visible: (inplot)
       renderFun: .inPlot
+      clearWith:
+            - vars
+            - angle 
 
     - name: outplot
       title: 'Item Outfit plot'
       type: Image
       width:  500
       height: 500
+      visible: (outplot)
       renderFun: .outPlot
+      clearWith:
+            - vars
+            - angle 
 
     - name: total
       title: Total
