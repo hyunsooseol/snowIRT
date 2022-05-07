@@ -208,15 +208,20 @@ adjustment; Ho= the data fit the Rasch model."
         
         mat <- res$Q3.matr
         
-        # Calculation of Thurstonian thresholds----
-        
-        thresh <- TAM::tam.threshold(tamobj)
-        nc <- ncol(thresh)
         
         # Partial credit model using MML estimation---
         
-        tampartial = TAM::tam.mml(resp = as.matrix(data))
-         pmeasure <- tampartial$item_irt$beta
+        mod_pcm <- TAM::tam(resp = as.matrix(data))
+        
+        
+        # Calculation of Thurstonian thresholds----
+        
+        thresh <- TAM::tam.threshold(mod_pcm)
+        nc <- ncol(thresh)
+        
+        
+        # tampartial = TAM::tam.mml(resp = as.matrix(data))
+          pmeasure <- mod_pcm$item_irt$beta
         
         
         results <-
@@ -225,9 +230,6 @@ adjustment; Ho= the data fit the Rasch model."
             'ise' = ise,
             'infit' = infit,
             'outfit' = outfit,
-            # 'total' = total,
-            # 'personmeasure'=personmeasure,
-            # 'pse'=pse,
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
