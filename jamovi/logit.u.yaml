@@ -1,0 +1,44 @@
+title: DIF with cumulative logit
+name: logit
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Variables
+        children:
+          - type: VariablesListBox
+            name: vars
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Grouping Variable
+        children:
+          - type: VariablesListBox
+            name: group
+            maxItemCount: 1
+            isTarget: true
+  - type: CollapseBox
+    label: DIF options
+    margin: normal
+    collapsed: true
+    children:
+      - type: ComboBox
+        name: model
+      - type: ComboBox
+        name: type
+      - type: ComboBox
+        name: match
+      - type: ComboBox
+        name: padjust
+  - type: CollapseBox
+    label: DIF analysis
+    margin: normal
+    collapsed: true
+    children:
+      - type: Checkbox
+        name: dif
+

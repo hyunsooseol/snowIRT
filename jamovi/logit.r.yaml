@@ -1,0 +1,26 @@
+---
+name:  logit
+title: DIF with cumulative logit
+jrs:   '1.1'
+
+items:
+    - name:  text
+      title: DIF with cumulative logit
+      type:  Preformatted
+
+    - name: dif
+      title: DIF detection among ordinal data
+      type: Table
+      visible: (dif)
+      rows: (vars)
+      clearWith:
+        - vars
+      refs: ShinyItemAnalysis
+        
+      columns:
+        - name: name
+          title: 'Item'
+          type: 'text'
+          content: ($key)
+
+...

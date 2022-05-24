@@ -1,0 +1,95 @@
+---
+name:  logit
+title: DIF with cumulative logit
+menuGroup: snowIRT
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+      description:
+          R: >
+            The data as a data frame.
+            
+    - name: vars
+      title: Variables
+      type: Variables
+      suggested:
+         - continuous
+      permitted:
+        - numeric        
+
+    - name: group
+      title: Grouping Variable
+      type: Variable
+      suggested:
+         - nominal
+      permitted:
+        - factor
+        - numeric
+      description:
+          ui: >
+            The grouping variable.
+          R: >
+            A string naming the grouping variable from `data`
+
+    - name: model
+      title: Logistic regression model
+      type: List
+      options:
+        - title: adjacent
+          name:  adjacent
+        - title: cumulative
+          name:  cumulative
+      default: adjacent
+
+    - name: type
+      title: DIF
+      type: List
+      options:
+        - title: both
+          name:  both
+        - title: udif
+          name:  udif
+        - title: nudif
+          name:  nudif  
+      default: both
+
+    - name: match
+      title: Matching criterion
+      type: List
+      options:
+        - title: zscore
+          name:  zscore
+        - title: score
+          name:  score
+      default: zscore  
+
+    - name: padjust
+      title: Method for multiple comparison
+      type: List
+      options:
+        - title: none
+          name:  none
+        - title: holm
+          name:  holm
+        - title: hochberg
+          name:  hochberg 
+        - title: hommel
+          name:  hommel
+        - title: bonferroni
+          name:  bonferroni          
+        - title: BH
+          name:  BH       
+        - title: BY
+          name:  BY
+        - title: fdr
+          name:  fdr              
+      default: none
+
+    - name: dif
+      title: DIF
+      type: Bool
+      default: TRUE
+...
