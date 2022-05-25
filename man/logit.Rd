@@ -11,8 +11,8 @@ logit(
   model = "adjacent",
   type = "both",
   match = "zscore",
-  padjust = "none",
-  dif = TRUE
+  padjust = "BH",
+  method = TRUE
 )
 }
 \arguments{
@@ -30,20 +30,20 @@ logit(
 
 \item{padjust}{.}
 
-\item{dif}{.}
+\item{method}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
-  \code{results$dif} \tab \tab \tab \tab \tab a table \cr
+  \code{results$method} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$dif$asDF}
+\code{results$method$asDF}
 
-\code{as.data.frame(results$dif)}
+\code{as.data.frame(results$method)}
 }
 \description{
 DIF with cumulative logit

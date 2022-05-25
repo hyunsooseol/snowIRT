@@ -49,6 +49,7 @@ analyses:
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: DIF with cumulative logit
+    menuSubgroup: Differential Item Functioning
 datasets:
   - name: dichotomous
     path: hls.omv
@@ -82,6 +83,12 @@ datasets:
     tags:
       - DIF
       - Delta
+  - name: ordinal
+    path: anxiety.omv
+    description: ordinal data for DIF
+    tags:
+      - DIF
+      - Ordinal
 usesNative: true
 minApp: 1.8.0
 

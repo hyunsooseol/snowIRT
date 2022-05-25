@@ -2,6 +2,7 @@
 name:  logit
 title: DIF with cumulative logit
 menuGroup: snowIRT
+menuSubgroup: Differential Item Functioning
 version: '1.0.0'
 jas: '1.2'
 
@@ -86,10 +87,11 @@ options:
           name:  BY
         - title: fdr
           name:  fdr              
-      default: none
+      default: BH
 
-    - name: dif
-      title: DIF
+    - name: method
+      title: DIF 
       type: Bool
       default: TRUE
+      
 ...

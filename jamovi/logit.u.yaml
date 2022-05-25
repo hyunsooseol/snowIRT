@@ -32,13 +32,15 @@ children:
         name: type
       - type: ComboBox
         name: match
-      - type: ComboBox
-        name: padjust
   - type: CollapseBox
-    label: DIF analysis
+    label: DIF Analysis
     margin: normal
     collapsed: true
     children:
-      - type: Checkbox
-        name: dif
-
+      - type: CheckBox
+        name: method
+        children:
+          - type: ComboBox
+            name: padjust
+            enable: (method)
+      

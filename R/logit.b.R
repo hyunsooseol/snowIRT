@@ -58,11 +58,35 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             self$results$text$setContent(fit)
             
             
-            # sta <- fit$Sval
-            # p  <- fit$pval
-            # 
-            # res<- data.frame(sta, p)
-            # 
+         #   if(self$options$padjust=='none'){
+                
+                chi<- fit$Sval
+                p<- fit$pval
+                padj <- fit$adj.pval
+                
+                
+             #   res<- data.frame(chi, p)
+            #    names <-  dimnames(res)[[1]]
+           #     dims <- dimnames(res)[[2]]
+               
+            
+                    table <- self$results$method
+                    
+                    
+                    for (i in seq_along(self$options$vars)) {
+                        
+                        row <- list()
+                        
+                        row[["chi"]] <- chi[i]
+                        row[["p"]] <- p[i]
+                        row[["padj"]] <- padj[i]
+                        
+                        table$setRow(rowKey = vars[i], values = row)
+                
+                }
+                
+            
+            
             
         })
 )

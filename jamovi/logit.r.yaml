@@ -2,25 +2,37 @@
 name:  logit
 title: DIF with cumulative logit
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name:  text
       title: DIF with cumulative logit
       type:  Preformatted
 
-    - name: dif
-      title: DIF detection among ordinal data
+    - name: method
+      title: Likelihood ratio Chi-square statistics
       type: Table
-      visible: (dif)
+      visible: (method)
       rows: (vars)
       clearWith:
         - vars
-      refs: ShinyItemAnalysis
+        - model
+        - type
+        - match
+        - padjust
+      refs: difNLR
         
       columns:
         - name: name
-          title: 'Item'
+          title: ''
           type: 'text'
           content: ($key)
-
+        - name: chi
+          title: 'chi'
+          type: 'number'
+        - name: p
+          title: 'p'
+          format: zto,pvalue 
+        - name: padj
+          title: 'Adj.p'
+          format: zto,pvalue 
 ...

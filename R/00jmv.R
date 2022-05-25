@@ -43,4 +43,11 @@
         `year`=2018, 
         `title`="CTT: Classical Test Theory Functions", 
         `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=CTT", 
-        `url`="https://CRAN.R-project.org/package=CTT"))
+        `url`="https://CRAN.R-project.org/package=CTT"), 
+    `difNLR`=list(
+        `type`="software", 
+        `author`="Hladka, A., Martinkova, P., & Zvara, K.", 
+        `year`=2022, 
+        `title`="difNLR: DIF and DDF Detection by Non-Linear Regression Models", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=difNLR", 
+        `url`="https://CRAN.R-project.org/package=difNLR"))

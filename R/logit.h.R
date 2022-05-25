@@ -11,8 +11,8 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             model = "adjacent",
             type = "both",
             match = "zscore",
-            padjust = "none",
-            dif = TRUE, ...) {
+            padjust = "BH",
+            method = TRUE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -69,10 +69,10 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "BH",
                     "BY",
                     "fdr"),
-                default="none")
-            private$..dif <- jmvcore::OptionBool$new(
-                "dif",
-                dif,
+                default="BH")
+            private$..method <- jmvcore::OptionBool$new(
+                "method",
+                method,
                 default=TRUE)
 
             self$.addOption(private$..vars)
@@ -81,7 +81,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..type)
             self$.addOption(private$..match)
             self$.addOption(private$..padjust)
-            self$.addOption(private$..dif)
+            self$.addOption(private$..method)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -90,7 +90,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         type = function() private$..type$value,
         match = function() private$..match$value,
         padjust = function() private$..padjust$value,
-        dif = function() private$..dif$value),
+        method = function() private$..method$value),
     private = list(
         ..vars = NA,
         ..group = NA,
@@ -98,7 +98,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..type = NA,
         ..match = NA,
         ..padjust = NA,
-        ..dif = NA)
+        ..method = NA)
 )
 
 logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -106,33 +106,50 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         text = function() private$.items[["text"]],
-        dif = function() private$.items[["dif"]]),
+        method = function() private$.items[["method"]]),
     private = list(),
     public=list(
         initialize=function(options) {
             super$initialize(
                 options=options,
                 name="",
-                title="DIF with cumulative logit")
+                title="DIF with cumulative logit",
+                refs="snowIRT")
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
                 title="DIF with cumulative logit"))
             self$add(jmvcore::Table$new(
                 options=options,
-                name="dif",
-                title="DIF detection among ordinal data",
-                visible="(dif)",
+                name="method",
+                title="Likelihood ratio Chi-square statistics",
+                visible="(method)",
                 rows="(vars)",
                 clearWith=list(
-                    "vars"),
-                refs="ShinyItemAnalysis",
+                    "vars",
+                    "model",
+                    "type",
+                    "match",
+                    "padjust"),
+                refs="difNLR",
                 columns=list(
                     list(
                         `name`="name", 
-                        `title`="Item", 
+                        `title`="", 
                         `type`="text", 
-                        `content`="($key)"))))}))
+                        `content`="($key)"),
+                    list(
+                        `name`="chi", 
+                        `title`="chi", 
+                        `type`="number"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="padj", 
+                        `title`="Adj.p", 
+                        `format`="zto,pvalue"))))}))
 
 logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "logitBase",
@@ -164,18 +181,18 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param type .
 #' @param match .
 #' @param padjust .
-#' @param dif .
+#' @param method .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$dif} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$method} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$dif$asDF}
+#' \code{results$method$asDF}
 #'
-#' \code{as.data.frame(results$dif)}
+#' \code{as.data.frame(results$method)}
 #'
 #' @export
 logit <- function(
@@ -185,8 +202,8 @@ logit <- function(
     model = "adjacent",
     type = "both",
     match = "zscore",
-    padjust = "none",
-    dif = TRUE) {
+    padjust = "BH",
+    method = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logit requires jmvcore to be installed (restart may be required)")
@@ -207,7 +224,7 @@ logit <- function(
         type = type,
         match = match,
         padjust = padjust,
-        dif = dif)
+        method = method)
 
     analysis <- logitClass$new(
         options = options,
