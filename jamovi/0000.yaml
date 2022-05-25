@@ -44,11 +44,11 @@ analyses:
     menuGroup: snowIRT
     menuTitle: Distractor analysis
     menuSubgroup: Multiple choice
-  - title: DIF with cumulative logit
+  - title: DIF for ordinal data
     name: logit
     ns: snowIRT
     menuGroup: snowIRT
-    menuTitle: DIF with cumulative logit
+    menuTitle: DIF for ordinal data
     menuSubgroup: Differential Item Functioning
 datasets:
   - name: dichotomous

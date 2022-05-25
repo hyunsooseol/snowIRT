@@ -1,12 +1,13 @@
 ---
 name:  logit
-title: DIF with cumulative logit
+title: DIF for ordinal data
 jrs:   '1.1'
 refs: snowIRT
 items:
-    - name:  text
-      title: DIF with cumulative logit
-      type:  Preformatted
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
 
     - name: method
       title: Likelihood ratio Chi-square statistics
@@ -27,7 +28,7 @@ items:
           type: 'text'
           content: ($key)
         - name: chi
-          title: 'chi'
+          title: 'Statistic'
           type: 'number'
         - name: p
           title: 'p'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/logit.h.R
 \name{logit}
 \alias{logit}
-\title{DIF with cumulative logit}
+\title{DIF for ordinal data}
 \usage{
 logit(
   data,
@@ -35,7 +35,7 @@ logit(
 \value{
 A results object containing:
 \tabular{llllll}{
-  \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$method} \tab \tab \tab \tab \tab a table \cr
 }
 
@@ -46,5 +46,5 @@ Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.f
 \code{as.data.frame(results$method)}
 }
 \description{
-DIF with cumulative logit
+DIF for ordinal data
 }

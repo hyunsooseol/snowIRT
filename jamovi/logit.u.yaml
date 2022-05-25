@@ -1,4 +1,4 @@
-title: DIF with cumulative logit
+title: DIF for ordinal data
 name: logit
 jus: '3.0'
 stage: 0

@@ -105,7 +105,7 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "logitResults",
     inherit = jmvcore::Group,
     active = list(
-        text = function() private$.items[["text"]],
+        instructions = function() private$.items[["instructions"]],
         method = function() private$.items[["method"]]),
     private = list(),
     public=list(
@@ -113,12 +113,13 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="DIF with cumulative logit",
+                title="DIF for ordinal data",
                 refs="snowIRT")
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Html$new(
                 options=options,
-                name="text",
-                title="DIF with cumulative logit"))
+                name="instructions",
+                title="Instructions",
+                visible=TRUE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="method",
@@ -140,7 +141,7 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="chi", 
-                        `title`="chi", 
+                        `title`="Statistic", 
                         `type`="number"),
                     list(
                         `name`="p", 
@@ -171,7 +172,7 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 requiresMissings = FALSE)
         }))
 
-#' DIF with cumulative logit
+#' DIF for ordinal data
 #'
 #' 
 #' @param data The data as a data frame.
@@ -184,7 +185,7 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param method .
 #' @return A results object containing:
 #' \tabular{llllll}{
-#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$method} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'

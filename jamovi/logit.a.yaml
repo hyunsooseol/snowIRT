@@ -1,6 +1,6 @@
 ---
 name:  logit
-title: DIF with cumulative logit
+title: DIF for ordinal data
 menuGroup: snowIRT
 menuSubgroup: Differential Item Functioning
 version: '1.0.0'

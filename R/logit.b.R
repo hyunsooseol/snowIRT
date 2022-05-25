@@ -13,7 +13,49 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "logitClass",
     inherit = logitBase,
     private = list(
-        .run = function() {
+
+        #=============================================================
+        
+        .init = function() {
+            if (is.null(self$data) | is.null(self$options$vars)) {
+                self$results$instructions$setVisible(visible = TRUE)
+                
+            }
+            
+            self$results$instructions$setContent(
+                "<html>
+            <head>
+            </head>
+            <body>
+            <div class='instructions'>
+            <p><b>Instructions</b></p>
+            <p>____________________________________________________________________________________</p>
+            <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
+            <P>2. The focal group should be coded as 1.</P>
+            <p>3. The Raju's Z statistics are estimated by Marginal Maximum Likelihood Estimation(MMLE), and area method is obtained by using the unsigned areas between the ICCs.</p>
+            <p>4. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+            <p>____________________________________________________________________________________</p>
+            </div>
+            </body>
+            </html>"
+            )
+            
+            if (self$options$method)
+                self$results$method$setNote(
+                    "Note",
+                    "Adj.p = The adjusted p-values by likelihood ratio test using multiple comparison."
+
+                )
+
+
+            if (length(self$options$vars) <= 1)
+                self$setStatus('complete')
+
+        },
+        
+        #=================================================
+        
+ .run = function() {
 
             if (length(self$options$vars)<1) return()
             
@@ -55,7 +97,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             )
             
             
-            self$results$text$setContent(fit)
+        #    self$results$text$setContent(fit)
             
             
          #   if(self$options$padjust=='none'){
