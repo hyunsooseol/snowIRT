@@ -12,7 +12,10 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             type = "both",
             match = "zscore",
             padjust = "BH",
-            method = TRUE, ...) {
+            method = TRUE,
+            puri = FALSE,
+            num = 1,
+            plot = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -74,6 +77,19 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "method",
                 method,
                 default=TRUE)
+            private$..puri <- jmvcore::OptionBool$new(
+                "puri",
+                puri,
+                default=FALSE)
+            private$..num <- jmvcore::OptionInteger$new(
+                "num",
+                num,
+                default=1,
+                min=1)
+            private$..plot <- jmvcore::OptionBool$new(
+                "plot",
+                plot,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
@@ -82,6 +98,9 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..match)
             self$.addOption(private$..padjust)
             self$.addOption(private$..method)
+            self$.addOption(private$..puri)
+            self$.addOption(private$..num)
+            self$.addOption(private$..plot)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -90,7 +109,10 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         type = function() private$..type$value,
         match = function() private$..match$value,
         padjust = function() private$..padjust$value,
-        method = function() private$..method$value),
+        method = function() private$..method$value,
+        puri = function() private$..puri$value,
+        num = function() private$..num$value,
+        plot = function() private$..plot$value),
     private = list(
         ..vars = NA,
         ..group = NA,
@@ -98,7 +120,10 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..type = NA,
         ..match = NA,
         ..padjust = NA,
-        ..method = NA)
+        ..method = NA,
+        ..puri = NA,
+        ..num = NA,
+        ..plot = NA)
 )
 
 logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -106,7 +131,8 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        method = function() private$.items[["method"]]),
+        method = function() private$.items[["method"]],
+        plot = function() private$.items[["plot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -150,7 +176,16 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="padj", 
                         `title`="Adj.p", 
-                        `format`="zto,pvalue"))))}))
+                        `format`="zto,pvalue"))))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot",
+                title="Category plot",
+                visible="(plot)",
+                width=500,
+                height=500,
+                renderFun=".plot",
+                refs="difNLR"))}))
 
 logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "logitBase",
@@ -183,10 +218,14 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param match .
 #' @param padjust .
 #' @param method .
+#' @param puri .
+#' @param num .
+#' @param plot .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$method} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -204,7 +243,10 @@ logit <- function(
     type = "both",
     match = "zscore",
     padjust = "BH",
-    method = TRUE) {
+    method = TRUE,
+    puri = FALSE,
+    num = 1,
+    plot = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logit requires jmvcore to be installed (restart may be required)")
@@ -225,7 +267,10 @@ logit <- function(
         type = type,
         match = match,
         padjust = padjust,
-        method = method)
+        method = method,
+        puri = puri,
+        num = num,
+        plot = plot)
 
     analysis <- logitClass$new(
         options = options,

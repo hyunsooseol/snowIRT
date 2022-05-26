@@ -30,9 +30,9 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <div class='instructions'>
             <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
-            <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
+            <p>1. Performs DIF detection procedure for ordinal data based either on adjacent category logit model or on cumulative logit model.</p>
             <P>2. The focal group should be coded as 1.</P>
-            <p>3. The Raju's Z statistics are estimated by Marginal Maximum Likelihood Estimation(MMLE), and area method is obtained by using the unsigned areas between the ICCs.</p>
+            <p>3. DIF likelihood ratio statistics are estimated by using <b>difNLR::difORD</b> function.</p>
             <p>4. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
             </div>
@@ -91,17 +91,31 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 Data = data, group = groupVarName, focal.name = 1,
                 model = self$options$model,
                 type = self$options$type, 
-                match = self$options$match, 
+                match = self$options$match,
+             #   purify = self$options$puri,
                 p.adjust.method = self$options$padjust, 
-                purify = FALSE
-            )
+                )
+            
+        
+            if(self$options$puri==TRUE){
+                
+                fit <- difNLR::difORD(
+                    Data = data, group = groupVarName, focal.name = 1,
+                    model = self$options$model,
+                    type = self$options$type, 
+                    match = self$options$match,
+                    purify = TRUE,
+                    p.adjust.method = self$options$padjust, 
+                )
+                
+                
+            }
             
             
+                
         #    self$results$text$setContent(fit)
             
             
-         #   if(self$options$padjust=='none'){
-                
                 chi<- fit$Sval
                 p<- fit$pval
                 padj <- fit$adj.pval
@@ -128,7 +142,28 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 }
                 
             
-            
-            
-        })
+                    # Normal dif plot--------
+                    
+                    image <- self$results$plot
+                    image$setState(fit)
+ },   
+ 
+ 
+ .plot = function(image, ggtheme, theme,...) {
+     
+     if (is.null(self$options$vars))
+         return()
+     
+     num <- self$options$num
+     
+     fit <- image$state
+     
+     plot <- plot(fit, item=num)
+     
+    # plot <- plot+ggtheme
+     print(plot)
+     TRUE
+ }
+
+  )
 )

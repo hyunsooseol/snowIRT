@@ -36,7 +36,7 @@ options:
             A string naming the grouping variable from `data`
 
     - name: model
-      title: Logistic regression model
+      title: Model
       type: List
       options:
         - title: adjacent
@@ -68,7 +68,7 @@ options:
       default: zscore  
 
     - name: padjust
-      title: Method for multiple comparison
+      title: Multiple comparison
       type: List
       options:
         - title: none
@@ -93,5 +93,20 @@ options:
       title: DIF 
       type: Bool
       default: TRUE
-      
+
+    - name: puri
+      title: Item purification
+      type: Bool
+      default: FALSE      
+
+    - name: num
+      title: Item number
+      default: 1
+      type: Integer
+      min: 1
+
+    - name: plot
+      title: Category plot 
+      type: Bool
+      default: FALSE      
 ...

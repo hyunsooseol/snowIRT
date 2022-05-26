@@ -36,4 +36,14 @@ items:
         - name: padj
           title: 'Adj.p'
           format: zto,pvalue 
+
+    - name:  plot
+      title: Category plot
+      type:  Image
+      visible: (plot)
+      width: 500
+      height: 500
+      renderFun: .plot
+      refs: difNLR
+
 ...

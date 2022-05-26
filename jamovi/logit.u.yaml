@@ -37,10 +37,44 @@ children:
     margin: normal
     collapsed: true
     children:
-      - type: CheckBox
-        name: method
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
         children:
-          - type: ComboBox
-            name: padjust
-            enable: (method)
-      
+          - type: Label
+            label: Table
+            fitToGrid: true
+            cell:
+              column: 0
+              row: 0
+            children:
+              - type: CheckBox
+                name: method
+                children:
+                  - type: ComboBox
+                    name: padjust
+                    enable: (method)
+              - type: CheckBox
+                name: puri
+      - type: LayoutBox
+        cell:
+          column: 1
+          row: 0
+        stretchFactor: 1 
+        margin: large
+        children:
+         - type: Label
+           label: 'Plot'
+           children:
+             - type: CheckBox
+               name: plot
+             - name: num
+               type: TextBox
+               format: number
+    
+
+
+
+
+ 
+ 
