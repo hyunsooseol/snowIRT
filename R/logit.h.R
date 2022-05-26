@@ -15,7 +15,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             method = TRUE,
             puri = FALSE,
             num = 1,
-            plot = FALSE, ...) {
+            plot = TRUE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -89,7 +89,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..plot <- jmvcore::OptionBool$new(
                 "plot",
                 plot,
-                default=FALSE)
+                default=TRUE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
@@ -180,7 +180,7 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
-                title="Category plot",
+                title="ICC plot",
                 visible="(plot)",
                 width=500,
                 height=500,
@@ -246,7 +246,7 @@ logit <- function(
     method = TRUE,
     puri = FALSE,
     num = 1,
-    plot = FALSE) {
+    plot = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logit requires jmvcore to be installed (restart may be required)")

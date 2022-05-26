@@ -151,16 +151,25 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
  
  .plot = function(image, ggtheme, theme,...) {
      
-     if (is.null(self$options$vars))
+     if (is.null(self$options$vars) | is.null(self$options$group))
          return()
      
+   # if (is.null(self$options$group))
+   #   
+   #   return()
+   
+   
      num <- self$options$num
+     model <- self$options$model
      
      fit <- image$state
      
      plot <- plot(fit, item=num)
      
-    # plot <- plot+ggtheme
+    if(self$options$model=="cumulative"){
+     plot <- plot(fit, item=num, plot.type="cumulative")
+    }
+     
      print(plot)
      TRUE
  }

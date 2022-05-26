@@ -38,7 +38,7 @@ items:
           format: zto,pvalue 
 
     - name:  plot
-      title: Category plot
+      title: ICC plot
       type:  Image
       visible: (plot)
       width: 500

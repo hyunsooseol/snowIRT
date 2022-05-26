@@ -15,7 +15,7 @@ logit(
   method = TRUE,
   puri = FALSE,
   num = 1,
-  plot = FALSE
+  plot = TRUE
 )
 }
 \arguments{

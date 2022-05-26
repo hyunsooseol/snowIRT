@@ -46,14 +46,14 @@ options:
       default: adjacent
 
     - name: type
-      title: DIF
+      title: Type of DIF
       type: List
       options:
         - title: both
           name:  both
-        - title: udif
+        - title: uniform
           name:  udif
-        - title: nudif
+        - title: non-uniform
           name:  nudif  
       default: both
 
@@ -106,7 +106,9 @@ options:
       min: 1
 
     - name: plot
-      title: Category plot 
+      title: ICC plot 
       type: Bool
-      default: FALSE      
+      default: TRUE  
+
+
 ...
