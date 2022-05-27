@@ -38,6 +38,10 @@ children:
             children:
               - type: CheckBox
                 name: raju
+                children:
+                  - type: ComboBox
+                    name: padjust
+                    enable: (raju)
       - type: LayoutBox
         cell:
           column: 1

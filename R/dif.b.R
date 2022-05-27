@@ -38,7 +38,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
             <P>2. The focal group should be coded as 1.</P>
-            <p>3. The Raju's Z statistics are estimated by Marginal Maximum Likelihood Estimation(MMLE), and area method is obtained by using the unsigned areas between the ICCs.</p>
+            <p>3. The Raju's Z statistics are estimated by using <b>difR::difRaju</b> function.</p></p>
             <p>4. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
             </div>
@@ -49,7 +49,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   if (self$options$raju)
     self$results$raju$setNote(
       "Note",
-      "1. z = Raju's Z statistics. 2. Adj.p = Benjamini-Hochberg p-value adjustment. 3. Effect size(ETS Delta scale) for absolute values of 'deltaRaju' = A: negligible effect(<1.0), B: moderate effect(>1.0),C: large effect(>1.5)."
+      "1. Effect size(ETS Delta scale) for absolute values of 'deltaRaju' = A: negligible effect(<1.0), B: moderate effect(>1.0),C: large effect(>1.5)."
       
     )
   
@@ -73,6 +73,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
   varNames <- c(groupVarName, vars)
   
+  padjust<- self$options$padjust
   
   if (is.null(groupVarName))
     
@@ -116,9 +117,10 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   res1 <- difR::difRaju(
     irtParam = item.1PL,
     focal.name = 1,
-    p.adjust.method = "BH",
+    p.adjust.method = padjust,
     same.scale = FALSE
   )
+  
   
   # ICC PLOT RESULT----------
   
@@ -130,7 +132,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
   zstat <- as.vector(res1$RajuZ)
   
-  pvalue <- as.vector(res1$adjusted.p)
+  p <- as.vector(res1$p.value)
+  
+  padjust <- as.vector(res1$adjusted.p)
   
   
   # get ETS delta scale--------
@@ -156,7 +160,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   results <-
     list(
       'zstat' = zstat,
-      'pvalue' = pvalue,
+      'p'= p,
+      'padjust' = padjust,
       'delta' = delta,
       'es' = es,
       'itempar'=itempar
@@ -174,7 +179,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   # get result---
   
   zstat <- results$zstat
-  pvalue <- results$pvalue
+  p <- results$p
+  padjust <- results$padjust
   delta <- results$delta
   es <- results$es
   
@@ -184,7 +190,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     
     row[["zstat"]] <- zstat[i]
     
-    row[["pvalue"]] <- pvalue[i]
+    row[["p"]] <- p[i]
+    
+    row[["padjust"]] <- padjust[i]
     
     row[["delta"]] <- delta[i]
     

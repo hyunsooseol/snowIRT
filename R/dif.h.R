@@ -9,6 +9,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             vars = NULL,
             group = NULL,
             raju = TRUE,
+            padjust = "BH",
             zplot = FALSE,
             iccplot = FALSE, ...) {
 
@@ -37,6 +38,19 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "raju",
                 raju,
                 default=TRUE)
+            private$..padjust <- jmvcore::OptionList$new(
+                "padjust",
+                padjust,
+                options=list(
+                    "none",
+                    "holm",
+                    "hochberg",
+                    "hommel",
+                    "bonferroni",
+                    "BH",
+                    "BY",
+                    "fdr"),
+                default="BH")
             private$..zplot <- jmvcore::OptionBool$new(
                 "zplot",
                 zplot,
@@ -49,6 +63,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..raju)
+            self$.addOption(private$..padjust)
             self$.addOption(private$..zplot)
             self$.addOption(private$..iccplot)
         }),
@@ -56,12 +71,14 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
         raju = function() private$..raju$value,
+        padjust = function() private$..padjust$value,
         zplot = function() private$..zplot$value,
         iccplot = function() private$..iccplot$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..raju = NA,
+        ..padjust = NA,
         ..zplot = NA,
         ..iccplot = NA)
 )
@@ -94,7 +111,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(raju)",
                 rows="(vars)",
                 clearWith=list(
-                    "vars"),
+                    "vars",
+                    "padjust"),
                 refs="difR",
                 columns=list(
                     list(
@@ -106,7 +124,11 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="zstat", 
                         `title`="Statistic"),
                     list(
-                        `name`="pvalue", 
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="padjust", 
                         `title`="Adj.p", 
                         `format`="zto,pvalue"),
                     list(
@@ -167,6 +189,7 @@ difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param vars .
 #' @param group A string naming the grouping variable from \code{data}
 #' @param raju .
+#' @param padjust .
 #' @param zplot .
 #' @param iccplot .
 #' @return A results object containing:
@@ -189,6 +212,7 @@ dif <- function(
     vars,
     group,
     raju = TRUE,
+    padjust = "BH",
     zplot = FALSE,
     iccplot = FALSE) {
 
@@ -208,6 +232,7 @@ dif <- function(
         vars = vars,
         group = group,
         raju = raju,
+        padjust = padjust,
         zplot = zplot,
         iccplot = iccplot)
 

@@ -16,6 +16,7 @@ items:
       rows: (vars)
       clearWith:
         - vars
+        - padjust
       refs: difR
         
       columns:
@@ -27,8 +28,12 @@ items:
         - name: zstat
           title: Statistic
           
-        - name: pvalue
-          title: Adj.p
+        - name: p
+          title: p
+          format: zto,pvalue
+
+        - name: padjust
+          title: 'Adj.p'
           format: zto,pvalue
          
         - name: delta

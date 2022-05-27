@@ -4,7 +4,15 @@
 \alias{dif}
 \title{Raju method}
 \usage{
-dif(data, vars, group, raju = TRUE, zplot = FALSE, iccplot = FALSE)
+dif(
+  data,
+  vars,
+  group,
+  raju = TRUE,
+  padjust = "BH",
+  zplot = FALSE,
+  iccplot = FALSE
+)
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -14,6 +22,8 @@ dif(data, vars, group, raju = TRUE, zplot = FALSE, iccplot = FALSE)
 \item{group}{A string naming the grouping variable from \code{data}}
 
 \item{raju}{.}
+
+\item{padjust}{.}
 
 \item{zplot}{.}
 
