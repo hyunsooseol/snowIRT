@@ -45,6 +45,8 @@ children:
                 name: thresh
               - type: CheckBox
                 name: pmeasure
+              - type: CheckBox
+                name: thurs
       - type: LayoutBox
         stretchFactor: 1
         margin: large

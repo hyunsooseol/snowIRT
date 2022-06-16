@@ -60,8 +60,8 @@ adjustment; Ho= the data fit the Rasch model."
             "Infit= Information-weighted mean square statistic; Outfit= Outlier-sensitive means square statistic."
           )
         
-        if (self$options$thresh)
-          self$results$thresh$setNote(
+        if (self$options$thurs)
+          self$results$thurs$setNote(
             "Note",
             "The Thurstonian threshold for a score category is defined as the ability at which the probability of achieving that score or higher reaches 0.50."
           )
@@ -105,8 +105,10 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateMatrixTable(results)
           
           # populate thurstonian thresholds
+          private$.populateThurstoneTable(results)
           
-          private$.populateThresholdsTable(results)
+         # delta-tau parameter--------
+           private$.populateThresholdsTable(results)
           
           # populate person table------
           
@@ -214,15 +216,24 @@ adjustment; Ho= the data fit the Rasch model."
         mod_pcm <- TAM::tam(resp = as.matrix(data))
         
         
-        # Calculation of Thurstonian thresholds----
-        
-        thresh <- TAM::tam.threshold(mod_pcm)
-        nc <- ncol(thresh)
-        
+        #  Calculation of Thurstonian thresholds----
+         
+         thresh <- TAM::tam.threshold(mod_pcm)
+         nc <- ncol(thresh)
+         
         
         # tampartial = TAM::tam.mml(resp = as.matrix(data))
-          pmeasure <- mod_pcm$item_irt$beta
+          
+        # Delta parameter-------------------
         
+        pmeasure <- mod_pcm$item_irt$beta
+        
+        # delta-tau parameterization--------
+        
+        delta <- mod_pcm$item_irt
+        
+        tau<- delta[,c(-1,-2,-3)]
+        nc1 <- ncol(tau)
         
         results <-
           list(
@@ -234,9 +245,11 @@ adjustment; Ho= the data fit the Rasch model."
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
             'mat' = mat,
-            'thresh' = thresh,
-            'nc' = nc,
-            'pmeasure' = pmeasure
+             'thresh' = thresh,
+             'nc' = nc,
+            'pmeasure' = pmeasure,
+            'tau'=tau,
+            'nc1'=nc1
           )
         
       },
@@ -376,18 +389,23 @@ adjustment; Ho= the data fit the Rasch model."
       
       
       
-      #  populate Thurstonian thresholds------------
+      #  populate Delta-tau parameterization------------
       
       .populateThresholdsTable = function(results) {
         
         table <- self$results$thresh
         
-        thr <- results$thresh # matrix
+      #  thr <- results$thresh # matrix
+        
+        tau <- results$tau
+        
+        
         pmeasure <- results$pmeasure
         
-        nCategory <- results$nc # number of thresholds
+        nCategory <- results$nc1 # number of tau
         
-        vars <- self$options$vars
+       
+         vars <- self$options$vars
         
         
         if (nCategory > 1) {
@@ -396,7 +414,7 @@ adjustment; Ho= the data fit the Rasch model."
             table$addColumn(
               name = paste0("name", i),
               title = as.character(i),
-              superTitle = 'Threshold',
+              superTitle = 'tau parameters',
               type = 'number'
             )
         }
@@ -408,7 +426,7 @@ adjustment; Ho= the data fit the Rasch model."
           
           
           for (j in 1:nCategory) {
-            row[[paste0("name", j)]] <- thr[i, j]
+            row[[paste0("name", j)]] <- tau[i, j]
             
             
           }
@@ -418,7 +436,50 @@ adjustment; Ho= the data fit the Rasch model."
         }
       },
       
-   ##### person statistics for output variable-------------------
+   # populate thurstone thresholds---------
+   
+      
+   .populateThurstoneTable = function(results) {
+     
+     table <- self$results$thurs
+     
+     
+     thr <- results$thresh # matrix
+     
+     nCategory <- results$nc # number of thresholds
+     
+     vars <- self$options$vars
+     
+     
+     if (nCategory > 1) {
+       for (i in 1:nCategory)
+         
+         table$addColumn(
+           name = paste0("name", i),
+           title = as.character(i),
+           superTitle = 'Thurstone Thresholds',
+           type = 'number'
+         )
+     }
+     
+     
+     
+     for (i in seq_along(vars)) {
+       row <- list()
+       
+       
+       for (j in 1:nCategory) {
+         row[[paste0("name", j)]] <- thr[i, j]
+         
+         
+       }
+       
+       table$setRow(rowNo = i, values = row)
+     }
+   },
+   
+     
+    ##### person statistics for output variable-------------------
       
    .populateOutputs= function(data) {
      

@@ -17,6 +17,7 @@ polytomous(
   mat = FALSE,
   thresh = TRUE,
   pmeasure = FALSE,
+  thurs = FALSE,
   icc = FALSE,
   wrightmap = TRUE,
   esc = FALSE,
@@ -51,6 +52,8 @@ polytomous(
 
 \item{pmeasure}{.}
 
+\item{thurs}{.}
+
 \item{icc}{.}
 
 \item{wrightmap}{.}
@@ -73,6 +76,7 @@ A results object containing:
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
+  \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr

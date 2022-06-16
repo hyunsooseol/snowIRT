@@ -17,6 +17,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             mat = FALSE,
             thresh = TRUE,
             pmeasure = FALSE,
+            thurs = FALSE,
             icc = FALSE,
             wrightmap = TRUE,
             esc = FALSE,
@@ -78,6 +79,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "pmeasure",
                 pmeasure,
                 default=FALSE)
+            private$..thurs <- jmvcore::OptionBool$new(
+                "thurs",
+                thurs,
+                default=FALSE)
             private$..icc <- jmvcore::OptionBool$new(
                 "icc",
                 icc,
@@ -130,6 +135,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..mat)
             self$.addOption(private$..thresh)
             self$.addOption(private$..pmeasure)
+            self$.addOption(private$..thurs)
             self$.addOption(private$..icc)
             self$.addOption(private$..wrightmap)
             self$.addOption(private$..esc)
@@ -155,6 +161,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         mat = function() private$..mat$value,
         thresh = function() private$..thresh$value,
         pmeasure = function() private$..pmeasure$value,
+        thurs = function() private$..thurs$value,
         icc = function() private$..icc$value,
         wrightmap = function() private$..wrightmap$value,
         esc = function() private$..esc$value,
@@ -179,6 +186,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..mat = NA,
         ..thresh = NA,
         ..pmeasure = NA,
+        ..thurs = NA,
         ..icc = NA,
         ..wrightmap = NA,
         ..esc = NA,
@@ -201,6 +209,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         scale = function() private$.items[["scale"]],
         mat = function() private$.items[["mat"]],
         thresh = function() private$.items[["thresh"]],
+        thurs = function() private$.items[["thurs"]],
         items = function() private$.items[["items"]],
         wrightmap = function() private$.items[["wrightmap"]],
         esc = function() private$.items[["esc"]],
@@ -270,7 +279,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="thresh",
-                title="Partial credit model",
+                title="Delta-tau paramaterization of the partial credit model",
                 rows="(vars)",
                 visible="(thresh)",
                 refs="TAM",
@@ -286,8 +295,21 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `visible`="(pmeasure)"))))
             self$add(jmvcore::Table$new(
                 options=options,
+                name="thurs",
+                title="Thurstone Thresholds of the partial credit model",
+                rows="(vars)",
+                visible="(thurs)",
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="number", 
+                        `content`="($key)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
                 name="items",
-                title="Item Statistics(Rating Scale Model)",
+                title="Item statistics of the rating scale model",
                 visible="(imeasure || ise || infit || outfit)",
                 rows="(vars)",
                 clearWith=list(
@@ -452,6 +474,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param mat .
 #' @param thresh .
 #' @param pmeasure .
+#' @param thurs .
 #' @param icc .
 #' @param wrightmap .
 #' @param esc .
@@ -466,6 +489,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
@@ -500,6 +524,7 @@ polytomous <- function(
     mat = FALSE,
     thresh = TRUE,
     pmeasure = FALSE,
+    thurs = FALSE,
     icc = FALSE,
     wrightmap = TRUE,
     esc = FALSE,
@@ -530,6 +555,7 @@ polytomous <- function(
         mat = mat,
         thresh = thresh,
         pmeasure = pmeasure,
+        thurs = thurs,
         icc = icc,
         wrightmap = wrightmap,
         esc = esc,

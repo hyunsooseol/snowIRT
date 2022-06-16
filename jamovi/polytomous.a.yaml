@@ -62,12 +62,17 @@ options:
       default: false
 
     - name: thresh
-      title: Thurstonian thresholds
+      title: Delta-tau parameters
       type: Bool
       default: TRUE
 
     - name: pmeasure
       title: Measure
+      type: Bool
+      default: false
+
+    - name: thurs
+      title: Thurstone Thresholds
       type: Bool
       default: false
 
