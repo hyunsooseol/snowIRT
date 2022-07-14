@@ -1,0 +1,43 @@
+---
+name:  clr
+title: Conditional Likelihood Ratio Test
+jrs:   '1.1'
+
+items:
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
+      
+    - name:  text
+      title: Conditional Likelihood Ratio Test
+      type:  Preformatted
+
+    - name: clr
+      title: Conditional Likelihood Ratio Test
+      type: Table
+      visible: (clr)
+      clearWith:
+        - vars
+        - model
+      refs: iarm
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: clr
+          title: CLR
+          type: number
+          
+        - name: df
+          title: df
+          type: number
+          
+        - name: p
+          title: p
+          type: number
+          format: zto,pvalue
+...
