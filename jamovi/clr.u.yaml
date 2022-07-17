@@ -2,7 +2,7 @@ title: Conditional Likelihood Ratio Test
 name: clr
 jus: '3.0'
 stage: 0
-compilerMode: aggressive
+compilerMode: tame
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -15,7 +15,7 @@ children:
             name: vars
             isTarget: true
       - type: TargetLayoutBox
-        label: Grouping Variable
+        label: Grouping Variable(Required)
         children:
           - type: VariablesListBox
             name: group
@@ -26,8 +26,20 @@ children:
     children:
       - type: ComboBox
         name: model
-  - type: LayoutBox
-    margin: large
+  - type: CollapseBox
+    label: Analysis
+    margin: normal
+    collapsed: true
     children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: CheckBox
+            name: clr
       - type: CheckBox
-        name: clr
+        name: resi
+        children:
+          - type: ComboBox
+            name: score
+            enable: (resi)
+

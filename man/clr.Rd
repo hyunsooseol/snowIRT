@@ -4,7 +4,7 @@
 \alias{clr}
 \title{Conditional Likelihood Ratio Test}
 \usage{
-clr(data, vars, group, model, clr = TRUE)
+clr(data, vars, group, model, clr = TRUE, resi = FALSE, score = "low")
 }
 \arguments{
 \item{data}{The data as a data frame.}
@@ -16,6 +16,10 @@ clr(data, vars, group, model, clr = TRUE)
 \item{model}{.}
 
 \item{clr}{.}
+
+\item{resi}{.}
+
+\item{score}{.}
 }
 \value{
 A results object containing:
@@ -23,6 +27,7 @@ A results object containing:
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$clr} \tab \tab \tab \tab \tab a table \cr
+  \code{results$resi} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

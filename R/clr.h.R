@@ -9,7 +9,9 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             vars = NULL,
             group = NULL,
             model = NULL,
-            clr = TRUE, ...) {
+            clr = TRUE,
+            resi = FALSE,
+            score = "low", ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -41,22 +43,39 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "clr",
                 clr,
                 default=TRUE)
+            private$..resi <- jmvcore::OptionBool$new(
+                "resi",
+                resi,
+                default=FALSE)
+            private$..score <- jmvcore::OptionList$new(
+                "score",
+                score,
+                options=list(
+                    "low",
+                    "high"),
+                default="low")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..model)
             self$.addOption(private$..clr)
+            self$.addOption(private$..resi)
+            self$.addOption(private$..score)
         }),
     active = list(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
         model = function() private$..model$value,
-        clr = function() private$..clr$value),
+        clr = function() private$..clr$value,
+        resi = function() private$..resi$value,
+        score = function() private$..score$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..model = NA,
-        ..clr = NA)
+        ..clr = NA,
+        ..resi = NA,
+        ..score = NA)
 )
 
 clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -65,7 +84,8 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         text = function() private$.items[["text"]],
-        clr = function() private$.items[["clr"]]),
+        clr = function() private$.items[["clr"]],
+        resi = function() private$.items[["resi"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -85,7 +105,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="clr",
-                title="Conditional Likelihood Ratio Test",
+                title="Conditional Likelihood Ratio Test for DIF",
                 visible="(clr)",
                 clearWith=list(
                     "vars",
@@ -95,21 +115,52 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="name", 
                         `title`="", 
-                        `type`="text", 
-                        `content`="($key)"),
+                        `type`="text"),
                     list(
                         `name`="clr", 
-                        `title`="CLR", 
+                        `title`="Value", 
                         `type`="number"),
                     list(
                         `name`="df", 
                         `title`="df", 
-                        `type`="number"),
+                        `type`="integer"),
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue"))))}))
+                        `format`="zto,pvalue"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="resi",
+                title="`Standardized residuals - ${score}`",
+                rows="(vars)",
+                visible="(resi)",
+                clearWith=list(
+                    "vars",
+                    "model",
+                    "score"),
+                refs="iarm",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="obs", 
+                        `title`="Observed", 
+                        `type`="number"),
+                    list(
+                        `name`="exp", 
+                        `title`="Expexted", 
+                        `type`="number"),
+                    list(
+                        `name`="std", 
+                        `title`="Std.residuals", 
+                        `type`="number"),
+                    list(
+                        `name`="sig", 
+                        `title`="Sig.", 
+                        `type`="text"))))}))
 
 clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "clrBase",
@@ -139,11 +190,14 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param group A string naming the grouping variable from \code{data}
 #' @param model .
 #' @param clr .
+#' @param resi .
+#' @param score .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$clr} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$resi} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -158,7 +212,9 @@ clr <- function(
     vars,
     group,
     model,
-    clr = TRUE) {
+    clr = TRUE,
+    resi = FALSE,
+    score = "low") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("clr requires jmvcore to be installed (restart may be required)")
@@ -177,7 +233,9 @@ clr <- function(
         vars = vars,
         group = group,
         model = model,
-        clr = clr)
+        clr = clr,
+        resi = resi,
+        score = score)
 
     analysis <- clrClass$new(
         options = options,

@@ -25,4 +25,5 @@ Imports:
     deltaPlotR,
     difNLR,
     ggplot2,
-    iarm
+    iarm,
+    eRm

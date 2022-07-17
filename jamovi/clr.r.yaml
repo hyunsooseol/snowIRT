@@ -14,7 +14,7 @@ items:
       type:  Preformatted
 
     - name: clr
-      title: Conditional Likelihood Ratio Test
+      title: Conditional Likelihood Ratio Test for DIF
       type: Table
       visible: (clr)
       clearWith:
@@ -26,18 +26,49 @@ items:
         - name: name
           title: ''
           type: 'text'
-          content: ($key)
 
         - name: clr
-          title: CLR
+          title: Value
           type: number
           
         - name: df
           title: df
-          type: number
+          type: integer
           
         - name: p
           title: p
-          type: number
           format: zto,pvalue
+          
+    - name: resi
+      title: '`Standardized residuals - ${score}`' 
+      type: Table
+      rows: (vars)
+      visible: (resi)
+      clearWith:
+        - vars
+        - model
+        - score
+      refs: iarm
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+          
+        - name: obs
+          title: Observed
+          type: number
+          
+        - name: exp
+          title: Expexted
+          type: number
+          
+        - name: std
+          title: Std.residuals
+          type: number
+
+        - name: sig
+          title: Sig.
+          type: 'text'          
 ...

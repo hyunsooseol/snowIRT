@@ -21,7 +21,7 @@ options:
         - numeric        
 
     - name: group
-      title: Grouping Variable
+      title: Grouping Variable(Required)
       type: Variable
       suggested:
          - nominal
@@ -40,9 +40,24 @@ options:
           name:  RM
         - title: PCM
           name:  PCM
-
+        
     - name: clr
-      title: Conditional likelihood ratio
+      title: DIF
       type: Bool
       default: TRUE 
+
+    - name: resi
+      title: Std.residual
+      type: Bool
+      default: FALSE 
+
+    - name: score
+      title: Score group
+      type: List
+      options:
+        - name: low
+          title: Low 
+        - name: high
+          title: High 
+      default: low
 ...
