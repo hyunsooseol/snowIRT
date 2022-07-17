@@ -41,6 +41,12 @@ options:
         - title: PCM
           name:  PCM
         
+    - name: num
+      title: Item number
+      default: 1
+      type: Integer
+      min: 1
+
     - name: clr
       title: DIF
       type: Bool
@@ -59,5 +65,15 @@ options:
           title: Low 
         - name: high
           title: High 
-      default: low
+
+    - name: plot
+      title: ICC 
+      type: Bool
+      default: false 
+
+    - name: plot1
+      title: ICC for DIF
+      type: Bool
+      default: false 
+  
 ...

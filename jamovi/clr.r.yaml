@@ -19,6 +19,7 @@ items:
       visible: (clr)
       clearWith:
         - vars
+        - group
         - model
       refs: iarm
         
@@ -46,6 +47,7 @@ items:
       visible: (resi)
       clearWith:
         - vars
+        - group
         - model
         - score
       refs: iarm
@@ -70,5 +72,31 @@ items:
 
         - name: sig
           title: Sig.
-          type: 'text'          
+          type: 'text' 
+
+    - name: plot
+      title: ICC
+      type:  Image
+      visible: (plot)
+      width: 600
+      height: 500
+      renderFun: .plot
+      clearWith:
+        - vars
+        - group
+        - model 
+        - num
+        
+    - name: plot1
+      title: ICC for DIF
+      type:  Image
+      visible: (plot1)
+      width: 600
+      height: 500
+      renderFun: .plot1
+      clearWith:
+        - vars
+        - group
+        - model 
+        - num        
 ...

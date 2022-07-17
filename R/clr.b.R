@@ -8,6 +8,7 @@
 #' @importFrom eRm RM
 #' @importFrom eRm PCM
 #' @importFrom iarm item_obsexp
+#' @importFrom iarm ICCplot
 #' @export
 
 clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
@@ -254,8 +255,74 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        }
        
      }
+                     
+                     #  plot----------
+                     
+                     
+                     
+                     image <- self$results$plot
+                     
+                      # image$setState(data[, -1])
+                      
+                       image$setState(data[, -1])
+                     
+                     # ICC FOR DIF---------------
+                     
+                     image <- self$results$plot1
+                     
+                     state <- list(data[, -1], data[[groupVarName]])
+                     
+                     image$setState(state)
+                     
+                     
+                },
+                     
+                     .plot = function(image, ggtheme, theme,...) {     
+                     
+                      data <- image$state
+                       
+                       num <- self$options$num
+                      
+                  
+                       plot<-  iarm::ICCplot(data=data, 
+                                             itemnumber=num, 
+                                             method="score",
+                                             icclabel = "yes"
+                                                    )
+                      
+                       
+                       plot <- plot+ggtheme
+                       
+                       print(plot)
+                       TRUE
+                       
+                     },
+     
+     .plot1 = function(image, ggtheme, theme,...) {     
+       
+      
+       num <- self$options$num
+       
+       data <- image$state[[1]]
+       group <- image$state[[2]] 
+       
+       plot1<-  iarm::ICCplot(data= data, 
+                             itemnumber= num, 
+                             method="cut",
+                             icclabel = "yes",
+                              dif="yes",
+                              difvar=group)
+       
+       
+       plot1 <- plot1+ggtheme
+       
+       print(plot1)
+       TRUE
+       
+     }
+                     
 
-                }               
+                              
        
      )
 )

@@ -33,13 +33,36 @@ children:
     children:
       - type: LayoutBox
         margin: large
+        cell:
+          column: 0
+          row: 0
+        stretchFactor: 1
         children:
-          - type: CheckBox
-            name: clr
-      - type: CheckBox
-        name: resi
+          - type: Label
+            label: Statistics
+            children:
+              - type: CheckBox
+                name: clr
+              - type: CheckBox
+                name: resi
+                children:
+                  - type: ComboBox
+                    name: score
+                    enable: (resi)
+      - type: LayoutBox
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        stretchFactor: 1
         children:
-          - type: ComboBox
-            name: score
-            enable: (resi)
-
+          - type: Label
+            label: Plots
+            children:
+              - type: TextBox
+                name: num
+                format: number
+              - type: CheckBox
+                name: plot
+              - type: CheckBox
+                name: plot1

@@ -9,9 +9,12 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             vars = NULL,
             group = NULL,
             model = NULL,
+            num = 1,
             clr = TRUE,
             resi = FALSE,
-            score = "low", ...) {
+            score = NULL,
+            plot = FALSE,
+            plot1 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -39,6 +42,11 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=list(
                     "RM",
                     "PCM"))
+            private$..num <- jmvcore::OptionInteger$new(
+                "num",
+                num,
+                default=1,
+                min=1)
             private$..clr <- jmvcore::OptionBool$new(
                 "clr",
                 clr,
@@ -52,30 +60,46 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 score,
                 options=list(
                     "low",
-                    "high"),
-                default="low")
+                    "high"))
+            private$..plot <- jmvcore::OptionBool$new(
+                "plot",
+                plot,
+                default=FALSE)
+            private$..plot1 <- jmvcore::OptionBool$new(
+                "plot1",
+                plot1,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..model)
+            self$.addOption(private$..num)
             self$.addOption(private$..clr)
             self$.addOption(private$..resi)
             self$.addOption(private$..score)
+            self$.addOption(private$..plot)
+            self$.addOption(private$..plot1)
         }),
     active = list(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
         model = function() private$..model$value,
+        num = function() private$..num$value,
         clr = function() private$..clr$value,
         resi = function() private$..resi$value,
-        score = function() private$..score$value),
+        score = function() private$..score$value,
+        plot = function() private$..plot$value,
+        plot1 = function() private$..plot1$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..model = NA,
+        ..num = NA,
         ..clr = NA,
         ..resi = NA,
-        ..score = NA)
+        ..score = NA,
+        ..plot = NA,
+        ..plot1 = NA)
 )
 
 clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -85,7 +109,9 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         instructions = function() private$.items[["instructions"]],
         text = function() private$.items[["text"]],
         clr = function() private$.items[["clr"]],
-        resi = function() private$.items[["resi"]]),
+        resi = function() private$.items[["resi"]],
+        plot = function() private$.items[["plot"]],
+        plot1 = function() private$.items[["plot1"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -109,6 +135,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(clr)",
                 clearWith=list(
                     "vars",
+                    "group",
                     "model"),
                 refs="iarm",
                 columns=list(
@@ -136,6 +163,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(resi)",
                 clearWith=list(
                     "vars",
+                    "group",
                     "model",
                     "score"),
                 refs="iarm",
@@ -160,7 +188,33 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="sig", 
                         `title`="Sig.", 
-                        `type`="text"))))}))
+                        `type`="text"))))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot",
+                title="ICC",
+                visible="(plot)",
+                width=600,
+                height=500,
+                renderFun=".plot",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "model",
+                    "num")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot1",
+                title="ICC for DIF",
+                visible="(plot1)",
+                width=600,
+                height=500,
+                renderFun=".plot1",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "model",
+                    "num")))}))
 
 clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "clrBase",
@@ -189,15 +243,20 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param vars .
 #' @param group A string naming the grouping variable from \code{data}
 #' @param model .
+#' @param num .
 #' @param clr .
 #' @param resi .
 #' @param score .
+#' @param plot .
+#' @param plot1 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$clr} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$resi} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -212,9 +271,12 @@ clr <- function(
     vars,
     group,
     model,
+    num = 1,
     clr = TRUE,
     resi = FALSE,
-    score = "low") {
+    score,
+    plot = FALSE,
+    plot1 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("clr requires jmvcore to be installed (restart may be required)")
@@ -233,9 +295,12 @@ clr <- function(
         vars = vars,
         group = group,
         model = model,
+        num = num,
         clr = clr,
         resi = resi,
-        score = score)
+        score = score,
+        plot = plot,
+        plot1 = plot1)
 
     analysis <- clrClass$new(
         options = options,
