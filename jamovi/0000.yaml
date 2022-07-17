@@ -55,6 +55,7 @@ analyses:
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: Conditional Likelihood Ratio Test
+    menuSubgroup: Differential Item Functioning
 datasets:
   - name: dichotomous
     path: hls.omv

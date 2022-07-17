@@ -2,6 +2,7 @@
 name:  clr
 title: Conditional Likelihood Ratio Test
 menuGroup: snowIRT
+menuSubgroup: Differential Item Functioning
 version: '1.0.0'
 jas: '1.2'
 
@@ -48,7 +49,7 @@ options:
       min: 1
 
     - name: clr
-      title: DIF
+      title: Differential Item Functioning(DIF)
       type: Bool
       default: TRUE 
 
@@ -67,7 +68,7 @@ options:
           title: High 
 
     - name: plot
-      title: ICC 
+      title: Item Characteristic Curve(ICC) 
       type: Bool
       default: false 
 

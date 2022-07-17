@@ -158,7 +158,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                        rm<- iarm::item_obsexp(rm.mod)
                        
-                       self$results$text$setContent(rm)
+                    #   self$results$text$setContent(rm)
 
                      
                          if(score=="low"){
@@ -211,7 +211,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        pc<- item_obsexp(pc.mod)
        
      
-       self$results$text$setContent(pc)
+    #   self$results$text$setContent(pc)
        
        
        if(score=="low"){
@@ -281,14 +281,13 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                      
                       data <- image$state
                        
-                       num <- self$options$num
+                      num <- self$options$num
                       
                   
                        plot<-  iarm::ICCplot(data=data, 
                                              itemnumber=num, 
-                                             method="score",
-                                             icclabel = "yes"
-                                                    )
+                                             method="score"
+                                                       )
                       
                        
                        plot <- plot+ggtheme
@@ -301,17 +300,25 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
      .plot1 = function(image, ggtheme, theme,...) {     
        
       
+       plot1 <- self$options$plot1
+       
+       if (!plot1)
+         return()
+       
        num <- self$options$num
        
        data <- image$state[[1]]
        group <- image$state[[2]] 
        
+       
+       
        plot1<-  iarm::ICCplot(data= data, 
                              itemnumber= num, 
-                             method="cut",
+                             method="score",
                              icclabel = "yes",
                               dif="yes",
-                              difvar=group)
+                              difvar=group,
+                             difstats = "no")
        
        
        plot1 <- plot1+ggtheme

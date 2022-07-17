@@ -107,7 +107,6 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        text = function() private$.items[["text"]],
         clr = function() private$.items[["clr"]],
         resi = function() private$.items[["resi"]],
         plot = function() private$.items[["plot"]],
@@ -124,10 +123,6 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="text",
-                title="Conditional Likelihood Ratio Test"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="clr",
@@ -252,7 +247,6 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$clr} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$resi} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr

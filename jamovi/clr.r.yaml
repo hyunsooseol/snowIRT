@@ -9,10 +9,6 @@ items:
       type: Html
       visible: True
       
-    - name:  text
-      title: Conditional Likelihood Ratio Test
-      type:  Preformatted
-
     - name: clr
       title: Conditional Likelihood Ratio Test for DIF
       type: Table
