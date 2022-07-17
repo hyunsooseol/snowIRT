@@ -94,7 +94,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                   
                    
-                     names <- c("Overall", "Group")
+                     names <- c("Overall", groupVarName)
 
                      clr <- as.numeric(dif[,1])
                      df <- as.numeric(dif[,2])
