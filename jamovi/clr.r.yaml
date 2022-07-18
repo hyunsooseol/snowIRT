@@ -2,7 +2,7 @@
 name:  clr
 title: Conditional Likelihood Ratio Test
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name: instructions
       title: Instructions
@@ -10,7 +10,7 @@ items:
       visible: True
       
     - name: clr
-      title: Conditional Likelihood Ratio Test for DIF
+      title: Conditional Likelihood Ratio Test 
       type: Table
       visible: (clr)
       clearWith:
@@ -111,7 +111,7 @@ items:
           superTitle: '95% CI'
  
     - name: plot
-      title: ICC
+      title: Item Characteristic Curve(ICC)
       type:  Image
       visible: (plot)
       width: 600
@@ -124,7 +124,7 @@ items:
         - num
         
     - name: plot1
-      title: ICC for DIF
+      title: Item Characteristic Curve for DIF
       type:  Image
       visible: (plot1)
       width: 600

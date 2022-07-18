@@ -126,7 +126,8 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Conditional Likelihood Ratio Test")
+                title="Conditional Likelihood Ratio Test",
+                refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
@@ -135,7 +136,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="clr",
-                title="Conditional Likelihood Ratio Test for DIF",
+                title="Conditional Likelihood Ratio Test",
                 visible="(clr)",
                 clearWith=list(
                     "vars",
@@ -236,7 +237,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
-                title="ICC",
+                title="Item Characteristic Curve(ICC)",
                 visible="(plot)",
                 width=600,
                 height=500,
@@ -249,7 +250,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
-                title="ICC for DIF",
+                title="Item Characteristic Curve for DIF",
                 visible="(plot1)",
                 width=600,
                 height=500,

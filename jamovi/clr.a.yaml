@@ -49,12 +49,12 @@ options:
       min: 1
 
     - name: clr
-      title: Differential Item Functioning(DIF)
+      title: Conditional likelihood ratio 
       type: Bool
       default: TRUE 
 
     - name: resi
-      title: Std.residual
+      title: Item residual
       type: Bool
       default: FALSE 
 

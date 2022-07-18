@@ -95,6 +95,20 @@ datasets:
     tags:
       - DIF
       - Ordinal
+  - name: AMTS
+    path: amts.omv
+    description: The Abbreviated Mental Test Score (AMTS)
+    tags:
+      - binary
+      - DIF
+      - Conditional likelihood test
+  - name: DESC-II
+    path: dep.omv
+    description: Depression Screening DESC-II
+    tags:
+      - polytomous
+      - DIF
+      - Conditional likelihood test
 usesNative: true
 minApp: 1.8.0
 
