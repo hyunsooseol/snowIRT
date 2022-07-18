@@ -8,6 +8,7 @@
 #' @importFrom eRm RM
 #' @importFrom eRm PCM
 #' @importFrom iarm item_obsexp
+#' @importFrom iarm partgam_DIF
 #' @importFrom iarm ICCplot
 #' @export
 
@@ -85,14 +86,6 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                            model=self$options$model)
                     #########################################################
       
-                    # table <- self$results$clr
-                    # 
-                    # table$addRow(rowKey="overall", 
-                    #              values=list(clr=clr[1,1], df=df[1,2], p=pvalue[1,3]))
-                    # table$addRow(rowKey=groupVarName, 
-                    #              values=list(clr=clr[2,1], df=df[2,2], p=pvalue[2,3]))   
-
-                  
                    
                      names <- c("Overall", groupVarName)
 
@@ -127,21 +120,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                      }
 
-                      #  for(name in names){
-                      # 
-                      #     row <- list()
-                      # 
-                      #     row[["clr"]] <- res[name,1]
-                      # 
-                      #     row[["df"]] <- res[name,2]
-                      # 
-                      #     row[["p"]] <- res[name,3]
-                      # 
-                      # 
-                      #     table$addRow(rowKey = name, values = row)
-                      # 
-                      # }
-
+                      
                      # Standardized residuals----------------
 
                      items <- self$options$vars   
@@ -254,9 +233,50 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          
        }
        
+       
      }
                      
-                     #  plot----------
+                     # Partial Gamma to detect Differential Item Functioning (DIF)------
+                     
+                     gam <- iarm::partgam_DIF(dat.items=data[, -1],dat.exo=data[[groupVarName]])
+                     ################################################################
+                     
+                     gamma <- gam$gamma
+                     se <- gam$se
+                     p <- gam$pvalue
+                     lower <- gam$lower
+                     upper <- gam$upper
+                     
+                     #  gf <- data.frame(gamma,se,p,lower, upper)
+                     
+                     ################## 
+                     
+                     items <- self$options$vars
+                     
+                     table <- self$results$dif
+                     
+                     for(i in seq_along(items)){
+                       
+                       row <- list()
+                       
+                       row[["gamma"]] <- gamma[i]
+                       
+                       row[["se"]] <- se[i]
+                       
+                       row[["p"]] <- p[i]
+                       
+                       row[["lower"]] <- lower[i]
+                       
+                       row[["upper"]] <- upper[i]
+                       
+                       table$setRow(rowKey = items[i], values = row)
+                       
+                     }
+                     
+                     
+                     
+                     
+                      #  plot----------
                      
                      
                      

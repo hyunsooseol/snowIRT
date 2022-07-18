@@ -70,6 +70,46 @@ items:
           title: Sig.
           type: 'text' 
 
+    - name: dif
+      title: Partial Gamma to detect Differential Item Functioning (DIF)
+      type: Table
+      visible: (dif)
+      rows: (vars)
+      clearWith:
+        - vars
+        - group
+        - model
+        - padjust
+      refs: iarm
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: gamma
+          title: Gamma
+          type: number
+          
+        - name: se
+          title: SE
+          type: number
+
+        - name: p
+          title: p
+          format: zto,pvalue
+
+        - name: lower
+          title: 'Lower'
+          type: number
+          superTitle: '95% CI'
+
+        - name: upper
+          title: 'Upper'
+          type: number
+          superTitle: '95% CI'
+ 
     - name: plot
       title: ICC
       type:  Image

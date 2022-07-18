@@ -67,6 +67,11 @@ options:
         - name: high
           title: High 
 
+    - name: dif
+      title: Partial Gamma for DIF
+      type: Bool
+      default: FALSE 
+
     - name: plot
       title: Item Characteristic Curve(ICC) 
       type: Bool

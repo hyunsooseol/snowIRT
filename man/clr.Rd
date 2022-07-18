@@ -13,6 +13,7 @@ clr(
   clr = TRUE,
   resi = FALSE,
   score,
+  dif = FALSE,
   plot = FALSE,
   plot1 = FALSE
 )
@@ -34,6 +35,8 @@ clr(
 
 \item{score}{.}
 
+\item{dif}{.}
+
 \item{plot}{.}
 
 \item{plot1}{.}
@@ -44,6 +47,7 @@ A results object containing:
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$clr} \tab \tab \tab \tab \tab a table \cr
   \code{results$resi} \tab \tab \tab \tab \tab a table \cr
+  \code{results$dif} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 }

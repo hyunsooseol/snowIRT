@@ -49,6 +49,8 @@ children:
                   - type: ComboBox
                     name: score
                     enable: (resi)
+              - type: CheckBox
+                name: dif
       - type: LayoutBox
         margin: large
         cell:

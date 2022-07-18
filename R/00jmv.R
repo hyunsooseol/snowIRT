@@ -50,4 +50,18 @@
         `year`=2022, 
         `title`="difNLR: DIF and DDF Detection by Non-Linear Regression Models", 
         `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=difNLR", 
-        `url`="https://CRAN.R-project.org/package=difNLR"))
+        `url`="https://CRAN.R-project.org/package=difNLR"), 
+    `iarm`=list(
+        `type`="software", 
+        `author`="Mueller, M., & Santiago, P.", 
+        `year`=2020, 
+        `title`="iarm: Item Analysis in Rasch Models", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=iarm", 
+        `url`="https://CRAN.R-project.org/package=iarm"), 
+    `eRm`=list(
+        `type`="software", 
+        `author`="Mair, P., Hatzinger, R., Maier, M., Rusch, T., & Debelak R.", 
+        `year`=2021, 
+        `title`="eRm: Extended Rasch Modeling", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=eRm", 
+        `url`="https://CRAN.R-project.org/package=eRm"))

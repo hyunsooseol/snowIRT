@@ -13,6 +13,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             clr = TRUE,
             resi = FALSE,
             score = NULL,
+            dif = FALSE,
             plot = FALSE,
             plot1 = FALSE, ...) {
 
@@ -61,6 +62,10 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=list(
                     "low",
                     "high"))
+            private$..dif <- jmvcore::OptionBool$new(
+                "dif",
+                dif,
+                default=FALSE)
             private$..plot <- jmvcore::OptionBool$new(
                 "plot",
                 plot,
@@ -77,6 +82,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..clr)
             self$.addOption(private$..resi)
             self$.addOption(private$..score)
+            self$.addOption(private$..dif)
             self$.addOption(private$..plot)
             self$.addOption(private$..plot1)
         }),
@@ -88,6 +94,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         clr = function() private$..clr$value,
         resi = function() private$..resi$value,
         score = function() private$..score$value,
+        dif = function() private$..dif$value,
         plot = function() private$..plot$value,
         plot1 = function() private$..plot1$value),
     private = list(
@@ -98,6 +105,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..clr = NA,
         ..resi = NA,
         ..score = NA,
+        ..dif = NA,
         ..plot = NA,
         ..plot1 = NA)
 )
@@ -109,6 +117,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         instructions = function() private$.items[["instructions"]],
         clr = function() private$.items[["clr"]],
         resi = function() private$.items[["resi"]],
+        dif = function() private$.items[["dif"]],
         plot = function() private$.items[["plot"]],
         plot1 = function() private$.items[["plot1"]]),
     private = list(),
@@ -184,6 +193,46 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="sig", 
                         `title`="Sig.", 
                         `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="dif",
+                title="Partial Gamma to detect Differential Item Functioning (DIF)",
+                visible="(dif)",
+                rows="(vars)",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "model",
+                    "padjust"),
+                refs="iarm",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="gamma", 
+                        `title`="Gamma", 
+                        `type`="number"),
+                    list(
+                        `name`="se", 
+                        `title`="SE", 
+                        `type`="number"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="lower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="95% CI"),
+                    list(
+                        `name`="upper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="95% CI"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -242,6 +291,7 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param clr .
 #' @param resi .
 #' @param score .
+#' @param dif .
 #' @param plot .
 #' @param plot1 .
 #' @return A results object containing:
@@ -249,6 +299,7 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$clr} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$resi} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$dif} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #' }
@@ -269,6 +320,7 @@ clr <- function(
     clr = TRUE,
     resi = FALSE,
     score,
+    dif = FALSE,
     plot = FALSE,
     plot1 = FALSE) {
 
@@ -293,6 +345,7 @@ clr <- function(
         clr = clr,
         resi = resi,
         score = score,
+        dif = dif,
         plot = plot,
         plot1 = plot1)
 
