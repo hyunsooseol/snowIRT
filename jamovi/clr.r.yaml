@@ -71,7 +71,7 @@ items:
           type: 'text' 
 
     - name: dif
-      title: Partial Gamma to detect Differential Item Functioning (DIF)
+      title: Partial Gamma Coefficients for DIF
       type: Table
       visible: (dif)
       rows: (vars)
@@ -89,7 +89,7 @@ items:
           content: ($key)
 
         - name: gamma
-          title: Gamma
+          title: Estimate
           type: number
           
         - name: se
@@ -117,6 +117,7 @@ items:
       width: 600
       height: 500
       renderFun: .plot
+      refs: iarm
       clearWith:
         - vars
         - group
@@ -130,6 +131,7 @@ items:
       width: 600
       height: 500
       renderFun: .plot1
+      refs: iarm
       clearWith:
         - vars
         - group

@@ -197,7 +197,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="dif",
-                title="Partial Gamma to detect Differential Item Functioning (DIF)",
+                title="Partial Gamma Coefficients for DIF",
                 visible="(dif)",
                 rows="(vars)",
                 clearWith=list(
@@ -214,7 +214,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="gamma", 
-                        `title`="Gamma", 
+                        `title`="Estimate", 
                         `type`="number"),
                     list(
                         `name`="se", 
@@ -242,6 +242,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=600,
                 height=500,
                 renderFun=".plot",
+                refs="iarm",
                 clearWith=list(
                     "vars",
                     "group",
@@ -255,6 +256,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=600,
                 height=500,
                 renderFun=".plot1",
+                refs="iarm",
                 clearWith=list(
                     "vars",
                     "group",

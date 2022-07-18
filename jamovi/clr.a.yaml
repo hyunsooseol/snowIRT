@@ -49,12 +49,12 @@ options:
       min: 1
 
     - name: clr
-      title: Conditional likelihood ratio 
+      title: Conditional likelihood ratio  
       type: Bool
       default: TRUE 
 
     - name: resi
-      title: Item residual
+      title: Standardized residuals
       type: Bool
       default: FALSE 
 
@@ -68,7 +68,7 @@ options:
           title: High 
 
     - name: dif
-      title: Partial Gamma for DIF
+      title: Partial Gamma coefficients for DIF
       type: Bool
       default: FALSE 
 
