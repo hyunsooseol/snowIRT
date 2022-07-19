@@ -68,3 +68,7 @@ children:
                 name: plot
               - type: CheckBox
                 name: plot1
+                children:
+                  - type: ComboBox
+                    name: method
+                    enable: (plot1)

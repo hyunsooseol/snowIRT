@@ -321,6 +321,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
      
      .plot1 = function(image, ggtheme, theme,...) {     
        
+       method <- self$options$method
       
        plot1 <- self$options$plot1
        
@@ -336,7 +337,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        
        plot1<-  iarm::ICCplot(data= data, 
                              itemnumber= num, 
-                             method="score",
+                             method= method,
                              icclabel = "yes",
                               dif="yes",
                               difvar=group,

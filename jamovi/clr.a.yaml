@@ -48,6 +48,15 @@ options:
       type: Integer
       min: 1
 
+    - name: method
+      title: Method
+      type: List
+      options:
+        - title: score
+          name:  score
+        - title: cut
+          name:  cut
+          
     - name: clr
       title: Conditional likelihood ratio  
       type: Bool

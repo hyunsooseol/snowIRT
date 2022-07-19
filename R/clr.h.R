@@ -10,6 +10,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             group = NULL,
             model = NULL,
             num = 1,
+            method = NULL,
             clr = TRUE,
             resi = FALSE,
             score = NULL,
@@ -48,6 +49,12 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 num,
                 default=1,
                 min=1)
+            private$..method <- jmvcore::OptionList$new(
+                "method",
+                method,
+                options=list(
+                    "score",
+                    "cut"))
             private$..clr <- jmvcore::OptionBool$new(
                 "clr",
                 clr,
@@ -79,6 +86,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..group)
             self$.addOption(private$..model)
             self$.addOption(private$..num)
+            self$.addOption(private$..method)
             self$.addOption(private$..clr)
             self$.addOption(private$..resi)
             self$.addOption(private$..score)
@@ -91,6 +99,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         group = function() private$..group$value,
         model = function() private$..model$value,
         num = function() private$..num$value,
+        method = function() private$..method$value,
         clr = function() private$..clr$value,
         resi = function() private$..resi$value,
         score = function() private$..score$value,
@@ -102,6 +111,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..group = NA,
         ..model = NA,
         ..num = NA,
+        ..method = NA,
         ..clr = NA,
         ..resi = NA,
         ..score = NA,
@@ -261,7 +271,8 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "vars",
                     "group",
                     "model",
-                    "num")))}))
+                    "num",
+                    "method")))}))
 
 clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "clrBase",
@@ -291,6 +302,7 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param group A string naming the grouping variable from \code{data}
 #' @param model .
 #' @param num .
+#' @param method .
 #' @param clr .
 #' @param resi .
 #' @param score .
@@ -320,6 +332,7 @@ clr <- function(
     group,
     model,
     num = 1,
+    method,
     clr = TRUE,
     resi = FALSE,
     score,
@@ -345,6 +358,7 @@ clr <- function(
         group = group,
         model = model,
         num = num,
+        method = method,
         clr = clr,
         resi = resi,
         score = score,

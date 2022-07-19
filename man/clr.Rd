@@ -10,6 +10,7 @@ clr(
   group,
   model,
   num = 1,
+  method,
   clr = TRUE,
   resi = FALSE,
   score,
@@ -28,6 +29,8 @@ clr(
 \item{model}{.}
 
 \item{num}{.}
+
+\item{method}{.}
 
 \item{clr}{.}
 
