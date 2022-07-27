@@ -19,13 +19,13 @@ analyses:
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: Dichotomous Rasch Model
-    menuSubgroup: Dichotomous
+    menuSubgroup: IRT
   - title: Polytomous Rasch Model
     name: polytomous
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: Polytomous Rasch Model
-    menuSubgroup: Polytomous
+    menuSubgroup: IRT
   - title: Raju method
     name: dif
     ns: snowIRT

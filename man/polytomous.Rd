@@ -24,7 +24,9 @@ polytomous(
   inplot = FALSE,
   outplot = FALSE,
   angle = 0,
-  tau = FALSE
+  tau = FALSE,
+  model = FALSE,
+  lr = FALSE
 )
 }
 \arguments{
@@ -68,12 +70,18 @@ polytomous(
 where 0 degrees represents completely horizontal labels.}
 
 \item{tau}{.}
+
+\item{model}{.}
+
+\item{lr}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
+  \code{results$model} \tab \tab \tab \tab \tab a table \cr
+  \code{results$lr} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
@@ -89,6 +97,7 @@ A results object containing:
   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$resid} \tab \tab \tab \tab \tab an output \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

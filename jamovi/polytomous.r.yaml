@@ -36,6 +36,77 @@ items:
           format: zto,pvalue
           visible: (modelfitp)
           
+    - name: model
+      title: Model comparison
+      type: Table
+      visible: (model)
+      clearWith:
+        - vars
+      refs: CDM
+
+      columns:
+        - name: name
+          title: 'Model'
+          type: 'text'
+         
+        - name: log
+          title: Log-likelihood
+          type: number
+
+        - name: dev
+          title: Deviance
+          type: number
+          
+        - name: aic
+          title: AIC
+          type: number
+          
+        - name: bic
+          title: BIC
+          type: number         
+
+        - name: caic
+          title: CAIC
+          type: number
+
+        - name: npars
+          title: Parameters
+          type: integer
+
+        - name: obs
+          title: N
+          type: integer
+
+    - name: lr
+      title: Likelihood ratio test
+      type: Table
+      rows: 1
+      visible: (lr)
+      clearWith:
+        - vars
+      refs: CDM
+
+      columns:
+        - name: model1
+          title: 'Model 1'
+          type: 'text'
+
+        - name: model2
+          title: 'Model 2'
+          type: 'text'
+          
+        - name: chi
+          title: Chi_square
+          type: number
+
+        - name: df
+          title: df
+          type: integer
+          
+        - name: p
+          title: p
+          format: zto,pvalue
+
     - name: mat
       title: Q3 Correlation Matrix
       type: Table
@@ -130,8 +201,8 @@ items:
           type: Image
           title: $key
           description: ESC plot
-          width:  400
-          height: 400
+          width:  500
+          height: 500
           visible: (esc)
           renderFun: .escPlot
           clearWith: []     
@@ -145,8 +216,8 @@ items:
           type: Image
           title: $key
           description: ICC plot
-          width:  400
-          height: 400
+          width:  500
+          height: 500
           visible: (icc)
           renderFun: .plot
           clearWith: []
@@ -216,4 +287,10 @@ items:
     - name:  text
       title: Rating Scale Deltas/thresholds
       type:  Preformatted
+
+    - name: resid
+      title: Standardized residuals for PCA
+      type: Output
+      clearWith:
+        - vars        
 ...

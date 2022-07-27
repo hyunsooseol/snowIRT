@@ -24,7 +24,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             inplot = FALSE,
             outplot = FALSE,
             angle = 0,
-            tau = FALSE, ...) {
+            tau = FALSE,
+            model = FALSE,
+            lr = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -123,6 +125,16 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "tau",
                 tau,
                 default=FALSE)
+            private$..model <- jmvcore::OptionBool$new(
+                "model",
+                model,
+                default=FALSE)
+            private$..lr <- jmvcore::OptionBool$new(
+                "lr",
+                lr,
+                default=FALSE)
+            private$..resid <- jmvcore::OptionOutput$new(
+                "resid")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -148,6 +160,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..outplot)
             self$.addOption(private$..angle)
             self$.addOption(private$..tau)
+            self$.addOption(private$..model)
+            self$.addOption(private$..lr)
+            self$.addOption(private$..resid)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -173,7 +188,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         inplot = function() private$..inplot$value,
         outplot = function() private$..outplot$value,
         angle = function() private$..angle$value,
-        tau = function() private$..tau$value),
+        tau = function() private$..tau$value,
+        model = function() private$..model$value,
+        lr = function() private$..lr$value,
+        resid = function() private$..resid$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -198,7 +216,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..inplot = NA,
         ..outplot = NA,
         ..angle = NA,
-        ..tau = NA)
+        ..tau = NA,
+        ..model = NA,
+        ..lr = NA,
+        ..resid = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -207,6 +228,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         scale = function() private$.items[["scale"]],
+        model = function() private$.items[["model"]],
+        lr = function() private$.items[["lr"]],
         mat = function() private$.items[["mat"]],
         thresh = function() private$.items[["thresh"]],
         thurs = function() private$.items[["thurs"]],
@@ -221,7 +244,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pse = function() private$.items[["pse"]],
         pinfit = function() private$.items[["pinfit"]],
         poutfit = function() private$.items[["poutfit"]],
-        text = function() private$.items[["text"]]),
+        text = function() private$.items[["text"]],
+        resid = function() private$.items[["resid"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -262,6 +286,77 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="p", 
                         `format`="zto,pvalue", 
                         `visible`="(modelfitp)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="model",
+                title="Model comparison",
+                visible="(model)",
+                clearWith=list(
+                    "vars"),
+                refs="CDM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="Model", 
+                        `type`="text"),
+                    list(
+                        `name`="log", 
+                        `title`="Log-likelihood", 
+                        `type`="number"),
+                    list(
+                        `name`="dev", 
+                        `title`="Deviance", 
+                        `type`="number"),
+                    list(
+                        `name`="aic", 
+                        `title`="AIC", 
+                        `type`="number"),
+                    list(
+                        `name`="bic", 
+                        `title`="BIC", 
+                        `type`="number"),
+                    list(
+                        `name`="caic", 
+                        `title`="CAIC", 
+                        `type`="number"),
+                    list(
+                        `name`="npars", 
+                        `title`="Parameters", 
+                        `type`="integer"),
+                    list(
+                        `name`="obs", 
+                        `title`="N", 
+                        `type`="integer"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="lr",
+                title="Likelihood ratio test",
+                rows=1,
+                visible="(lr)",
+                clearWith=list(
+                    "vars"),
+                refs="CDM",
+                columns=list(
+                    list(
+                        `name`="model1", 
+                        `title`="Model 1", 
+                        `type`="text"),
+                    list(
+                        `name`="model2", 
+                        `title`="Model 2", 
+                        `type`="text"),
+                    list(
+                        `name`="chi", 
+                        `title`="Chi_square", 
+                        `type`="number"),
+                    list(
+                        `name`="df", 
+                        `title`="df", 
+                        `type`="integer"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="mat",
@@ -354,8 +449,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 template=jmvcore::Image$new(
                     options=options,
                     title="$key",
-                    width=400,
-                    height=400,
+                    width=500,
+                    height=500,
                     visible="(esc)",
                     renderFun=".escPlot",
                     clearWith=list())))
@@ -367,8 +462,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 template=jmvcore::Image$new(
                     options=options,
                     title="$key",
-                    width=400,
-                    height=400,
+                    width=500,
+                    height=500,
                     visible="(icc)",
                     renderFun=".plot",
                     clearWith=list())))
@@ -437,7 +532,13 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
-                title="Rating Scale Deltas/thresholds"))}))
+                title="Rating Scale Deltas/thresholds"))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="resid",
+                title="Standardized residuals for PCA",
+                clearWith=list(
+                    "vars")))}))
 
 polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "polytomousBase",
@@ -483,10 +584,14 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param angle a number from 0 to 45 defining the angle of the x-axis labels,
 #'   where 0 degrees represents completely horizontal labels.
 #' @param tau .
+#' @param model .
+#' @param lr .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$model} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$lr} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
@@ -502,6 +607,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -531,7 +637,9 @@ polytomous <- function(
     inplot = FALSE,
     outplot = FALSE,
     angle = 0,
-    tau = FALSE) {
+    tau = FALSE,
+    model = FALSE,
+    lr = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("polytomous requires jmvcore to be installed (restart may be required)")
@@ -562,7 +670,9 @@ polytomous <- function(
         inplot = inplot,
         outplot = outplot,
         angle = angle,
-        tau = tau)
+        tau = tau,
+        model = model,
+        lr = lr)
 
     analysis <- polytomousClass$new(
         options = options,

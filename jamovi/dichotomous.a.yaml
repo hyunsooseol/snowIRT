@@ -2,7 +2,7 @@
 name:  dichotomous
 title: Dichotomous Rasch Model
 menuGroup: snowIRT
-menuSubgroup: Dichotomous
+menuSubgroup: IRT
 version: '1.0.0'
 jas: '1.2'
 

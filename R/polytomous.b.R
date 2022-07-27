@@ -8,7 +8,9 @@
 #' @importFrom TAM tam.threshold
 #' @importFrom TAM tam
 #' @importFrom TAM tam.wle
+#' @importFrom TAM IRT.residuals
 #' @importFrom ShinyItemAnalysis ggWrightMap
+#' @importFrom CDM IRT.compareModels
 #' @import ggplot2
 #' @export
 
@@ -110,6 +112,13 @@ adjustment; Ho= the data fit the Rasch model."
          # delta-tau parameter--------
            private$.populateThresholdsTable(results)
           
+          # model comparison----------
+          
+         
+           private$.populateModelTable(results)
+          
+          private$.populateLrTable(results)
+          
           # populate person table------
           
          # private$.populatePersonTable(results)
@@ -136,6 +145,11 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.prepareOutfitPlot(data)
           
+          # prepare rating scale category plot=========
+          
+        #  private$.prepareRatingPlot(data)
+          
+          
         }
         
       },
@@ -154,8 +168,19 @@ adjustment; Ho= the data fit the Rasch model."
         if(self$options$tau==TRUE){
         
         tau <- tamobj$item_irt
-        
-        
+          
+        # rsmod <- psychotools::rsmodel(as.matrix(data))
+        # 
+        # ## extract threshold parameters with sum zero restriction
+        # thr <- psychotools::threshpar(rsmod)
+        # 
+        # # convering data frame-------
+        # 
+        # df <- purrr::map_df(thr, dplyr::bind_rows)
+        # 
+        # tau<- data.frame(df)
+        # 
+        # 
         self$results$text$setContent(tau)
         
         }
@@ -235,6 +260,31 @@ adjustment; Ho= the data fit the Rasch model."
         tau<- delta[,c(-1,-2,-3)]
         nc1 <- ncol(tau)
         
+        ########## model comparison-----------
+        RSM <- tamobj
+        PCM <- mod_pcm
+        
+        comp <- CDM::IRT.compareModels(PCM, RSM)
+        
+        name <- comp$IC$Model
+        log <- comp$IC$loglike
+        dev <- comp$IC$Deviance
+        aic <- comp$IC$AIC
+        bic <- comp$IC$BIC
+        caic <- comp$IC$CAIC
+        npars <- comp$IC$Npars
+        obs <- comp$IC$Nobs
+        
+        #####################
+        
+        lr<- comp$LRtest
+        
+        model1 <- lr$Model1
+        model2<- lr$Model2
+        chi<- lr$Chi2
+        df<- lr$df
+        p<- lr$p
+        
         results <-
           list(
             'imeasure' = imeasure,
@@ -249,14 +299,30 @@ adjustment; Ho= the data fit the Rasch model."
              'nc' = nc,
             'pmeasure' = pmeasure,
             'tau'=tau,
-            'nc1'=nc1
+            'nc1'=nc1,
+            'name'=name,
+            'log'=log,
+            'dev'=dev,
+            'aic'=aic,
+            'bic'=bic,
+            'caic'=caic,
+            'npars'=npars,
+            'obs'=obs,
+            'model1'=model1,
+            'model2'=model2,
+            'chi'=chi,
+            'df'=df,
+            'p'=p
           )
+       
+          
+        },
         
-      },
-      
+    
       # Init. tables ------------------------------------
       
       .initItemsTable = function() {
+        
         table <- self$results$items
         
         for (i in seq_along(items))
@@ -264,7 +330,66 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
+      .populateModelTable = function(results) {
       
+        table <- self$results$model
+        
+         name <- results$name
+         log <- results$log
+         dev <- results$dev
+         aic <- results$aic
+         bic <- results$bic
+         caic <- results$caic
+         npars <- results$npars
+         obs <- results$obs
+        
+        
+        for(i in seq_along(1:2)){
+          
+          row <- list()
+          
+          row[['name']] <- name[i]
+          row[['log']] <- log[i]
+          row[['dev']] <- dev[i]
+          row[['aic']] <- aic[i]
+          row[['bic']] <- bic[i]
+          row[['caic']] <- caic[i]
+          row[['npars']] <- npars[i]
+          row[['obs']] <- obs[i]
+          
+          table$addRow(rowKey = i, values = row)
+          
+        }
+        
+      
+      },
+     
+      .populateLrTable = function(results) {
+        
+        table <- self$results$lr
+        
+        model1 <- results$model1
+        model2 <- results$model2
+        chi <- results$chi
+        df <- results$df
+        p <- results$p
+        
+        
+          row <- list()
+          
+          row[['model1']] <- model1
+          row[['model2']] <- model2
+          row[['chi']] <- chi
+          row[['df']] <- df
+          row[['p']] <- p
+         
+          table$setRow(rowNo = 1, values = row)
+          
+        
+        
+      },
+      
+       
       # populate scale table-------------------
       
       .populateScaleTable = function(results) {
@@ -478,6 +603,9 @@ adjustment; Ho= the data fit the Rasch model."
      }
    },
    
+   # Model comparison---------
+   
+     
      
     ##### person statistics for output variable-------------------
       
@@ -550,6 +678,37 @@ adjustment; Ho= the data fit the Rasch model."
        
      }
      
+     if (self$options$resid && self$results$resid$isNotFilled()) {
+       
+       
+       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+       res <- TAM::IRT.residuals(tamobj )
+       resid <- res$stand_residuals
+       
+       
+       keys <- 1:length(self$options$vars)
+       titles <- paste("Item", 1:length(self$options$vars))
+       descriptions <- paste("Item", 1:length(self$options$vars))
+       measureTypes <- rep("continuous", length(self$options$vars))
+       
+       self$results$resid$set(
+         keys=keys,
+         titles=titles,
+         descriptions=descriptions,
+         measureTypes=measureTypes
+       )
+       
+       self$results$resid$setRowNums(rownames(data))
+       
+       
+       resid <- as.data.frame(resid)
+       
+       for (i in 1:length(self$options$vars)) {
+         scores <- as.numeric(resid[, i])
+         self$results$resid$setValues(index=i, scores)
+       }
+     }
+     
     
    },
       
@@ -607,7 +766,7 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
-      
+  
       
       #================================================================
       
@@ -694,9 +853,9 @@ adjustment; Ho= the data fit the Rasch model."
       # Expected score curve plot----------
       
       
-      .escPlot = function(image, ...) {
+   .escPlot = function(image, ...) {
         
-        tamp <- image$parent$state
+        tamp <- image$parent$state 
         
         if (is.null(tamp))
           return()
@@ -867,8 +1026,8 @@ adjustment; Ho= the data fit the Rasch model."
      
    },
    
-   
-   
+ 
+ 
       ### Helper functions =================================
       
       .cleanData = function() {

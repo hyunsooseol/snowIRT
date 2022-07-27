@@ -66,6 +66,13 @@ children:
                 name: modelfitp
               - type: CheckBox
                 name: mat
+          - type: Label
+            label: Model comparison
+            children:
+              - type: CheckBox
+                name: model 
+              - type: CheckBox
+                name: lr                
   - type: CollapseBox
     label: Plots
     margin: normal
@@ -157,3 +164,5 @@ children:
         children:
           - type: CheckBox
             name: tau
+          - type: Output
+            name: resid    

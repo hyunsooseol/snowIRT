@@ -2,7 +2,7 @@
 name:  polytomous
 title: Polytomous Rasch Model
 menuGroup: snowIRT
-menuSubgroup: Polytomous
+menuSubgroup: IRT
 version: '1.0.0'
 jas: '1.2'
 
@@ -137,4 +137,17 @@ options:
       type: Bool
       default: false
 
+    - name: model
+      title: Information indices
+      type: Bool
+      default: false
+
+    - name: lr
+      title: Likelihood ratio test
+      type: Bool
+      default: false
+
+    - name: resid
+      title: Std.residuals(for PCA)
+      type: Output
 ...
