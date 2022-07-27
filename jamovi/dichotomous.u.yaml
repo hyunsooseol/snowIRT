@@ -137,7 +137,8 @@ children:
                 name: pinfit
               - type: Output
                 name: poutfit
- 
+              - type: Output
+                name: resid
 
 
 

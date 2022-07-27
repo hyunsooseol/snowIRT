@@ -103,6 +103,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 min=0,
                 max=45,
                 default=0)
+            private$..resid <- jmvcore::OptionOutput$new(
+                "resid")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -124,6 +126,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..inplot)
             self$.addOption(private$..outplot)
             self$.addOption(private$..angle)
+            self$.addOption(private$..resid)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -145,7 +148,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         poutfit = function() private$..poutfit$value,
         inplot = function() private$..inplot$value,
         outplot = function() private$..outplot$value,
-        angle = function() private$..angle$value),
+        angle = function() private$..angle$value,
+        resid = function() private$..resid$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -166,7 +170,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..poutfit = NA,
         ..inplot = NA,
         ..outplot = NA,
-        ..angle = NA)
+        ..angle = NA,
+        ..resid = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -185,7 +190,8 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         pmeasure = function() private$.items[["pmeasure"]],
         pse = function() private$.items[["pse"]],
         pinfit = function() private$.items[["pinfit"]],
-        poutfit = function() private$.items[["poutfit"]]),
+        poutfit = function() private$.items[["poutfit"]],
+        resid = function() private$.items[["resid"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -358,6 +364,12 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 varTitle="Outfit",
                 measureType="continuous",
                 clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Output$new(
+                options=options,
+                name="resid",
+                title="Standardized residuals for PCA",
+                clearWith=list(
                     "vars")))}))
 
 dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -415,6 +427,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

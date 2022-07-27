@@ -170,5 +170,10 @@ items:
       measureType: continuous
       clearWith:
         - vars      
-          
+
+    - name: resid
+      title: Standardized residuals for PCA
+      type: Output
+      clearWith:
+        - vars          
 ...

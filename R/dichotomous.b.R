@@ -9,6 +9,7 @@
 #' @importFrom difR difRaju
 #' @importFrom TAM tam.wle
 #' @importFrom TAM tam.personfit
+#' @importFrom TAM IRT.residuals
 #' @importFrom ShinyItemAnalysis ggWrightMap
 #' @import ggplot2
 #' @export
@@ -107,6 +108,7 @@ adjustment; Ho= the data fit the Rasch model."
           # populate output variables-----
           
           private$.populateOutputs(data)
+          
           
           # prepare plot-----
           
@@ -436,6 +438,36 @@ adjustment; Ho= the data fit the Rasch model."
          }
          
          
+         if (self$options$resid && self$results$resid$isNotFilled()) {
+         
+           
+           tamobj = TAM::tam.mml(resp = as.matrix(data))
+           res <- TAM::IRT.residuals(tamobj )
+           resid <- res$stand_residuals
+           
+           
+           keys <- 1:length(self$options$vars)
+           titles <- paste("Item", 1:length(self$options$vars))
+           descriptions <- paste("Item", 1:length(self$options$vars))
+           measureTypes <- rep("continuous", length(self$options$vars))
+           
+           self$results$resid$set(
+             keys=keys,
+             titles=titles,
+             descriptions=descriptions,
+             measureTypes=measureTypes
+           )
+           
+           self$results$resid$setRowNums(rownames(data))
+           
+           
+           resid <- as.data.frame(resid)
+           
+           for (i in 1:length(self$options$vars)) {
+             scores <- as.numeric(resid[, i])
+             self$results$resid$setValues(index=i, scores)
+           }
+         }
          
        },
       

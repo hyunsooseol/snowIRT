@@ -73,6 +73,7 @@ A results object containing:
   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
+  \code{results$resid} \tab \tab \tab \tab \tab an output \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
