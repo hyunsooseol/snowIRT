@@ -385,9 +385,9 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number", 
                         `content`="($key)"),
                     list(
-                        `name`="pmeasure", 
+                        `name`="imeasure", 
                         `title`="Measure", 
-                        `visible`="(pmeasure)"))))
+                        `visible`="(imeasure)"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="thurs",

@@ -134,9 +134,9 @@ items:
           type: 'number'
           content: ($key)
           
-        - name: pmeasure
+        - name: imeasure
           title: Measure
-          visible: (pmeasure) 
+          visible: (imeasure) 
 
     - name: thurs
       title: Thurstone Thresholds of the partial credit model

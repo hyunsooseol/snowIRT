@@ -525,7 +525,7 @@ adjustment; Ho= the data fit the Rasch model."
         tau <- results$tau
         
         
-        pmeasure <- results$pmeasure
+        imeasure <- results$imeasure
         
         nCategory <- results$nc1 # number of tau
         
@@ -556,7 +556,7 @@ adjustment; Ho= the data fit the Rasch model."
             
           }
           
-          row[["pmeasure"]] <- pmeasure[i]
+          row[["imeasure"]] <- imeasure[i]
           table$setRow(rowNo = i, values = row)
         }
       },
