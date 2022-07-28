@@ -72,7 +72,7 @@ options:
       default: TRUE      
 
     - name: esc
-      title: Expected scores curve
+      title: ICC
       type: Bool
       default: false
 

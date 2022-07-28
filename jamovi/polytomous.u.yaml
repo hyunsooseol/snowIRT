@@ -24,7 +24,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Rating Scale Model
+            label: 'Rating scale model' 
             fitToGrid: true
             cell:
               column: 0
@@ -39,7 +39,7 @@ children:
               - type: CheckBox
                 name: outfit
           - type: Label
-            label: Partical Credit Model
+            label: 'Partical credit model'
             children:
               - type: CheckBox
                 name: thresh
@@ -56,7 +56,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: Model Fit
+            label: Model fit
             children:
               - type: CheckBox
                 name: reliability
@@ -126,7 +126,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Person Statistics
+            label: 'Person measures'
             fitToGrid: true
             cell:
               column: 0
@@ -147,7 +147,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: Person Fit
+            label: 'Person fit'
             children:
               - type: Output
                 name: pinfit

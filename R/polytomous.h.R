@@ -347,7 +347,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="chi", 
-                        `title`="Chi_square", 
+                        `title`="\u03C7\u00B2", 
                         `type`="number"),
                     list(
                         `name`="df", 
@@ -363,6 +363,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Q3 Correlation Matrix",
                 rows="(vars)",
                 visible="(mat)",
+                clearWith=list(
+                    "vars"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -377,6 +379,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Delta-tau paramaterization of the partial credit model",
                 rows="(vars)",
                 visible="(thresh)",
+                clearWith=list(
+                    "vars"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -385,15 +389,17 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number", 
                         `content`="($key)"),
                     list(
-                        `name`="imeasure", 
+                        `name`="pmeasure", 
                         `title`="Measure", 
-                        `visible`="(imeasure)"))))
+                        `visible`="(pmeasure)"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="thurs",
                 title="Thurstone Thresholds of the partial credit model",
                 rows="(vars)",
                 visible="(thurs)",
+                clearWith=list(
+                    "vars"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -440,12 +446,16 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 height=500,
                 renderFun=".wrightmapPlot",
                 visible="(wrightmap)",
-                refs="ShinyItemAnalysis"))
+                refs="ShinyItemAnalysis",
+                clearWith=list(
+                    "vars")))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="esc",
                 title="Expected Score Curve",
                 items="(vars)",
+                clearWith=list(
+                    "vars"),
                 template=jmvcore::Image$new(
                     options=options,
                     title="$key",
@@ -459,6 +469,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="plot",
                 title="Category Information",
                 items="(vars)",
+                clearWith=list(
+                    "vars"),
                 template=jmvcore::Image$new(
                     options=options,
                     title="$key",
@@ -532,7 +544,9 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
-                title="Rating Scale Deltas/thresholds"))
+                title="Rating Scale Deltas/thresholds",
+                clearWith=list(
+                    "vars")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="resid",

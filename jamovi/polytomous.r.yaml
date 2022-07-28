@@ -96,7 +96,7 @@ items:
           type: 'text'
           
         - name: chi
-          title: Chi_square
+          title: χ²
           type: number
 
         - name: df
@@ -112,6 +112,8 @@ items:
       type: Table
       rows: (vars)
       visible: (mat)
+      clearWith:
+        - vars
       refs: TAM
       
       columns:
@@ -126,6 +128,8 @@ items:
       type: Table
       rows: (vars)
       visible: (thresh)
+      clearWith:
+        - vars
       refs: TAM    
 
       columns:
@@ -134,15 +138,17 @@ items:
           type: 'number'
           content: ($key)
           
-        - name: imeasure
+        - name: pmeasure
           title: Measure
-          visible: (imeasure) 
+          visible: (pmeasure) 
 
     - name: thurs
       title: Thurstone Thresholds of the partial credit model
       type: Table
       rows: (vars)
       visible: (thurs)
+      clearWith:
+        - vars
       refs: TAM    
 
       columns:
@@ -191,12 +197,16 @@ items:
       renderFun: .wrightmapPlot
       visible: (wrightmap)
       refs: ShinyItemAnalysis
+      clearWith:
+        - vars
       
     - name: esc
       title: 'Expected Score Curve'
       type: Array
       description: an array of plots
       items: (vars)
+      clearWith:
+        - vars
       template:
           type: Image
           title: $key
@@ -212,6 +222,8 @@ items:
       type: Array
       description: an array of plots
       items: (vars)
+      clearWith:
+        - vars
       template:
           type: Image
           title: $key
@@ -230,8 +242,8 @@ items:
       visible: (inplot)
       renderFun: .inPlot
       clearWith:
-            - vars
-            - angle 
+        - vars
+        - angle 
 
     - name: outplot
       title: 'Item Outfit plot'
@@ -241,8 +253,8 @@ items:
       visible: (outplot)
       renderFun: .outPlot
       clearWith:
-            - vars
-            - angle 
+        - vars
+        - angle 
 
     - name: total
       title: Total
@@ -287,7 +299,9 @@ items:
     - name:  text
       title: Rating Scale Deltas/thresholds
       type:  Preformatted
-
+      clearWith:
+        - vars  
+        
     - name: resid
       title: Standardized residuals for PCA
       type: Output

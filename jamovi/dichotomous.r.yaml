@@ -42,6 +42,8 @@ items:
       rows: (vars)
       visible: (mat)
       refs: TAM
+      clearWith:
+        - vars
       
       columns:
           - name: .name
@@ -92,6 +94,8 @@ items:
       height: 500
       renderFun: .plot
       visible: (wrightmap)
+      clearWith:
+        - vars
       refs: ShinyItemAnalysis      
 
     - name: esc
@@ -99,6 +103,8 @@ items:
       type: Array
       description: an array of plots
       items: (vars)
+      clearWith:
+        - vars
       template:
           type: Image
           title: $key
@@ -117,8 +123,8 @@ items:
       visible: (inplot)
       renderFun: .inPlot
       clearWith:
-            - vars
-            - angle 
+        - vars
+        - angle 
 
     - name: outplot
       title: 'Item Outfit plot'
@@ -128,8 +134,8 @@ items:
       visible: (outplot)
       renderFun: .outPlot
       clearWith:
-            - vars
-            - angle 
+        - vars
+        - angle 
 
     - name: total
       title: Total

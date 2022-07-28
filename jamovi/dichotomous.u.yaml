@@ -24,7 +24,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Statistics
+            label: 'Item measures'
             fitToGrid: true
             cell:
               column: 0
@@ -49,7 +49,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: Model Fit
+            label: 'Model fit'
             children:
               - type: CheckBox
                 name: reliability
@@ -69,7 +69,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: ''
+            label: 'Map plots'
             fitToGrid: true
             cell:
               column: 0
@@ -88,7 +88,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: ''
+            label: 'Fit plots'
             children: 
               - type: CheckBox
                 name: inplot
@@ -110,7 +110,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Statistics
+            label: 'Person measures'
             fitToGrid: true
             cell:
               column: 0
@@ -131,12 +131,15 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: Fit Measure 
+            label: 'Person fit' 
             children:
               - type: Output
                 name: pinfit
               - type: Output
                 name: poutfit
+          - type: Label
+            label: 'Residuals' 
+            children:
               - type: Output
                 name: resid
 

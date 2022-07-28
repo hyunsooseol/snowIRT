@@ -239,6 +239,8 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 rows="(vars)",
                 visible="(mat)",
                 refs="TAM",
+                clearWith=list(
+                    "vars"),
                 columns=list(
                     list(
                         `name`=".name", 
@@ -289,12 +291,16 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 height=500,
                 renderFun=".plot",
                 visible="(wrightmap)",
+                clearWith=list(
+                    "vars"),
                 refs="ShinyItemAnalysis"))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="esc",
                 title="Expected Score Curve",
                 items="(vars)",
+                clearWith=list(
+                    "vars"),
                 template=jmvcore::Image$new(
                     options=options,
                     title="$key",
