@@ -64,4 +64,11 @@
         `year`=2021, 
         `title`="eRm: Extended Rasch Modeling", 
         `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=eRm", 
-        `url`="https://CRAN.R-project.org/package=eRm"))
+        `url`="https://CRAN.R-project.org/package=eRm"), 
+    `CDM`=list(
+        `type`="software", 
+        `author`="Robitzsch, A., Kiefer, T., George, A., & Uenlue, A.", 
+        `year`=2022, 
+        `title`="CDM: Cognitive Diagnosis Modeling", 
+        `publisher`="[R package]. Retrieved from https://CRAN.R-project.org/package=CDM", 
+        `url`="https://CRAN.R-project.org/package=CDM"))

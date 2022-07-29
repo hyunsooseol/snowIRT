@@ -153,8 +153,13 @@ children:
                 name: pinfit
               - type: Output
                 name: poutfit
+          - type: Label
+            label: 'Residuals'
+            children:
+              - type: Output
+                name: resid               
   - type: CollapseBox
-    label: Additional output
+    label: Additional Output
     margin: normal
     collapsed: true
     children:
@@ -164,5 +169,4 @@ children:
         children:
           - type: CheckBox
             name: tau
-          - type: Output
-            name: resid    
+ 

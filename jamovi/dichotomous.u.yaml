@@ -69,7 +69,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Map plots'
+            label: 'Plots'
             fitToGrid: true
             cell:
               column: 0

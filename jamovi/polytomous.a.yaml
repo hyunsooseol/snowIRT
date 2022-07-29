@@ -77,7 +77,7 @@ options:
       default: false
 
     - name: icc
-      title: Category information
+      title: Item category(partial credit) 
       type: Bool
       default: false
 
@@ -87,7 +87,7 @@ options:
       default: TRUE
 
     - name: esc
-      title: Expected scores curve
+      title: Item Characteristic Curve(ICC)
       type: Bool
       default: false
 
