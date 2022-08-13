@@ -92,6 +92,8 @@ children:
               - type: CheckBox
                 name: wrightmap
               - type: CheckBox
+                name: piplot
+              - type: CheckBox
                 name: esc
               - type: CheckBox
                 name: icc

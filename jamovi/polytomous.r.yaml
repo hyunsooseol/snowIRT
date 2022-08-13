@@ -200,6 +200,16 @@ items:
       clearWith:
         - vars
       
+    - name: piplot
+      title: 'Person-item map for PCM '
+      type: Image
+      width:  500
+      height: 500
+      visible: (piplot)
+      renderFun: .piPlot
+      clearWith:
+        - vars
+
     - name: esc
       title: 'Expected Score Curve'
       type: Array

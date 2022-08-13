@@ -26,7 +26,8 @@ polytomous(
   angle = 0,
   tau = FALSE,
   model = FALSE,
-  lr = FALSE
+  lr = FALSE,
+  piplot = FALSE
 )
 }
 \arguments{
@@ -74,6 +75,8 @@ where 0 degrees represents completely horizontal labels.}
 \item{model}{.}
 
 \item{lr}{.}
+
+\item{piplot}{.}
 }
 \value{
 A results object containing:
@@ -87,6 +90,7 @@ A results object containing:
   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
+  \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr

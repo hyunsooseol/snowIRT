@@ -26,7 +26,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             angle = 0,
             tau = FALSE,
             model = FALSE,
-            lr = FALSE, ...) {
+            lr = FALSE,
+            piplot = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -135,6 +136,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 default=FALSE)
             private$..resid <- jmvcore::OptionOutput$new(
                 "resid")
+            private$..piplot <- jmvcore::OptionBool$new(
+                "piplot",
+                piplot,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -163,6 +168,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..model)
             self$.addOption(private$..lr)
             self$.addOption(private$..resid)
+            self$.addOption(private$..piplot)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -191,7 +197,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         tau = function() private$..tau$value,
         model = function() private$..model$value,
         lr = function() private$..lr$value,
-        resid = function() private$..resid$value),
+        resid = function() private$..resid$value,
+        piplot = function() private$..piplot$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -219,7 +226,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..tau = NA,
         ..model = NA,
         ..lr = NA,
-        ..resid = NA)
+        ..resid = NA,
+        ..piplot = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -235,6 +243,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         thurs = function() private$.items[["thurs"]],
         items = function() private$.items[["items"]],
         wrightmap = function() private$.items[["wrightmap"]],
+        piplot = function() private$.items[["piplot"]],
         esc = function() private$.items[["esc"]],
         plot = function() private$.items[["plot"]],
         inplot = function() private$.items[["inplot"]],
@@ -449,6 +458,16 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="piplot",
+                title="Person-item map for PCM ",
+                width=500,
+                height=500,
+                visible="(piplot)",
+                renderFun=".piPlot",
+                clearWith=list(
+                    "vars")))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="esc",
@@ -600,6 +619,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param tau .
 #' @param model .
 #' @param lr .
+#' @param piplot .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -611,6 +631,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
 #'   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
@@ -653,7 +674,8 @@ polytomous <- function(
     angle = 0,
     tau = FALSE,
     model = FALSE,
-    lr = FALSE) {
+    lr = FALSE,
+    piplot = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("polytomous requires jmvcore to be installed (restart may be required)")
@@ -686,7 +708,8 @@ polytomous <- function(
         angle = angle,
         tau = tau,
         model = model,
-        lr = lr)
+        lr = lr,
+        piplot = piplot)
 
     analysis <- polytomousClass$new(
         options = options,

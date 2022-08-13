@@ -11,6 +11,8 @@
 #' @importFrom TAM IRT.residuals
 #' @importFrom ShinyItemAnalysis ggWrightMap
 #' @importFrom CDM IRT.compareModels
+#' @importFrom eRm plotPImap
+#' @importFrom eRm PCM
 #' @import ggplot2
 #' @export
 
@@ -134,6 +136,9 @@ adjustment; Ho= the data fit the Rasch model."
           # prepare plot-----
           
           private$.prepareWrightmapPlot(data)
+          
+          # prepare person-item map
+          private$.preparepiPlot(data)
           
           # prepare Expected score curve plot---------
           
@@ -712,8 +717,8 @@ adjustment; Ho= the data fit the Rasch model."
     
    },
       
-      
-      #### Plot functions ###########################
+   
+   #### Plot functions ###########################
       
       .prepareIccPlot = function(data) {
         
@@ -833,7 +838,38 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
-      # Prepare Expected score curve functions------------
+   # PREPARE PERSON-ITM PLOT FOR PCM-------------
+   
+   .preparepiPlot = function(data) {
+     
+     autopcm <- eRm::PCM(data)
+     
+     
+     # Prepare Data For Plot -------
+     
+     image <- self$results$piplot
+     image$setState(autopcm)
+     
+   },
+   
+   .piPlot= function(image, ...) {
+     
+     autopcm <- image$state
+     
+     if (is.null(autopcm))
+       return()
+     
+     
+     plot <- eRm::plotPImap(autopcm, sorted=TRUE)
+     
+     print(plot)
+     
+     TRUE
+     
+   },
+   
+   
+   # Prepare Expected score curve functions------------
       
       .prepareEscPlot = function(data) {
         
@@ -883,7 +919,11 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
-   .prepareInfitPlot=function(data){
+
+   
+   # infit plot---------------
+   
+      .prepareInfitPlot=function(data){
      
      
      # estimate the Rasch model with MML using function 'tam.mml'-----

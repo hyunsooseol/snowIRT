@@ -77,7 +77,7 @@ options:
       default: false
 
     - name: icc
-      title: Item category(partial credit) 
+      title: Item category for PCM 
       type: Bool
       default: false
 
@@ -150,4 +150,9 @@ options:
     - name: resid
       title: Std.residuals(for PCA)
       type: Output
+
+    - name: piplot
+      title: Person-item map for PCM 
+      type: Bool
+      default: false
 ...
