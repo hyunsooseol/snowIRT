@@ -154,5 +154,5 @@ options:
     - name: piplot
       title: Person-item map for PCM 
       type: Bool
-      default: false
+      default: TRUE
 ...

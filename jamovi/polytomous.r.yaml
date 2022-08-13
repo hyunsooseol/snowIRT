@@ -207,6 +207,7 @@ items:
       height: 500
       visible: (piplot)
       renderFun: .piPlot
+      refs: eRm
       clearWith:
         - vars
 

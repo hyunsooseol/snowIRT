@@ -27,7 +27,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             tau = FALSE,
             model = FALSE,
             lr = FALSE,
-            piplot = FALSE, ...) {
+            piplot = TRUE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -139,7 +139,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..piplot <- jmvcore::OptionBool$new(
                 "piplot",
                 piplot,
-                default=FALSE)
+                default=TRUE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -466,6 +466,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 height=500,
                 visible="(piplot)",
                 renderFun=".piPlot",
+                refs="eRm",
                 clearWith=list(
                     "vars")))
             self$add(jmvcore::Array$new(
@@ -675,7 +676,7 @@ polytomous <- function(
     tau = FALSE,
     model = FALSE,
     lr = FALSE,
-    piplot = FALSE) {
+    piplot = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("polytomous requires jmvcore to be installed (restart may be required)")
