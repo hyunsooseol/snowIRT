@@ -72,7 +72,7 @@ options:
       default: false
 
     - name: thurs
-      title: Thurstone Thresholds
+      title: Thurstone thresholds
       type: Bool
       default: false
 

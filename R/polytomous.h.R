@@ -404,7 +404,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="thurs",
-                title="Thurstone Thresholds of the partial credit model",
+                title="Thurstone thresholds of the partial credit model",
                 rows="(vars)",
                 visible="(thurs)",
                 clearWith=list(
