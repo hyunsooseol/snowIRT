@@ -83,7 +83,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: ''
+            label: 'Map'
             fitToGrid: true
             cell:
               column: 0
@@ -93,6 +93,9 @@ children:
                 name: wrightmap
               - type: CheckBox
                 name: piplot
+          - type: Label
+            label: 'Item'
+            children:
               - type: CheckBox
                 name: esc
               - type: CheckBox
@@ -106,7 +109,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: ''
+            label: 'Fit'
             children: 
               - type: CheckBox
                 name: inplot

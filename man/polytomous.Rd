@@ -27,7 +27,7 @@ polytomous(
   tau = FALSE,
   model = FALSE,
   lr = FALSE,
-  piplot = FALSE
+  piplot = TRUE
 )
 }
 \arguments{

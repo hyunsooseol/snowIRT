@@ -41,7 +41,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             <p>1. Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
             <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
             <p>3. The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
-            <p>4. The <b>eRm</b> package was used for the person-item map for PCM.</p>
+            <p>4. The <b>eRm</b> R package was used for the person-item map for PCM.</p>
             <p>5. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a>.</p>
             <p>6. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
             <p>____________________________________________________________________________________</p>
@@ -861,7 +861,8 @@ adjustment; Ho= the data fit the Rasch model."
        return()
      
      
-     plot <- eRm::plotPImap(autopcm, sorted=TRUE)
+     plot <- eRm::plotPImap(autopcm, sorted=TRUE,
+                            warn.ord.colour = "red")
      
      print(plot)
      
