@@ -9,6 +9,35 @@ items:
       type: Html
       visible: True
       
+    - name: to
+      title: 'Summary of total score'
+      type: Table
+      rows: 1
+      visible: (to)
+      clearWith:
+        - vars
+      refs: snowIRT
+      
+      columns:
+        - name: N
+          type: number
+        - name: Minimum
+          type: number
+        - name: Maximum
+          type: number
+        - name: Mean
+          type: number
+        - name: Median
+          type: number
+        - name: SD
+          type: number
+        - name: SE
+          type: number
+        - name: Skewness
+          type: number
+        - name: Kurtosis
+          type: number
+
     - name: scale
       title: Model Fit
       type: Table
@@ -182,4 +211,17 @@ items:
       type: Output
       clearWith:
         - vars          
+
+    - name:  plot2
+      title: 'Histogram of total score'
+      type:  Image
+      requiresData: true
+      visible: (plot2)
+      width: 500
+      height: 500
+      renderFun: .plot2
+      refs: snowIRT 
+      clearWith:
+            - vars
+
 ...

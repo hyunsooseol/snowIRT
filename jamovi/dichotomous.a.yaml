@@ -120,4 +120,14 @@ options:
     - name: resid
       title: Std.residuals(for PCA)
       type: Output  
+
+    - name: to
+      title: Summary of total score
+      type: Bool
+      default: TRUE  
+
+    - name: plot2
+      title: Histogram of total score
+      type: Bool
+      default: FALSE      
 ...

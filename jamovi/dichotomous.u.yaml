@@ -142,6 +142,26 @@ children:
             children:
               - type: Output
                 name: resid
+  - type: CollapseBox
+    label: Summary
+    margin: normal
+    collapsed: true
+    children:
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        children:
+          - type: Label
+            label: ''
+            fitToGrid: true
+            cell:
+              column: 0
+              row: 0
+            children:
+              - type: CheckBox
+                name: to
+              - type: CheckBox
+                name: plot2
 
 
 

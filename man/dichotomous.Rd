@@ -20,7 +20,9 @@ dichotomous(
   esc = FALSE,
   inplot = FALSE,
   outplot = FALSE,
-  angle = 0
+  angle = 0,
+  to = FALSE,
+  plot2 = FALSE
 )
 }
 \arguments{
@@ -56,11 +58,16 @@ dichotomous(
 
 \item{angle}{a number from 0 to 45 defining the angle of the x-axis labels,
 where 0 degrees represents completely horizontal labels.}
+
+\item{to}{.}
+
+\item{plot2}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
+  \code{results$to} \tab \tab \tab \tab \tab a table \cr
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
@@ -74,13 +81,14 @@ A results object containing:
   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
+  \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$scale$asDF}
+\code{results$to$asDF}
 
-\code{as.data.frame(results$scale)}
+\code{as.data.frame(results$to)}
 }
 \description{
 Dichotomous Rasch Model

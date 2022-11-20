@@ -1,12 +1,12 @@
 ---
 title: Item Response Theory
 name: snowIRT
-version: 4.7.4
+version: 4.7.8
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2022-08-23'
+date: '2022-11-20'
 type: R
 description: >-
   This module includes item distractor analysis, item and person Statistics,
