@@ -196,7 +196,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Standard'
+            label: 'Transformation'
             fitToGrid: true
             cell:
               column: 1
