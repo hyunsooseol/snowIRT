@@ -21,7 +21,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             inplot = FALSE,
             outplot = FALSE,
             angle = 0,
-            to = TRUE,
+            to = FALSE,
             plot2 = FALSE, ...) {
 
             super$initialize(
@@ -110,7 +110,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             private$..to <- jmvcore::OptionBool$new(
                 "to",
                 to,
-                default=TRUE)
+                default=FALSE)
             private$..plot2 <- jmvcore::OptionBool$new(
                 "plot2",
                 plot2,
@@ -531,7 +531,7 @@ dichotomous <- function(
     inplot = FALSE,
     outplot = FALSE,
     angle = 0,
-    to = TRUE,
+    to = FALSE,
     plot2 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))

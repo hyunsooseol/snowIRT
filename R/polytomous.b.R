@@ -13,6 +13,8 @@
 #' @importFrom CDM IRT.compareModels
 #' @importFrom eRm plotPImap
 #' @importFrom eRm PCM
+#' @importFrom psych describe
+#' @importFrom stats ecdf
 #' @import ggplot2
 #' @export
 
@@ -154,7 +156,14 @@ adjustment; Ho= the data fit the Rasch model."
           # prepare rating scale category plot=========
           
         #  private$.prepareRatingPlot(data)
+        
+          # Summary of total score-----
           
+          private$.populateToTable(results)  
+          
+          #Standard score---------
+          
+          private$.populateStTable(results)
           
         }
         
@@ -291,6 +300,40 @@ adjustment; Ho= the data fit the Rasch model."
         df<- lr$df
         p<- lr$p
         
+        # total score calculation
+        score <- apply(data, 1,sum)
+        
+        # summary of total score
+        to <- psych::describe(score)
+        to$kurtosis <- to$kurtosis + 3
+        
+        # Histogram of total score-------
+        
+        # colors by cut-score
+        cut <- median(score) # cut-score
+        color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
+        df2 <- data.frame(score)
+        
+        state <- list(df2, score,color)
+        
+        
+        image2 <- self$results$plot2
+        
+        image2$setState(state)
+        
+        
+        # Standard score----------
+        
+        tosc <- sort(unique(score))          # Levels of total score
+        perc <- stats::ecdf(score)(tosc)     # Percentiles
+        zsco <- sort(unique(scale(score)))   # Z-score
+        tsco <- 50 + 10 * zsco               # T-score
+        
+        st<- cbind(tosc, perc, zsco, tsco)
+        st<- as.data.frame(st)
+        
+       # self$results$text1$setContent(st)
+        
         results <-
           list(
             'imeasure' = imeasure,
@@ -318,13 +361,81 @@ adjustment; Ho= the data fit the Rasch model."
             'model2'=model2,
             'chi'=chi,
             'df'=df,
-            'p'=p
+            'p'=p,
+            'to'=to,
+            'st'=st
           )
        
           
         },
+       
+      
+      # Standard score----------
+      
+      .populateStTable = function(results) {
+      
+        table <- self$results$st
         
-    
+        st <- results$st
+        
+        names<- dimnames(st)[[1]]
+        
+        for (name in names) {
+          
+          row <- list()
+          
+          row[['Total']] <- st[name,1]
+          row[['Percentile']] <- st[name,2]
+          row[['Z']] <- st[name,3]
+          row[['T']] <- st[name,4]
+          
+          
+          table$addRow(rowKey=name, values=row)
+          
+        }
+        
+        
+      },
+        
+        
+      # Summary of total score---------
+      
+      .populateToTable = function(results) {
+        
+        table <- self$results$to 
+        
+        to <- results$to
+        
+        n<- to$n
+        min<- to$min
+        max<- to$max
+        mean<- to$mean
+        median<- to$median
+        sd<- to$sd
+        se <- to$se
+        skew<- to$skew
+        kurtosis<- to$kurtosis
+        
+        
+        row <- list()
+        
+        row[['N']] <- n
+        row[['Minimum']] <- min
+        row[['Maximum']] <- max
+        row[['Mean']] <- mean
+        row[['Median']] <- median
+        row[['SD']] <- sd
+        row[['SE']] <- se
+        row[['Skewness']] <- skew
+        row[['Kurtosis']] <- kurtosis
+        
+        
+        table$setRow(rowNo = 1, values = row)
+        
+        
+      },
+      
+      
       # Init. tables ------------------------------------
       
       .initItemsTable = function() {
@@ -616,7 +727,7 @@ adjustment; Ho= the data fit the Rasch model."
     ##### person statistics for output variable-------------------
       
    .populateOutputs= function(data) {
-     
+    
      if (self$options$total&& self$results$total$isNotFilled()){
        
        tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
@@ -717,7 +828,21 @@ adjustment; Ho= the data fit the Rasch model."
      
     
    },
-      
+    
+   .populatePerOutputs = function(results) {
+     
+     perc <- results$perc  
+     
+     if (self$options$per
+         && self$results$per$isNotFilled()) {
+       
+       
+       self$results$per$setValues(perc)
+       
+       self$results$per$setRowNums(rownames(data))
+       
+     }
+   },  
    
    #### Plot functions ###########################
       
@@ -1068,6 +1193,26 @@ adjustment; Ho= the data fit the Rasch model."
      
    },
    
+ #Histogram of total score------
+ 
+ 
+ .plot2 = function(image2, ggtheme, theme,...) {
+   
+   
+   df2 <- image2$state[[1]]
+   score <- image2$state[[2]]
+   color <- image2$state[[3]]
+   
+   plot2 <- ggplot(df2, aes(score)) +
+     geom_histogram(binwidth = 1, fill = color, col = "black") +
+     xlab("Total score") +
+     ylab("Number of respondents") +
+     theme_app()
+   
+   
+   print(plot2)
+   TRUE
+ },
  
  
       ### Helper functions =================================

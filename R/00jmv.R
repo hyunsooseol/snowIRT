@@ -7,7 +7,7 @@
         `author`="Seol, H.", 
         `year`=2022, 
         `title`="snowIRT: Item Response Theory for jamovi", 
-        `publisher`="[jamovi module]. Retrieved from https://github.com/hyunsooseol/snowIRT", 
+        `publisher`="(Version 4.8.0)[jamovi module]. Retrieved from https://github.com/hyunsooseol/snowIRT", 
         `url`="https://github.com/hyunsooseol/snowIRT"), 
     `TAM`=list(
         `type`="software", 

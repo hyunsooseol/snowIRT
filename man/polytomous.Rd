@@ -27,7 +27,10 @@ polytomous(
   tau = FALSE,
   model = FALSE,
   lr = FALSE,
-  piplot = TRUE
+  piplot = TRUE,
+  to = FALSE,
+  st = FALSE,
+  plot2 = FALSE
 )
 }
 \arguments{
@@ -77,11 +80,19 @@ where 0 degrees represents completely horizontal labels.}
 \item{lr}{.}
 
 \item{piplot}{.}
+
+\item{to}{.}
+
+\item{st}{.}
+
+\item{plot2}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
+  \code{results$st} \tab \tab \tab \tab \tab a table \cr
+  \code{results$to} \tab \tab \tab \tab \tab a table \cr
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$model} \tab \tab \tab \tab \tab a table \cr
   \code{results$lr} \tab \tab \tab \tab \tab a table \cr
@@ -102,13 +113,14 @@ A results object containing:
   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
+  \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$scale$asDF}
+\code{results$st$asDF}
 
-\code{as.data.frame(results$scale)}
+\code{as.data.frame(results$st)}
 }
 \description{
 Polytomous Rasch Model

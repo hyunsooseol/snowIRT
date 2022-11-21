@@ -124,7 +124,7 @@ options:
     - name: to
       title: Summary of total score
       type: Bool
-      default: TRUE  
+      default: false  
 
     - name: plot2
       title: Histogram of total score

@@ -1,7 +1,7 @@
 Package: snowIRT
 Type: Package
 Title: Item Response Theory for jamovi
-Version: 4.7.8
+Version: 4.8.0
 Date: 2022-11-20
 Author: Hyunsoo Seol
 Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
@@ -9,7 +9,7 @@ Description: This package provides distractor analysis, item and person statisti
 License: GPL3
 LazyData: TRUE
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
 Imports:
     jmvcore (>= 0.8),
     R6,
@@ -28,6 +28,3 @@ Imports:
     iarm,
     eRm,
     psych
-
-
-   

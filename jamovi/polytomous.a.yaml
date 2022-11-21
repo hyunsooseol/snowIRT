@@ -155,4 +155,19 @@ options:
       title: Person-item map for PCM 
       type: Bool
       default: TRUE
+
+    - name: to
+      title: Summary 
+      type: Bool
+      default: false  
+
+    - name: st
+      title: Standard scores
+      type: Bool
+      default: false  
+      
+    - name: plot2
+      title: Histogram 
+      type: Bool
+      default: FALSE    
 ...
