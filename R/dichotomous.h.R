@@ -22,7 +22,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             outplot = FALSE,
             angle = 0,
             to = FALSE,
-            plot2 = FALSE, ...) {
+            plot2 = FALSE,
+            st = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -115,6 +116,10 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "plot2",
                 plot2,
                 default=FALSE)
+            private$..st <- jmvcore::OptionBool$new(
+                "st",
+                st,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -139,6 +144,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..resid)
             self$.addOption(private$..to)
             self$.addOption(private$..plot2)
+            self$.addOption(private$..st)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -163,7 +169,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         angle = function() private$..angle$value,
         resid = function() private$..resid$value,
         to = function() private$..to$value,
-        plot2 = function() private$..plot2$value),
+        plot2 = function() private$..plot2$value,
+        st = function() private$..st$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -187,7 +194,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..angle = NA,
         ..resid = NA,
         ..to = NA,
-        ..plot2 = NA)
+        ..plot2 = NA,
+        ..st = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -195,6 +203,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
+        st = function() private$.items[["st"]],
         to = function() private$.items[["to"]],
         scale = function() private$.items[["scale"]],
         mat = function() private$.items[["mat"]],
@@ -223,6 +232,32 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="st",
+                title="Standard score",
+                visible="(st)",
+                clearWith=list(
+                    "vars"),
+                refs="ShinyItemAnalysis",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="Total", 
+                        `type`="integer"),
+                    list(
+                        `name`="Percentile", 
+                        `type`="number"),
+                    list(
+                        `name`="Z", 
+                        `type`="number"),
+                    list(
+                        `name`="T", 
+                        `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="to",
@@ -487,9 +522,11 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   where 0 degrees represents completely horizontal labels.
 #' @param to .
 #' @param plot2 .
+#' @param st .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$st} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$to} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
@@ -509,9 +546,9 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$to$asDF}
+#' \code{results$st$asDF}
 #'
-#' \code{as.data.frame(results$to)}
+#' \code{as.data.frame(results$st)}
 #'
 #' @export
 dichotomous <- function(
@@ -532,7 +569,8 @@ dichotomous <- function(
     outplot = FALSE,
     angle = 0,
     to = FALSE,
-    plot2 = FALSE) {
+    plot2 = FALSE,
+    st = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dichotomous requires jmvcore to be installed (restart may be required)")
@@ -561,7 +599,8 @@ dichotomous <- function(
         outplot = outplot,
         angle = angle,
         to = to,
-        plot2 = plot2)
+        plot2 = plot2,
+        st = st)
 
     analysis <- dichotomousClass$new(
         options = options,

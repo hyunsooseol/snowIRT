@@ -300,6 +300,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="st",
                 title="Standard score",
                 visible="(st)",
+                refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars"),
                 columns=list(

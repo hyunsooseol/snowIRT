@@ -13,6 +13,7 @@ items:
       title: 'Standard score'
       type: Table
       visible: (st)
+      refs: ShinyItemAnalysis 
       clearWith:
         - vars
       

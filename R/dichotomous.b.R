@@ -12,6 +12,7 @@
 #' @importFrom TAM IRT.residuals
 #' @importFrom ShinyItemAnalysis ggWrightMap
 #' @importFrom psych describe
+#' @importFrom stats ecdf
 #' @import ggplot2
 #' @export
 
@@ -129,6 +130,9 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.populateToTable(results)
           
+          #Standard score---------
+          
+          private$.populateStTable(results)
           
          
           }
@@ -225,6 +229,16 @@ adjustment; Ho= the data fit the Rasch model."
         
         image2$setState(state)
         
+        # Standard score----------
+        
+        tosc <- sort(unique(score))          # Levels of total score
+        perc <- stats::ecdf(score)(tosc)     # Percentiles
+        zsco <- sort(unique(scale(score)))   # Z-score
+        tsco <- 50 + 10 * zsco               # T-score
+        
+        st<- cbind(tosc, perc, zsco, tsco)
+        st<- as.data.frame(st)
+        
       
         results <-
           list(
@@ -240,12 +254,41 @@ adjustment; Ho= the data fit the Rasch model."
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
             'mat' = mat,
-            'to'=to
+            'to'=to,
+            'st'=st
           
             )
       
        
       },
+      
+      # Standard score----------
+      
+      .populateStTable = function(results) {
+        
+        table <- self$results$st
+        
+        st <- results$st
+        
+        names<- dimnames(st)[[1]]
+        
+        for (name in names) {
+          
+          row <- list()
+          
+          row[['Total']] <- st[name,1]
+          row[['Percentile']] <- st[name,2]
+          row[['Z']] <- st[name,3]
+          row[['T']] <- st[name,4]
+          
+          
+          table$addRow(rowKey=name, values=row)
+          
+        }
+        
+        
+      },
+      
       
       # Summary of total score---------
       

@@ -9,6 +9,28 @@ items:
       type: Html
       visible: True
       
+    - name: st
+      title: 'Standard score'
+      type: Table
+      visible: (st)
+      clearWith:
+        - vars
+      refs: ShinyItemAnalysis  
+      
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+        - name: Total
+          type: integer
+        - name: Percentile
+          type: number
+        - name: Z
+          type: number
+        - name: T
+          type: number
+
     - name: to
       title: 'Summary of total score'
       type: Table

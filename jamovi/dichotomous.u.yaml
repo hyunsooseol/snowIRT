@@ -143,16 +143,20 @@ children:
               - type: Output
                 name: resid
   - type: CollapseBox
-    label: Standard score
+    label: Standard scores
     margin: normal
     collapsed: true
     children:
       - type: LayoutBox
         stretchFactor: 1
         margin: large
+        cell:
+          column: 0
+          row: 0
+        fitToGrid: true
         children:
           - type: Label
-            label: ''
+            label: 'Total score'
             fitToGrid: true
             cell:
               column: 0
@@ -162,6 +166,23 @@ children:
                 name: to
               - type: CheckBox
                 name: plot2
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
+          - type: Label
+            label: 'Transformation'
+            fitToGrid: true
+            cell:
+              column: 1
+              row: 0
+            children:
+              - type: CheckBox
+                name: st
 
 
 

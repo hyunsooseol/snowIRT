@@ -22,7 +22,8 @@ dichotomous(
   outplot = FALSE,
   angle = 0,
   to = FALSE,
-  plot2 = FALSE
+  plot2 = FALSE,
+  st = FALSE
 )
 }
 \arguments{
@@ -62,11 +63,14 @@ where 0 degrees represents completely horizontal labels.}
 \item{to}{.}
 
 \item{plot2}{.}
+
+\item{st}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
+  \code{results$st} \tab \tab \tab \tab \tab a table \cr
   \code{results$to} \tab \tab \tab \tab \tab a table \cr
   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
@@ -86,9 +90,9 @@ A results object containing:
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$to$asDF}
+\code{results$st$asDF}
 
-\code{as.data.frame(results$to)}
+\code{as.data.frame(results$st)}
 }
 \description{
 Dichotomous Rasch Model
