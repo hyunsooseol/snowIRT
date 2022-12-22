@@ -126,13 +126,14 @@ items:
       type:  Image
       requiresData: true
       visible: (plot)
-      width: 400
-      height: 400
+      width: 500
+      height: 500
       renderFun: .plot
       refs: ShinyItemAnalysis
       clearWith:
             - vars
-            - num  
+            - num 
+            - group
 
     - name:  plot1
       title: 'Discrimination plot'

@@ -9,6 +9,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             vars = NULL,
             key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
             num = 1,
+            group = 3,
             count = TRUE,
             prop = FALSE,
             sum = FALSE,
@@ -40,6 +41,11 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 num,
                 default=1,
                 min=1)
+            private$..group <- jmvcore::OptionInteger$new(
+                "group",
+                group,
+                default=3,
+                min=2)
             private$..count <- jmvcore::OptionBool$new(
                 "count",
                 count,
@@ -81,6 +87,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..vars)
             self$.addOption(private$..key)
             self$.addOption(private$..num)
+            self$.addOption(private$..group)
             self$.addOption(private$..count)
             self$.addOption(private$..prop)
             self$.addOption(private$..sum)
@@ -94,6 +101,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         vars = function() private$..vars$value,
         key = function() private$..key$value,
         num = function() private$..num$value,
+        group = function() private$..group$value,
         count = function() private$..count$value,
         prop = function() private$..prop$value,
         sum = function() private$..sum$value,
@@ -106,6 +114,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..vars = NA,
         ..key = NA,
         ..num = NA,
+        ..group = NA,
         ..count = NA,
         ..prop = NA,
         ..sum = NA,
@@ -267,13 +276,14 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Distractor plot",
                 requiresData=TRUE,
                 visible="(plot)",
-                width=400,
-                height=400,
+                width=500,
+                height=500,
                 renderFun=".plot",
                 refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars",
-                    "num")))
+                    "num",
+                    "group")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
@@ -315,6 +325,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param vars .
 #' @param key .
 #' @param num .
+#' @param group .
 #' @param count .
 #' @param prop .
 #' @param sum .
@@ -347,6 +358,7 @@ item <- function(
     vars,
     key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
     num = 1,
+    group = 3,
     count = TRUE,
     prop = FALSE,
     sum = FALSE,
@@ -371,6 +383,7 @@ item <- function(
         vars = vars,
         key = key,
         num = num,
+        group = group,
         count = count,
         prop = prop,
         sum = sum,

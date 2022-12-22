@@ -31,6 +31,12 @@ options:
       type: Integer
       min: 1
 
+    - name: group
+      title: Num.of groups
+      default: 3
+      type: Integer
+      min: 2
+
     - name: count
       title: Counts of respondents
       type: Bool

@@ -56,7 +56,7 @@ children:
               - type: CheckBox
                 name: sum
               - type: CheckBox
-                name: disc    
+                name: disc
       - type: LayoutBox
         stretchFactor: 1
         margin: large
@@ -70,9 +70,13 @@ children:
             children:
               - type: CheckBox
                 name: plot
-              - name: num
-                type: TextBox
-                format: number
+                children:
+                  - name: num
+                    type: TextBox
+                    format: number
+                  - name: group
+                    type: TextBox
+                    format: number
               - type: CheckBox
                 name: plot1
                 children:
@@ -84,12 +88,5 @@ children:
                     format: number
                     suggestedValues:
                       - value: 0
-                      - value: 45    
+                      - value: 45
 
-
-
-
-
-
-
- 

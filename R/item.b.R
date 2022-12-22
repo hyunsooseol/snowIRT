@@ -267,8 +267,10 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
      key1 <- strsplit(self$options$key, ',')[[1]]
      
      nums<- self$options$num
+     group <- self$options$group
      
      plot <- ShinyItemAnalysis::plotDistractorAnalysis(data, key1, 
+                                                       num.groups = group,
                                                        item = nums)
 
 
