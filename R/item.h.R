@@ -14,7 +14,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             prop = FALSE,
             sum = FALSE,
             disc = FALSE,
-            plot = FALSE,
+            plot = TRUE,
             angle = 0,
             plot1 = FALSE,
             disi = NULL, ...) {
@@ -65,7 +65,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..plot <- jmvcore::OptionBool$new(
                 "plot",
                 plot,
-                default=FALSE)
+                default=TRUE)
             private$..angle <- jmvcore::OptionNumber$new(
                 "angle",
                 angle,
@@ -363,7 +363,7 @@ item <- function(
     prop = FALSE,
     sum = FALSE,
     disc = FALSE,
-    plot = FALSE,
+    plot = TRUE,
     angle = 0,
     plot1 = FALSE,
     disi) {
