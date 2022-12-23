@@ -164,12 +164,16 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
      
      fit <- image$state
      
-     plot <- plot(fit, item=num)
+    # plot <- plot(fit, item=num)
      
-    if(self$options$model=="cumulative"){
-     plot <- plot(fit, item=num, plot.type="cumulative")
-    }
-     
+     if(self$options$model=="cumulative"){
+      plot <- plot(fit, item=num, plot.type="cumulative")
+     } else{
+       
+       plot <- plot(fit, item=num, plot.type="category")
+       
+     }
+      
      print(plot)
      TRUE
  }

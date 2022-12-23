@@ -21,17 +21,22 @@ children:
             name: group
             maxItemCount: 1
             isTarget: true
-  - type: CollapseBox
-    label: DIF options
-    margin: normal
-    collapsed: true
+  - type: LayoutBox
+    margin: large
+    style: inline
     children:
-      - type: ComboBox
-        name: model
-      - type: ComboBox
-        name: type
-      - type: ComboBox
-        name: match
+      - type: Label
+        label: Analysis options
+        margin: large
+        style: list-inline
+        children:
+          - type: ComboBox
+            name: model
+            format: number
+          - type: ComboBox
+            name: type
+          - type: ComboBox
+            name: match            
   - type: CollapseBox
     label: DIF Analysis
     margin: normal
@@ -42,7 +47,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Table
+            label: Tables
             fitToGrid: true
             cell:
               column: 0

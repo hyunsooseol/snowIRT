@@ -43,7 +43,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Table
+            label: Tables
             fitToGrid: true
             cell:
               column: 0
