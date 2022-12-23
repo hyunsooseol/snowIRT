@@ -60,7 +60,7 @@ options:
     - name: plot
       title: Distractor plot
       type: Bool
-      default: TRUE
+      default: FALSE
 
     - name: angle
       title: Angle of x-axis labels
