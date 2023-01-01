@@ -600,13 +600,14 @@ adjustment; Ho= the data fit the Rasch model."
         
         image <- self$results$plot
         
-        nvars <- length(self$options$vars)
+        vars <- self$options$vars
+        #nvars <- length(self$options$vars)
         
         # width <- 400 + nvars * 30
         # 
         # image$setSize(width, 400)
         
-        state <- list(pmeasure, imeasure)
+        state <- list(pmeasure, imeasure, vars)
         
         image$setState(state)
         
@@ -622,8 +623,11 @@ adjustment; Ho= the data fit the Rasch model."
   
   pmeasure <- image$state[[1]]
   imeasure <- image$state[[2]]
+  vars <- image$state[[3]]
+  
   
   plot<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
+                                        item.names = vars,
                                         color = "deepskyblue")
   
   

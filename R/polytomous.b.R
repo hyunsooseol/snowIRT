@@ -885,13 +885,14 @@ adjustment; Ho= the data fit the Rasch model."
         
         image <- self$results$wrightmap
         
-        nvars <- length(self$options$vars)
+        vars <- self$options$vars
+        #nvars <- length(self$options$vars)
         
         # width <- 400 + nvars * 30
         # 
         # image$setSize(width, 400)
         
-        state <- list(personmeasure, imeasure)
+        state <- list(personmeasure, imeasure, vars)
         
         image$setState(state)
         
@@ -941,7 +942,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         personmeasure <- image$state[[1]]
         imeasure <- image$state[[2]]
-        
+        vars <- image$state[[3]]
         # plot1 <- WrightMap::wrightMap(pmeasure,imeasure,
         #                              show.thr.lab= FALSE,
         #                              thr.sym.cex = 2.0,
@@ -951,6 +952,8 @@ adjustment; Ho= the data fit the Rasch model."
         # 
         
         plot1<- ShinyItemAnalysis::ggWrightMap(personmeasure, imeasure,
+                                              item.names = vars,
+                                             # rel_widths = c(1, 1), 
                                               color = "deepskyblue")
         
         
