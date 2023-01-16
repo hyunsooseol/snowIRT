@@ -123,7 +123,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "angle",
                 angle,
                 min=0,
-                max=45,
+                max=90,
                 default=0)
             private$..tau <- jmvcore::OptionBool$new(
                 "tau",
@@ -717,7 +717,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param esc .
 #' @param inplot .
 #' @param outplot .
-#' @param angle a number from 0 to 45 defining the angle of the x-axis labels,
+#' @param angle a number from 0 to 90 defining the angle of the x-axis labels,
 #'   where 0 degrees represents completely horizontal labels.
 #' @param tau .
 #' @param model .

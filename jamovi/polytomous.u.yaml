@@ -120,7 +120,8 @@ children:
                 format: number
                 suggestedValues:
                   - value: 0
-                  - value: 45   
+                  - value: 45
+                  - value: 90
   - type: CollapseBox
     label: Person Analysis
     margin: normal
@@ -206,7 +207,7 @@ children:
                 name: st
 
   - type: CollapseBox
-    label: Additional Output
+    label: Additional output
     margin: normal
     collapsed: true
     children:
