@@ -16,6 +16,7 @@ items:
       rows: (vars)
       clearWith:
         - vars
+        - group
         - model
         - type
         - match
@@ -45,5 +46,13 @@ items:
       height: 500
       renderFun: .plot
       refs: difNLR
-
+      clearWith:
+        - vars
+        - group
+        - model
+        - type
+        - match
+        - padjust
+        - num
+ 
 ...

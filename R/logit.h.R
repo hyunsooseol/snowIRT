@@ -154,6 +154,7 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 rows="(vars)",
                 clearWith=list(
                     "vars",
+                    "group",
                     "model",
                     "type",
                     "match",
@@ -185,7 +186,15 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=500,
                 height=500,
                 renderFun=".plot",
-                refs="difNLR"))}))
+                refs="difNLR",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "model",
+                    "type",
+                    "match",
+                    "padjust",
+                    "num")))}))
 
 logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "logitBase",

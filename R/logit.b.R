@@ -87,33 +87,35 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
             # analysis--------
             
-            fit <- difNLR::difORD(
+            if(isTRUE(self$options$puri))
+            {
+              
+              fit <- difNLR::difORD(
                 Data = data, group = groupVarName, focal.name = 1,
                 model = self$options$model,
                 type = self$options$type, 
                 match = self$options$match,
-             #   purify = self$options$puri,
+                purify = TRUE,
                 p.adjust.method = self$options$padjust, 
-                )
-            
-        
-            if(self$options$puri==TRUE){
-                
-                fit <- difNLR::difORD(
-                    Data = data, group = groupVarName, focal.name = 1,
-                    model = self$options$model,
-                    type = self$options$type, 
-                    match = self$options$match,
-                    purify = TRUE,
-                    p.adjust.method = self$options$padjust, 
-                )
-                
-                
+              )
+              
+              
+            } else{
+              
+              fit <- difNLR::difORD(
+                Data = data, group = groupVarName, focal.name = 1,
+                model = self$options$model,
+                type = self$options$type, 
+                match = self$options$match,
+                #   purify = self$options$puri,
+                p.adjust.method = self$options$padjust, 
+              )
+             
+              
             }
-            
-            
-                
-        #    self$results$text$setContent(fit)
+           
+        
+            # self$results$text$setContent(fit)
             
             
                 chi<- fit$Sval
@@ -168,9 +170,11 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
      
      if(self$options$model=="cumulative"){
       plot <- plot(fit, item=num, plot.type="cumulative")
+                   
      } else{
        
        plot <- plot(fit, item=num, plot.type="category")
+                    
        
      }
       
