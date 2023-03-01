@@ -19,7 +19,7 @@ polytomous(
   pmeasure = FALSE,
   thurs = FALSE,
   icc = FALSE,
-  wrightmap = TRUE,
+  wplot = TRUE,
   esc = FALSE,
   inplot = FALSE,
   outplot = FALSE,
@@ -62,7 +62,7 @@ polytomous(
 
 \item{icc}{.}
 
-\item{wrightmap}{.}
+\item{wplot}{.}
 
 \item{esc}{.}
 
@@ -97,10 +97,10 @@ A results object containing:
   \code{results$model} \tab \tab \tab \tab \tab a table \cr
   \code{results$lr} \tab \tab \tab \tab \tab a table \cr
   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
+  \code{results$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
-  \code{results$items} \tab \tab \tab \tab \tab a table \cr
-  \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
+  \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr

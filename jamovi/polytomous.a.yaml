@@ -81,7 +81,7 @@ options:
       type: Bool
       default: false
 
-    - name: wrightmap
+    - name: wplot
       title: Wright map
       type: Bool
       default: TRUE

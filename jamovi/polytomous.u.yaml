@@ -83,18 +83,18 @@ children:
         margin: large
         children:
           - type: Label
-            label: Map
+            label: Maps
             fitToGrid: true
             cell:
               column: 0
               row: 0
             children:
               - type: CheckBox
-                name: wrightmap
+                name: wplot
               - type: CheckBox
                 name: piplot
           - type: Label
-            label: Item
+            label: Item plots
             children:
               - type: CheckBox
                 name: esc

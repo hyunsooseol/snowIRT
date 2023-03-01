@@ -19,7 +19,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             pmeasure = FALSE,
             thurs = FALSE,
             icc = FALSE,
-            wrightmap = TRUE,
+            wplot = TRUE,
             esc = FALSE,
             inplot = FALSE,
             outplot = FALSE,
@@ -93,9 +93,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "icc",
                 icc,
                 default=FALSE)
-            private$..wrightmap <- jmvcore::OptionBool$new(
-                "wrightmap",
-                wrightmap,
+            private$..wplot <- jmvcore::OptionBool$new(
+                "wplot",
+                wplot,
                 default=TRUE)
             private$..esc <- jmvcore::OptionBool$new(
                 "esc",
@@ -169,7 +169,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..pmeasure)
             self$.addOption(private$..thurs)
             self$.addOption(private$..icc)
-            self$.addOption(private$..wrightmap)
+            self$.addOption(private$..wplot)
             self$.addOption(private$..esc)
             self$.addOption(private$..total)
             self$.addOption(private$..personmeasure)
@@ -202,7 +202,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pmeasure = function() private$..pmeasure$value,
         thurs = function() private$..thurs$value,
         icc = function() private$..icc$value,
-        wrightmap = function() private$..wrightmap$value,
+        wplot = function() private$..wplot$value,
         esc = function() private$..esc$value,
         total = function() private$..total$value,
         personmeasure = function() private$..personmeasure$value,
@@ -234,7 +234,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..pmeasure = NA,
         ..thurs = NA,
         ..icc = NA,
-        ..wrightmap = NA,
+        ..wplot = NA,
         ..esc = NA,
         ..total = NA,
         ..personmeasure = NA,
@@ -265,10 +265,10 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         model = function() private$.items[["model"]],
         lr = function() private$.items[["lr"]],
         mat = function() private$.items[["mat"]],
+        items = function() private$.items[["items"]],
         thresh = function() private$.items[["thresh"]],
         thurs = function() private$.items[["thurs"]],
-        items = function() private$.items[["items"]],
-        wrightmap = function() private$.items[["wrightmap"]],
+        wplot = function() private$.items[["wplot"]],
         piplot = function() private$.items[["piplot"]],
         esc = function() private$.items[["esc"]],
         plot = function() private$.items[["plot"]],
@@ -474,6 +474,37 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `combineBelow`=TRUE))))
             self$add(jmvcore::Table$new(
                 options=options,
+                name="items",
+                title="Item statistics of the rating scale model",
+                visible="(imeasure || ise || infit || outfit)",
+                rows="(vars)",
+                clearWith=list(
+                    "vars"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="measure", 
+                        `title`="Measure", 
+                        `visible`="(imeasure)"),
+                    list(
+                        `name`="ise", 
+                        `title`="S.E.Measure", 
+                        `visible`="(ise)"),
+                    list(
+                        `name`="infit", 
+                        `title`="Infit", 
+                        `visible`="(infit)"),
+                    list(
+                        `name`="outfit", 
+                        `title`="Outfit", 
+                        `visible`="(outfit)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
                 name="thresh",
                 title="Delta-tau paramaterization of the partial credit model",
                 rows="(vars)",
@@ -506,45 +537,14 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="", 
                         `type`="number", 
                         `content`="($key)"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="items",
-                title="Item statistics of the rating scale model",
-                visible="(imeasure || ise || infit || outfit)",
-                rows="(vars)",
-                clearWith=list(
-                    "vars"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="($key)"),
-                    list(
-                        `name`="measure", 
-                        `title`="Measure", 
-                        `visible`="(imeasure)"),
-                    list(
-                        `name`="ise", 
-                        `title`="S.E.Measure", 
-                        `visible`="(ise)"),
-                    list(
-                        `name`="infit", 
-                        `title`="Infit", 
-                        `visible`="(infit)"),
-                    list(
-                        `name`="outfit", 
-                        `title`="Outfit", 
-                        `visible`="(outfit)"))))
             self$add(jmvcore::Image$new(
                 options=options,
-                name="wrightmap",
+                name="wplot",
                 title="Wright Map",
                 width=500,
                 height=500,
-                renderFun=".wrightmapPlot",
-                visible="(wrightmap)",
+                visible="(wplot)",
+                renderFun=".wplot",
                 refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars")))
@@ -713,7 +713,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param pmeasure .
 #' @param thurs .
 #' @param icc .
-#' @param wrightmap .
+#' @param wplot .
 #' @param esc .
 #' @param inplot .
 #' @param outplot .
@@ -735,10 +735,10 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$model} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$lr} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$wrightmap} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
@@ -776,7 +776,7 @@ polytomous <- function(
     pmeasure = FALSE,
     thurs = FALSE,
     icc = FALSE,
-    wrightmap = TRUE,
+    wplot = TRUE,
     esc = FALSE,
     inplot = FALSE,
     outplot = FALSE,
@@ -813,7 +813,7 @@ polytomous <- function(
         pmeasure = pmeasure,
         thurs = thurs,
         icc = icc,
-        wrightmap = wrightmap,
+        wplot = wplot,
         esc = esc,
         inplot = inplot,
         outplot = outplot,

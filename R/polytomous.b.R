@@ -118,10 +118,7 @@ adjustment; Ho= the data fit the Rasch model."
            private$.populateThresholdsTable(results)
           
           # model comparison----------
-          
-         
-           private$.populateModelTable(results)
-          
+          private$.populateModelTable(results)
           private$.populateLrTable(results)
           
          
@@ -129,10 +126,7 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.prepareIccPlot(data)
           
-          # prepare plot-----
-          
-          private$.prepareWrightmapPlot(data)
-          
+        
           # prepare person-item map
           private$.preparepiPlot(data)
           
@@ -177,9 +171,12 @@ adjustment; Ho= the data fit the Rasch model."
       .compute = function(data) {
         
         
+        set.seed(1234)
         # estimate the Rasch model with MML using function 'tam.mml'-----
         
         tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+        
+        ###########################################################
         
         
         if(self$options$tau==TRUE){
@@ -348,6 +345,19 @@ adjustment; Ho= the data fit the Rasch model."
         
         res <- TAM::IRT.residuals(tamobj )
         resid <- res$stand_residuals
+        
+        # Wrightmap plot--------------
+        if(self$options$wplot==TRUE){
+        
+        vars <- self$options$vars
+        image <- self$results$wplot
+       
+        imeasure <- tamobj$item_irt[[3]]
+        
+        state <- list(personmeasure, imeasure, vars)
+        image$setState(state)
+        }
+        
         
         
         results <-
@@ -843,109 +853,6 @@ adjustment; Ho= the data fit the Rasch model."
    },
    
     
-   # .populateOutputs= function(data) {
-   #  
-   #   if (self$options$total&& self$results$total$isNotFilled()){
-   #     
-   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-   #     person<- TAM::tam.wle(tamobj)
-   #     
-   #     total<- person$PersonScores
-   #    
-   #    
-   #     # total <- results$total
-   #     
-   #     self$results$total$setRowNums(rownames(data))
-   #     self$results$total$setValues(total)
-   #     
-   #   }
-   #    
-   #   if (self$options$personmeasure&& self$results$personmeasure$isNotFilled()){
-   #     
-   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-   #     person<- TAM::tam.wle(tamobj)
-   #     
-   #     personmeasure<- person$theta
-   #     # personmeasure <- results$personmeasure
-   #     
-   #     self$results$personmeasure$setRowNums(rownames(data))
-   #     self$results$personmeasure$setValues(personmeasure)
-   #     
-   #   }
-   #   
-   #   if (self$options$pse&& self$results$pse$isNotFilled()){
-   #     
-   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-   #     person<- TAM::tam.wle(tamobj)
-   #     
-   #     pse <- person$error
-   #     # pse <- results$pse
-   #     
-   #     self$results$pse$setRowNums(rownames(data))
-   #     self$results$pse$setValues(pse)
-   #     
-   #   }
-   #  
-   #   if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
-   #     
-   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-   #     
-   #     fit <- TAM::tam.personfit(tamobj)
-   #     
-   #     pinfit <- fit$infitPerson
-   #     
-   #     self$results$pinfit$setRowNums(rownames(data))
-   #     self$results$pinfit$setValues(pinfit)
-   #     
-   #   }
-   #   
-   #   if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
-   #     
-   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-   #     
-   #     fit <- TAM::tam.personfit(tamobj)
-   #     
-   #     poutfit <- fit$outfitPerson
-   #     
-   #     self$results$poutfit$setRowNums(rownames(data))
-   #     self$results$poutfit$setValues(poutfit)
-   #     
-   #   }
-   #   
-   #   if (self$options$resid && self$results$resid$isNotFilled()) {
-   #     
-   #     
-   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-   #     res <- TAM::IRT.residuals(tamobj )
-   #     resid <- res$stand_residuals
-   #     
-   #     
-   #     keys <- 1:length(self$options$vars)
-   #     titles <- paste("Item", 1:length(self$options$vars))
-   #     descriptions <- paste("Item", 1:length(self$options$vars))
-   #     measureTypes <- rep("continuous", length(self$options$vars))
-   #     
-   #     self$results$resid$set(
-   #       keys=keys,
-   #       titles=titles,
-   #       descriptions=descriptions,
-   #       measureTypes=measureTypes
-   #     )
-   #     
-   #     self$results$resid$setRowNums(rownames(data))
-   #     
-   #     
-   #     resid <- as.data.frame(resid)
-   #     
-   #     for (i in 1:length(self$options$vars)) {
-   #       scores <- as.numeric(resid[, i])
-   #       self$results$resid$setValues(index=i, scores)
-   #     }
-   #   }
-   #   
-   #  
-   # },
-   #  
     .populatePerOutputs = function(results) {
      
      perc <- results$perc  
@@ -962,63 +869,76 @@ adjustment; Ho= the data fit the Rasch model."
    },  
    
    #### Plot functions ###########################
-      
-      .prepareIccPlot = function(data) {
-        
-        # item characteristic curves based on partial credit model--------
-        
-        tam <- TAM::tam.mml(resp = as.matrix(data))
-        
-        
-        # Prepare Data For Plot -------
-        
-        image <- self$results$plot
-        image$setState(tam)
-        
-      },
-      
-      ### wrightmap Plot functions ----------------------------
-      
-      
-      .prepareWrightmapPlot = function(data) {
-        
-        
-        tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-        
-        
-        # person statistics-----------  
-        
-        person<- TAM:: tam.wle(tamobj)
-       
-        personmeasure<- person$theta
-        
-       
-        # item difficulty for rating scale model---------------
-        
-       
-        imeasure <- tamobj$item_irt[[3]]
-        
-        # plot-----------------
-        
-        image <- self$results$wrightmap
-        
-        vars <- self$options$vars
-        #nvars <- length(self$options$vars)
-        
-        # width <- 400 + nvars * 30
-        # 
-        # image$setSize(width, 400)
-        
-        state <- list(personmeasure, imeasure, vars)
-        
-        image$setState(state)
-        
-      },
-      
-  
-      
-      #================================================================
-      
+   
+   # wright map plot--------------
+   
+   .wplot = function(image,...) {
+     
+     if (is.null(image$state))
+       return(FALSE)
+     
+     personmeasure <- image$state[[1]]
+     imeasure <- image$state[[2]]
+     vars <- image$state[[3]]
+     
+     
+     wplot<- ShinyItemAnalysis::ggWrightMap(personmeasure, imeasure,
+                                            item.names = vars,
+                                            # rel_widths = c(1, 1), 
+                                            color = "deepskyblue")
+    
+     print(wplot)
+     TRUE
+     
+   },
+   
+   # PREPARE PERSON-ITEM PLOT FOR PCM-------------
+   
+   .preparepiPlot = function(data) {
+     
+     
+     set.seed(1234)
+     
+     autopcm <- eRm::PCM(data)
+    
+     image <- self$results$piplot
+     image$setState(autopcm)
+     
+   },
+   
+   .piPlot= function(image, ...) {
+     
+     autopcm <- image$state
+     
+     if (is.null(autopcm))
+       return()
+     
+     
+     plot <- eRm::plotPImap(autopcm, sorted=TRUE,
+                            warn.ord.colour = "red")
+     
+     print(plot)
+     
+     TRUE
+     
+   },
+   
+   # ICC plot-----------------
+   
+   .prepareIccPlot = function(data) {
+     
+     # item characteristic curves based on partial credit model--------
+     set.seed(1234)
+     tam <- TAM::tam.mml(resp = as.matrix(data))
+     
+     
+     # Prepare Data For Plot -------
+     
+     image <- self$results$plot
+     image$setState(tam)
+     
+   },
+   
       .plot = function(image, ...) {
         
         tam <- image$parent$state
@@ -1048,78 +968,13 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
  
-      # wright map plot--------------
       
-      .wrightmapPlot = function(image,...) {
-        
-        wrightmap <- self$options$wrightmap
-        
-        if (!wrightmap)
-          return()
-        
-        personmeasure <- image$state[[1]]
-        imeasure <- image$state[[2]]
-        vars <- image$state[[3]]
-        # plot1 <- WrightMap::wrightMap(pmeasure,imeasure,
-        #                              show.thr.lab= FALSE,
-        #                              thr.sym.cex = 2.0,
-        #                              thr.sym.pch = 17,
-        #                              axis.persons = "Person distribution",
-        #                              thr.sym.col.fg = RColorBrewer::brewer.pal(10, "Paired"))
-        # 
-        
-        plot1<- ShinyItemAnalysis::ggWrightMap(personmeasure, imeasure,
-                                              item.names = vars,
-                                             # rel_widths = c(1, 1), 
-                                              color = "deepskyblue")
-        
-        
-        
-        # plot1 <- plot1+ggtheme
-        
-        
-        
-        print(plot1)
-        TRUE
-        
-      },
-      
-   # PREPARE PERSON-ITM PLOT FOR PCM-------------
-   
-   .preparepiPlot = function(data) {
-     
-     autopcm <- eRm::PCM(data)
-     
-     
-     # Prepare Data For Plot -------
-     
-     image <- self$results$piplot
-     image$setState(autopcm)
-     
-   },
-   
-   .piPlot= function(image, ...) {
-     
-     autopcm <- image$state
-     
-     if (is.null(autopcm))
-       return()
-     
-     
-     plot <- eRm::plotPImap(autopcm, sorted=TRUE,
-                            warn.ord.colour = "red")
-     
-     print(plot)
-     
-     TRUE
-     
-   },
-   
    
    # Prepare Expected score curve functions------------
       
       .prepareEscPlot = function(data) {
         
+        set.seed(1234)
         tamp = TAM::tam(resp =as.matrix(data))
         
         
@@ -1134,8 +989,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       
       # Expected score curve plot----------
-      
-      
+    
    .escPlot = function(image, ...) {
         
         tamp <- image$parent$state 
@@ -1174,7 +1028,7 @@ adjustment; Ho= the data fit the Rasch model."
      
      
      # estimate the Rasch model with MML using function 'tam.mml'-----
-     
+        set.seed(1234)
      tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
      
      
@@ -1212,11 +1066,8 @@ adjustment; Ho= the data fit the Rasch model."
    
    .inPlot = function(image, ggtheme, theme,...) {
      
-     
-     inplot <- self$options$inplot
-     
-     if (!inplot)
-       return()
+     if (is.null(image$state))
+       return(FALSE)
      
      infit1 <- image$state
      
@@ -1224,8 +1075,8 @@ adjustment; Ho= the data fit the Rasch model."
      plot <- ggplot(infit1, aes(x = item, y=infit)) + 
        geom_point(shape = 21, color = 'skyblue', 
                   fill = 'white', size = 3, stroke = 2) +
-       geom_hline(yintercept = 1.5) +
-       geom_hline(yintercept = 0.5) +
+       geom_hline(yintercept = 1.5,linetype = "dotted", color='red') +
+       geom_hline(yintercept = 0.5,linetype = "dotted", color='red') +
        ggtitle("Item Infit")
      
      plot <- plot+ggtheme
@@ -1247,7 +1098,7 @@ adjustment; Ho= the data fit the Rasch model."
    .prepareOutfitPlot=function(data){
      
      # estimate the Rasch model with MML using function 'tam.mml'-----
-     
+     set.seed(1234)
      tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
      
      
@@ -1281,10 +1132,8 @@ adjustment; Ho= the data fit the Rasch model."
    
    .outPlot = function(image, ggtheme, theme,...) {
      
-     outplot <- self$options$outplot
-     
-     if (!outplot)
-       return()
+     if (is.null(image$state))
+       return(FALSE)
      
      outfit1 <- image$state
      
@@ -1292,8 +1141,8 @@ adjustment; Ho= the data fit the Rasch model."
      plot <- ggplot(outfit1, aes(x = item, y=outfit)) + 
        geom_point(shape = 21, color = 'skyblue', 
                   fill = 'white', size = 3, stroke = 2) +
-       geom_hline(yintercept = 1.5) +
-       geom_hline(yintercept = 0.5) +
+       geom_hline(yintercept = 1.5,linetype = "dotted", color='red') +
+       geom_hline(yintercept = 0.5,linetype = "dotted", color='red') +
        ggtitle("Item Outfit")
      
      plot <- plot+ggtheme
@@ -1318,6 +1167,8 @@ adjustment; Ho= the data fit the Rasch model."
  
  .plot2 = function(image2, ggtheme, theme,...) {
    
+   if (is.null(image2$state))
+     return(FALSE)
    
    df2 <- image2$state[[1]]
    score <- image2$state[[2]]
