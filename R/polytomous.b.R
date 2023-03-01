@@ -124,14 +124,7 @@ adjustment; Ho= the data fit the Rasch model."
           
           private$.populateLrTable(results)
           
-          # populate person table------
-          
-         # private$.populatePersonTable(results)
-          
-          # populate output variables-----
-          
-          private$.populateOutputs(data)
-          
+         
           #prepare plot-----
           
           private$.prepareIccPlot(data)
@@ -164,6 +157,15 @@ adjustment; Ho= the data fit the Rasch model."
           #Standard score---------
           
           private$.populateStTable(results)
+          
+          
+          # populate output variables-----
+          private$.populateTotalOutputs(results)
+          private$.populatePersonmeasureOutputs(results)
+          private$.populatePseOutputs(results)
+          private$.populatePinfitOutputs(results)
+          private$.populatePoutfitOutputs(results)
+          private$.populateResidOutputs(results)
           
         }
         
@@ -232,10 +234,10 @@ adjustment; Ho= the data fit the Rasch model."
         
         # person statistics------------------
         
-        # total<- person$PersonScores
-        # personmeasure<- person$theta
-        # pse <- person$error
-        # 
+         total<- person$PersonScores
+         personmeasure<- person$theta
+         pse <- person$error
+         
         #computing an effect size of model fit(MADaQ3)-------
         
        # assess model fit
@@ -334,6 +336,20 @@ adjustment; Ho= the data fit the Rasch model."
         
        # self$results$text1$setContent(st)
         
+        # person infit---------
+        pfit <- TAM::tam.personfit(tamobj)
+        pinfit <- pfit$infitPerson
+        
+        # person outfit---------
+        pfit <- TAM::tam.personfit(tamobj)
+        poutfit <- pfit$outfitPerson
+        
+        # Residual----------
+        
+        res <- TAM::IRT.residuals(tamobj )
+        resid <- res$stand_residuals
+        
+        
         results <-
           list(
             'imeasure' = imeasure,
@@ -363,7 +379,13 @@ adjustment; Ho= the data fit the Rasch model."
             'df'=df,
             'p'=p,
             'to'=to,
-            'st'=st
+            'st'=st,
+            'total'=total,
+            'personmeasure'=personmeasure,
+            'pse'=pse,
+            'pinfit'=pinfit,
+            'poutfit'=poutfit,
+            'resid'=resid
           )
        
           
@@ -720,88 +742,80 @@ adjustment; Ho= the data fit the Rasch model."
      }
    },
    
-   # Model comparison---------
-   
-     
-     
+  
     ##### person statistics for output variable-------------------
-      
-   .populateOutputs= function(data) {
-    
-     if (self$options$total&& self$results$total$isNotFilled()){
-       
-       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-       person<- TAM::tam.wle(tamobj)
-       
-       total<- person$PersonScores
-      
-      
-       # total <- results$total
+     
+   .populateTotalOutputs=function(results){
+     
+     total <- results$total
+     
+     if (self$options$total && self$results$total$isNotFilled()) {
        
        self$results$total$setRowNums(rownames(data))
        self$results$total$setValues(total)
        
      }
-      
-     if (self$options$personmeasure&& self$results$personmeasure$isNotFilled()){
-       
-       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-       person<- TAM::tam.wle(tamobj)
-       
-       personmeasure<- person$theta
-       # personmeasure <- results$personmeasure
+     
+   },
+   
+   .populatePersonmeasureOutputs=function(results){
+     
+     personmeasure <- results$personmeasure
+     
+     if (self$options$personmeasure && self$results$personmeasure$isNotFilled()) {
        
        self$results$personmeasure$setRowNums(rownames(data))
        self$results$personmeasure$setValues(personmeasure)
        
      }
      
-     if (self$options$pse&& self$results$pse$isNotFilled()){
-       
-       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-       person<- TAM::tam.wle(tamobj)
-       
-       pse <- person$error
-       # pse <- results$pse
+   },
+   
+   .populatePseOutputs=function(results){
+     
+     pse <- results$pse
+     
+     if (self$options$pse && self$results$pse$isNotFilled()) {
        
        self$results$pse$setRowNums(rownames(data))
        self$results$pse$setValues(pse)
        
      }
-    
+     
+   },
+   
+   .populatePinfitOutputs=function(results){
+     
+     pinfit <- results$pinfit
+     
      if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
-       
-       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-       
-       fit <- TAM::tam.personfit(tamobj)
-       
-       pinfit <- fit$infitPerson
        
        self$results$pinfit$setRowNums(rownames(data))
        self$results$pinfit$setValues(pinfit)
        
      }
      
+   },
+   
+   
+   .populatePoutfitOutputs=function(results){
+     
+     poutfit <- results$poutfit
      if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
-       
-       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-       
-       fit <- TAM::tam.personfit(tamobj)
-       
-       poutfit <- fit$outfitPerson
        
        self$results$poutfit$setRowNums(rownames(data))
        self$results$poutfit$setValues(poutfit)
        
      }
      
+   },   
+   
+   
+   .populateResidOutputs=function(results){
+     
+     resid <- results$resid
+     
      if (self$options$resid && self$results$resid$isNotFilled()) {
-       
-       
-       tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-       res <- TAM::IRT.residuals(tamobj )
-       resid <- res$stand_residuals
-       
        
        keys <- 1:length(self$options$vars)
        titles <- paste("Item", 1:length(self$options$vars))
@@ -824,12 +838,115 @@ adjustment; Ho= the data fit the Rasch model."
          scores <- as.numeric(resid[, i])
          self$results$resid$setValues(index=i, scores)
        }
+       
      }
-     
-    
    },
+   
     
-   .populatePerOutputs = function(results) {
+   # .populateOutputs= function(data) {
+   #  
+   #   if (self$options$total&& self$results$total$isNotFilled()){
+   #     
+   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+   #     person<- TAM::tam.wle(tamobj)
+   #     
+   #     total<- person$PersonScores
+   #    
+   #    
+   #     # total <- results$total
+   #     
+   #     self$results$total$setRowNums(rownames(data))
+   #     self$results$total$setValues(total)
+   #     
+   #   }
+   #    
+   #   if (self$options$personmeasure&& self$results$personmeasure$isNotFilled()){
+   #     
+   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+   #     person<- TAM::tam.wle(tamobj)
+   #     
+   #     personmeasure<- person$theta
+   #     # personmeasure <- results$personmeasure
+   #     
+   #     self$results$personmeasure$setRowNums(rownames(data))
+   #     self$results$personmeasure$setValues(personmeasure)
+   #     
+   #   }
+   #   
+   #   if (self$options$pse&& self$results$pse$isNotFilled()){
+   #     
+   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+   #     person<- TAM::tam.wle(tamobj)
+   #     
+   #     pse <- person$error
+   #     # pse <- results$pse
+   #     
+   #     self$results$pse$setRowNums(rownames(data))
+   #     self$results$pse$setValues(pse)
+   #     
+   #   }
+   #  
+   #   if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
+   #     
+   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+   #     
+   #     fit <- TAM::tam.personfit(tamobj)
+   #     
+   #     pinfit <- fit$infitPerson
+   #     
+   #     self$results$pinfit$setRowNums(rownames(data))
+   #     self$results$pinfit$setValues(pinfit)
+   #     
+   #   }
+   #   
+   #   if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
+   #     
+   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+   #     
+   #     fit <- TAM::tam.personfit(tamobj)
+   #     
+   #     poutfit <- fit$outfitPerson
+   #     
+   #     self$results$poutfit$setRowNums(rownames(data))
+   #     self$results$poutfit$setValues(poutfit)
+   #     
+   #   }
+   #   
+   #   if (self$options$resid && self$results$resid$isNotFilled()) {
+   #     
+   #     
+   #     tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
+   #     res <- TAM::IRT.residuals(tamobj )
+   #     resid <- res$stand_residuals
+   #     
+   #     
+   #     keys <- 1:length(self$options$vars)
+   #     titles <- paste("Item", 1:length(self$options$vars))
+   #     descriptions <- paste("Item", 1:length(self$options$vars))
+   #     measureTypes <- rep("continuous", length(self$options$vars))
+   #     
+   #     self$results$resid$set(
+   #       keys=keys,
+   #       titles=titles,
+   #       descriptions=descriptions,
+   #       measureTypes=measureTypes
+   #     )
+   #     
+   #     self$results$resid$setRowNums(rownames(data))
+   #     
+   #     
+   #     resid <- as.data.frame(resid)
+   #     
+   #     for (i in 1:length(self$options$vars)) {
+   #       scores <- as.numeric(resid[, i])
+   #       self$results$resid$setValues(index=i, scores)
+   #     }
+   #   }
+   #   
+   #  
+   # },
+   #  
+    .populatePerOutputs = function(results) {
      
      perc <- results$perc  
      

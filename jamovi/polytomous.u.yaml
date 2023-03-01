@@ -24,7 +24,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Rating scale model' 
+            label: Rating scale model
             fitToGrid: true
             cell:
               column: 0
@@ -39,7 +39,7 @@ children:
               - type: CheckBox
                 name: outfit
           - type: Label
-            label: 'Partical credit model'
+            label: Partical credit model
             children:
               - type: CheckBox
                 name: thresh
@@ -70,9 +70,9 @@ children:
             label: Model comparison
             children:
               - type: CheckBox
-                name: model 
+                name: model
               - type: CheckBox
-                name: lr                
+                name: lr
   - type: CollapseBox
     label: Plots
     margin: normal
@@ -83,7 +83,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Map'
+            label: Map
             fitToGrid: true
             cell:
               column: 0
@@ -94,7 +94,7 @@ children:
               - type: CheckBox
                 name: piplot
           - type: Label
-            label: 'Item'
+            label: Item
             children:
               - type: CheckBox
                 name: esc
@@ -109,12 +109,12 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Fit'
-            children: 
+            label: Fit
+            children:
               - type: CheckBox
                 name: inplot
               - type: CheckBox
-                name: outplot  
+                name: outplot
               - type: TextBox
                 name: angle
                 format: number
@@ -132,7 +132,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Person measures'
+            label: Person measures
             fitToGrid: true
             cell:
               column: 0
@@ -153,17 +153,17 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Person fit'
+            label: Person fit
             children:
               - type: Output
                 name: pinfit
               - type: Output
                 name: poutfit
           - type: Label
-            label: 'Residuals'
+            label: Residuals
             children:
               - type: Output
-                name: resid               
+                name: resid
   - type: CollapseBox
     label: Standard scores
     margin: normal
@@ -178,7 +178,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Total score'
+            label: Total score
             fitToGrid: true
             cell:
               column: 0
@@ -197,7 +197,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Transformation'
+            label: Transformation
             fitToGrid: true
             cell:
               column: 1
@@ -205,7 +205,6 @@ children:
             children:
               - type: CheckBox
                 name: st
-
   - type: CollapseBox
     label: Additional output
     margin: normal
@@ -217,4 +216,3 @@ children:
         children:
           - type: CheckBox
             name: tau
- 
