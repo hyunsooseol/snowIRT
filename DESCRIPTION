@@ -1,8 +1,8 @@
 Package: snowIRT
 Type: Package
 Title: Item Response Theory for jamovi
-Version: 4.8.4
-Date: 2023-01-16
+Version: 4.8.5
+Date: 2023-03-01
 Author: Hyunsoo Seol
 Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
 Description: This package provides distractor analysis, item and person statistics, Model fit, Differential Item Functioning, Wright Map, Expected Score Curve, and Item Characteristic Curves for DIF using the Rasch measurement model.
