@@ -218,6 +218,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
 
 .plot = function(image, ...) {
   
+  if (is.null(image$state))
+    return(FALSE)
+  
   plotData <- image$state
   
   plot <- plot(plotData)

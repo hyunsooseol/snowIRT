@@ -898,9 +898,9 @@ adjustment; Ho= the data fit the Rasch model."
      
      
      set.seed(1234)
-     
+     #########################
      autopcm <- eRm::PCM(data)
-    
+    #########################
      image <- self$results$piplot
      image$setState(autopcm)
      
@@ -1028,7 +1028,7 @@ adjustment; Ho= the data fit the Rasch model."
      
      
      # estimate the Rasch model with MML using function 'tam.mml'-----
-        set.seed(1234)
+     set.seed(1234)
      tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
      
      
@@ -1075,8 +1075,8 @@ adjustment; Ho= the data fit the Rasch model."
      plot <- ggplot(infit1, aes(x = item, y=infit)) + 
        geom_point(shape = 21, color = 'skyblue', 
                   fill = 'white', size = 3, stroke = 2) +
-       geom_hline(yintercept = 1.5,linetype = "dotted", color='red') +
-       geom_hline(yintercept = 0.5,linetype = "dotted", color='red') +
+       geom_hline(yintercept = 1.5,linetype = "dotted", color='red', size=1.0) +
+       geom_hline(yintercept = 0.5,linetype = "dotted", color='red', size=1.0) +
        ggtitle("Item Infit")
      
      plot <- plot+ggtheme
@@ -1141,8 +1141,8 @@ adjustment; Ho= the data fit the Rasch model."
      plot <- ggplot(outfit1, aes(x = item, y=outfit)) + 
        geom_point(shape = 21, color = 'skyblue', 
                   fill = 'white', size = 3, stroke = 2) +
-       geom_hline(yintercept = 1.5,linetype = "dotted", color='red') +
-       geom_hline(yintercept = 0.5,linetype = "dotted", color='red') +
+       geom_hline(yintercept = 1.5,linetype = "dotted", color='red', size=1.0) +
+       geom_hline(yintercept = 0.5,linetype = "dotted", color='red', size=1.0) +
        ggtitle("Item Outfit")
      
      plot <- plot+ggtheme

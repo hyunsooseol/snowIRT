@@ -280,7 +280,9 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
 .plot1 = function(image, ggtheme, theme,...) {
   
- 
+  if (is.null(image$state))
+    return(FALSE)
+  
   dicho <- image$state
   
   disi<- self$options$disi

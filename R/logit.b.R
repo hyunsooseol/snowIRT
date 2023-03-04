@@ -153,13 +153,8 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
  
  .plot = function(image, ggtheme, theme,...) {
      
-     if (is.null(self$options$vars) | is.null(self$options$group))
-         return()
-     
-   # if (is.null(self$options$group))
-   #   
-   #   return()
-   
+   if (is.null(image$state))
+     return(FALSE)
    
      num <- self$options$num
      model <- self$options$model

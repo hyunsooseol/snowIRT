@@ -671,8 +671,8 @@ adjustment; Ho= the data fit the Rasch model."
   plot <- ggplot(infit1, aes(x = Item, y=infit)) +
     geom_point(shape = 21, color = 'skyblue',
                fill = 'white', size = 3, stroke = 2) +
-    geom_hline(yintercept = 1.5, linetype = "dotted", color='red') +
-    geom_hline(yintercept = 0.5, linetype = "dotted", color='red') +
+    geom_hline(yintercept = 1.5, linetype = "dotted", color='red', size=1.0) +
+    geom_hline(yintercept = 0.5, linetype = "dotted", color='red', size=1.0) +
     ggtitle("Item Infit")
   
   
@@ -704,8 +704,8 @@ adjustment; Ho= the data fit the Rasch model."
   plot <- ggplot(outfit1, aes(x = Item, y=outfit)) + 
     geom_point(shape = 21, color = 'skyblue', 
                fill = 'white', size = 3, stroke = 2) +
-    geom_hline(yintercept = 1.5, linetype = "dotted", color='red') +
-    geom_hline(yintercept = 0.5, linetype = "dotted", color='red') +
+    geom_hline(yintercept = 1.5, linetype = "dotted", color='red', size=1.0) +
+    geom_hline(yintercept = 0.5, linetype = "dotted", color='red', size=1.0) +
     ggtitle("Item Outfit")
   
   plot <- plot+ggtheme

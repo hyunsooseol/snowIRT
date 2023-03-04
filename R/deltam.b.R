@@ -216,8 +216,8 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                },
                    .plot = function(image, ...) {
                        
-                        if (is.null(self$options$vars))
-                            return()
+                     if (is.null(image$state))
+                       return(FALSE)
                        
                        
                        fixed <- image$state
@@ -231,9 +231,8 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         .plot1 = function(image, ...) {
             
-             if (is.null(self$options$vars))
-                 return()
-            
+          if (is.null(image$state))
+            return(FALSE)
             
             normal <- image$state
             
