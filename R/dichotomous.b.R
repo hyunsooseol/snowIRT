@@ -127,6 +127,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .compute = function(data) {
         
+        set.seed(1234)
       
         # estimate the Rasch model with MMLE-----
         
@@ -616,13 +617,12 @@ adjustment; Ho= the data fit the Rasch model."
 
 .prepareEscPlot = function(data) {
 
+  set.seed(1234)
   tamp = TAM::tam(resp =as.matrix(data))
 
-
-  # Prepare Data For ESC Plot -------
+    # Prepare Data For ESC Plot -------
 
   image <- self$results$get('esc')
-
   image$setState(tamp)
 
 

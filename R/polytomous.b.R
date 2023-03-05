@@ -99,16 +99,12 @@ adjustment; Ho= the data fit the Rasch model."
           results <- private$.compute(data)
           
           #populate scale table-----
-          
           private$.populateScaleTable(results)
           
-          
           # populate item table----
-          
           private$.populateItemsTable(results)
           
           # Populate q3 matrix table-----
-          
           private$.populateMatrixTable(results)
           
           # populate thurstonian thresholds
@@ -121,37 +117,24 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateModelTable(results)
           private$.populateLrTable(results)
           
-         
           #prepare plot-----
-          
           private$.prepareIccPlot(data)
-          
-        
           # prepare person-item map
           private$.preparepiPlot(data)
-          
           # prepare Expected score curve plot---------
-          
           private$.prepareEscPlot(data)
           
           # prepare item fit plot-------
-          
           private$.prepareInfitPlot(data)
-          
           private$.prepareOutfitPlot(data)
           
           # prepare rating scale category plot=========
-          
-        #  private$.prepareRatingPlot(data)
-        
+          #  private$.prepareRatingPlot(data)
           # Summary of total score-----
-          
           private$.populateToTable(results)  
           
           #Standard score---------
-          
           private$.populateStTable(results)
-          
           
           # populate output variables-----
           private$.populateTotalOutputs(results)
@@ -172,10 +155,9 @@ adjustment; Ho= the data fit the Rasch model."
         
         
         set.seed(1234)
+        
         # estimate the Rasch model with MML using function 'tam.mml'-----
-        
         tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-        
         ###########################################################
         
         
@@ -205,72 +187,51 @@ adjustment; Ho= the data fit the Rasch model."
         imeasure<- tamobj$xsi[,1]
         
         #imeasure <- tamobj$item_irt[[3]]
-        
-        
-        # estimate standard error of the item parameter-----
-        
-        #ise <- tamobj$se.AXsi[,2]
+       # estimate standard error of the item parameter-----
+       #ise <- tamobj$se.AXsi[,2]
         
         ise<- tamobj$xsi[,2]
         
         # computing infit and outfit statistics---------------------
         
         infit <- TAM::tam.fit(tamobj)$itemfit$Infit
-        
-        
         outfit <- TAM::tam.fit(tamobj)$itemfit$Outfit
         
-        
-        # computing person separation reliability-------
-        
-       
-        person<- TAM::tam.wle(tamobj)
-        
-        reliability<- person$WLE.rel
+       # computing person separation reliability-------
+         person<- TAM::tam.wle(tamobj)
+         reliability<- person$WLE.rel
         
         
         # person statistics------------------
-        
          total<- person$PersonScores
          personmeasure<- person$theta
          pse <- person$error
          
         #computing an effect size of model fit(MADaQ3)-------
-        
        # assess model fit
         res <- TAM::tam.modelfit(tamobj)
-        
         modelfit <- res$stat.MADaQ3$MADaQ3
         
         # pvalue--------
         modelfitp <- res$stat.MADaQ3$p
         
         # q3 matrix----------
-        
         mat <- res$Q3.matr
-        
-        
+
         # Partial credit model using MML estimation---
-        
         mod_pcm <- TAM::tam(resp = as.matrix(data))
-        
-        
+
         #  Calculation of Thurstonian thresholds----
-         
          thresh <- TAM::tam.threshold(mod_pcm)
          nc <- ncol(thresh)
-         
-        
+
         # tampartial = TAM::tam.mml(resp = as.matrix(data))
-          
         # Delta parameter-------------------
         
         pmeasure <- mod_pcm$item_irt$beta
         
         # delta-tau parameterization--------
-        
         delta <- mod_pcm$item_irt
-        
         tau<- delta[,c(-1,-2,-3)]
         nc1 <- ncol(tau)
         
@@ -290,7 +251,6 @@ adjustment; Ho= the data fit the Rasch model."
         obs <- comp$IC$Nobs
         
         #####################
-        
         lr<- comp$LRtest
         
         model1 <- lr$Model1
@@ -358,9 +318,7 @@ adjustment; Ho= the data fit the Rasch model."
         image$setState(state)
         }
         
-        
-        
-        results <-
+      results <-
           list(
             'imeasure' = imeasure,
             'ise' = ise,
@@ -896,7 +854,6 @@ adjustment; Ho= the data fit the Rasch model."
    
    .preparepiPlot = function(data) {
      
-     
      set.seed(1234)
      #########################
      autopcm <- eRm::PCM(data)
@@ -968,8 +925,7 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
  
-      
-   
+    
    # Prepare Expected score curve functions------------
       
       .prepareEscPlot = function(data) {
@@ -1019,13 +975,11 @@ adjustment; Ho= the data fit the Rasch model."
         
         
       },
-      
-
+     
    
    # infit plot---------------
    
-      .prepareInfitPlot=function(data){
-     
+   .prepareInfitPlot=function(data){
      
      # estimate the Rasch model with MML using function 'tam.mml'-----
      set.seed(1234)
@@ -1186,7 +1140,7 @@ adjustment; Ho= the data fit the Rasch model."
  },
  
  
-      ### Helper functions =================================
+ ### Helper functions =================================
       
       .cleanData = function() {
         items <- self$options$vars
