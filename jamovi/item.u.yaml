@@ -69,6 +69,8 @@ children:
             label: Plots
             children:
               - type: CheckBox
+                name: plot2
+              - type: CheckBox
                 name: plot
                 children:
                   - name: num

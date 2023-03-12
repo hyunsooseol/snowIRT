@@ -17,7 +17,8 @@ item(
   plot = FALSE,
   angle = 0,
   plot1 = FALSE,
-  disi
+  disi,
+  plot2 = FALSE
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ where 0 degrees represents completely horizontal labels.}
 \item{plot1}{.}
 
 \item{disi}{.}
+
+\item{plot2}{.}
 }
 \value{
 A results object containing:
@@ -56,6 +59,7 @@ A results object containing:
   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$disc} \tab \tab \tab \tab \tab a table \cr
+  \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 }

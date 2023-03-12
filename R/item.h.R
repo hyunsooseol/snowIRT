@@ -17,7 +17,8 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             plot = FALSE,
             angle = 0,
             plot1 = FALSE,
-            disi = NULL, ...) {
+            disi = NULL,
+            plot2 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -83,6 +84,10 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "ULI",
                     "RIT",
                     "RIR"))
+            private$..plot2 <- jmvcore::OptionBool$new(
+                "plot2",
+                plot2,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..key)
@@ -96,6 +101,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..angle)
             self$.addOption(private$..plot1)
             self$.addOption(private$..disi)
+            self$.addOption(private$..plot2)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -109,7 +115,8 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot = function() private$..plot$value,
         angle = function() private$..angle$value,
         plot1 = function() private$..plot1$value,
-        disi = function() private$..disi$value),
+        disi = function() private$..disi$value,
+        plot2 = function() private$..plot2$value),
     private = list(
         ..vars = NA,
         ..key = NA,
@@ -122,7 +129,8 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..plot = NA,
         ..angle = NA,
         ..plot1 = NA,
-        ..disi = NA)
+        ..disi = NA,
+        ..plot2 = NA)
 )
 
 itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -134,6 +142,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         prop = function() private$.items[["prop"]],
         sum = function() private$.items[["sum"]],
         disc = function() private$.items[["disc"]],
+        plot2 = function() private$.items[["plot2"]],
         plot = function() private$.items[["plot"]],
         plot1 = function() private$.items[["plot1"]]),
     private = list(),
@@ -272,6 +281,18 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="RIR"))))
             self$add(jmvcore::Image$new(
                 options=options,
+                name="plot2",
+                title="Histogram of total score",
+                requiresData=TRUE,
+                visible="(plot2)",
+                width=500,
+                height=500,
+                renderFun=".plot2",
+                refs="ShinyItemAnalysis",
+                clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Image$new(
+                options=options,
                 name="plot",
                 title="Distractor plot",
                 requiresData=TRUE,
@@ -335,6 +356,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   where 0 degrees represents completely horizontal labels.
 #' @param plot1 .
 #' @param disi .
+#' @param plot2 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -342,6 +364,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$disc} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #' }
@@ -366,7 +389,8 @@ item <- function(
     plot = FALSE,
     angle = 0,
     plot1 = FALSE,
-    disi) {
+    disi,
+    plot2 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("item requires jmvcore to be installed (restart may be required)")
@@ -391,7 +415,8 @@ item <- function(
         plot = plot,
         angle = angle,
         plot1 = plot1,
-        disi = disi)
+        disi = disi,
+        plot2 = plot2)
 
     analysis <- itemClass$new(
         options = options,

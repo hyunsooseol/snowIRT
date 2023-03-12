@@ -88,4 +88,9 @@ options:
           name:  RIT
         - title: RIR
           name:  RIR
+
+    - name: plot2
+      title: 'Histogram of total score'
+      type: Bool
+      default: FALSE
 ...

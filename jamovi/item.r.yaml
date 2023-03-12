@@ -121,6 +121,18 @@ items:
         - name: RIR
           title: RIR 
 
+    - name:  plot2
+      title: 'Histogram of total score'
+      type:  Image
+      requiresData: true
+      visible: (plot2)
+      width: 500
+      height: 500
+      renderFun: .plot2
+      refs: ShinyItemAnalysis
+      clearWith:
+            - vars
+
     - name:  plot
       title: 'Distractor plot'
       type:  Image

@@ -11,6 +11,7 @@
 #' @importFrom CTT score
 #' @importFrom ShinyItemAnalysis ItemAnalysis
 #' @importFrom ShinyItemAnalysis DDplot
+#' @importFrom ShinyItemAnalysis theme_app
 #' @import ggplot2
 #' @export
 
@@ -252,10 +253,67 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              image <- self$results$plot1
      
              image$setState(dicho)
-
+             
+             # Histogram of total score------------
+            
+            if(self$options$plot2==TRUE){ 
+             
+              dicho<- CTT::score(data,key1,output.scored=TRUE)
+              
+              binary<- dicho$scored
+              
+             score <- rowSums(binary)
+             df <- data.frame(score)
+             
+             state <- list(score, df)
+             
+             image2 <- self$results$plot2
+             image2$setState(state)
+            }
+           
           },
+#################################################################
 
-
+        .plot2 = function(image2, ggtheme, theme,...) {
+          
+          if (is.null(image2$state))
+            return(FALSE)
+          
+          score <- image2$state[[1]]
+          df <- image2$state[[2]]
+          
+          # plot2<- ggplot(df, aes(score)) +
+          #   geom_histogram(binwidth = 1) +
+          #   xlab("Total score") +
+          #   ylab("Number of respondents")
+        
+          # histogram
+          ggplot(df, aes(score)) +
+            geom_histogram(binwidth = 1, col = "black") +
+            xlab("Total score") +
+            ylab("Number of respondents") +
+            ShinyItemAnalysis::theme_app()
+          
+          # colors by cut-score
+          cut <- median(score) # cut-score
+          color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
+          df <- data.frame(score)
+          
+          # histogram
+          plot2<- ggplot(df, aes(score)) +
+            geom_histogram(binwidth = 1, fill = color, col = "black") +
+            xlab("Total score") +
+            ylab("Number of respondents") +
+            ShinyItemAnalysis::theme_app()
+          
+          
+          plot2+ggtheme
+          
+          print(plot2)
+          TRUE
+        },
+        
+        
  .plot = function(image, ...) {
 
 
