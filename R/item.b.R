@@ -199,12 +199,56 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               # Scores, scored file-----------
               
               dicho<- CTT::score(data,key1,output.scored=TRUE)
-              
               dicho<- dicho$scored
+              dicho <- as.data.frame(dicho) # dichotomous matrix
               
-              dicho <- as.data.frame(dicho)
               
-              # traditional item analysis table
+             if(self$options$total==TRUE){
+             
+               binary<- CTT::score(data,key1,output.scored=TRUE)
+             
+                # Save total score---------
+                score<- as.vector(binary$score)
+              
+              self$results$total$setRowNums(rownames(data))     
+               self$results$total$setValues(score)
+               
+             }
+                
+            
+              # Save scoring-----------------
+              
+              if(self$options$scoring==TRUE){
+                
+                binary<- CTT::score(data,key1,output.scored=TRUE)
+                
+               
+                keys <- 1:length(self$options$vars)
+                titles <- paste("Item", 1:length(self$options$vars))
+                descriptions <- paste("Item", 1:length(self$options$vars))
+                measureTypes <- rep("continuous", length(self$options$vars))
+                
+                self$results$scoring$set(
+                  keys=keys,
+                  titles=titles,
+                  descriptions=descriptions,
+                  measureTypes=measureTypes
+                )
+                
+                self$results$scoring$setRowNums(rownames(data))
+                
+                
+                scoring<- as.data.frame(binary$scored)
+                
+                for (i in 1:length(self$options$vars)) {
+                  scores <- as.numeric(scoring[, i])
+                  self$results$scoring$setValues(index=i, scores)
+                }
+                
+              } 
+               
+              
+              # traditional item analysis table--------------------
               
               it<- ShinyItemAnalysis::ItemAnalysis(dicho)
               

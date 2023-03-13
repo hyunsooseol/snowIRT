@@ -160,4 +160,17 @@ items:
             - disi
             - angle
 
+    - name: total
+      title: Total
+      type: Output
+      varTitle: Total
+      measureType: continuous
+      clearWith:
+        - vars
+
+    - name: scoring
+      title: Scoring
+      type: Output
+      clearWith:
+        - vars                
 ...

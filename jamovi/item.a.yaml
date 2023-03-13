@@ -93,4 +93,12 @@ options:
       title: 'Histogram of total score'
       type: Bool
       default: FALSE
+
+    - name: total
+      title: Total score
+      type: Output  
+      
+    - name: scoring
+      title: Scoring
+      type: Output      
 ...

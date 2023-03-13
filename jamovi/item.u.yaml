@@ -57,6 +57,14 @@ children:
                 name: sum
               - type: CheckBox
                 name: disc
+          - type: Label
+            label: Save
+            fitToGrid: true
+            children:      
+              - type: Output
+                name: total
+              - type: Output
+                name: scoring
       - type: LayoutBox
         stretchFactor: 1
         margin: large
