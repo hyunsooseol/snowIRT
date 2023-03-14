@@ -22,6 +22,7 @@ items:
           rows: 0
           clearWith:
             - vars
+            - key
           columns:
             - name: name
               title: ''
@@ -50,6 +51,7 @@ items:
           rows: 0
           clearWith:
             - vars
+            - key
           columns:
             - name: name
               title: ''
@@ -78,6 +80,7 @@ items:
           rows: 0
           clearWith:
             - vars
+            - key
           columns:
             - name: correct
               title: 'Correct'
@@ -101,6 +104,7 @@ items:
       rows: (vars)
       clearWith:
         - vars
+        - key
       refs: ShinyItemAnalysis
         
       columns:
@@ -132,6 +136,7 @@ items:
       refs: ShinyItemAnalysis
       clearWith:
             - vars
+            - key
 
     - name:  plot
       title: 'Distractor plot'
@@ -146,6 +151,7 @@ items:
             - vars
             - num 
             - group
+            - key
 
     - name:  plot1
       title: 'Discrimination plot'
@@ -159,6 +165,7 @@ items:
             - vars
             - disi
             - angle
+            - key
 
     - name: total
       title: Total
@@ -167,12 +174,14 @@ items:
       measureType: continuous
       clearWith:
         - vars
+        - key
 
     - name: scoring
       title: Scoring
       type: Output
       clearWith:
-        - vars                
+        - vars
+        - key
 
     - name:  plot3
       title: 'Empirical Item Characteristic Curve'
@@ -185,5 +194,6 @@ items:
       refs: CTT
       clearWith:
             - vars
-            - num1 
+            - num1
+            - key
 ...

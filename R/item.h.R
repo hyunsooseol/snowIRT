@@ -200,7 +200,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     title="Item $key",
                     rows=0,
                     clearWith=list(
-                        "vars"),
+                        "vars",
+                        "key"),
                     columns=list(
                         list(
                             `name`="name", 
@@ -231,7 +232,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     title="Item $key",
                     rows=0,
                     clearWith=list(
-                        "vars"),
+                        "vars",
+                        "key"),
                     columns=list(
                         list(
                             `name`="name", 
@@ -262,7 +264,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     title="Item $key",
                     rows=0,
                     clearWith=list(
-                        "vars"),
+                        "vars",
+                        "key"),
                     columns=list(
                         list(
                             `name`="correct", 
@@ -289,7 +292,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(disc)",
                 rows="(vars)",
                 clearWith=list(
-                    "vars"),
+                    "vars",
+                    "key"),
                 refs="ShinyItemAnalysis",
                 columns=list(
                     list(
@@ -320,7 +324,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".plot2",
                 refs="ShinyItemAnalysis",
                 clearWith=list(
-                    "vars")))
+                    "vars",
+                    "key")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -334,7 +339,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "num",
-                    "group")))
+                    "group",
+                    "key")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
@@ -347,7 +353,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "disi",
-                    "angle")))
+                    "angle",
+                    "key")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="total",
@@ -355,13 +362,15 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 varTitle="Total",
                 measureType="continuous",
                 clearWith=list(
-                    "vars")))
+                    "vars",
+                    "key")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="scoring",
                 title="Scoring",
                 clearWith=list(
-                    "vars")))
+                    "vars",
+                    "key")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
@@ -374,7 +383,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs="CTT",
                 clearWith=list(
                     "vars",
-                    "num1")))}))
+                    "num1",
+                    "key")))}))
 
 itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "itemBase",
