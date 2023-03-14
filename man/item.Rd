@@ -9,6 +9,7 @@ item(
   vars,
   key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
   num = 1,
+  num1 = 1,
   group = 3,
   count = TRUE,
   prop = FALSE,
@@ -18,7 +19,8 @@ item(
   angle = 0,
   plot1 = FALSE,
   disi,
-  plot2 = FALSE
+  plot2 = FALSE,
+  plot3 = FALSE
 )
 }
 \arguments{
@@ -29,6 +31,8 @@ item(
 \item{key}{.}
 
 \item{num}{.}
+
+\item{num1}{.}
 
 \item{group}{.}
 
@@ -50,6 +54,8 @@ where 0 degrees represents completely horizontal labels.}
 \item{disi}{.}
 
 \item{plot2}{.}
+
+\item{plot3}{.}
 }
 \value{
 A results object containing:
@@ -64,6 +70,7 @@ A results object containing:
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$total} \tab \tab \tab \tab \tab an output \cr
   \code{results$scoring} \tab \tab \tab \tab \tab an output \cr
+  \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

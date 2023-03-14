@@ -31,6 +31,12 @@ options:
       type: Integer
       min: 1
 
+    - name: num1
+      title: Item number
+      default: 1
+      type: Integer
+      min: 1
+      
     - name: group
       title: Num.of groups
       default: 3
@@ -99,6 +105,11 @@ options:
       type: Output  
       
     - name: scoring
-      title: Scoring
+      title: Score the response
       type: Output      
+
+    - name: plot3
+      title: 'Empirical ICC'
+      type: Bool
+      default: FALSE
 ...

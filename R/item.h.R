@@ -9,6 +9,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             vars = NULL,
             key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
             num = 1,
+            num1 = 1,
             group = 3,
             count = TRUE,
             prop = FALSE,
@@ -18,7 +19,8 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             angle = 0,
             plot1 = FALSE,
             disi = NULL,
-            plot2 = FALSE, ...) {
+            plot2 = FALSE,
+            plot3 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -40,6 +42,11 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..num <- jmvcore::OptionInteger$new(
                 "num",
                 num,
+                default=1,
+                min=1)
+            private$..num1 <- jmvcore::OptionInteger$new(
+                "num1",
+                num1,
                 default=1,
                 min=1)
             private$..group <- jmvcore::OptionInteger$new(
@@ -92,10 +99,15 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "total")
             private$..scoring <- jmvcore::OptionOutput$new(
                 "scoring")
+            private$..plot3 <- jmvcore::OptionBool$new(
+                "plot3",
+                plot3,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..key)
             self$.addOption(private$..num)
+            self$.addOption(private$..num1)
             self$.addOption(private$..group)
             self$.addOption(private$..count)
             self$.addOption(private$..prop)
@@ -108,11 +120,13 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..plot2)
             self$.addOption(private$..total)
             self$.addOption(private$..scoring)
+            self$.addOption(private$..plot3)
         }),
     active = list(
         vars = function() private$..vars$value,
         key = function() private$..key$value,
         num = function() private$..num$value,
+        num1 = function() private$..num1$value,
         group = function() private$..group$value,
         count = function() private$..count$value,
         prop = function() private$..prop$value,
@@ -124,11 +138,13 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         disi = function() private$..disi$value,
         plot2 = function() private$..plot2$value,
         total = function() private$..total$value,
-        scoring = function() private$..scoring$value),
+        scoring = function() private$..scoring$value,
+        plot3 = function() private$..plot3$value),
     private = list(
         ..vars = NA,
         ..key = NA,
         ..num = NA,
+        ..num1 = NA,
         ..group = NA,
         ..count = NA,
         ..prop = NA,
@@ -140,7 +156,8 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..disi = NA,
         ..plot2 = NA,
         ..total = NA,
-        ..scoring = NA)
+        ..scoring = NA,
+        ..plot3 = NA)
 )
 
 itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -156,7 +173,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot = function() private$.items[["plot"]],
         plot1 = function() private$.items[["plot1"]],
         total = function() private$.items[["total"]],
-        scoring = function() private$.items[["scoring"]]),
+        scoring = function() private$.items[["scoring"]],
+        plot3 = function() private$.items[["plot3"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -343,7 +361,20 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="scoring",
                 title="Scoring",
                 clearWith=list(
-                    "vars")))}))
+                    "vars")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot3",
+                title="Empirical Item Characteristic Curve",
+                requiresData=TRUE,
+                visible="(plot3)",
+                width=500,
+                height=500,
+                renderFun=".plot3",
+                refs="CTT",
+                clearWith=list(
+                    "vars",
+                    "num1")))}))
 
 itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "itemBase",
@@ -372,6 +403,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param vars .
 #' @param key .
 #' @param num .
+#' @param num1 .
 #' @param group .
 #' @param count .
 #' @param prop .
@@ -383,6 +415,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot1 .
 #' @param disi .
 #' @param plot2 .
+#' @param plot3 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -395,6 +428,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$total} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$scoring} \tab \tab \tab \tab \tab an output \cr
+#'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -409,6 +443,7 @@ item <- function(
     vars,
     key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
     num = 1,
+    num1 = 1,
     group = 3,
     count = TRUE,
     prop = FALSE,
@@ -418,7 +453,8 @@ item <- function(
     angle = 0,
     plot1 = FALSE,
     disi,
-    plot2 = FALSE) {
+    plot2 = FALSE,
+    plot3 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("item requires jmvcore to be installed (restart may be required)")
@@ -435,6 +471,7 @@ item <- function(
         vars = vars,
         key = key,
         num = num,
+        num1 = num1,
         group = group,
         count = count,
         prop = prop,
@@ -444,7 +481,8 @@ item <- function(
         angle = angle,
         plot1 = plot1,
         disi = disi,
-        plot2 = plot2)
+        plot2 = plot2,
+        plot3 = plot3)
 
     analysis <- itemClass$new(
         options = options,

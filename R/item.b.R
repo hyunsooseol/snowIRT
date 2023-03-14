@@ -9,6 +9,7 @@
 #' @importFrom CTT distractor.analysis
 #' @importFrom CTT distractorAnalysis
 #' @importFrom CTT score
+#' @importFrom CTT cttICC
 #' @importFrom ShinyItemAnalysis ItemAnalysis
 #' @importFrom ShinyItemAnalysis DDplot
 #' @importFrom ShinyItemAnalysis theme_app
@@ -247,6 +248,16 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 
               } 
                
+              # Empirical ICC-----------------
+              
+              if(self$options$plot3==TRUE){
+                
+                myscores <-CTT::score(data,key1,output.scored=TRUE)
+                
+                image3 <- self$results$plot3
+                image3$setState(myscores)
+                
+              }
               
               # traditional item analysis table--------------------
               
@@ -403,8 +414,25 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
   
   print(plot1)
   TRUE
-}
+},
 
+.plot3 = function(image3,...) {
+  
+  if (is.null(image3$state))
+    return(FALSE)
+
+  num1 <- self$options$num1
+  
+  myScores <- image3$state
+  
+  plot3 <- CTT::cttICC(myScores$score, 
+                  myScores$scored[,num1], 
+                  plotTitle = '',
+                  colTheme="spartans", cex=1.5)
+  
+  print(plot3)
+  TRUE
+}
 
        )
 )
