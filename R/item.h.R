@@ -165,6 +165,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
+        text = function() private$.items[["text"]],
         count = function() private$.items[["count"]],
         prop = function() private$.items[["prop"]],
         sum = function() private$.items[["sum"]],
@@ -188,6 +189,10 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="text",
+                title="Test"))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="count",
@@ -430,6 +435,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr

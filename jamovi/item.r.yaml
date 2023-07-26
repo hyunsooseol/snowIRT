@@ -9,6 +9,10 @@ items:
       type: Html
       visible: True
       
+    - name:  text
+      title: Test
+      type:  Preformatted
+
     - name: count
       title: 'Counts of respondents'
       type: Array

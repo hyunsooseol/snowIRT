@@ -50,7 +50,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (self$options$disc)
               self$results$disc$setNote(
                 "Note",
-                "ULI:Upper-Lower Index, RIT:Item-Total correlation, RIR: Item-Rest correlation."
+                "ULI:Upper-Lower Index based on 3 groups, RIT:Item-Total correlation, RIR: Item-Rest correlation."
                 
                 
               )
@@ -264,12 +264,13 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               it<- ShinyItemAnalysis::ItemAnalysis(dicho)
               
               dif <- it[1]
-              ULI <- it[10]
+              ULI <- it[13]
               RIT <- it[11]
-              RIR <- it[12]
+              RIR <- it[10]
               
               discri <- data.frame(dif, ULI, RIT, RIR)
               
+              #self$results$text$setContent(discri)
               
               dif <- discri$Difficulty
               ULI<- discri$ULI
