@@ -114,7 +114,7 @@ items:
       title: Item Characteristic Curve(ICC)
       type:  Image
       visible: (plot)
-      width: 600
+      width: 500
       height: 500
       renderFun: .plot
       refs: iarm
@@ -128,7 +128,7 @@ items:
       title: Item Characteristic Curve for DIF
       type:  Image
       visible: (plot1)
-      width: 600
+      width: 500
       height: 500
       renderFun: .plot1
       refs: iarm

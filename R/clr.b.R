@@ -290,19 +290,21 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                      
                      # ICC FOR DIF---------------
                      
-                     image <- self$results$plot1
+                     image1 <- self$results$plot1
                      
                      state <- list(data[, -1], data[[groupVarName]])
                      
-                     image$setState(state)
+                     image1$setState(state)
                      
                      
                 },
                      
-                     .plot = function(image, ggtheme, theme,...) {     
+                     .plot = function(image,...) {     
                      
-                      data <- image$state
+                       if (is.null(image$state))
+                         return(FALSE)
                        
+                      data <- image$state
                       num <- self$options$num
                       
                   
@@ -312,26 +314,31 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                                        )
                       
                        
-                       plot <- plot+ggtheme
+                       #plot <- plot+ggtheme
                        
                        print(plot)
                        TRUE
                        
                      },
      
-     .plot1 = function(image, ggtheme, theme,...) {     
+     .plot1 = function(image1,...) {     
+       
+       
+       if (is.null(image1$state))
+         return(FALSE)
+       
        
        method <- self$options$method
-      
-       plot1 <- self$options$plot1
-       
-       if (!plot1)
-         return()
+       # 
+       # plot1 <- self$options$plot1
+       # 
+       # if (!plot1)
+       #   return()
        
        num <- self$options$num
        
-       data <- image$state[[1]]
-       group <- image$state[[2]] 
+       data <- image1$state[[1]]
+       group <- image1$state[[2]] 
        
        
        
@@ -344,7 +351,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                              difstats = "no")
        
        
-       plot1 <- plot1+ggtheme
+       #plot1 <- plot1+ggtheme
        
        print(plot1)
        TRUE
