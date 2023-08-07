@@ -348,7 +348,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     title="Item $key",
                     clearWith=list(
                         "vars",
-                        "key"),
+                        "key",
+                        "group1"),
                     columns=list(
                         list(
                             `name`="name", 

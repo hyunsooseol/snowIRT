@@ -142,6 +142,7 @@ items:
           clearWith:
             - vars
             - key
+            - group1
           columns:
             - name: name
               title: ''
