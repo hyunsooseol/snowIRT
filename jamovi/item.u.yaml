@@ -65,6 +65,17 @@ children:
                 name: total
               - type: Output
                 name: scoring
+          - type: Label
+            label: Distractor Analysis
+            fitToGrid: true
+            children:
+              - type: CheckBox
+                name: sum1
+                children:
+                  - name: group1
+                    type: TextBox
+                    format: number
+                    enable: (sum1)
       - type: LayoutBox
         stretchFactor: 1
         margin: large

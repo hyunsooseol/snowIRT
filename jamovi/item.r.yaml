@@ -10,7 +10,7 @@ items:
       visible: True
       
     - name:  text
-      title: Test
+      title: ""
       type:  Preformatted
 
     - name: count
@@ -72,7 +72,7 @@ items:
               type: number 
 
     - name: sum
-      title: 'Summary'
+      title: 'Item summary'
       type: Array
       visible: (sum)
       refs: CTT
@@ -128,6 +128,25 @@ items:
           
         - name: RIR
           title: RIR 
+
+    - name: sum1
+      title: 'Total summary'
+      type: Array
+      visible: (sum1)
+      refs: CTT
+
+      items: (vars)
+      template:
+          title: Item $key
+          type: Table
+          clearWith:
+            - vars
+            - key
+          columns:
+            - name: name
+              title: ''
+              type: 'text'
+              content: ($key)
 
     - name:  plot2
       title: 'Histogram of total score'

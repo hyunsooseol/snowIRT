@@ -11,10 +11,12 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             num = 1,
             num1 = 1,
             group = 3,
+            group1 = 3,
             count = TRUE,
             prop = FALSE,
             sum = FALSE,
             disc = FALSE,
+            sum1 = FALSE,
             plot = FALSE,
             angle = 0,
             plot1 = FALSE,
@@ -54,6 +56,11 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 group,
                 default=3,
                 min=2)
+            private$..group1 <- jmvcore::OptionInteger$new(
+                "group1",
+                group1,
+                default=3,
+                min=2)
             private$..count <- jmvcore::OptionBool$new(
                 "count",
                 count,
@@ -69,6 +76,10 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..disc <- jmvcore::OptionBool$new(
                 "disc",
                 disc,
+                default=FALSE)
+            private$..sum1 <- jmvcore::OptionBool$new(
+                "sum1",
+                sum1,
                 default=FALSE)
             private$..plot <- jmvcore::OptionBool$new(
                 "plot",
@@ -109,10 +120,12 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..num)
             self$.addOption(private$..num1)
             self$.addOption(private$..group)
+            self$.addOption(private$..group1)
             self$.addOption(private$..count)
             self$.addOption(private$..prop)
             self$.addOption(private$..sum)
             self$.addOption(private$..disc)
+            self$.addOption(private$..sum1)
             self$.addOption(private$..plot)
             self$.addOption(private$..angle)
             self$.addOption(private$..plot1)
@@ -128,10 +141,12 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         num = function() private$..num$value,
         num1 = function() private$..num1$value,
         group = function() private$..group$value,
+        group1 = function() private$..group1$value,
         count = function() private$..count$value,
         prop = function() private$..prop$value,
         sum = function() private$..sum$value,
         disc = function() private$..disc$value,
+        sum1 = function() private$..sum1$value,
         plot = function() private$..plot$value,
         angle = function() private$..angle$value,
         plot1 = function() private$..plot1$value,
@@ -146,10 +161,12 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..num = NA,
         ..num1 = NA,
         ..group = NA,
+        ..group1 = NA,
         ..count = NA,
         ..prop = NA,
         ..sum = NA,
         ..disc = NA,
+        ..sum1 = NA,
         ..plot = NA,
         ..angle = NA,
         ..plot1 = NA,
@@ -170,6 +187,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         prop = function() private$.items[["prop"]],
         sum = function() private$.items[["sum"]],
         disc = function() private$.items[["disc"]],
+        sum1 = function() private$.items[["sum1"]],
         plot2 = function() private$.items[["plot2"]],
         plot = function() private$.items[["plot"]],
         plot1 = function() private$.items[["plot1"]],
@@ -192,7 +210,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
-                title="Test"))
+                title=""))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="count",
@@ -260,7 +278,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Array$new(
                 options=options,
                 name="sum",
-                title="Summary",
+                title="Item summary",
                 visible="(sum)",
                 refs="CTT",
                 items="(vars)",
@@ -318,6 +336,25 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="RIR", 
                         `title`="RIR"))))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="sum1",
+                title="Total summary",
+                visible="(sum1)",
+                refs="CTT",
+                items="(vars)",
+                template=jmvcore::Table$new(
+                    options=options,
+                    title="Item $key",
+                    clearWith=list(
+                        "vars",
+                        "key"),
+                    columns=list(
+                        list(
+                            `name`="name", 
+                            `title`="", 
+                            `type`="text", 
+                            `content`="($key)")))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot2",
@@ -421,10 +458,12 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param num .
 #' @param num1 .
 #' @param group .
+#' @param group1 .
 #' @param count .
 #' @param prop .
 #' @param sum .
 #' @param disc .
+#' @param sum1 .
 #' @param plot .
 #' @param angle a number from 0 to 90 defining the angle of the x-axis labels,
 #'   where 0 degrees represents completely horizontal labels.
@@ -440,6 +479,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$disc} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$sum1} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
@@ -462,10 +502,12 @@ item <- function(
     num = 1,
     num1 = 1,
     group = 3,
+    group1 = 3,
     count = TRUE,
     prop = FALSE,
     sum = FALSE,
     disc = FALSE,
+    sum1 = FALSE,
     plot = FALSE,
     angle = 0,
     plot1 = FALSE,
@@ -490,10 +532,12 @@ item <- function(
         num = num,
         num1 = num1,
         group = group,
+        group1 = group1,
         count = count,
         prop = prop,
         sum = sum,
         disc = disc,
+        sum1 = sum1,
         plot = plot,
         angle = angle,
         plot1 = plot1,

@@ -43,6 +43,12 @@ options:
       type: Integer
       min: 2
 
+    - name: group1
+      title: Num.of groups
+      default: 3
+      type: Integer
+      min: 2
+
     - name: count
       title: Counts of respondents
       type: Bool
@@ -63,6 +69,11 @@ options:
       type: Bool
       default: FALSE  
 
+    - name: sum1
+      title: Total summary
+      type: Bool
+      default: FALSE  
+      
     - name: plot
       title: Distractor plot
       type: Bool

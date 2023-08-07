@@ -11,10 +11,12 @@ item(
   num = 1,
   num1 = 1,
   group = 3,
+  group1 = 3,
   count = TRUE,
   prop = FALSE,
   sum = FALSE,
   disc = FALSE,
+  sum1 = FALSE,
   plot = FALSE,
   angle = 0,
   plot1 = FALSE,
@@ -36,6 +38,8 @@ item(
 
 \item{group}{.}
 
+\item{group1}{.}
+
 \item{count}{.}
 
 \item{prop}{.}
@@ -43,6 +47,8 @@ item(
 \item{sum}{.}
 
 \item{disc}{.}
+
+\item{sum1}{.}
 
 \item{plot}{.}
 
@@ -66,6 +72,7 @@ A results object containing:
   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$disc} \tab \tab \tab \tab \tab a table \cr
+  \code{results$sum1} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
