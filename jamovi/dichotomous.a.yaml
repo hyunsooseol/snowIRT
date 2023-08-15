@@ -135,4 +135,9 @@ options:
       title: Standard scores
       type: Bool
       default: false  
+
+    - name: plot3
+      title: Fit plot
+      type: Bool
+      default: false  
 ...

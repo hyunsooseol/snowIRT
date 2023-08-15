@@ -30,7 +30,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             piplot = TRUE,
             to = FALSE,
             st = FALSE,
-            plot2 = FALSE, ...) {
+            plot2 = FALSE,
+            plot3 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -155,6 +156,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot2",
                 plot2,
                 default=FALSE)
+            private$..plot3 <- jmvcore::OptionBool$new(
+                "plot3",
+                plot3,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -187,6 +192,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..to)
             self$.addOption(private$..st)
             self$.addOption(private$..plot2)
+            self$.addOption(private$..plot3)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -219,7 +225,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         piplot = function() private$..piplot$value,
         to = function() private$..to$value,
         st = function() private$..st$value,
-        plot2 = function() private$..plot2$value),
+        plot2 = function() private$..plot2$value,
+        plot3 = function() private$..plot3$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -251,7 +258,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..piplot = NA,
         ..to = NA,
         ..st = NA,
-        ..plot2 = NA)
+        ..plot2 = NA,
+        ..plot3 = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -281,7 +289,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         poutfit = function() private$.items[["poutfit"]],
         text = function() private$.items[["text"]],
         resid = function() private$.items[["resid"]],
-        plot2 = function() private$.items[["plot2"]]),
+        plot2 = function() private$.items[["plot2"]],
+        plot3 = function() private$.items[["plot3"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -674,6 +683,18 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".plot2",
                 refs="snowIRT",
                 clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot3",
+                title="Person fit plot",
+                requiresData=TRUE,
+                visible="(plot3)",
+                width=600,
+                height=400,
+                renderFun=".plot3",
+                refs="snowIRT",
+                clearWith=list(
                     "vars")))}))
 
 polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -727,6 +748,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param to .
 #' @param st .
 #' @param plot2 .
+#' @param plot3 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -753,6 +775,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -788,7 +811,8 @@ polytomous <- function(
     piplot = TRUE,
     to = FALSE,
     st = FALSE,
-    plot2 = FALSE) {
+    plot2 = FALSE,
+    plot3 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("polytomous requires jmvcore to be installed (restart may be required)")
@@ -825,7 +849,8 @@ polytomous <- function(
         piplot = piplot,
         to = to,
         st = st,
-        plot2 = plot2)
+        plot2 = plot2,
+        plot3 = plot3)
 
     analysis <- polytomousClass$new(
         options = options,

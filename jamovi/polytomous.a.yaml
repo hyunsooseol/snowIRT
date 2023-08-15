@@ -170,4 +170,9 @@ options:
       title: Histogram 
       type: Bool
       default: FALSE    
+
+    - name: plot3
+      title: Fit plot
+      type: Bool
+      default: false  
 ...

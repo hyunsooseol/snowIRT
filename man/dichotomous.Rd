@@ -23,7 +23,8 @@ dichotomous(
   angle = 0,
   to = FALSE,
   plot2 = FALSE,
-  st = FALSE
+  st = FALSE,
+  plot3 = FALSE
 )
 }
 \arguments{
@@ -65,6 +66,8 @@ where 0 degrees represents completely horizontal labels.}
 \item{plot2}{.}
 
 \item{st}{.}
+
+\item{plot3}{.}
 }
 \value{
 A results object containing:
@@ -86,6 +89,7 @@ A results object containing:
   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

@@ -382,6 +382,24 @@ adjustment; Ho= the data fit the Rasch model."
         state <- list(personmeasure, imeasure, vars)
         image$setState(state)
         }
+       
+        # Person fit plot3----------------------
+        
+        Measure <- personmeasure
+        Infit <- pinfit
+        Outfit <- poutfit
+        
+        daf <- data.frame(Measure,Infit,Outfit)
+        
+        pf<- reshape2::melt(daf,
+                            id.vars='Measure',
+                            variable.name="Fit",
+                            value.name='Value')
+        
+        image <- self$results$plot3
+        
+        image$setState(pf)
+        
         
       results <-
           list(
@@ -1204,6 +1222,29 @@ adjustment; Ho= the data fit the Rasch model."
    TRUE
  },
  
+ 
+ .plot3 = function(image,ggtheme, theme,...) {
+   
+   if (is.null(image$state))
+     return(FALSE)
+   
+   pf <- image$state
+   
+   plot3<- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit))+
+     geom_point()+
+     
+     ggplot2::scale_shape_manual(values=c(3, 4))+
+     #ggplot2::scale_color_manual(values=c("red", "blue")+
+     ggplot2::coord_cartesian(xlim=c(-4, 4),ylim=c(0, 3))+
+     ggplot2::geom_hline(yintercept = 1.5,linetype = "dotted", color='red', size=1.0)+ 
+     ggplot2::geom_hline(yintercept = 0.5,linetype = "dotted", color='red', size=1.0)    
+   
+   
+   plot3 <- plot3+ggtheme
+   
+   print(plot3)
+   TRUE
+ },
  
  ### Helper functions =================================
       

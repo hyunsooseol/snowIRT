@@ -246,4 +246,15 @@ items:
       clearWith:
             - vars
 
+    - name:  plot3
+      title: 'Person fit plot'
+      type:  Image
+      requiresData: true
+      visible: (plot3)
+      width: 600
+      height: 400
+      renderFun: .plot3
+      refs: snowIRT 
+      clearWith:
+            - vars
 ...

@@ -138,6 +138,8 @@ children:
                 name: pinfit
               - type: Output
                 name: poutfit
+              - type: CheckBox
+                name: plot3
           - type: Label
             label: 'Residuals' 
             children:

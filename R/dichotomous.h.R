@@ -23,7 +23,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             angle = 0,
             to = FALSE,
             plot2 = FALSE,
-            st = FALSE, ...) {
+            st = FALSE,
+            plot3 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -120,6 +121,10 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "st",
                 st,
                 default=FALSE)
+            private$..plot3 <- jmvcore::OptionBool$new(
+                "plot3",
+                plot3,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -145,6 +150,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..to)
             self$.addOption(private$..plot2)
             self$.addOption(private$..st)
+            self$.addOption(private$..plot3)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -170,7 +176,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         resid = function() private$..resid$value,
         to = function() private$..to$value,
         plot2 = function() private$..plot2$value,
-        st = function() private$..st$value),
+        st = function() private$..st$value,
+        plot3 = function() private$..plot3$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -195,7 +202,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..resid = NA,
         ..to = NA,
         ..plot2 = NA,
-        ..st = NA)
+        ..st = NA,
+        ..plot3 = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -218,7 +226,8 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         pinfit = function() private$.items[["pinfit"]],
         poutfit = function() private$.items[["poutfit"]],
         resid = function() private$.items[["resid"]],
-        plot2 = function() private$.items[["plot2"]]),
+        plot2 = function() private$.items[["plot2"]],
+        plot3 = function() private$.items[["plot3"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -478,6 +487,18 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 renderFun=".plot2",
                 refs="snowIRT",
                 clearWith=list(
+                    "vars")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot3",
+                title="Person fit plot",
+                requiresData=TRUE,
+                visible="(plot3)",
+                width=600,
+                height=400,
+                renderFun=".plot3",
+                refs="snowIRT",
+                clearWith=list(
                     "vars")))}))
 
 dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -524,6 +545,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param to .
 #' @param plot2 .
 #' @param st .
+#' @param plot3 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -543,6 +565,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -571,7 +594,8 @@ dichotomous <- function(
     angle = 0,
     to = FALSE,
     plot2 = FALSE,
-    st = FALSE) {
+    st = FALSE,
+    plot3 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dichotomous requires jmvcore to be installed (restart may be required)")
@@ -601,7 +625,8 @@ dichotomous <- function(
         angle = angle,
         to = to,
         plot2 = plot2,
-        st = st)
+        st = st,
+        plot3 = plot3)
 
     analysis <- dichotomousClass$new(
         options = options,
