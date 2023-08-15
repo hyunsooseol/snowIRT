@@ -111,13 +111,13 @@ adjustment; Ho= the data fit the Rasch model."
           
          
           # populate output variables-----
-          private$.populateTotalOutputs(results)
-          private$.populatePmeasureOutputs(results)
-          private$.populatePseOutputs(results)
-          private$.populatePinfitOutputs(results)
-          private$.populatePoutfitOutputs(results)
-          private$.populateResidOutputs(results)
-          
+          # private$.populateTotalOutputs(results)
+          # private$.populatePmeasureOutputs(results)
+          # private$.populatePseOutputs(results)
+          # private$.populatePinfitOutputs(results)
+          # private$.populatePoutfitOutputs(results)
+          # private$.populateResidOutputs(results)
+          # 
           }
         
       },
@@ -151,7 +151,6 @@ adjustment; Ho= the data fit the Rasch model."
         infit <- fit$itemfit$Infit
         outfit <- fit$itemfit$Outfit
         
-        
         # computing person separation reliability-------
         
         person<- TAM::tam.wle(tamobj)
@@ -159,10 +158,9 @@ adjustment; Ho= the data fit the Rasch model."
         
         # person statistics
         
-         total<- person$PersonScores
-         pmeasure<- person$theta
-         pse <- person$error
-         
+        total<- person$PersonScores
+        pmeasure<- person$theta
+        pse <- person$error
         
         #computing an effect size of model fit(MADaQ3) using MML-------
         # assess model fit----
@@ -240,6 +238,32 @@ adjustment; Ho= the data fit the Rasch model."
         st<- cbind(tosc, perc, zsco, tsco)
         st<- as.data.frame(st)
         
+        #### Person Statistics###########################
+       
+        # Person tables------------
+        
+        if(self$options$total==TRUE){
+        
+          self$results$total$setRowNums(rownames(data))     
+          self$results$total$setValues(total)
+          
+        }
+        
+        if(self$options$pmeasure==TRUE){
+
+          self$results$pmeasure$setRowNums(rownames(data))
+          self$results$pmeasure$setValues(pmeasure)
+
+        }
+
+        if(self$options$pse==TRUE){
+
+          self$results$pse$setRowNums(rownames(data))
+          self$results$pse$setValues(pse)
+
+        }
+
+        
         # person infit---------
         pfit <- TAM::tam.personfit(tamobj)
         pinfit <- pfit$infitPerson
@@ -253,6 +277,47 @@ adjustment; Ho= the data fit the Rasch model."
         res <- TAM::IRT.residuals(tamobj )
         resid <- res$stand_residuals
         
+        if(self$options$pinfit==TRUE){
+          
+          self$results$pinfit$setRowNums(rownames(data))
+          self$results$pinfit$setValues(pinfit)
+          
+        }
+        
+        if(self$options$poutfit==TRUE){
+          
+          self$results$poutfit$setRowNums(rownames(data))
+          self$results$poutfit$setValues(poutfit)
+          
+        }
+        
+        if(self$options$resid==TRUE){
+          
+          keys <- 1:length(self$options$vars)
+              titles <- paste("Item", 1:length(self$options$vars))
+              descriptions <- paste("Item", 1:length(self$options$vars))
+              measureTypes <- rep("continuous", length(self$options$vars))
+
+              self$results$resid$set(
+                keys=keys,
+                titles=titles,
+                descriptions=descriptions,
+                measureTypes=measureTypes
+              )
+
+              self$results$resid$setRowNums(rownames(data))
+
+
+              resid <- as.data.frame(resid)
+
+              for (i in 1:length(self$options$vars)) {
+                scores <- as.numeric(resid[, i])
+                self$results$resid$setValues(index=i, scores)
+              }
+
+            }
+
+
         
         results <-
           list(
@@ -489,104 +554,104 @@ adjustment; Ho= the data fit the Rasch model."
  
 ######### person output variables========================
 
-.populateTotalOutputs=function(results){
-  
-  total <- results$total
-  
-  if (self$options$total && self$results$total$isNotFilled()) {
-   
-    self$results$total$setRowNums(rownames(data))
-    self$results$total$setValues(total)
-    
-  }
-  
-},
-
-.populatePmeasureOutputs=function(results){
-  
-  pmeasure <- results$pmeasure
-  
-  if (self$options$pmeasure && self$results$pmeasure$isNotFilled()) {
-  
-    self$results$pmeasure$setRowNums(rownames(data))
-    self$results$pmeasure$setValues(pmeasure)
-    
-  }
-  
-},
-
-.populatePseOutputs=function(results){
-  
-  pse <- results$pse
-  
-  if (self$options$pse && self$results$pse$isNotFilled()) {
-  
-    self$results$pse$setRowNums(rownames(data))
-    self$results$pse$setValues(pse)
-    
-  }
-  
-},
-
-.populatePinfitOutputs=function(results){
-  
-  pinfit <- results$pinfit
-  
-  if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
-  
-    self$results$pinfit$setRowNums(rownames(data))
-    self$results$pinfit$setValues(pinfit)
-    
-  }
-  
-},
-
-  
-.populatePoutfitOutputs=function(results){
-  
-  poutfit <- results$poutfit
-  if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
-    
-    self$results$poutfit$setRowNums(rownames(data))
-    self$results$poutfit$setValues(poutfit)
-    
-  }
-  
-},   
-
-
-.populateResidOutputs=function(results){
-  
-  resid <- results$resid
-  
-  if (self$options$resid && self$results$resid$isNotFilled()) {
-    
-    keys <- 1:length(self$options$vars)
-    titles <- paste("Item", 1:length(self$options$vars))
-    descriptions <- paste("Item", 1:length(self$options$vars))
-    measureTypes <- rep("continuous", length(self$options$vars))
-    
-    self$results$resid$set(
-      keys=keys,
-      titles=titles,
-      descriptions=descriptions,
-      measureTypes=measureTypes
-    )
-    
-    self$results$resid$setRowNums(rownames(data))
-    
-    
-    resid <- as.data.frame(resid)
-    
-    for (i in 1:length(self$options$vars)) {
-      scores <- as.numeric(resid[, i])
-      self$results$resid$setValues(index=i, scores)
-    }
-    
-  }
-  
-},   
-
+# .populateTotalOutputs=function(results){
+#   
+#   total <- results$total
+#   
+#   if (self$options$total && self$results$total$isNotFilled()) {
+#    
+#     self$results$total$setRowNums(rownames(data))
+#     self$results$total$setValues(total)
+#     
+#   }
+#   
+# },
+# 
+# .populatePmeasureOutputs=function(results){
+#   
+#   pmeasure <- results$pmeasure
+#   
+#   if (self$options$pmeasure && self$results$pmeasure$isNotFilled()) {
+#   
+#     self$results$pmeasure$setRowNums(rownames(data))
+#     self$results$pmeasure$setValues(pmeasure)
+#     
+#   }
+#   
+# },
+# 
+# .populatePseOutputs=function(results){
+#   
+#   pse <- results$pse
+#   
+#   if (self$options$pse && self$results$pse$isNotFilled()) {
+#   
+#     self$results$pse$setRowNums(rownames(data))
+#     self$results$pse$setValues(pse)
+#     
+#   }
+#   
+# },
+# 
+# .populatePinfitOutputs=function(results){
+#   
+#   pinfit <- results$pinfit
+#   
+#   if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
+#   
+#     self$results$pinfit$setRowNums(rownames(data))
+#     self$results$pinfit$setValues(pinfit)
+#     
+#   }
+#   
+# },
+# 
+#   
+# .populatePoutfitOutputs=function(results){
+#   
+#   poutfit <- results$poutfit
+#   if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
+#     
+#     self$results$poutfit$setRowNums(rownames(data))
+#     self$results$poutfit$setValues(poutfit)
+#     
+#   }
+#   
+# },   
+# 
+# 
+# .populateResidOutputs=function(results){
+#   
+#   resid <- results$resid
+#   
+#   if (self$options$resid && self$results$resid$isNotFilled()) {
+#     
+#     keys <- 1:length(self$options$vars)
+#     titles <- paste("Item", 1:length(self$options$vars))
+#     descriptions <- paste("Item", 1:length(self$options$vars))
+#     measureTypes <- rep("continuous", length(self$options$vars))
+#     
+#     self$results$resid$set(
+#       keys=keys,
+#       titles=titles,
+#       descriptions=descriptions,
+#       measureTypes=measureTypes
+#     )
+#     
+#     self$results$resid$setRowNums(rownames(data))
+#     
+#     
+#     resid <- as.data.frame(resid)
+#     
+#     for (i in 1:length(self$options$vars)) {
+#       scores <- as.numeric(resid[, i])
+#       self$results$resid$setValues(index=i, scores)
+#     }
+#     
+#   }
+#   
+# },   
+# 
 
  
  
