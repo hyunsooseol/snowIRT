@@ -125,7 +125,7 @@ items:
         - num
         
     - name: plot1
-      title: Item Characteristic Curve for DIF
+      title: DIF using total scores
       type:  Image
       visible: (plot1)
       width: 500
@@ -137,5 +137,19 @@ items:
         - group
         - model 
         - num 
-        - method
+
+    - name: plot2
+      title: DIF using class intervals
+      type:  Image
+      visible: (plot2)
+      width: 500
+      height: 500
+      renderFun: .plot2
+      refs: iarm
+      clearWith:
+        - vars
+        - group
+        - model 
+        - num 
+        - ci
 ...

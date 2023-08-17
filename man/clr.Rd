@@ -10,13 +10,14 @@ clr(
   group,
   model,
   num = 1,
-  method,
+  ci = 3,
   clr = TRUE,
   resi = FALSE,
   score,
   dif = FALSE,
   plot = FALSE,
-  plot1 = FALSE
+  plot1 = FALSE,
+  plot2 = FALSE
 )
 }
 \arguments{
@@ -30,7 +31,7 @@ clr(
 
 \item{num}{.}
 
-\item{method}{.}
+\item{ci}{.}
 
 \item{clr}{.}
 
@@ -43,6 +44,8 @@ clr(
 \item{plot}{.}
 
 \item{plot1}{.}
+
+\item{plot2}{.}
 }
 \value{
 A results object containing:
@@ -53,6 +56,7 @@ A results object containing:
   \code{results$dif} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

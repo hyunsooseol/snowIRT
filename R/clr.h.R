@@ -10,13 +10,14 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             group = NULL,
             model = NULL,
             num = 1,
-            method = NULL,
+            ci = 3,
             clr = TRUE,
             resi = FALSE,
             score = NULL,
             dif = FALSE,
             plot = FALSE,
-            plot1 = FALSE, ...) {
+            plot1 = FALSE,
+            plot2 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -49,12 +50,11 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 num,
                 default=1,
                 min=1)
-            private$..method <- jmvcore::OptionList$new(
-                "method",
-                method,
-                options=list(
-                    "score",
-                    "cut"))
+            private$..ci <- jmvcore::OptionInteger$new(
+                "ci",
+                ci,
+                default=3,
+                min=2)
             private$..clr <- jmvcore::OptionBool$new(
                 "clr",
                 clr,
@@ -81,43 +81,50 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot1",
                 plot1,
                 default=FALSE)
+            private$..plot2 <- jmvcore::OptionBool$new(
+                "plot2",
+                plot2,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..model)
             self$.addOption(private$..num)
-            self$.addOption(private$..method)
+            self$.addOption(private$..ci)
             self$.addOption(private$..clr)
             self$.addOption(private$..resi)
             self$.addOption(private$..score)
             self$.addOption(private$..dif)
             self$.addOption(private$..plot)
             self$.addOption(private$..plot1)
+            self$.addOption(private$..plot2)
         }),
     active = list(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
         model = function() private$..model$value,
         num = function() private$..num$value,
-        method = function() private$..method$value,
+        ci = function() private$..ci$value,
         clr = function() private$..clr$value,
         resi = function() private$..resi$value,
         score = function() private$..score$value,
         dif = function() private$..dif$value,
         plot = function() private$..plot$value,
-        plot1 = function() private$..plot1$value),
+        plot1 = function() private$..plot1$value,
+        plot2 = function() private$..plot2$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..model = NA,
         ..num = NA,
-        ..method = NA,
+        ..ci = NA,
         ..clr = NA,
         ..resi = NA,
         ..score = NA,
         ..dif = NA,
         ..plot = NA,
-        ..plot1 = NA)
+        ..plot1 = NA,
+        ..plot2 = NA)
 )
 
 clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -129,7 +136,8 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         resi = function() private$.items[["resi"]],
         dif = function() private$.items[["dif"]],
         plot = function() private$.items[["plot"]],
-        plot1 = function() private$.items[["plot1"]]),
+        plot1 = function() private$.items[["plot1"]],
+        plot2 = function() private$.items[["plot2"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -261,7 +269,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
-                title="Item Characteristic Curve for DIF",
+                title="DIF using total scores",
                 visible="(plot1)",
                 width=500,
                 height=500,
@@ -271,8 +279,22 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "vars",
                     "group",
                     "model",
+                    "num")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot2",
+                title="DIF using class intervals",
+                visible="(plot2)",
+                width=500,
+                height=500,
+                renderFun=".plot2",
+                refs="iarm",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "model",
                     "num",
-                    "method")))}))
+                    "ci")))}))
 
 clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "clrBase",
@@ -303,13 +325,14 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param group A string naming the grouping variable from \code{data}
 #' @param model .
 #' @param num .
-#' @param method .
+#' @param ci .
 #' @param clr .
 #' @param resi .
 #' @param score .
 #' @param dif .
 #' @param plot .
 #' @param plot1 .
+#' @param plot2 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -318,6 +341,7 @@ clrBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$dif} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -333,13 +357,14 @@ clr <- function(
     group,
     model,
     num = 1,
-    method,
+    ci = 3,
     clr = TRUE,
     resi = FALSE,
     score,
     dif = FALSE,
     plot = FALSE,
-    plot1 = FALSE) {
+    plot1 = FALSE,
+    plot2 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("clr requires jmvcore to be installed (restart may be required)")
@@ -359,13 +384,14 @@ clr <- function(
         group = group,
         model = model,
         num = num,
-        method = method,
+        ci = ci,
         clr = clr,
         resi = resi,
         score = score,
         dif = dif,
         plot = plot,
-        plot1 = plot1)
+        plot1 = plot1,
+        plot2 = plot2)
 
     analysis <- clrClass$new(
         options = options,

@@ -288,13 +288,22 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                       
                        image$setState(data[, -1])
                      
-                     # ICC FOR DIF---------------
+                     # DIF using total scores---------------
                      
                      image1 <- self$results$plot1
                      
                      state <- list(data[, -1], data[[groupVarName]])
                      
                      image1$setState(state)
+                     
+                     # DIF using class intervals---------------
+                     
+                     image2 <- self$results$plot2
+                     
+                     state <- list(data[, -1], data[[groupVarName]])
+                     
+                     image2$setState(state)
+                     
                      
                      
                 },
@@ -321,19 +330,11 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                        
                      },
      
-     .plot1 = function(image1,...) {     
+     .plot1 = function(image1,ggtheme, theme, ...) {     
        
        
        if (is.null(image1$state))
          return(FALSE)
-       
-       
-       method <- self$options$method
-       # 
-       # plot1 <- self$options$plot1
-       # 
-       # if (!plot1)
-       #   return()
        
        num <- self$options$num
        
@@ -344,7 +345,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        
        plot1<-  iarm::ICCplot(data= data, 
                              itemnumber= num, 
-                             method= method,
+                             method= "score",
                              icclabel = "yes",
                               dif="yes",
                               difvar=group,
@@ -356,10 +357,41 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        print(plot1)
        TRUE
        
-     }
-                     
+     },
+    
+    
+    .plot2 = function(image2,ggtheme, theme, ...) {     
+      
+      
+      if (is.null(image2$state))
+        return(FALSE)
+      
+      
+      num <- self$options$num
+      ci <- self$options$ci
+      
+      data <- image2$state[[1]]
+      group <- image2$state[[2]] 
+      
+      
+      
+      plot2<-  iarm::ICCplot(data= data, 
+                             itemnumber= num, 
+                             method= "cut",
+                             cinumber=ci,
+                             icclabel = "yes",
+                             dif="yes",
+                             difvar=group,
+                             difstats = "no")
+      
+    
+     # plot2 <- plot2+ggtheme
+      
+      print(plot2)
+      TRUE
+      
+    }
+    
 
-                              
-       
      )
 )

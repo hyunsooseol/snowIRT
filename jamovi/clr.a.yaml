@@ -48,15 +48,12 @@ options:
       type: Integer
       min: 1
 
-    - name: method
-      title: Method
-      type: List
-      options:
-        - title: score
-          name:  score
-        - title: cut
-          name:  cut
-          
+    - name: ci
+      title: CI number
+      default: 3
+      type: Integer
+      min: 2
+
     - name: clr
       title: Conditional likelihood ratio  
       type: Bool
@@ -87,7 +84,12 @@ options:
       default: false 
 
     - name: plot1
-      title: ICC for DIF
+      title: Total score
+      type: Bool
+      default: false 
+
+    - name: plot2
+      title: Class Interval(CI)
       type: Bool
       default: false 
   
