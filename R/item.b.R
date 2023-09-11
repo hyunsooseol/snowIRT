@@ -36,11 +36,12 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </head>
             <body>
             <div class='instructions'>
-            <p><b>Instructions</b></p>
+            <h2><b>Instructions</b></h2>
             <p>____________________________________________________________________________________</p>
-            <P>1. Enter the correct answer separated by commas, but there must be no spaces between commas.
-            <P>2. By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.
-            <p>3. Feature requests and bug reports can be made on the <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+            <P>1. Enter the correct answer separated by commas, but there must be no spaces between commas.</p>
+            <p>2. A minimum sample size(ex.30 persons X 10 items) is required to split respondents into groups based on total scores.</p>
+            <P>3. By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</p>
+            <p>4. Feature requests and bug reports can be made on the <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
             </div>
             </body>
