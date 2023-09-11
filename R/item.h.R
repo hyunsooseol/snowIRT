@@ -60,7 +60,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "group1",
                 group1,
                 default=3,
-                min=2)
+                min=3)
             private$..count <- jmvcore::OptionBool$new(
                 "count",
                 count,

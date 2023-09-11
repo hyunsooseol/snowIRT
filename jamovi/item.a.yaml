@@ -47,7 +47,7 @@ options:
       title: Num.of groups
       default: 3
       type: Integer
-      min: 2
+      min: 3
 
     - name: count
       title: Counts of respondents
