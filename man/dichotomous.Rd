@@ -73,11 +73,11 @@ where 0 degrees represents completely horizontal labels.}
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-  \code{results$st} \tab \tab \tab \tab \tab a table \cr
-  \code{results$to} \tab \tab \tab \tab \tab a table \cr
-  \code{results$scale} \tab \tab \tab \tab \tab a table \cr
-  \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+  \code{results$stand$st} \tab \tab \tab \tab \tab a table \cr
+  \code{results$stand$to} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
@@ -94,9 +94,9 @@ A results object containing:
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$st$asDF}
+\code{results$items$asDF}
 
-\code{as.data.frame(results$st)}
+\code{as.data.frame(results$items)}
 }
 \description{
 Dichotomous Rasch Model

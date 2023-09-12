@@ -49,7 +49,7 @@ options:
     - name: reliability
       title: Reliability
       type: Bool
-      default: True
+      default: TRUE
 
     - name: modelfit
       title: MADaQ3

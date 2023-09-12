@@ -37,7 +37,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             </head>
             <body>
             <div class='instructions'>
-            <p><b>Instructions</b></p>
+            <h2><b>Instructions</b></h2>
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
@@ -53,7 +53,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
         #  private$.initItemsTable()
         
         if (self$options$modelfitp)
-          self$results$scale$setNote(
+          self$results$mf$scale$setNote(
             "Note",
             "MADaQ3= Mean of absolute values of centered Q_3 statistic with p value obtained by Holm
 adjustment; Ho= the data fit the Rasch model."
@@ -367,7 +367,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateStTable = function(results) {
         
-        table <- self$results$st
+        table <- self$results$stand$st
         
         st <- results$st
         
@@ -395,7 +395,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateToTable = function(results) {
         
-        table <- self$results$to 
+        table <- self$results$stand$to 
         
         to <- results$to
         
@@ -446,7 +446,7 @@ adjustment; Ho= the data fit the Rasch model."
       .populateScaleTable = function(results) {
         
        
-        table <- self$results$scale
+        table <- self$results$mf$scale
         
         reliability <- results$reliability
         
@@ -472,7 +472,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         # get variables---------------------------------
         
-        matrix <- self$results$get('mat')
+        matrix <- self$results$mf$get('mat')
         vars <- self$options$get('vars')
         nVars <- length(vars)
         
