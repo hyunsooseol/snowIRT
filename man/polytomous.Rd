@@ -96,11 +96,11 @@ A results object containing:
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$ia$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$ia$thresh} \tab \tab \tab \tab \tab a table \cr
+  \code{results$ia$thurs} \tab \tab \tab \tab \tab a table \cr
   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$mcc$model} \tab \tab \tab \tab \tab a table \cr
   \code{results$mcc$lr} \tab \tab \tab \tab \tab a table \cr
-  \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
   \code{results$ss$st} \tab \tab \tab \tab \tab a table \cr
   \code{results$ss$to} \tab \tab \tab \tab \tab a table \cr
   \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
@@ -119,12 +119,6 @@ A results object containing:
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 }
-
-Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
-
-\code{results$thurs$asDF}
-
-\code{as.data.frame(results$thurs)}
 }
 \description{
 Polytomous Rasch Model

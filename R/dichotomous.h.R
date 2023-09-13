@@ -285,7 +285,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                         super$initialize(
                             options=options,
                             name="stand",
-                            title="Standard scores")
+                            title="Standard Scores")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="st",
@@ -360,7 +360,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                         super$initialize(
                             options=options,
                             name="mf",
-                            title="Model fit")
+                            title="Model Fit")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="scale",
@@ -433,7 +433,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$add(jmvcore::Image$new(
                 options=options,
                 name="inplot",
-                title="Item Infit plot",
+                title="Item Infit Plot",
                 width=500,
                 height=500,
                 visible="(inplot)",
@@ -444,7 +444,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$add(jmvcore::Image$new(
                 options=options,
                 name="outplot",
-                title="Item Outfit plot",
+                title="Item Outfit Plot",
                 width=500,
                 height=500,
                 visible="(outplot)",
@@ -501,7 +501,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot2",
-                title="Histogram of total score",
+                title="Histogram of Total Score",
                 requiresData=TRUE,
                 visible="(plot2)",
                 width=500,
@@ -513,7 +513,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
-                title="Person fit plot",
+                title="Person Fit Plot",
                 requiresData=TRUE,
                 visible="(plot3)",
                 width=600,

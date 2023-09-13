@@ -311,7 +311,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         super$initialize(
                             options=options,
                             name="ia",
-                            title="Item analysis")
+                            title="Item Analysis")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="items",
@@ -388,7 +388,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         super$initialize(
                             options=options,
                             name="mf",
-                            title="Model fit")
+                            title="Model Fit")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="scale",
@@ -443,7 +443,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         super$initialize(
                             options=options,
                             name="mcc",
-                            title="Model comparison")
+                            title="Model Comparison")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="model",
@@ -526,7 +526,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         super$initialize(
                             options=options,
                             name="ss",
-                            title="Standard scores")
+                            title="Standard Scores")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="st",
@@ -645,7 +645,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="inplot",
-                title="Item Infit plot",
+                title="Item Infit Plot",
                 width=500,
                 height=500,
                 visible="(inplot)",
@@ -656,7 +656,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="outplot",
-                title="Item Outfit plot",
+                title="Item Outfit Plot",
                 width=500,
                 height=500,
                 visible="(outplot)",
@@ -719,7 +719,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot2",
-                title="Histogram of total score",
+                title="Histogram of Total Score",
                 requiresData=TRUE,
                 visible="(plot2)",
                 width=500,
@@ -731,7 +731,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
-                title="Person fit plot",
+                title="Person Fit Plot",
                 requiresData=TRUE,
                 visible="(plot3)",
                 width=600,

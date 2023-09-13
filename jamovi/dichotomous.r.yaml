@@ -45,7 +45,7 @@ items:
           visible: (outfit) 
 
     - name: stand
-      title: 'Standard scores'
+      title: 'Standard Scores'
       type: Group
       items:
         - name: st
@@ -100,7 +100,7 @@ items:
               type: number
 
     - name: mf
-      title: 'Model fit'
+      title: 'Model Fit'
       type: Group
       items:
         - name: scale
@@ -175,7 +175,7 @@ items:
           clearWith: []         
           
     - name: inplot
-      title: 'Item Infit plot'
+      title: 'Item Infit Plot'
       type: Image
       width:  500
       height: 500
@@ -186,7 +186,7 @@ items:
         - angle 
 
     - name: outplot
-      title: 'Item Outfit plot'
+      title: 'Item Outfit Plot'
       type: Image
       width:  500
       height: 500
@@ -243,7 +243,7 @@ items:
         - vars          
 
     - name:  plot2
-      title: 'Histogram of total score'
+      title: 'Histogram of Total Score'
       type:  Image
       requiresData: true
       visible: (plot2)
@@ -255,7 +255,7 @@ items:
             - vars
 
     - name:  plot3
-      title: 'Person fit plot'
+      title: 'Person Fit Plot'
       type:  Image
       requiresData: true
       visible: (plot3)
