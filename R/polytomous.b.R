@@ -62,7 +62,7 @@ adjustment; Ho= the data fit the Rasch model."
           )
         
         if (self$options$infit)
-          self$results$items$setNote(
+          self$results$ia$items$setNote(
             "Note",
             "Infit= Information-weighted mean square statistic; Outfit= Outlier-sensitive means square statistic."
           )
@@ -513,7 +513,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .initItemsTable = function() {
         
-        table <- self$results$items
+        table <- self$results$ia$items
         
         for (i in seq_along(items))
           table$addFootnote(rowKey = items[i], 'name')
@@ -606,7 +606,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateItemsTable = function(results) {
         
-        table <- self$results$items
+        table <- self$results$ia$items
         
         items <- self$options$vars
         
@@ -708,7 +708,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateThresholdsTable = function(results) {
         
-        table <- self$results$thresh
+        table <- self$results$ia$thresh
         
       #  thr <- results$thresh # matrix
         

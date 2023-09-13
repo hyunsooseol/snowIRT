@@ -8,37 +8,60 @@ items:
       title: Instructions
       type: Html
       visible: True
-      
-    - name:  items
-      title: 'Item statistics of the rating scale model'
-      type:  Table
-      visible: (imeasure || ise || infit || outfit)
-      rows: (vars)
-      clearWith:
-        - vars
-      refs: TAM
+
+    - name: ia
+      title: 'Item analysis'
+      type: Group
+      items:   
+        - name:  items
+          title: 'Item statistics of the rating scale model'
+          type:  Table
+          visible: (imeasure || ise || infit || outfit)
+          rows: (vars)
+          clearWith:
+            - vars
+          refs: TAM
         
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
+          columns:
+            - name: name
+              title: ''
+              type: 'text'
+              content: ($key)
 
-        - name: measure
-          title: Measure
-          visible: (imeasure) 
+            - name: measure
+              title: Measure
+              visible: (imeasure) 
           
-        - name: ise
-          title: S.E.Measure
-          visible: (ise)  
+            - name: ise
+              title: S.E.Measure
+              visible: (ise)  
 
-        - name: infit
-          title: Infit 
-          visible: (infit)  
+            - name: infit
+              title: Infit 
+              visible: (infit)  
 
-        - name: outfit
-          title: Outfit 
-          visible: (outfit)  
+            - name: outfit
+              title: Outfit 
+              visible: (outfit)  
+
+        - name: thresh
+          title: Delta-tau paramaterization of the partial credit model
+          type: Table
+          rows: (vars)
+          visible: (thresh)
+          clearWith:
+            - vars
+          refs: TAM    
+
+          columns:
+            - name: name
+              title: ''
+              type: 'number'
+              content: ($key)
+          
+            - name: pmeasure
+              title: Measure
+              visible: (pmeasure) 
 
     - name: mf
       title: 'Model fit'
@@ -161,25 +184,6 @@ items:
             - name: p
               title: p
               format: zto,pvalue
-
-    - name: thresh
-      title: Delta-tau paramaterization of the partial credit model
-      type: Table
-      rows: (vars)
-      visible: (thresh)
-      clearWith:
-        - vars
-      refs: TAM    
-
-      columns:
-        - name: name
-          title: ''
-          type: 'number'
-          content: ($key)
-          
-        - name: pmeasure
-          title: Measure
-          visible: (pmeasure) 
 
     - name: thurs
       title: Thurstone thresholds of the partial credit model

@@ -267,10 +267,9 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        items = function() private$.items[["items"]],
+        ia = function() private$.items[["ia"]],
         mf = function() private$.items[["mf"]],
         mcc = function() private$.items[["mcc"]],
-        thresh = function() private$.items[["thresh"]],
         thurs = function() private$.items[["thurs"]],
         ss = function() private$.items[["ss"]],
         wplot = function() private$.items[["wplot"]],
@@ -301,37 +300,68 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="items",
-                title="Item statistics of the rating scale model",
-                visible="(imeasure || ise || infit || outfit)",
-                rows="(vars)",
-                clearWith=list(
-                    "vars"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="($key)"),
-                    list(
-                        `name`="measure", 
-                        `title`="Measure", 
-                        `visible`="(imeasure)"),
-                    list(
-                        `name`="ise", 
-                        `title`="S.E.Measure", 
-                        `visible`="(ise)"),
-                    list(
-                        `name`="infit", 
-                        `title`="Infit", 
-                        `visible`="(infit)"),
-                    list(
-                        `name`="outfit", 
-                        `title`="Outfit", 
-                        `visible`="(outfit)"))))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    items = function() private$.items[["items"]],
+                    thresh = function() private$.items[["thresh"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="ia",
+                            title="Item analysis")
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="items",
+                            title="Item statistics of the rating scale model",
+                            visible="(imeasure || ise || infit || outfit)",
+                            rows="(vars)",
+                            clearWith=list(
+                                "vars"),
+                            refs="TAM",
+                            columns=list(
+                                list(
+                                    `name`="name", 
+                                    `title`="", 
+                                    `type`="text", 
+                                    `content`="($key)"),
+                                list(
+                                    `name`="measure", 
+                                    `title`="Measure", 
+                                    `visible`="(imeasure)"),
+                                list(
+                                    `name`="ise", 
+                                    `title`="S.E.Measure", 
+                                    `visible`="(ise)"),
+                                list(
+                                    `name`="infit", 
+                                    `title`="Infit", 
+                                    `visible`="(infit)"),
+                                list(
+                                    `name`="outfit", 
+                                    `title`="Outfit", 
+                                    `visible`="(outfit)"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="thresh",
+                            title="Delta-tau paramaterization of the partial credit model",
+                            rows="(vars)",
+                            visible="(thresh)",
+                            clearWith=list(
+                                "vars"),
+                            refs="TAM",
+                            columns=list(
+                                list(
+                                    `name`="name", 
+                                    `title`="", 
+                                    `type`="number", 
+                                    `content`="($key)"),
+                                list(
+                                    `name`="pmeasure", 
+                                    `title`="Measure", 
+                                    `visible`="(pmeasure)"))))}))$new(options=options))
             self$add(R6::R6Class(
                 inherit = jmvcore::Group,
                 active = list(
@@ -470,25 +500,6 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                     `name`="p", 
                                     `title`="p", 
                                     `format`="zto,pvalue"))))}))$new(options=options))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="thresh",
-                title="Delta-tau paramaterization of the partial credit model",
-                rows="(vars)",
-                visible="(thresh)",
-                clearWith=list(
-                    "vars"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="number", 
-                        `content`="($key)"),
-                    list(
-                        `name`="pmeasure", 
-                        `title`="Measure", 
-                        `visible`="(pmeasure)"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="thurs",
@@ -785,12 +796,12 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ia$items} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ia$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mcc$model} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mcc$lr} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ss$st} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ss$to} \tab \tab \tab \tab \tab a table \cr
@@ -813,9 +824,9 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$items$asDF}
+#' \code{results$thurs$asDF}
 #'
-#' \code{as.data.frame(results$items)}
+#' \code{as.data.frame(results$thurs)}
 #'
 #' @export
 polytomous <- function(
