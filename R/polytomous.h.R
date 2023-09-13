@@ -267,15 +267,12 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        st = function() private$.items[["st"]],
-        to = function() private$.items[["to"]],
-        scale = function() private$.items[["scale"]],
-        model = function() private$.items[["model"]],
-        lr = function() private$.items[["lr"]],
-        mat = function() private$.items[["mat"]],
         items = function() private$.items[["items"]],
+        mf = function() private$.items[["mf"]],
+        mcc = function() private$.items[["mcc"]],
         thresh = function() private$.items[["thresh"]],
         thurs = function() private$.items[["thurs"]],
+        ss = function() private$.items[["ss"]],
         wplot = function() private$.items[["wplot"]],
         piplot = function() private$.items[["piplot"]],
         esc = function() private$.items[["esc"]],
@@ -304,183 +301,6 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="st",
-                title="Standard score",
-                visible="(st)",
-                refs="ShinyItemAnalysis",
-                clearWith=list(
-                    "vars"),
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="($key)"),
-                    list(
-                        `name`="Total", 
-                        `type`="integer"),
-                    list(
-                        `name`="Percentile", 
-                        `type`="number"),
-                    list(
-                        `name`="Z", 
-                        `type`="number"),
-                    list(
-                        `name`="T", 
-                        `type`="number"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="to",
-                title="Summary of total score",
-                rows=1,
-                visible="(to)",
-                clearWith=list(
-                    "vars"),
-                refs="snowIRT",
-                columns=list(
-                    list(
-                        `name`="N", 
-                        `type`="number"),
-                    list(
-                        `name`="Minimum", 
-                        `type`="number"),
-                    list(
-                        `name`="Maximum", 
-                        `type`="number"),
-                    list(
-                        `name`="Mean", 
-                        `type`="number"),
-                    list(
-                        `name`="Median", 
-                        `type`="number"),
-                    list(
-                        `name`="SD", 
-                        `type`="number"),
-                    list(
-                        `name`="SE", 
-                        `type`="number"),
-                    list(
-                        `name`="Skewness", 
-                        `type`="number"),
-                    list(
-                        `name`="Kurtosis", 
-                        `type`="number"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="scale",
-                title="Model Fit",
-                rows=1,
-                clearWith=list(
-                    "vars"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="Scale"),
-                    list(
-                        `name`="reliability", 
-                        `title`="Person Reliability", 
-                        `visible`="(reliability)"),
-                    list(
-                        `name`="modelfit", 
-                        `title`="MADaQ3", 
-                        `visible`="(modelfit)"),
-                    list(
-                        `name`="modelfitp", 
-                        `title`="p", 
-                        `format`="zto,pvalue", 
-                        `visible`="(modelfitp)"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="model",
-                title="Model comparison",
-                visible="(model)",
-                clearWith=list(
-                    "vars"),
-                refs="CDM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="Model", 
-                        `type`="text"),
-                    list(
-                        `name`="log", 
-                        `title`="Log-likelihood", 
-                        `type`="number"),
-                    list(
-                        `name`="dev", 
-                        `title`="Deviance", 
-                        `type`="number"),
-                    list(
-                        `name`="aic", 
-                        `title`="AIC", 
-                        `type`="number"),
-                    list(
-                        `name`="bic", 
-                        `title`="BIC", 
-                        `type`="number"),
-                    list(
-                        `name`="caic", 
-                        `title`="CAIC", 
-                        `type`="number"),
-                    list(
-                        `name`="npars", 
-                        `title`="Parameters", 
-                        `type`="integer"),
-                    list(
-                        `name`="obs", 
-                        `title`="N", 
-                        `type`="integer"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="lr",
-                title="Likelihood ratio test",
-                rows=1,
-                visible="(lr)",
-                clearWith=list(
-                    "vars"),
-                refs="CDM",
-                columns=list(
-                    list(
-                        `name`="model1", 
-                        `title`="Model 1", 
-                        `type`="text"),
-                    list(
-                        `name`="model2", 
-                        `title`="Model 2", 
-                        `type`="text"),
-                    list(
-                        `name`="chi", 
-                        `title`="\u03C7\u00B2", 
-                        `type`="number"),
-                    list(
-                        `name`="df", 
-                        `title`="df", 
-                        `type`="integer"),
-                    list(
-                        `name`="p", 
-                        `title`="p", 
-                        `format`="zto,pvalue"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="mat",
-                title="Q3 Correlation Matrix",
-                rows="(vars)",
-                visible="(mat)",
-                clearWith=list(
-                    "vars"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`=".name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="($key)", 
-                        `combineBelow`=TRUE))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="items",
@@ -512,6 +332,144 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="outfit", 
                         `title`="Outfit", 
                         `visible`="(outfit)"))))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    scale = function() private$.items[["scale"]],
+                    mat = function() private$.items[["mat"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="mf",
+                            title="Model fit")
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="scale",
+                            title="Model Fit",
+                            rows=1,
+                            clearWith=list(
+                                "vars"),
+                            refs="TAM",
+                            columns=list(
+                                list(
+                                    `name`="name", 
+                                    `title`="", 
+                                    `type`="text", 
+                                    `content`="Scale"),
+                                list(
+                                    `name`="reliability", 
+                                    `title`="Person Reliability", 
+                                    `visible`="(reliability)"),
+                                list(
+                                    `name`="modelfit", 
+                                    `title`="MADaQ3", 
+                                    `visible`="(modelfit)"),
+                                list(
+                                    `name`="modelfitp", 
+                                    `title`="p", 
+                                    `format`="zto,pvalue", 
+                                    `visible`="(modelfitp)"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="mat",
+                            title="Q3 Correlation Matrix",
+                            rows="(vars)",
+                            visible="(mat)",
+                            clearWith=list(
+                                "vars"),
+                            refs="TAM",
+                            columns=list(
+                                list(
+                                    `name`=".name", 
+                                    `title`="", 
+                                    `type`="text", 
+                                    `content`="($key)", 
+                                    `combineBelow`=TRUE))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    model = function() private$.items[["model"]],
+                    lr = function() private$.items[["lr"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="mcc",
+                            title="Model comparison")
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="model",
+                            title="Model comparison",
+                            visible="(model)",
+                            clearWith=list(
+                                "vars"),
+                            refs="CDM",
+                            columns=list(
+                                list(
+                                    `name`="name", 
+                                    `title`="Model", 
+                                    `type`="text"),
+                                list(
+                                    `name`="log", 
+                                    `title`="Log-likelihood", 
+                                    `type`="number"),
+                                list(
+                                    `name`="dev", 
+                                    `title`="Deviance", 
+                                    `type`="number"),
+                                list(
+                                    `name`="aic", 
+                                    `title`="AIC", 
+                                    `type`="number"),
+                                list(
+                                    `name`="bic", 
+                                    `title`="BIC", 
+                                    `type`="number"),
+                                list(
+                                    `name`="caic", 
+                                    `title`="CAIC", 
+                                    `type`="number"),
+                                list(
+                                    `name`="npars", 
+                                    `title`="Parameters", 
+                                    `type`="integer"),
+                                list(
+                                    `name`="obs", 
+                                    `title`="N", 
+                                    `type`="integer"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="lr",
+                            title="Likelihood ratio test",
+                            rows=1,
+                            visible="(lr)",
+                            clearWith=list(
+                                "vars"),
+                            refs="CDM",
+                            columns=list(
+                                list(
+                                    `name`="model1", 
+                                    `title`="Model 1", 
+                                    `type`="text"),
+                                list(
+                                    `name`="model2", 
+                                    `title`="Model 2", 
+                                    `type`="text"),
+                                list(
+                                    `name`="chi", 
+                                    `title`="\u03C7\u00B2", 
+                                    `type`="number"),
+                                list(
+                                    `name`="df", 
+                                    `title`="df", 
+                                    `type`="integer"),
+                                list(
+                                    `name`="p", 
+                                    `title`="p", 
+                                    `format`="zto,pvalue"))))}))$new(options=options))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="thresh",
@@ -546,6 +504,81 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="", 
                         `type`="number", 
                         `content`="($key)"))))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    st = function() private$.items[["st"]],
+                    to = function() private$.items[["to"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="ss",
+                            title="Standard scores")
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="st",
+                            title="Standard score",
+                            visible="(st)",
+                            refs="ShinyItemAnalysis",
+                            clearWith=list(
+                                "vars"),
+                            columns=list(
+                                list(
+                                    `name`="name", 
+                                    `title`="", 
+                                    `type`="text", 
+                                    `content`="($key)"),
+                                list(
+                                    `name`="Total", 
+                                    `type`="integer"),
+                                list(
+                                    `name`="Percentile", 
+                                    `type`="number"),
+                                list(
+                                    `name`="Z", 
+                                    `type`="number"),
+                                list(
+                                    `name`="T", 
+                                    `type`="number"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="to",
+                            title="Summary of total score",
+                            rows=1,
+                            visible="(to)",
+                            clearWith=list(
+                                "vars"),
+                            refs="snowIRT",
+                            columns=list(
+                                list(
+                                    `name`="N", 
+                                    `type`="number"),
+                                list(
+                                    `name`="Minimum", 
+                                    `type`="number"),
+                                list(
+                                    `name`="Maximum", 
+                                    `type`="number"),
+                                list(
+                                    `name`="Mean", 
+                                    `type`="number"),
+                                list(
+                                    `name`="Median", 
+                                    `type`="number"),
+                                list(
+                                    `name`="SD", 
+                                    `type`="number"),
+                                list(
+                                    `name`="SE", 
+                                    `type`="number"),
+                                list(
+                                    `name`="Skewness", 
+                                    `type`="number"),
+                                list(
+                                    `name`="Kurtosis", 
+                                    `type`="number"))))}))$new(options=options))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="wplot",
@@ -752,15 +785,15 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$st} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$to} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$scale} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$model} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$lr} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mcc$model} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mcc$lr} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ss$st} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ss$to} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
@@ -780,9 +813,9 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$st$asDF}
+#' \code{results$items$asDF}
 #'
-#' \code{as.data.frame(results$st)}
+#' \code{as.data.frame(results$items)}
 #'
 #' @export
 polytomous <- function(

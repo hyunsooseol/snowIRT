@@ -94,15 +94,15 @@ where 0 degrees represents completely horizontal labels.}
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-  \code{results$st} \tab \tab \tab \tab \tab a table \cr
-  \code{results$to} \tab \tab \tab \tab \tab a table \cr
-  \code{results$scale} \tab \tab \tab \tab \tab a table \cr
-  \code{results$model} \tab \tab \tab \tab \tab a table \cr
-  \code{results$lr} \tab \tab \tab \tab \tab a table \cr
-  \code{results$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$items} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mcc$model} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mcc$lr} \tab \tab \tab \tab \tab a table \cr
   \code{results$thresh} \tab \tab \tab \tab \tab a table \cr
   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
+  \code{results$ss$st} \tab \tab \tab \tab \tab a table \cr
+  \code{results$ss$to} \tab \tab \tab \tab \tab a table \cr
   \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
@@ -122,9 +122,9 @@ A results object containing:
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$st$asDF}
+\code{results$items$asDF}
 
-\code{as.data.frame(results$st)}
+\code{as.data.frame(results$items)}
 }
 \description{
 Polytomous Rasch Model

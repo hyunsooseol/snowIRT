@@ -9,173 +9,8 @@ items:
       type: Html
       visible: True
       
-    - name: st
-      title: 'Standard score'
-      type: Table
-      visible: (st)
-      refs: ShinyItemAnalysis 
-      clearWith:
-        - vars
-      
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
-        - name: Total
-          type: integer
-        - name: Percentile
-          type: number
-        - name: Z
-          type: number
-        - name: T
-          type: number
- 
-    - name: to
-      title: 'Summary of total score'
-      type: Table
-      rows: 1
-      visible: (to)
-      clearWith:
-        - vars
-      refs: snowIRT
-      
-      columns:
-        - name: N
-          type: number
-        - name: Minimum
-          type: number
-        - name: Maximum
-          type: number
-        - name: Mean
-          type: number
-        - name: Median
-          type: number
-        - name: SD
-          type: number
-        - name: SE
-          type: number
-        - name: Skewness
-          type: number
-        - name: Kurtosis
-          type: number
-
-    - name: scale
-      title: Model Fit
-      type: Table
-      rows: 1
-      clearWith:
-        - vars
-      refs: TAM
-
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: Scale
-
-        - name: reliability
-          title: Person Reliability
-          visible: (reliability)
-       
-        - name: modelfit
-          title: MADaQ3
-          visible: (modelfit)
-
-        - name: modelfitp
-          title: p
-          format: zto,pvalue
-          visible: (modelfitp)
-          
-    - name: model
-      title: Model comparison
-      type: Table
-      visible: (model)
-      clearWith:
-        - vars
-      refs: CDM
-
-      columns:
-        - name: name
-          title: 'Model'
-          type: 'text'
-         
-        - name: log
-          title: Log-likelihood
-          type: number
-
-        - name: dev
-          title: Deviance
-          type: number
-          
-        - name: aic
-          title: AIC
-          type: number
-          
-        - name: bic
-          title: BIC
-          type: number         
-
-        - name: caic
-          title: CAIC
-          type: number
-
-        - name: npars
-          title: Parameters
-          type: integer
-
-        - name: obs
-          title: N
-          type: integer
-
-    - name: lr
-      title: Likelihood ratio test
-      type: Table
-      rows: 1
-      visible: (lr)
-      clearWith:
-        - vars
-      refs: CDM
-
-      columns:
-        - name: model1
-          title: 'Model 1'
-          type: 'text'
-
-        - name: model2
-          title: 'Model 2'
-          type: 'text'
-          
-        - name: chi
-          title: χ²
-          type: number
-
-        - name: df
-          title: df
-          type: integer
-          
-        - name: p
-          title: p
-          format: zto,pvalue
-
-    - name: mat
-      title: Q3 Correlation Matrix
-      type: Table
-      rows: (vars)
-      visible: (mat)
-      clearWith:
-        - vars
-      refs: TAM
-      
-      columns:
-          - name: .name
-            title: ""
-            type: text
-            content: ($key)
-            combineBelow: true
-
     - name:  items
-      title: Item statistics of the rating scale model
+      title: 'Item statistics of the rating scale model'
       type:  Table
       visible: (imeasure || ise || infit || outfit)
       rows: (vars)
@@ -204,6 +39,128 @@ items:
         - name: outfit
           title: Outfit 
           visible: (outfit)  
+
+    - name: mf
+      title: 'Model fit'
+      type: Group
+      items:    
+        - name: scale
+          title: Model Fit
+          type: Table
+          rows: 1
+          clearWith:
+            - vars
+          refs: TAM
+
+          columns:
+            - name: name
+              title: ''
+              type: 'text'
+              content: Scale
+
+            - name: reliability
+              title: Person Reliability
+              visible: (reliability)
+       
+            - name: modelfit
+              title: MADaQ3
+              visible: (modelfit)
+
+            - name: modelfitp
+              title: p
+              format: zto,pvalue
+              visible: (modelfitp)
+
+        - name: mat
+          title: Q3 Correlation Matrix
+          type: Table
+          rows: (vars)
+          visible: (mat)
+          clearWith:
+            - vars
+          refs: TAM
+      
+          columns:
+            - name: .name
+              title: ""
+              type: text
+              content: ($key)
+              combineBelow: true
+
+    - name: mcc
+      title: 'Model comparison'
+      type: Group
+      items:          
+        - name: model
+          title: Model comparison
+          type: Table
+          visible: (model)
+          clearWith:
+            - vars
+          refs: CDM
+
+          columns:
+            - name: name
+              title: 'Model'
+              type: 'text'
+         
+            - name: log
+              title: Log-likelihood
+              type: number
+
+            - name: dev
+              title: Deviance
+              type: number
+          
+            - name: aic
+              title: AIC
+              type: number
+          
+            - name: bic
+              title: BIC
+              type: number         
+
+            - name: caic
+              title: CAIC
+              type: number
+
+            - name: npars
+              title: Parameters
+              type: integer
+
+            - name: obs
+              title: N
+              type: integer
+
+        - name: lr
+          title: Likelihood ratio test
+          type: Table
+          rows: 1
+          visible: (lr)
+          clearWith:
+            - vars
+          refs: CDM
+
+          columns:
+            - name: model1
+              title: 'Model 1'
+              type: 'text'
+
+            - name: model2
+              title: 'Model 2'
+              type: 'text'
+          
+            - name: chi
+              title: χ²
+              type: number
+
+            - name: df
+              title: df
+              type: integer
+          
+            - name: p
+              title: p
+              format: zto,pvalue
 
     - name: thresh
       title: Delta-tau paramaterization of the partial credit model
@@ -238,6 +195,61 @@ items:
           title: ''
           type: 'number'
           content: ($key)
+
+    - name: ss
+      title: 'Standard scores'
+      type: Group
+      items:       
+        - name: st
+          title: 'Standard score'
+          type: Table
+          visible: (st)
+          refs: ShinyItemAnalysis 
+          clearWith:
+            - vars
+      
+          columns:
+            - name: name
+              title: ''
+              type: 'text'
+              content: ($key)
+            - name: Total
+              type: integer
+            - name: Percentile
+              type: number
+            - name: Z
+              type: number
+            - name: T
+              type: number
+ 
+        - name: to
+          title: 'Summary of total score'
+          type: Table
+          rows: 1
+          visible: (to)
+          clearWith:
+            - vars
+          refs: snowIRT
+      
+          columns:
+            - name: N
+              type: number
+            - name: Minimum
+              type: number
+            - name: Maximum
+              type: number
+            - name: Mean
+              type: number
+            - name: Median
+              type: number
+            - name: SD
+              type: number
+            - name: SE
+              type: number
+            - name: Skewness
+              type: number
+            - name: Kurtosis
+              type: number
 
     - name: wplot
       title: 'Wright Map'

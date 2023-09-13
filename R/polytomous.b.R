@@ -38,7 +38,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             </head>
             <body>
             <div class='instructions'>
-            <p><b>Instructions</b></p>
+            <h2><b>Instructions</b></h2>
             <p>____________________________________________________________________________________</p>
             <p>1. Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
             <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
@@ -55,7 +55,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
         #  private$.initItemsTable()
         
         if (self$options$modelfitp)
-          self$results$scale$setNote(
+          self$results$mf$scale$setNote(
             "Note",
             "MADaQ3= Mean of absolute values of centered Q_3 statistic with p value obtained by Holm
 adjustment; Ho= the data fit the Rasch model."
@@ -447,7 +447,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateStTable = function(results) {
       
-        table <- self$results$st
+        table <- self$results$ss$st
         
         st <- results$st
         
@@ -475,7 +475,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateToTable = function(results) {
         
-        table <- self$results$to 
+        table <- self$results$ss$to 
         
         to <- results$to
         
@@ -522,7 +522,7 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateModelTable = function(results) {
       
-        table <- self$results$model
+        table <- self$results$mcc$model
         
          name <- results$name
          log <- results$log
@@ -556,7 +556,7 @@ adjustment; Ho= the data fit the Rasch model."
      
       .populateLrTable = function(results) {
         
-        table <- self$results$lr
+        table <- self$results$mcc$lr
         
         model1 <- results$model1
         model2 <- results$model2
@@ -583,7 +583,7 @@ adjustment; Ho= the data fit the Rasch model."
       # populate scale table-------------------
       
       .populateScaleTable = function(results) {
-        table <- self$results$scale
+        table <- self$results$mf$scale
         
         reliability <- results$reliability
         
@@ -643,7 +643,7 @@ adjustment; Ho= the data fit the Rasch model."
       .populateMatrixTable = function(results) {
         # get variables---------------------------------
         
-        matrix <- self$results$get('mat')
+        matrix <- self$results$mf$get('mat')
         vars <- self$options$get('vars')
         nVars <- length(vars)
         
