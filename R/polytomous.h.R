@@ -270,7 +270,6 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ia = function() private$.items[["ia"]],
         mf = function() private$.items[["mf"]],
         mcc = function() private$.items[["mcc"]],
-        thurs = function() private$.items[["thurs"]],
         ss = function() private$.items[["ss"]],
         wplot = function() private$.items[["wplot"]],
         piplot = function() private$.items[["piplot"]],
@@ -304,7 +303,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 inherit = jmvcore::Group,
                 active = list(
                     items = function() private$.items[["items"]],
-                    thresh = function() private$.items[["thresh"]]),
+                    thresh = function() private$.items[["thresh"]],
+                    thurs = function() private$.items[["thurs"]]),
                 private = list(),
                 public=list(
                     initialize=function(options) {
@@ -361,7 +361,22 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                 list(
                                     `name`="pmeasure", 
                                     `title`="Measure", 
-                                    `visible`="(pmeasure)"))))}))$new(options=options))
+                                    `visible`="(pmeasure)"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="thurs",
+                            title="Thurstone thresholds of the partial credit model",
+                            rows="(vars)",
+                            visible="(thurs)",
+                            clearWith=list(
+                                "vars"),
+                            refs="TAM",
+                            columns=list(
+                                list(
+                                    `name`="name", 
+                                    `title`="", 
+                                    `type`="number", 
+                                    `content`="($key)"))))}))$new(options=options))
             self$add(R6::R6Class(
                 inherit = jmvcore::Group,
                 active = list(
@@ -500,21 +515,6 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                     `name`="p", 
                                     `title`="p", 
                                     `format`="zto,pvalue"))))}))$new(options=options))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="thurs",
-                title="Thurstone thresholds of the partial credit model",
-                rows="(vars)",
-                visible="(thurs)",
-                clearWith=list(
-                    "vars"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="number", 
-                        `content`="($key)"))))
             self$add(R6::R6Class(
                 inherit = jmvcore::Group,
                 active = list(
@@ -798,11 +798,11 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$ia$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ia$thresh} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ia$thurs} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mcc$model} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mcc$lr} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$thurs} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ss$st} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ss$to} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
@@ -821,12 +821,6 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 #' }
-#'
-#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
-#'
-#' \code{results$thurs$asDF}
-#'
-#' \code{as.data.frame(results$thurs)}
 #'
 #' @export
 polytomous <- function(

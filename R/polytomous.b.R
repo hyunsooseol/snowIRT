@@ -68,7 +68,7 @@ adjustment; Ho= the data fit the Rasch model."
           )
         
         if (self$options$thurs)
-          self$results$thurs$setNote(
+          self$results$ia$thurs$setNote(
             "Note",
             "The Thurstonian threshold for a score category is defined as the ability at which the probability of achieving that score or higher reaches 0.50."
           )
@@ -756,7 +756,7 @@ adjustment; Ho= the data fit the Rasch model."
       
    .populateThurstoneTable = function(results) {
      
-     table <- self$results$thurs
+     table <- self$results$ia$thurs
      
      
      thr <- results$thresh # matrix

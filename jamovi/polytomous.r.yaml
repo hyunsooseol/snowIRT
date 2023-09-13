@@ -63,6 +63,21 @@ items:
               title: Measure
               visible: (pmeasure) 
 
+        - name: thurs
+          title: Thurstone thresholds of the partial credit model
+          type: Table
+          rows: (vars)
+          visible: (thurs)
+          clearWith:
+            - vars
+          refs: TAM    
+
+          columns:
+            - name: name
+              title: ''
+              type: 'number'
+              content: ($key)
+
     - name: mf
       title: 'Model fit'
       type: Group
@@ -184,21 +199,6 @@ items:
             - name: p
               title: p
               format: zto,pvalue
-
-    - name: thurs
-      title: Thurstone thresholds of the partial credit model
-      type: Table
-      rows: (vars)
-      visible: (thurs)
-      clearWith:
-        - vars
-      refs: TAM    
-
-      columns:
-        - name: name
-          title: ''
-          type: 'number'
-          content: ($key)
 
     - name: ss
       title: 'Standard scores'
