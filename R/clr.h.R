@@ -8,7 +8,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         initialize = function(
             vars = NULL,
             group = NULL,
-            model = NULL,
+            model = "RM",
             num = 1,
             ci = 3,
             clr = TRUE,
@@ -44,7 +44,8 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 model,
                 options=list(
                     "RM",
-                    "PCM"))
+                    "PCM"),
+                default="RM")
             private$..num <- jmvcore::OptionInteger$new(
                 "num",
                 num,
@@ -355,7 +356,7 @@ clr <- function(
     data,
     vars,
     group,
-    model,
+    model = "RM",
     num = 1,
     ci = 3,
     clr = TRUE,

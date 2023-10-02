@@ -10,7 +10,7 @@ items:
       visible: True
 
     - name: raju
-      title: Raju’s area method
+      title:  '`Raju’s area method - ${padjust}`'
       type: Table
       visible: (raju)
       rows: (vars)

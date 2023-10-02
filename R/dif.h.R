@@ -107,7 +107,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="raju",
-                title="Raju\u2019s area method",
+                title="`Raju\u2019s area method - ${padjust}`",
                 visible="(raju)",
                 rows="(vars)",
                 clearWith=list(

@@ -21,11 +21,6 @@ children:
             name: group
             maxItemCount: 1
             isTarget: true
-  - type: LayoutBox
-    margin: large
-    children:
-      - type: ComboBox
-        name: model
   - type: CollapseBox
     label: Analysis
     margin: normal
@@ -38,6 +33,17 @@ children:
           row: 0
         stretchFactor: 1
         children:
+          - type: Label
+            label: 'Model'
+            children:
+              - type: RadioButton
+                name: model_RM
+                optionName: model
+                optionPart: RM
+              - type: RadioButton
+                name: model_PCM
+                optionName: model
+                optionPart: PCM
           - type: Label
             label: Statistics
             children:

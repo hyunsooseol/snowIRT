@@ -41,7 +41,8 @@ options:
           name:  RM
         - title: PCM
           name:  PCM
-        
+      default: RM        
+
     - name: num
       title: Item number
       default: 1

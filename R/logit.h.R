@@ -149,7 +149,7 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="method",
-                title="Likelihood ratio Chi-square statistics",
+                title="`Likelihood ratio Chi-square statistics - ${padjust}`",
                 visible="(method)",
                 rows="(vars)",
                 clearWith=list(

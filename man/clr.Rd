@@ -8,7 +8,7 @@ clr(
   data,
   vars,
   group,
-  model,
+  model = "RM",
   num = 1,
   ci = 3,
   clr = TRUE,

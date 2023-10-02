@@ -10,7 +10,7 @@ items:
       visible: True
 
     - name: method
-      title: Likelihood ratio Chi-square statistics
+      title: '`Likelihood ratio Chi-square statistics - ${padjust}`'
       type: Table
       visible: (method)
       rows: (vars)
