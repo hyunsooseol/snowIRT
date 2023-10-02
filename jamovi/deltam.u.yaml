@@ -20,25 +20,39 @@ children:
             name: group
             isTarget: true
             maxItemCount: 1
-  - type: CollapseBox
-    label: Fixed method
-    margin: normal
-    collapsed: true
+  - type: LayoutBox
+    margin: large
+    stretchFactor: 1
     children:
-      - type: CheckBox
-        name: fixed
-      - type: CheckBox
-        name: plot
-  - type: CollapseBox
-    label: Normal method
-    margin: normal
-    collapsed: true
-    children:
-      - type: CheckBox
-        name: normal
+      - type: LayoutBox
+        margin: large
+        cell:
+          column: 0
+          row: 0
+        stretchFactor: 1
         children:
-          - type: ComboBox
-            name: puri
-            enable: (normal)
-      - type: CheckBox
-        name: plot1
+          - type: Label
+            label: Fixed method
+            children:
+              - type: CheckBox
+                name: fixed
+              - type: CheckBox
+                name: plot
+      - type: LayoutBox
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        stretchFactor: 1
+        children:
+          - type: Label
+            label: Normal method
+            children:
+              - type: CheckBox
+                name: normal
+                children:
+                  - type: ComboBox
+                    name: puri
+                    enable: (normal)
+              - type: CheckBox
+                name: plot1

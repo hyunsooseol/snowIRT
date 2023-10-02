@@ -20,28 +20,23 @@ children:
             name: group
             isTarget: true
             maxItemCount: 1
-  - type: CollapseBox
-    label: Raju method
-    margin: normal
-    collapsed: true
+  - type: LayoutBox
+    stretchFactor: 1
+    margin: large
     children:
-      - type: LayoutBox
-        stretchFactor: 1
-        margin: large
+      - type: Label
+        label: Method
+        fitToGrid: true
+        cell:
+          column: 0
+          row: 0
         children:
-          - type: Label
-            label: Method
-            fitToGrid: true
-            cell:
-              column: 0
-              row: 0
+          - type: CheckBox
+            name: raju
             children:
-              - type: CheckBox
-                name: raju
-                children:
-                  - type: ComboBox
-                    name: padjust
-                    enable: (raju)
+              - type: ComboBox
+                name: padjust
+                enable: (raju)
       - type: LayoutBox
         cell:
           column: 1
