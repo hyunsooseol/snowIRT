@@ -2,16 +2,19 @@
 % Please edit documentation in R/dif.h.R
 \name{dif}
 \alias{dif}
-\title{Raju method}
+\title{Raju & Mantel-Haenszel method}
 \usage{
 dif(
   data,
   vars,
   group,
-  raju = TRUE,
+  raju = FALSE,
+  mh = FALSE,
   padjust = "BH",
+  padjust1 = "BH",
   zplot = FALSE,
-  iccplot = FALSE
+  iccplot = FALSE,
+  plot1 = FALSE
 )
 }
 \arguments{
@@ -23,18 +26,26 @@ dif(
 
 \item{raju}{.}
 
+\item{mh}{.}
+
 \item{padjust}{.}
+
+\item{padjust1}{.}
 
 \item{zplot}{.}
 
 \item{iccplot}{.}
+
+\item{plot1}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mh} \tab \tab \tab \tab \tab a table \cr
   \code{results$zplot} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$iccplot} \tab \tab \tab \tab \tab an array of plots \cr
 }
 
@@ -45,5 +56,5 @@ Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.f
 \code{as.data.frame(results$raju)}
 }
 \description{
-Raju method
+Raju & Mantel-Haenszel method
 }

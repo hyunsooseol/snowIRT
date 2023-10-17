@@ -1,6 +1,6 @@
 ---
 name:  dif
-title: Differential Item Functioning
+title: Raju & Mantel-Haenszel method
 jrs:   '1.1'
 refs: snowIRT
 items:
@@ -16,6 +16,7 @@ items:
       rows: (vars)
       clearWith:
         - vars
+        - group
         - padjust
       refs: difR
         
@@ -43,17 +44,62 @@ items:
           title: 'Effect size'
           type: 'text'
 
+    - name: mh
+      title:  '` Mantel-Haenszel method - ${padjust1}`'
+      type: Table
+      visible: (mh)
+      rows: (vars)
+      clearWith:
+        - vars
+        - group
+        - padjust1
+      refs: difR
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: mhstat
+          title: MH Chi-square
+          
+        - name: p
+          title: p
+          format: zto,pvalue
+
+        - name: padjust
+          title: 'Adj.p'
+          format: zto,pvalue
+         
     - name: zplot
-      title: 'Z statistic'
+      title: 'Z statistic plot'
       type: Image
       width:  500
       height: 500
       renderFun: .plot
       visible: (zplot)
-      refs: difR  
+      refs: difR
+      clearWith:
+        - vars
+        - group
+        - padjust
+
+    - name: plot1
+      title: 'Mantel-Haenszel plot'
+      type: Image
+      width:  500
+      height: 500
+      renderFun: .plot1
+      visible: (plot1)
+      refs: difR
+      clearWith:
+        - vars
+        - group
+        - padjust1
 
     - name: iccplot
-      title: 'Item characteristic curve for DIF'
+      title: 'Item Characteristic Curve plot for DIF'
       type: Array
       description: an array of plots
       items: (vars)
@@ -67,4 +113,7 @@ items:
           visible: (iccplot)
           renderFun: .iccplot
           clearWith: []
+
+
+
 ...

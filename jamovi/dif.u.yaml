@@ -1,4 +1,4 @@
-title: Raju method
+title: Raju & Mantel-Haenszel method
 name: dif
 jus: '3.0'
 stage: 0
@@ -37,6 +37,12 @@ children:
               - type: ComboBox
                 name: padjust
                 enable: (raju)
+          - type: CheckBox
+            name: mh
+            children:
+              - type: ComboBox
+                name: padjust1
+                enable: (mh)
       - type: LayoutBox
         cell:
           column: 1
@@ -51,7 +57,8 @@ children:
                name: zplot
              - type: CheckBox
                name: iccplot
-    
+             - type: CheckBox
+               name: plot1    
 
  
 

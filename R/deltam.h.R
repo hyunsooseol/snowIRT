@@ -117,7 +117,8 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(fixed)",
                 rows="(vars)",
                 clearWith=list(
-                    "vars"),
+                    "vars",
+                    "group"),
                 refs="ShinyItemAnalysis",
                 columns=list(
                     list(
@@ -151,14 +152,19 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(plot)",
                 width=400,
                 height=400,
-                renderFun=".plot"))
+                renderFun=".plot",
+                clearWith=list(
+                    "vars",
+                    "group")))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="normal",
                 title="Perpendicular distances(after the last iteration)",
                 visible="(normal)",
                 clearWith=list(
-                    "vars"),
+                    "vars",
+                    "group",
+                    "puri"),
                 refs="ShinyItemAnalysis",
                 columns=list(
                     list(
@@ -181,7 +187,10 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(plot1)",
                 width=400,
                 height=400,
-                renderFun=".plot1"))}))
+                renderFun=".plot1",
+                clearWith=list(
+                    "vars",
+                    "group")))}))
 
 deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "deltamBase",

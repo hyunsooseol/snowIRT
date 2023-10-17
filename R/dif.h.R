@@ -8,10 +8,13 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         initialize = function(
             vars = NULL,
             group = NULL,
-            raju = TRUE,
+            raju = FALSE,
+            mh = FALSE,
             padjust = "BH",
+            padjust1 = "BH",
             zplot = FALSE,
-            iccplot = FALSE, ...) {
+            iccplot = FALSE,
+            plot1 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -37,10 +40,27 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..raju <- jmvcore::OptionBool$new(
                 "raju",
                 raju,
-                default=TRUE)
+                default=FALSE)
+            private$..mh <- jmvcore::OptionBool$new(
+                "mh",
+                mh,
+                default=FALSE)
             private$..padjust <- jmvcore::OptionList$new(
                 "padjust",
                 padjust,
+                options=list(
+                    "none",
+                    "holm",
+                    "hochberg",
+                    "hommel",
+                    "bonferroni",
+                    "BH",
+                    "BY",
+                    "fdr"),
+                default="BH")
+            private$..padjust1 <- jmvcore::OptionList$new(
+                "padjust1",
+                padjust1,
                 options=list(
                     "none",
                     "holm",
@@ -59,28 +79,41 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "iccplot",
                 iccplot,
                 default=FALSE)
+            private$..plot1 <- jmvcore::OptionBool$new(
+                "plot1",
+                plot1,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
             self$.addOption(private$..raju)
+            self$.addOption(private$..mh)
             self$.addOption(private$..padjust)
+            self$.addOption(private$..padjust1)
             self$.addOption(private$..zplot)
             self$.addOption(private$..iccplot)
+            self$.addOption(private$..plot1)
         }),
     active = list(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
         raju = function() private$..raju$value,
+        mh = function() private$..mh$value,
         padjust = function() private$..padjust$value,
+        padjust1 = function() private$..padjust1$value,
         zplot = function() private$..zplot$value,
-        iccplot = function() private$..iccplot$value),
+        iccplot = function() private$..iccplot$value,
+        plot1 = function() private$..plot1$value),
     private = list(
         ..vars = NA,
         ..group = NA,
         ..raju = NA,
+        ..mh = NA,
         ..padjust = NA,
+        ..padjust1 = NA,
         ..zplot = NA,
-        ..iccplot = NA)
+        ..iccplot = NA,
+        ..plot1 = NA)
 )
 
 difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -89,7 +122,9 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         raju = function() private$.items[["raju"]],
+        mh = function() private$.items[["mh"]],
         zplot = function() private$.items[["zplot"]],
+        plot1 = function() private$.items[["plot1"]],
         iccplot = function() private$.items[["iccplot"]]),
     private = list(),
     public=list(
@@ -97,7 +132,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Differential Item Functioning",
+                title="Raju & Mantel-Haenszel method",
                 refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
@@ -112,6 +147,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 rows="(vars)",
                 clearWith=list(
                     "vars",
+                    "group",
                     "padjust"),
                 refs="difR",
                 columns=list(
@@ -138,19 +174,64 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="es", 
                         `title`="Effect size", 
                         `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="mh",
+                title="` Mantel-Haenszel method - ${padjust1}`",
+                visible="(mh)",
+                rows="(vars)",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "padjust1"),
+                refs="difR",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="mhstat", 
+                        `title`="MH Chi-square"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="padjust", 
+                        `title`="Adj.p", 
+                        `format`="zto,pvalue"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="zplot",
-                title="Z statistic",
+                title="Z statistic plot",
                 width=500,
                 height=500,
                 renderFun=".plot",
                 visible="(zplot)",
-                refs="difR"))
+                refs="difR",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "padjust")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot1",
+                title="Mantel-Haenszel plot",
+                width=500,
+                height=500,
+                renderFun=".plot1",
+                visible="(plot1)",
+                refs="difR",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "padjust1")))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="iccplot",
-                title="Item characteristic curve for DIF",
+                title="Item Characteristic Curve plot for DIF",
                 items="(vars)",
                 refs="ShinyItemAnalysis",
                 template=jmvcore::Image$new(
@@ -183,21 +264,26 @@ difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 weightsSupport = 'auto')
         }))
 
-#' Raju method
+#' Raju & Mantel-Haenszel method
 #'
 #' 
 #' @param data The data as a data frame.
 #' @param vars .
 #' @param group A string naming the grouping variable from \code{data}
 #' @param raju .
+#' @param mh .
 #' @param padjust .
+#' @param padjust1 .
 #' @param zplot .
 #' @param iccplot .
+#' @param plot1 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$zplot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$iccplot} \tab \tab \tab \tab \tab an array of plots \cr
 #' }
 #'
@@ -212,10 +298,13 @@ dif <- function(
     data,
     vars,
     group,
-    raju = TRUE,
+    raju = FALSE,
+    mh = FALSE,
     padjust = "BH",
+    padjust1 = "BH",
     zplot = FALSE,
-    iccplot = FALSE) {
+    iccplot = FALSE,
+    plot1 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dif requires jmvcore to be installed (restart may be required)")
@@ -233,9 +322,12 @@ dif <- function(
         vars = vars,
         group = group,
         raju = raju,
+        mh = mh,
         padjust = padjust,
+        padjust1 = padjust1,
         zplot = zplot,
-        iccplot = iccplot)
+        iccplot = iccplot,
+        plot1 = plot1)
 
     analysis <- difClass$new(
         options = options,

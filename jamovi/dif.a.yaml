@@ -1,6 +1,6 @@
 ---
 name:  dif
-title: Raju method
+title: Raju & Mantel-Haenszel method
 menuGroup: snowIRT
 menuSubgroup: Differential Item Functioning
 version: '1.0.0'
@@ -38,7 +38,12 @@ options:
     - name: raju
       title: Raju
       type: Bool
-      default: TRUE
+      default: false
+    
+    - name: mh
+      title: Mantel-Haenszel
+      type: Bool
+      default: false
       
     - name: padjust
       title: Multiple comparison
@@ -62,14 +67,40 @@ options:
           name:  fdr              
       default: BH
 
+    - name: padjust1
+      title: Multiple comparison
+      type: List
+      options:
+        - title: none
+          name:  none
+        - title: holm
+          name:  holm
+        - title: hochberg
+          name:  hochberg 
+        - title: hommel
+          name:  hommel
+        - title: bonferroni
+          name:  bonferroni          
+        - title: BH
+          name:  BH       
+        - title: BY
+          name:  BY
+        - title: fdr
+          name:  fdr              
+      default: BH
+
     - name: zplot
-      title: Z statistic
+      title: Z statistic plot
       type: Bool
       default: false
  
     - name: iccplot
-      title: Item characteristic curve for DIF
+      title: ICC plot for DIF
       type: Bool
       default: false
- 
+      
+    - name: plot1
+      title: Mantel-Haenszel plot
+      type: Bool
+      default: false 
 ...
