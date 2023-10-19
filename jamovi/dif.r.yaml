@@ -9,6 +9,10 @@ items:
       type: Html
       visible: True
 
+    - name:  text
+      title: ''
+      type:  Preformatted
+
     - name: raju
       title:  '`Raju’s area method - ${padjust}`'
       type: Table
@@ -97,6 +101,47 @@ items:
         - vars
         - group
         - padjust1
+
+    - name: gmh
+      title:  '` Generalized Mantel-Haenszel method - ${padjust2}`'
+      type: Table
+      visible: (gmh)
+      rows: (vars)
+      clearWith:
+        - vars
+        - group
+        - padjust2
+      refs: difR
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: gmhstat
+          title: MH Chi-square
+          
+        - name: p
+          title: p
+          format: zto,pvalue
+
+        - name: padjust
+          title: 'Adj.p'
+          format: zto,pvalue
+
+    - name: plot2
+      title: 'Generalized Mantel-Haenszel plot'
+      type: Image
+      width:  500
+      height: 500
+      renderFun: .plot2
+      visible: (plot2)
+      refs: difR
+      clearWith:
+        - vars
+        - group
+        - padjust2
 
     - name: iccplot
       title: 'Item Characteristic Curve plot for DIF'

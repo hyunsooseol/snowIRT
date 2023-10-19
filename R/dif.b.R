@@ -11,6 +11,7 @@
 #' @importFrom TAM tam.mml
 #' @importFrom difR difRaju
 #' @importFrom difR difMH
+#' @importFrom difR difGMH
 #' @importFrom ShinyItemAnalysis plotDIFirt
 #' @export
 
@@ -36,11 +37,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             <body>
             <div class='instructions'>
             <p>____________________________________________________________________________________</p>
-            <p>1. Each variable should be coded as <b>0 or 1</b> with the 'Grouping variable'in jamovi.</p>
-            <P>2. The focal group should be coded as <b>1</b>.</P>
-            <p>3. The Raju's Z statistics are estimated by using <b>difR::difRaju</b> function.</p></p>
-            <p>4. The Mantel-Haenszel Chi square are estimated by using <b>difR::difMH</b> function.</p></p>
-            <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+            <p>1. Performs DIF detection using <b>difR</b> R package.
+            <P>2. For Raju and MH method, the focal group should be coded as <b>1</b>.</P>
+            <p>3. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
             <p>____________________________________________________________________________________</p>
             </div>
             </body>
@@ -75,6 +74,10 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   varNames <- c(groupVarName, vars)
   
   padjust<- self$options$padjust
+  padjust1<- self$options$padjust1
+  padjust2<- self$options$padjust2
+  
+  #--------------------------------------------
   
   if (is.null(groupVarName))
     
@@ -92,11 +95,69 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
   groupLevels <- base::levels(data[[groupVarName]])
   
-  if (length(groupLevels) != 2)
-    jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels",
-                    code = "grouping_var_must_have_2_levels",
-                    a = groupVarName)
+  # Generalized MH method--------------
   
+  if (length(groupLevels) > 2){
+    
+  
+    if(isTRUE(self$options$gmh | self$options$plot2)){
+      
+      fn <- as.numeric(strsplit(self$options$fn, ',')[[1]])
+      
+      gmh <- difR::difGMH(data,
+                          groupVarName,
+                          focal.names = fn,
+                          p.adjust.method = padjust2)
+      
+      
+     # self$results$text$setContent(gmh)
+      
+      
+      if (is.null(self$options$group))
+        return()
+      
+      table <- self$results$gmh
+      
+      items <- self$options$vars
+      
+      # get result---
+      
+      gmhstat <- as.vector(gmh$GMH)
+      p <- as.vector(gmh$p.value)
+      padjust <- as.vector(gmh$adjusted.p)
+      
+      
+      for (i in seq_along(items)) {
+        row <- list()
+        
+        row[["gmhstat"]] <- gmhstat[i]
+        
+        row[["p"]] <- p[i]
+        
+        row[["padjust"]] <- padjust[i]
+        
+        table$setRow(rowKey = items[i], values = row)
+      }
+      
+      # GMH Plot -------
+      image2 <- self$results$plot2
+      image2$setState(gmh)
+      
+      
+    }
+    
+      
+    }
+    
+   else{
+    
+    if (length(groupLevels) >2) return()
+    
+  # if (length(groupLevels) != 2)
+  #   jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels",
+  #                   code = "grouping_var_must_have_2_levels",
+  #                   a = groupVarName)
+  # 
   
   ref = dplyr::filter(data, data[[groupVarName]] == 0)
   ref.data = dplyr::select(ref,-groupVarName)
@@ -122,9 +183,11 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     same.scale = FALSE
   )
   
+  
+  # Calculating Mantel-Haenszel using difR::difMH()-------
+  
   if(isTRUE(self$options$mh | self$options$plot1)){
   
-    # Calculating Mantel-Haenszel using difR::difMH()
   # example:
   # difR::difMH(verbal, group = "Gender", focal.name = 1)
   
@@ -261,7 +324,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   image<- self$results$iccplot
   image$setState(itempar)
   
-  
+  }
+
 },
 
 
@@ -316,6 +380,19 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   plot1 <- plot(plotData)
   
   print(plot1)
+  TRUE
+},
+
+.plot2 = function(image2, ...) {
+  
+  if (is.null(image2$state))
+    return(FALSE)
+  
+  plotData <- image2$state
+  
+  plot2 <- plot(plotData)
+  
+  print(plot2)
   TRUE
 }
 

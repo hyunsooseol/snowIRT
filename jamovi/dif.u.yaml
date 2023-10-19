@@ -25,7 +25,7 @@ children:
     margin: large
     children:
       - type: Label
-        label: Method
+        label: 'Raju method'
         fitToGrid: true
         cell:
           column: 0
@@ -38,11 +38,9 @@ children:
                 name: padjust
                 enable: (raju)
           - type: CheckBox
-            name: mh
-            children:
-              - type: ComboBox
-                name: padjust1
-                enable: (mh)
+            name: zplot
+          - type: CheckBox
+            name: iccplot
       - type: LayoutBox
         cell:
           column: 1
@@ -51,15 +49,32 @@ children:
         margin: large
         children:
          - type: Label
-           label: 'Plots'
+           label: 'Mantel-Haenszel(MH) method'
            children:
              - type: CheckBox
-               name: zplot
+               name: mh
+               children:
+                 - type: ComboBox
+                   name: padjust1
+                   enable: (mh)
              - type: CheckBox
-               name: iccplot
+               name: plot1     
+         - type: Label
+           label: 'Generalized MH method(Group levels>2)'
+           children:
              - type: CheckBox
-               name: plot1    
-
+               name: gmh
+               children:
+                 - type: TextBox
+                   name: fn
+                   format: string
+                   stretchFactor: 2
+                   enable: (gmh)
+                 - type: ComboBox
+                   name: padjust2
+                   enable: (gmh)
+             - type: CheckBox
+               name: plot2    
  
 
 

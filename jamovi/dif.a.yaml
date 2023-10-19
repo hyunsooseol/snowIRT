@@ -36,12 +36,12 @@ options:
             A string naming the grouping variable from `data`
 
     - name: raju
-      title: Raju
+      title: 'Raju test'
       type: Bool
       default: false
     
     - name: mh
-      title: Mantel-Haenszel
+      title: 'MH test'
       type: Bool
       default: false
       
@@ -100,7 +100,45 @@ options:
       default: false
       
     - name: plot1
-      title: Mantel-Haenszel plot
+      title: 'MH plot'
       type: Bool
       default: false 
+
+    - name: gmh
+      title: 'Generalized MH test'
+      type: Bool
+      default: false
+
+    - name: fn
+      title: 'Focal groups'
+      type: String
+      default: '2,3,4' 
+
+    - name: plot2
+      title: 'Generalized MH plot'
+      type: Bool
+      default: false 
+
+    - name: padjust2
+      title: Multiple comparison
+      type: List
+      options:
+        - title: none
+          name:  none
+        - title: holm
+          name:  holm
+        - title: hochberg
+          name:  hochberg 
+        - title: hommel
+          name:  hommel
+        - title: bonferroni
+          name:  bonferroni          
+        - title: BH
+          name:  BH       
+        - title: BY
+          name:  BY
+        - title: fdr
+          name:  fdr              
+      default: BH
+
 ...

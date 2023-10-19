@@ -14,7 +14,11 @@ dif(
   padjust1 = "BH",
   zplot = FALSE,
   iccplot = FALSE,
-  plot1 = FALSE
+  plot1 = FALSE,
+  gmh = FALSE,
+  fn = "2,3,4",
+  plot2 = FALSE,
+  padjust2 = "BH"
 )
 }
 \arguments{
@@ -37,15 +41,26 @@ dif(
 \item{iccplot}{.}
 
 \item{plot1}{.}
+
+\item{gmh}{.}
+
+\item{fn}{.}
+
+\item{plot2}{.}
+
+\item{padjust2}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
+  \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
   \code{results$mh} \tab \tab \tab \tab \tab a table \cr
   \code{results$zplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
+  \code{results$gmh} \tab \tab \tab \tab \tab a table \cr
+  \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$iccplot} \tab \tab \tab \tab \tab an array of plots \cr
 }
 

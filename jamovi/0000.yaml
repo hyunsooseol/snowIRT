@@ -1,12 +1,12 @@
 ---
 title: Item Response Theory
 name: snowIRT
-version: 4.9.7
+version: 4.9.8
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2023-10-17'
+date: '2023-10-19'
 type: R
 description: >-
   This module includes IRT, item distractor analysis, item and person
@@ -62,17 +62,50 @@ datasets:
     description: binary data
     tags:
       - Dichotomous
-  - name: dif
-    path: dif.omv
-    description: Differential Item Functioning
-    tags:
-      - DIF
-      - Raju
   - name: Polytomous
     path: hls2.omv
     description: Health Literacy Survey
     tags:
       - Polytomous
+  - name: dif
+    path: dif.omv
+    description: Raju & MH method
+    tags:
+      - DIF
+      - Raju
+      - MH
+  - name: gmh
+    path: gmh.omv
+    description: Generalized MH method
+    tags:
+      - DIF
+      - Generalized MH
+  - name: ordinal
+    path: anxiety.omv
+    description: ordinal data for DIF
+    tags:
+      - DIF
+      - Ordinal
+  - name: gmat
+    path: GMAT.omv
+    description: GMAT data for DIF
+    tags:
+      - DIF
+      - Delta
+  - name: AMTS
+    path: amts.omv
+    description: The Abbreviated Mental Test Score (AMTS)
+    tags:
+      - DIF
+      - Dichotomous
+      - Conditional likelihood test
+  - name: DESC-II
+    path: dep.omv
+    description: Depression Screening DESC-II
+    tags:
+      - DIF
+      - polytomous
+      - Conditional likelihood test
   - name: mcq
     path: mcq.omv
     description: Multiple choice data
@@ -83,31 +116,6 @@ datasets:
     description: Multiple choice(Character)
     tags:
       - MCQ
-  - name: gmat
-    path: GMAT.omv
-    description: GMAT data for DIF
-    tags:
-      - DIF
-      - Delta
-  - name: ordinal
-    path: anxiety.omv
-    description: ordinal data for DIF
-    tags:
-      - DIF
-      - Ordinal
-  - name: AMTS
-    path: amts.omv
-    description: The Abbreviated Mental Test Score (AMTS)
-    tags:
-      - Dichotomous
-      - Conditional likelihood test
-  - name: DESC-II
-    path: dep.omv
-    description: Depression Screening DESC-II
-    tags:
-      - polytomous
-      - DIF
-      - Conditional likelihood test
 usesNative: true
 minApp: 1.8.0
 
