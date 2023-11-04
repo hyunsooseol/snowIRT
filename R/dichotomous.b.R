@@ -37,7 +37,6 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             </head>
             <body>
             <div class='instructions'>
-            <h2><b>Instructions</b></h2>
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
             <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>

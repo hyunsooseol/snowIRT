@@ -76,20 +76,10 @@ options:
       type: Bool
       default: false
 
-    - name: icc
-      title: Item category for PCM 
-      type: Bool
-      default: false
-
     - name: wplot
       title: Wright map
       type: Bool
       default: TRUE
-
-    - name: esc
-      title: Item Characteristic Curve(ICC)
-      type: Bool
-      default: false
 
     - name: total
       title: Total score
@@ -175,4 +165,96 @@ options:
       title: Fit plot
       type: Bool
       default: false  
+
+    - name: width
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height
+      type: Integer
+      title: "X"
+      default: 500
+
+    - name: width5
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height5
+      type: Integer
+      title: "X"
+      default: 500
+
+    - name: num
+      title: Item number
+      default: 1
+      type: Integer
+      min: 1
+
+    - name: plot4
+      title: 'Item Characteristic Curve(ICC)'
+      type: Bool
+      default: false
+
+    - name: width4
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height4
+      type: Integer
+      title: "Height"
+      default: 500
+
+    - name: num1
+      title: Item number
+      default: 1
+      type: Integer
+      min: 1
+
+    - name: plot6
+      title: 'Item category for PCM' 
+      type: Bool
+      default: false
+      
+    - name: width6
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height6
+      type: Integer
+      title: "Height"
+      default: 500
+
+    - name: width7
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height7
+      type: Integer
+      title: "Height"
+      default: 500
+
+    - name: width3
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height3
+      type: Integer
+      title: "X"
+      default: 500
+
+    - name: width2
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height2
+      type: Integer
+      title: "X"
+      default: 500
 ...

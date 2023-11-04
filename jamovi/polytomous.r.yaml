@@ -258,80 +258,68 @@ items:
     - name: wplot
       title: 'Wright Map'
       type: Image
-      width: 500
-      height: 500
       visible: (wplot)
       renderFun: .wplot
       refs: ShinyItemAnalysis
       clearWith:
         - vars
+        - width
+        - height
       
     - name: piplot
       title: 'Person-item map for PCM '
       type: Image
-      width:  500
-      height: 500
       visible: (piplot)
       renderFun: .piPlot
       refs: eRm
       clearWith:
         - vars
+        - width5
+        - height5
 
-    - name: esc
-      title: 'Expected Score Curve'
-      type: Array
-      description: an array of plots
-      items: (vars)
+    - name: plot4
+      title: 'Item Characteristic Curve(ICC)'
+      type: Image
+      visible: (plot4)
+      renderFun: .plot4
       clearWith:
         - vars
-      template:
-          type: Image
-          title: $key
-          description: ESC plot
-          width:  500
-          height: 500
-          visible: (esc)
-          renderFun: .escPlot
-          clearWith: []     
+        - num
+        - width4
+        - height4
      
-    - name: plot
-      title: 'Category Information'
-      type: Array
-      description: an array of plots
-      items: (vars)
+    - name: plot6
+      title: 'Item category for PCM' 
+      type: Image
+      visible: (plot6)
+      renderFun: .plot6
       clearWith:
         - vars
-      template:
-          type: Image
-          title: $key
-          description: ICC plot
-          width:  500
-          height: 500
-          visible: (icc)
-          renderFun: .plot
-          clearWith: []
+        - num1
+        - width6
+        - height6
 
     - name: inplot
       title: 'Item Infit Plot'
       type: Image
-      width:  500
-      height: 500
       visible: (inplot)
       renderFun: .inPlot
       clearWith:
         - vars
-        - angle 
+        - angle
+        - width7
+        - height7
 
     - name: outplot
       title: 'Item Outfit Plot'
       type: Image
-      width:  500
-      height: 500
       visible: (outplot)
       renderFun: .outPlot
       clearWith:
         - vars
-        - angle 
+        - angle
+        - width7
+        - height7
 
     - name: total
       title: Total
@@ -390,22 +378,22 @@ items:
       type:  Image
       requiresData: true
       visible: (plot2)
-      width: 500
-      height: 500
       renderFun: .plot2
       refs: snowIRT 
       clearWith:
             - vars
+            - width2
+            - height2
 
     - name:  plot3
       title: 'Person Fit Plot'
       type:  Image
       requiresData: true
       visible: (plot3)
-      width: 600
-      height: 400
       renderFun: .plot3
       refs: snowIRT 
       clearWith:
             - vars
+            - width3
+            - plot3
 ...

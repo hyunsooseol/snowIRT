@@ -38,7 +38,6 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             </head>
             <body>
             <div class='instructions'>
-            <h2><b>Instructions</b></h2>
             <p>____________________________________________________________________________________</p>
             <p>1. Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
             <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
@@ -94,6 +93,7 @@ adjustment; Ho= the data fit the Rasch model."
           ready <- FALSE
         
         if (ready) {
+          
           data <- private$.cleanData()
           
           results <- private$.compute(data)
@@ -118,11 +118,15 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateLrTable(results)
           
           #prepare plot-----
-          private$.prepareIccPlot(data)
+       # private$.prepareIccPlot(data)
+         
+          # prepare Expected score curve plot---------
+         # private$.prepareEscPlot(data) 
+          
           # prepare person-item map
           private$.preparepiPlot(data)
-          # prepare Expected score curve plot---------
-          private$.prepareEscPlot(data)
+          
+         
           
           # prepare item fit plot-------
           private$.prepareInfitPlot(data)
@@ -153,7 +157,57 @@ adjustment; Ho= the data fit the Rasch model."
       
       .compute = function(data) {
         
+        if(isTRUE(self$options$wplot)){
+          width <- self$options$width
+          height <- self$options$height
+          self$results$wplot$setSize(width, height)
+        }
         
+        if(isTRUE(self$options$piplot)){
+          width <- self$options$width5
+          height <- self$options$height5
+          self$results$piplot$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$plot4)){
+          width <- self$options$width4
+          height <- self$options$height4
+          self$results$plot4$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$plot6)){
+          width <- self$options$width6
+          height <- self$options$height6
+          self$results$plot6$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$inplot)){
+          width <- self$options$width7
+          height <- self$options$height7
+          self$results$inplot$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$outplot)){
+          width <- self$options$width7
+          height <- self$options$height7
+          self$results$outplot$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$plot3)){
+          width <- self$options$width3
+          height <- self$options$height3
+          self$results$plot3$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$plot2)){
+          width <- self$options$width2
+          height <- self$options$height2
+          self$results$plot2$setSize(width, height)
+        }
+        
+        
+        
+        ##################################################################
         set.seed(1234)
         
         # estimate the Rasch model with MML using function 'tam.mml'-----
@@ -399,9 +453,20 @@ adjustment; Ho= the data fit the Rasch model."
         image <- self$results$plot3
         
         image$setState(pf)
+       
+          # ICC Plot -------
+
+          image4 <- self$results$plot4
+          image4$setState(tamobj)
         
-        
-      results <-
+          # 'Item category for PCM' Plot -------
+          
+          image6 <- self$results$plot6
+          image6$setState(tamobj)
+          
+          
+          
+          results <-
           list(
             'imeasure' = imeasure,
             'ise' = ise,
@@ -794,106 +859,7 @@ adjustment; Ho= the data fit the Rasch model."
    },
    
   
-    ##### person statistics for output variable-------------------
-     
-   # .populateTotalOutputs=function(results){
-   #   
-   #   total <- results$total
-   #   
-   #   if (self$options$total && self$results$total$isNotFilled()) {
-   #     
-   #     self$results$total$setRowNums(rownames(data))
-   #     self$results$total$setValues(total)
-   #     
-   #   }
-   #   
-   # },
-   # 
-   # .populatePersonmeasureOutputs=function(results){
-   #   
-   #   personmeasure <- results$personmeasure
-   #   
-   #   if (self$options$personmeasure && self$results$personmeasure$isNotFilled()) {
-   #     
-   #     self$results$personmeasure$setRowNums(rownames(data))
-   #     self$results$personmeasure$setValues(personmeasure)
-   #     
-   #   }
-   #   
-   # },
-   # 
-   # .populatePseOutputs=function(results){
-   #   
-   #   pse <- results$pse
-   #   
-   #   if (self$options$pse && self$results$pse$isNotFilled()) {
-   #     
-   #     self$results$pse$setRowNums(rownames(data))
-   #     self$results$pse$setValues(pse)
-   #     
-   #   }
-   #   
-   # },
-   # 
-   # .populatePinfitOutputs=function(results){
-   #   
-   #   pinfit <- results$pinfit
-   #   
-   #   if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
-   #     
-   #     self$results$pinfit$setRowNums(rownames(data))
-   #     self$results$pinfit$setValues(pinfit)
-   #     
-   #   }
-   #   
-   # },
-   # 
-   # 
-   # .populatePoutfitOutputs=function(results){
-   #   
-   #   poutfit <- results$poutfit
-   #   if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
-   #     
-   #     self$results$poutfit$setRowNums(rownames(data))
-   #     self$results$poutfit$setValues(poutfit)
-   #     
-   #   }
-   #   
-   # },   
-   # 
-   # 
-   # .populateResidOutputs=function(results){
-   #   
-   #   resid <- results$resid
-   #   
-   #   if (self$options$resid && self$results$resid$isNotFilled()) {
-   #     
-   #     keys <- 1:length(self$options$vars)
-   #     titles <- paste("Item", 1:length(self$options$vars))
-   #     descriptions <- paste("Item", 1:length(self$options$vars))
-   #     measureTypes <- rep("continuous", length(self$options$vars))
-   #     
-   #     self$results$resid$set(
-   #       keys=keys,
-   #       titles=titles,
-   #       descriptions=descriptions,
-   #       measureTypes=measureTypes
-   #     )
-   #     
-   #     self$results$resid$setRowNums(rownames(data))
-   #     
-   #     
-   #     resid <- as.data.frame(resid)
-   #     
-   #     for (i in 1:length(self$options$vars)) {
-   #       scores <- as.numeric(resid[, i])
-   #       self$results$resid$setValues(index=i, scores)
-   #     }
-   #     
-   #   }
-   # },
-   # 
-   #  
+   #####################################################
     .populatePerOutputs = function(results) {
      
      perc <- results$perc  
@@ -963,97 +929,116 @@ adjustment; Ho= the data fit the Rasch model."
      
    },
    
-   # ICC plot-----------------
+   # # ICC plot-----------------
+   # 
+   # .prepareIccPlot = function(data) {
+   #   
+   #   # item characteristic curves based on partial credit model--------
+   #   set.seed(1234)
+   #   tam <- TAM::tam.mml(resp = as.matrix(data))
+   #   
+   #   
+   #   # ICC Plot -------
+   #   
+   #   image <- self$results$plot4
+   #   image$setState(tam)
+   #   
+   # },
    
-   .prepareIccPlot = function(data) {
-     
-     # item characteristic curves based on partial credit model--------
-     set.seed(1234)
-     tam <- TAM::tam.mml(resp = as.matrix(data))
+   .plot4 = function(image4, ...) {
      
      
-     # Prepare Data For Plot -------
+     # ICC plot-------------------
      
-     image <- self$results$plot
-     image$setState(tam)
+     num <- self$options$num
+     #tamp <- image$parent$state
+     
+     # if (is.null(tamp))
+     #   return()
+     
+     if (is.null(image4$state))
+       return(FALSE)
+     
+     tamobj <- image4$state
+     
+     #esc <- self$results$plot4
+     
+     # index <- 1
+     # 
+     # for (item in images$items) {
+     #   if (identical(image, item))
+     #     break()
+     # 
+     #   index <- index + 1
+     # }
+     
+     plot4 <- plot(tamobj,
+                   items = num,
+                   #type="items" produce item response curve not expected curve
+                   type = "expected",
+                   export = FALSE)
+    
+     print(plot4)
+     TRUE
+    
      
    },
    
-      .plot = function(image, ...) {
-        
-        tam <- image$parent$state
-        
-        if (is.null(tam))
-          return()
-        
-        images <- self$results$plot
-        
-        index <- 1
-        
-        for (item in images$items) {
-          if (identical(image, item))
-            break()
-          
-          index <- index + 1
-        }
-        
-        plot <- plot(tam,
-                     items = index,
-                     type = 'items',
-                     export = FALSE)
-        
-        
-        print(plot)
-        TRUE
-        
-      },
- 
+   
     
    # Prepare Expected score curve functions------------
       
-      .prepareEscPlot = function(data) {
-        
-        set.seed(1234)
-        tamp = TAM::tam(resp =as.matrix(data))
-        
-        
-        # Prepare Data For ESC Plot -------
-        
-        image <- self$results$get('esc')
-        
-        image$setState(tamp)
-        
-        
-      },
+      # .prepareEscPlot = function(data) {
+      #   
+      #   set.seed(1234)
+      #   tamp = TAM::tam(resp =as.matrix(data))
+      #   
+      #   
+      #   # Prepare Data For ESC Plot -------
+      #   
+      #   image <- self$results$get('esc')
+      #   
+      #   image$setState(tamp)
+      #   
+      #   
+      # },
+      # 
       
-      
-      # Expected score curve plot----------
     
-   .escPlot = function(image, ...) {
+   .plot6 = function(image6, ...) {
         
-        tamp <- image$parent$state 
+       # 'Item category for PCM'  
+     
+     
+        # tamp <- image$parent$state 
+        # 
+        # if (is.null(tamp))
+        #   return()
+        # 
+        # images <- self$results$esc
+        # 
+        # index <- 1
+        # 
+        # for (item in images$items) {
+        #   if (identical(image, item))
+        #     break()
+        #   
+        #   index <- index + 1
+        # }
+        # 
         
-        if (is.null(tamp))
-          return()
+        num1 <- self$options$num1
+       
+        if (is.null(image6$state))
+          return(FALSE)
         
-        images <- self$results$esc
+        tamobj <- image6$state
         
-        index <- 1
-        
-        for (item in images$items) {
-          if (identical(image, item))
-            break()
-          
-          index <- index + 1
-        }
-        
-        plot2 <- plot(tamp,
-                      items = index,
-                      #type="items" produce item response curve not expected curve
-                      type = "expected",
+        plot6 <- plot(tamobj,
+                      items = num1,
+                      type = 'items',
                       export = FALSE)
-        
-        print(plot2)
+        print(plot6)
         TRUE
         
         
@@ -1217,6 +1202,7 @@ adjustment; Ho= the data fit the Rasch model."
      ylab("Number of respondents") +
      theme_app()
    
+   plot2 <- plot2+ggtheme
    
    print(plot2)
    TRUE

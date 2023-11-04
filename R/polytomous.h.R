@@ -18,9 +18,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             thresh = TRUE,
             pmeasure = FALSE,
             thurs = FALSE,
-            icc = FALSE,
             wplot = TRUE,
-            esc = FALSE,
             inplot = FALSE,
             outplot = FALSE,
             angle = 0,
@@ -31,7 +29,25 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             to = FALSE,
             st = FALSE,
             plot2 = FALSE,
-            plot3 = FALSE, ...) {
+            plot3 = FALSE,
+            width = 500,
+            height = 500,
+            width5 = 500,
+            height5 = 500,
+            num = 1,
+            plot4 = FALSE,
+            width4 = 500,
+            height4 = 500,
+            num1 = 1,
+            plot6 = FALSE,
+            width6 = 500,
+            height6 = 500,
+            width7 = 500,
+            height7 = 500,
+            width3 = 500,
+            height3 = 500,
+            width2 = 500,
+            height2 = 500, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -90,18 +106,10 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "thurs",
                 thurs,
                 default=FALSE)
-            private$..icc <- jmvcore::OptionBool$new(
-                "icc",
-                icc,
-                default=FALSE)
             private$..wplot <- jmvcore::OptionBool$new(
                 "wplot",
                 wplot,
                 default=TRUE)
-            private$..esc <- jmvcore::OptionBool$new(
-                "esc",
-                esc,
-                default=FALSE)
             private$..total <- jmvcore::OptionOutput$new(
                 "total")
             private$..personmeasure <- jmvcore::OptionOutput$new(
@@ -160,6 +168,80 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot3",
                 plot3,
                 default=FALSE)
+            private$..width <- jmvcore::OptionInteger$new(
+                "width",
+                width,
+                default=500)
+            private$..height <- jmvcore::OptionInteger$new(
+                "height",
+                height,
+                default=500)
+            private$..width5 <- jmvcore::OptionInteger$new(
+                "width5",
+                width5,
+                default=500)
+            private$..height5 <- jmvcore::OptionInteger$new(
+                "height5",
+                height5,
+                default=500)
+            private$..num <- jmvcore::OptionInteger$new(
+                "num",
+                num,
+                default=1,
+                min=1)
+            private$..plot4 <- jmvcore::OptionBool$new(
+                "plot4",
+                plot4,
+                default=FALSE)
+            private$..width4 <- jmvcore::OptionInteger$new(
+                "width4",
+                width4,
+                default=500)
+            private$..height4 <- jmvcore::OptionInteger$new(
+                "height4",
+                height4,
+                default=500)
+            private$..num1 <- jmvcore::OptionInteger$new(
+                "num1",
+                num1,
+                default=1,
+                min=1)
+            private$..plot6 <- jmvcore::OptionBool$new(
+                "plot6",
+                plot6,
+                default=FALSE)
+            private$..width6 <- jmvcore::OptionInteger$new(
+                "width6",
+                width6,
+                default=500)
+            private$..height6 <- jmvcore::OptionInteger$new(
+                "height6",
+                height6,
+                default=500)
+            private$..width7 <- jmvcore::OptionInteger$new(
+                "width7",
+                width7,
+                default=500)
+            private$..height7 <- jmvcore::OptionInteger$new(
+                "height7",
+                height7,
+                default=500)
+            private$..width3 <- jmvcore::OptionInteger$new(
+                "width3",
+                width3,
+                default=500)
+            private$..height3 <- jmvcore::OptionInteger$new(
+                "height3",
+                height3,
+                default=500)
+            private$..width2 <- jmvcore::OptionInteger$new(
+                "width2",
+                width2,
+                default=500)
+            private$..height2 <- jmvcore::OptionInteger$new(
+                "height2",
+                height2,
+                default=500)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -173,9 +255,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..thresh)
             self$.addOption(private$..pmeasure)
             self$.addOption(private$..thurs)
-            self$.addOption(private$..icc)
             self$.addOption(private$..wplot)
-            self$.addOption(private$..esc)
             self$.addOption(private$..total)
             self$.addOption(private$..personmeasure)
             self$.addOption(private$..pse)
@@ -193,6 +273,24 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..st)
             self$.addOption(private$..plot2)
             self$.addOption(private$..plot3)
+            self$.addOption(private$..width)
+            self$.addOption(private$..height)
+            self$.addOption(private$..width5)
+            self$.addOption(private$..height5)
+            self$.addOption(private$..num)
+            self$.addOption(private$..plot4)
+            self$.addOption(private$..width4)
+            self$.addOption(private$..height4)
+            self$.addOption(private$..num1)
+            self$.addOption(private$..plot6)
+            self$.addOption(private$..width6)
+            self$.addOption(private$..height6)
+            self$.addOption(private$..width7)
+            self$.addOption(private$..height7)
+            self$.addOption(private$..width3)
+            self$.addOption(private$..height3)
+            self$.addOption(private$..width2)
+            self$.addOption(private$..height2)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -207,9 +305,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         thresh = function() private$..thresh$value,
         pmeasure = function() private$..pmeasure$value,
         thurs = function() private$..thurs$value,
-        icc = function() private$..icc$value,
         wplot = function() private$..wplot$value,
-        esc = function() private$..esc$value,
         total = function() private$..total$value,
         personmeasure = function() private$..personmeasure$value,
         pse = function() private$..pse$value,
@@ -226,7 +322,25 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         to = function() private$..to$value,
         st = function() private$..st$value,
         plot2 = function() private$..plot2$value,
-        plot3 = function() private$..plot3$value),
+        plot3 = function() private$..plot3$value,
+        width = function() private$..width$value,
+        height = function() private$..height$value,
+        width5 = function() private$..width5$value,
+        height5 = function() private$..height5$value,
+        num = function() private$..num$value,
+        plot4 = function() private$..plot4$value,
+        width4 = function() private$..width4$value,
+        height4 = function() private$..height4$value,
+        num1 = function() private$..num1$value,
+        plot6 = function() private$..plot6$value,
+        width6 = function() private$..width6$value,
+        height6 = function() private$..height6$value,
+        width7 = function() private$..width7$value,
+        height7 = function() private$..height7$value,
+        width3 = function() private$..width3$value,
+        height3 = function() private$..height3$value,
+        width2 = function() private$..width2$value,
+        height2 = function() private$..height2$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -240,9 +354,7 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..thresh = NA,
         ..pmeasure = NA,
         ..thurs = NA,
-        ..icc = NA,
         ..wplot = NA,
-        ..esc = NA,
         ..total = NA,
         ..personmeasure = NA,
         ..pse = NA,
@@ -259,7 +371,25 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..to = NA,
         ..st = NA,
         ..plot2 = NA,
-        ..plot3 = NA)
+        ..plot3 = NA,
+        ..width = NA,
+        ..height = NA,
+        ..width5 = NA,
+        ..height5 = NA,
+        ..num = NA,
+        ..plot4 = NA,
+        ..width4 = NA,
+        ..height4 = NA,
+        ..num1 = NA,
+        ..plot6 = NA,
+        ..width6 = NA,
+        ..height6 = NA,
+        ..width7 = NA,
+        ..height7 = NA,
+        ..width3 = NA,
+        ..height3 = NA,
+        ..width2 = NA,
+        ..height2 = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -273,8 +403,8 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ss = function() private$.items[["ss"]],
         wplot = function() private$.items[["wplot"]],
         piplot = function() private$.items[["piplot"]],
-        esc = function() private$.items[["esc"]],
-        plot = function() private$.items[["plot"]],
+        plot4 = function() private$.items[["plot4"]],
+        plot6 = function() private$.items[["plot6"]],
         inplot = function() private$.items[["inplot"]],
         outplot = function() private$.items[["outplot"]],
         total = function() private$.items[["total"]],
@@ -594,76 +724,68 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="wplot",
                 title="Wright Map",
-                width=500,
-                height=500,
                 visible="(wplot)",
                 renderFun=".wplot",
                 refs="ShinyItemAnalysis",
                 clearWith=list(
-                    "vars")))
+                    "vars",
+                    "width",
+                    "height")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="piplot",
                 title="Person-item map for PCM ",
-                width=500,
-                height=500,
                 visible="(piplot)",
                 renderFun=".piPlot",
                 refs="eRm",
                 clearWith=list(
-                    "vars")))
-            self$add(jmvcore::Array$new(
+                    "vars",
+                    "width5",
+                    "height5")))
+            self$add(jmvcore::Image$new(
                 options=options,
-                name="esc",
-                title="Expected Score Curve",
-                items="(vars)",
+                name="plot4",
+                title="Item Characteristic Curve(ICC)",
+                visible="(plot4)",
+                renderFun=".plot4",
                 clearWith=list(
-                    "vars"),
-                template=jmvcore::Image$new(
-                    options=options,
-                    title="$key",
-                    width=500,
-                    height=500,
-                    visible="(esc)",
-                    renderFun=".escPlot",
-                    clearWith=list())))
-            self$add(jmvcore::Array$new(
+                    "vars",
+                    "num",
+                    "width4",
+                    "height4")))
+            self$add(jmvcore::Image$new(
                 options=options,
-                name="plot",
-                title="Category Information",
-                items="(vars)",
+                name="plot6",
+                title="Item category for PCM",
+                visible="(plot6)",
+                renderFun=".plot6",
                 clearWith=list(
-                    "vars"),
-                template=jmvcore::Image$new(
-                    options=options,
-                    title="$key",
-                    width=500,
-                    height=500,
-                    visible="(icc)",
-                    renderFun=".plot",
-                    clearWith=list())))
+                    "vars",
+                    "num1",
+                    "width6",
+                    "height6")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="inplot",
                 title="Item Infit Plot",
-                width=500,
-                height=500,
                 visible="(inplot)",
                 renderFun=".inPlot",
                 clearWith=list(
                     "vars",
-                    "angle")))
+                    "angle",
+                    "width7",
+                    "height7")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="outplot",
                 title="Item Outfit Plot",
-                width=500,
-                height=500,
                 visible="(outplot)",
                 renderFun=".outPlot",
                 clearWith=list(
                     "vars",
-                    "angle")))
+                    "angle",
+                    "width7",
+                    "height7")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="total",
@@ -722,24 +844,24 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Histogram of Total Score",
                 requiresData=TRUE,
                 visible="(plot2)",
-                width=500,
-                height=500,
                 renderFun=".plot2",
                 refs="snowIRT",
                 clearWith=list(
-                    "vars")))
+                    "vars",
+                    "width2",
+                    "height2")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
                 title="Person Fit Plot",
                 requiresData=TRUE,
                 visible="(plot3)",
-                width=600,
-                height=400,
                 renderFun=".plot3",
                 refs="snowIRT",
                 clearWith=list(
-                    "vars")))}))
+                    "vars",
+                    "width3",
+                    "plot3")))}))
 
 polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "polytomousBase",
@@ -778,9 +900,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param thresh .
 #' @param pmeasure .
 #' @param thurs .
-#' @param icc .
 #' @param wplot .
-#' @param esc .
 #' @param inplot .
 #' @param outplot .
 #' @param angle a number from 0 to 90 defining the angle of the x-axis labels,
@@ -793,6 +913,24 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param st .
 #' @param plot2 .
 #' @param plot3 .
+#' @param width .
+#' @param height .
+#' @param width5 .
+#' @param height5 .
+#' @param num .
+#' @param plot4 .
+#' @param width4 .
+#' @param height4 .
+#' @param num1 .
+#' @param plot6 .
+#' @param width6 .
+#' @param height6 .
+#' @param width7 .
+#' @param height7 .
+#' @param width3 .
+#' @param height3 .
+#' @param width2 .
+#' @param height2 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -807,8 +945,8 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$ss$to} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
-#'   \code{results$plot} \tab \tab \tab \tab \tab an array of plots \cr
+#'   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot6} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$total} \tab \tab \tab \tab \tab an output \cr
@@ -837,9 +975,7 @@ polytomous <- function(
     thresh = TRUE,
     pmeasure = FALSE,
     thurs = FALSE,
-    icc = FALSE,
     wplot = TRUE,
-    esc = FALSE,
     inplot = FALSE,
     outplot = FALSE,
     angle = 0,
@@ -850,7 +986,25 @@ polytomous <- function(
     to = FALSE,
     st = FALSE,
     plot2 = FALSE,
-    plot3 = FALSE) {
+    plot3 = FALSE,
+    width = 500,
+    height = 500,
+    width5 = 500,
+    height5 = 500,
+    num = 1,
+    plot4 = FALSE,
+    width4 = 500,
+    height4 = 500,
+    num1 = 1,
+    plot6 = FALSE,
+    width6 = 500,
+    height6 = 500,
+    width7 = 500,
+    height7 = 500,
+    width3 = 500,
+    height3 = 500,
+    width2 = 500,
+    height2 = 500) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("polytomous requires jmvcore to be installed (restart may be required)")
@@ -875,9 +1029,7 @@ polytomous <- function(
         thresh = thresh,
         pmeasure = pmeasure,
         thurs = thurs,
-        icc = icc,
         wplot = wplot,
-        esc = esc,
         inplot = inplot,
         outplot = outplot,
         angle = angle,
@@ -888,7 +1040,25 @@ polytomous <- function(
         to = to,
         st = st,
         plot2 = plot2,
-        plot3 = plot3)
+        plot3 = plot3,
+        width = width,
+        height = height,
+        width5 = width5,
+        height5 = height5,
+        num = num,
+        plot4 = plot4,
+        width4 = width4,
+        height4 = height4,
+        num1 = num1,
+        plot6 = plot6,
+        width6 = width6,
+        height6 = height6,
+        width7 = width7,
+        height7 = height7,
+        width3 = width3,
+        height3 = height3,
+        width2 = width2,
+        height2 = height2)
 
     analysis <- polytomousClass$new(
         options = options,
