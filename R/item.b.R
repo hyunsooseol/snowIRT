@@ -36,7 +36,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </head>
             <body>
             <div class='instructions'>
-            <h2><b>Instructions</b></h2>
             <p>____________________________________________________________________________________</p>
             <P>1. Enter the correct answer separated by commas, but there must be no spaces between commas.</p>
             <p>2. To resolve error messages like 'breaks are not unique', we need to add more questions and respondents.</p>
@@ -65,6 +64,32 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             #   )
             # 
         
+            if(isTRUE(self$options$plot)){
+              width <- self$options$width
+              height <- self$options$height
+              self$results$plot$setSize(width, height)
+            }
+            
+            if(isTRUE(self$options$plot1)){
+              width <- self$options$width1
+              height <- self$options$height1
+              self$results$plot1$setSize(width, height)
+            }  
+            
+            if(isTRUE(self$options$plot2)){
+              width <- self$options$width2
+              height <- self$options$height2
+              self$results$plot2$setSize(width, height)
+            }  
+            
+            if(isTRUE(self$options$plot3)){
+              width <- self$options$width3
+              height <- self$options$height3
+              self$results$plot3$setSize(width, height)
+            }  
+            
+            
+            
              
         },
         

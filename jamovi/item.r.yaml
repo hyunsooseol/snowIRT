@@ -154,21 +154,19 @@ items:
       type:  Image
       requiresData: true
       visible: (plot2)
-      width: 500
-      height: 500
       renderFun: .plot2
       refs: ShinyItemAnalysis
       clearWith:
             - vars
             - key
+            - width2
+            - height2
 
     - name:  plot
       title: 'Distractor plot'
       type:  Image
       requiresData: true
       visible: (plot)
-      width: 500
-      height: 500
       renderFun: .plot
       refs: ShinyItemAnalysis
       clearWith:
@@ -176,13 +174,13 @@ items:
             - num 
             - group
             - key
+            - width
+            - height
 
     - name:  plot1
       title: 'Discrimination plot'
       type:  Image
       visible: (plot1)
-      width: 600
-      height: 500
       renderFun: .plot1
       refs: ShinyItemAnalysis
       clearWith:
@@ -190,6 +188,8 @@ items:
             - disi
             - angle
             - key
+            - width1
+            - height1
 
     - name: total
       title: Total
@@ -212,12 +212,12 @@ items:
       type:  Image
       requiresData: true
       visible: (plot3)
-      width: 500
-      height: 500
       renderFun: .plot3
       refs: CTT
       clearWith:
             - vars
             - num1
             - key
+            - width3
+            - height3
 ...
