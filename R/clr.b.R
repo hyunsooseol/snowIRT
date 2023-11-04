@@ -29,7 +29,6 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </head>
             <body>
             <div class='instructions'>
-            <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
             <p>1. Conditional likelihood ratio tests are estimated by <b>'iarm'</b> R package.</p>
             <p>2. Model='RM' for binary items, or model='PCM' for polytomous items, is used. </p>
@@ -46,6 +45,26 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 "'Overall' indicates test of homogeneity."
                 
               )
+            
+            
+            
+            if(isTRUE(self$options$plot)){
+              width <- self$options$width
+              height <- self$options$height
+              self$results$plot$setSize(width, height)
+            }
+            
+            if(isTRUE(self$options$plot1)){
+              width <- self$options$width1
+              height <- self$options$height1
+              self$results$plot1$setSize(width, height)
+            }  
+            
+            if(isTRUE(self$options$plot2)){
+              width <- self$options$width2
+              height <- self$options$height2
+              self$results$plot2$setSize(width, height)
+            }  
             
             
             if (length(self$options$vars) <= 1)
@@ -276,10 +295,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                      }
                      
                      
-                     
-                     
                       #  plot----------
-                     
                      
                      
                      image <- self$results$plot
@@ -350,10 +366,10 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                               dif="yes",
                               difvar=group,
                              difstats = "no")
-       
-       
-       #plot1 <- plot1+ggtheme
-       
+                             
+  
+       #  plot1 <- plot1+ggtheme
+            
        print(plot1)
        TRUE
        
@@ -383,6 +399,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                              dif="yes",
                              difvar=group,
                              difstats = "no")
+                             
       
     
      # plot2 <- plot2+ggtheme

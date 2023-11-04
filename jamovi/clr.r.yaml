@@ -114,8 +114,6 @@ items:
       title: Item Characteristic Curve(ICC)
       type:  Image
       visible: (plot)
-      width: 500
-      height: 500
       renderFun: .plot
       refs: iarm
       clearWith:
@@ -123,13 +121,13 @@ items:
         - group
         - model 
         - num
+        - width
+        - height
         
     - name: plot1
       title: DIF using total scores
       type:  Image
       visible: (plot1)
-      width: 500
-      height: 500
       renderFun: .plot1
       refs: iarm
       clearWith:
@@ -137,13 +135,13 @@ items:
         - group
         - model 
         - num 
+        - width1
+        - height1
 
     - name: plot2
       title: DIF using class intervals
       type:  Image
       visible: (plot2)
-      width: 500
-      height: 500
       renderFun: .plot2
       refs: iarm
       clearWith:
@@ -152,4 +150,6 @@ items:
         - model 
         - num 
         - ci
+        - width2
+        - height2
 ...
