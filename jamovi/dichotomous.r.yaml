@@ -171,24 +171,24 @@ items:
     - name: inplot
       title: 'Item Infit Plot'
       type: Image
-      width:  500
-      height: 500
       visible: (inplot)
       renderFun: .inPlot
       clearWith:
         - vars
         - angle 
+        - width1
+        - height1
 
     - name: outplot
       title: 'Item Outfit Plot'
       type: Image
-      width:  500
-      height: 500
       visible: (outplot)
       renderFun: .outPlot
       clearWith:
         - vars
-        - angle 
+        - angle
+        - width1
+        - height1
 
     - name: total
       title: Total
@@ -236,27 +236,27 @@ items:
       clearWith:
         - vars          
 
-    - name:  plot2
-      title: 'Histogram of Total Score'
-      type:  Image
-      requiresData: true
-      visible: (plot2)
-      width: 500
-      height: 500
-      renderFun: .plot2
-      refs: snowIRT 
-      clearWith:
-            - vars
-
     - name:  plot3
       title: 'Person Fit Plot'
       type:  Image
       requiresData: true
       visible: (plot3)
-      width: 600
-      height: 400
       renderFun: .plot3
       refs: snowIRT 
       clearWith:
             - vars
+            - width3
+            - height3
+
+    - name:  plot2
+      title: 'Histogram of Total Score'
+      type:  Image
+      requiresData: true
+      visible: (plot2)
+      renderFun: .plot2
+      refs: snowIRT 
+      clearWith:
+            - vars
+            - width2
+            - height2
 ...

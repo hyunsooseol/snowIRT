@@ -141,6 +141,29 @@ adjustment; Ho= the data fit the Rasch model."
           self$results$plot4$setSize(width, height)
         }
         
+        if(isTRUE(self$options$inplot)){
+          width <- self$options$width1
+          height <- self$options$height1
+          self$results$inplot$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$outplot)){
+          width <- self$options$width1
+          height <- self$options$height1
+          self$results$outplot$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$plot3)){
+          width <- self$options$width3
+          height <- self$options$height3
+          self$results$plot3$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$plot2)){
+          width <- self$options$width2
+          height <- self$options$height2
+          self$results$plot2$setSize(width, height)
+        }
         
         #################################################
         set.seed(1234)
@@ -595,110 +618,7 @@ adjustment; Ho= the data fit the Rasch model."
         
       },
       
- 
-######### person output variables========================
 
-# .populateTotalOutputs=function(results){
-#   
-#   total <- results$total
-#   
-#   if (self$options$total && self$results$total$isNotFilled()) {
-#    
-#     self$results$total$setRowNums(rownames(data))
-#     self$results$total$setValues(total)
-#     
-#   }
-#   
-# },
-# 
-# .populatePmeasureOutputs=function(results){
-#   
-#   pmeasure <- results$pmeasure
-#   
-#   if (self$options$pmeasure && self$results$pmeasure$isNotFilled()) {
-#   
-#     self$results$pmeasure$setRowNums(rownames(data))
-#     self$results$pmeasure$setValues(pmeasure)
-#     
-#   }
-#   
-# },
-# 
-# .populatePseOutputs=function(results){
-#   
-#   pse <- results$pse
-#   
-#   if (self$options$pse && self$results$pse$isNotFilled()) {
-#   
-#     self$results$pse$setRowNums(rownames(data))
-#     self$results$pse$setValues(pse)
-#     
-#   }
-#   
-# },
-# 
-# .populatePinfitOutputs=function(results){
-#   
-#   pinfit <- results$pinfit
-#   
-#   if (self$options$pinfit && self$results$pinfit$isNotFilled()) {
-#   
-#     self$results$pinfit$setRowNums(rownames(data))
-#     self$results$pinfit$setValues(pinfit)
-#     
-#   }
-#   
-# },
-# 
-#   
-# .populatePoutfitOutputs=function(results){
-#   
-#   poutfit <- results$poutfit
-#   if (self$options$poutfit && self$results$poutfit$isNotFilled()) {
-#     
-#     self$results$poutfit$setRowNums(rownames(data))
-#     self$results$poutfit$setValues(poutfit)
-#     
-#   }
-#   
-# },   
-# 
-# 
-# .populateResidOutputs=function(results){
-#   
-#   resid <- results$resid
-#   
-#   if (self$options$resid && self$results$resid$isNotFilled()) {
-#     
-#     keys <- 1:length(self$options$vars)
-#     titles <- paste("Item", 1:length(self$options$vars))
-#     descriptions <- paste("Item", 1:length(self$options$vars))
-#     measureTypes <- rep("continuous", length(self$options$vars))
-#     
-#     self$results$resid$set(
-#       keys=keys,
-#       titles=titles,
-#       descriptions=descriptions,
-#       measureTypes=measureTypes
-#     )
-#     
-#     self$results$resid$setRowNums(rownames(data))
-#     
-#     
-#     resid <- as.data.frame(resid)
-#     
-#     for (i in 1:length(self$options$vars)) {
-#       scores <- as.numeric(resid[, i])
-#       self$results$resid$setValues(index=i, scores)
-#     }
-#     
-#   }
-#   
-# },   
-# 
-
- 
- 
   # Wrightmapt Plot-----------------------------------------------    
   
 .plot = function(image,...){
@@ -715,6 +635,8 @@ adjustment; Ho= the data fit the Rasch model."
   plot<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
                                         item.names = vars,
                                         color = "deepskyblue")
+  
+  #plot <- plot+ggtheme
   
   print(plot)
   TRUE
@@ -859,6 +781,7 @@ adjustment; Ho= the data fit the Rasch model."
     ylab("Number of respondents") +
     theme_app()
   
+  plot2 <- plot2+ggtheme
   
   print(plot2)
   TRUE
