@@ -65,6 +65,7 @@ adjustment; Ho= the data fit the Rasch model."
             "Infit= Information-weighted mean square statistic; Outfit= Outlier-sensitive means square statistic."
           )
         
+     
         
         if (length(self$options$vars) <= 1)
           self$setStatus('complete')
@@ -102,7 +103,7 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateMatrixTable(results)
        
           # prepare Expected score curve plot---------
-          private$.prepareEscPlot(data)
+       #   private$.prepareEscPlot(data)
         
           # Summary of total score-----
           private$.populateToTable(results)
@@ -128,11 +129,28 @@ adjustment; Ho= the data fit the Rasch model."
       
       .compute = function(data) {
         
+        if(isTRUE(self$options$wrightmap)){
+          width <- self$options$width
+          height <- self$options$height
+          self$results$plot$setSize(width, height)
+        }
+        
+        if(isTRUE(self$options$plot4)){
+          width <- self$options$width4
+          height <- self$options$height4
+          self$results$plot4$setSize(width, height)
+        }
+        
+        
+        #################################################
         set.seed(1234)
       
         # estimate the Rasch model with MMLE-----
         
         tamobj = TAM::tam.mml(resp = as.matrix(data))
+        
+        ##################################################
+        
         
         # computing item mean
         prop <- tamobj$item$M
@@ -195,6 +213,14 @@ adjustment; Ho= the data fit the Rasch model."
         
         state <- list(pmeasure, imeasure, vars)
         image$setState(state)
+        
+        # esc plot------------------
+        
+       #tamp = TAM::tam(resp =as.matrix(data))
+       
+        image <- self$results$plot4
+        image$setState(tamobj)
+       
         
        # Infit plot------------------------
        
@@ -696,48 +722,54 @@ adjustment; Ho= the data fit the Rasch model."
 
 
 
-#Prepare Expected score curve functions------------
+# #Prepare Expected score curve functions------------
+# 
+# .prepareEscPlot = function(data) {
+# 
+#   set.seed(1234)
+#   tamp = TAM::tam(resp =as.matrix(data))
+# 
+#     # Prepare Data For ESC Plot -------
+# 
+#   image <- self$results$plot4
+#   image$setState(tamp)
+# 
+# 
+# },
 
-.prepareEscPlot = function(data) {
 
-  set.seed(1234)
-  tamp = TAM::tam(resp =as.matrix(data))
-
-    # Prepare Data For ESC Plot -------
-
-  image <- self$results$get('esc')
-  image$setState(tamp)
-
-
-},
-
-
- .escPlot = function(image, ...) {
+ .plot4 = function(image, ...) {
    
   
-   tamp <- image$parent$state
+   num <- self$options$num
+   #tamp <- image$parent$state
    
-   if (is.null(tamp))
-     return()
+   # if (is.null(tamp))
+   #   return()
    
-   images <- self$results$esc
+   if (is.null(image$state))
+     return(FALSE)
    
-   index <- 1
+   tamobj <- image$state
+   
+   #esc <- self$results$plot4
+   
+   # index <- 1
+   # 
+   # for (item in images$items) {
+   #   if (identical(image, item))
+   #     break()
+   # 
+   #   index <- index + 1
+   # }
 
-   for (item in images$items) {
-     if (identical(image, item))
-       break()
-
-     index <- index + 1
-   }
-
-    plot1 <- plot(tamp,
-                  items = index,
+    plot4 <- plot(tamobj,
+                  items = num,
                   #type="items" produce item response curve not expected curve
                   type = "expected",
                   export = FALSE)
 
-  print(plot1)
+  print(plot4)
    TRUE
    
    

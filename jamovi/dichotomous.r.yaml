@@ -149,30 +149,24 @@ items:
     - name: plot
       title: 'Wright Map'
       type: Image
-      width:  500
-      height: 500
       renderFun: .plot
       visible: (wrightmap)
       clearWith:
         - vars
+        - width
+        - height
       refs: ShinyItemAnalysis      
 
-    - name: esc
+    - name: plot4
       title: 'Expected Score Curve'
-      type: Array
-      description: an array of plots
-      items: (vars)
+      type: Image
+      visible: (plot4)
+      renderFun: .plot4
       clearWith:
         - vars
-      template:
-          type: Image
-          title: $key
-          description: ESC plot
-          width:  400
-          height: 400
-          visible: (esc)
-          renderFun: .escPlot
-          clearWith: []         
+        - num
+        - width4
+        - height4
           
     - name: inplot
       title: 'Item Infit Plot'

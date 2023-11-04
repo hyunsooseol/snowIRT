@@ -71,11 +71,6 @@ options:
       type: Bool
       default: TRUE      
 
-    - name: esc
-      title: Item Characteristic Curve(ICC)
-      type: Bool
-      default: false
-
     - name: total
       title: Total score
       type: Output
@@ -140,4 +135,35 @@ options:
       title: Fit plot
       type: Bool
       default: false  
+
+    - name: width
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height
+      type: Integer
+      title: "X"
+      default: 500
+
+    - name: num
+      title: Item number
+      default: 1
+      type: Integer
+      min: 1
+
+    - name: plot4
+      title: 'Item Characteristic Curve(ICC)'
+      type: Bool
+      default: false
+
+    - name: width4
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height4
+      type: Integer
+      title: "Height"
+      default: 500
 ...

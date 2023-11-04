@@ -24,7 +24,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Item measures'
+            label: Item measures
             fitToGrid: true
             cell:
               column: 0
@@ -49,7 +49,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Model fit'
+            label: Model fit
             children:
               - type: CheckBox
                 name: reliability
@@ -69,7 +69,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Plots'
+            label: Plots
             fitToGrid: true
             cell:
               column: 0
@@ -77,8 +77,31 @@ children:
             children:
               - type: CheckBox
                 name: wrightmap
+                style: list-inline
+                children:
+                  - type: TextBox
+                    name: width
+                    format: number
+                    enable: (wrightmap)
+                  - type: TextBox
+                    name: height
+                    format: number
+                    enable: (wrightmap)
               - type: CheckBox
-                name: esc
+                name: plot4
+                children:
+                  - name: num
+                    type: TextBox
+                    format: number
+                    enable: (plot4)
+                  - type: TextBox
+                    name: width4
+                    format: number
+                    enable: (plot4)
+                  - type: TextBox
+                    name: height4
+                    format: number
+                    enable: (plot4)
       - type: LayoutBox
         stretchFactor: 1
         margin: large
@@ -88,12 +111,12 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Fit plots'
-            children: 
+            label: Fit plots
+            children:
               - type: CheckBox
                 name: inplot
               - type: CheckBox
-                name: outplot  
+                name: outplot
               - type: TextBox
                 name: angle
                 format: number
@@ -111,7 +134,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Person measures'
+            label: Person measures
             fitToGrid: true
             cell:
               column: 0
@@ -132,7 +155,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Person fit' 
+            label: Person fit
             children:
               - type: Output
                 name: pinfit
@@ -141,7 +164,7 @@ children:
               - type: CheckBox
                 name: plot3
           - type: Label
-            label: 'Residuals' 
+            label: Residuals
             children:
               - type: Output
                 name: resid
@@ -159,7 +182,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Total score'
+            label: Total score
             fitToGrid: true
             cell:
               column: 0
@@ -178,7 +201,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Transformation'
+            label: Transformation
             fitToGrid: true
             cell:
               column: 1
@@ -186,18 +209,3 @@ children:
             children:
               - type: CheckBox
                 name: st
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

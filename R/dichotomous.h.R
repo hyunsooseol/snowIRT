@@ -17,14 +17,19 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             modelfitp = FALSE,
             mat = FALSE,
             wrightmap = TRUE,
-            esc = FALSE,
             inplot = FALSE,
             outplot = FALSE,
             angle = 0,
             to = FALSE,
             plot2 = FALSE,
             st = FALSE,
-            plot3 = FALSE, ...) {
+            plot3 = FALSE,
+            width = 500,
+            height = 500,
+            num = 1,
+            plot4 = FALSE,
+            width4 = 500,
+            height4 = 500, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -79,10 +84,6 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "wrightmap",
                 wrightmap,
                 default=TRUE)
-            private$..esc <- jmvcore::OptionBool$new(
-                "esc",
-                esc,
-                default=FALSE)
             private$..total <- jmvcore::OptionOutput$new(
                 "total")
             private$..pmeasure <- jmvcore::OptionOutput$new(
@@ -125,6 +126,31 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "plot3",
                 plot3,
                 default=FALSE)
+            private$..width <- jmvcore::OptionInteger$new(
+                "width",
+                width,
+                default=500)
+            private$..height <- jmvcore::OptionInteger$new(
+                "height",
+                height,
+                default=500)
+            private$..num <- jmvcore::OptionInteger$new(
+                "num",
+                num,
+                default=1,
+                min=1)
+            private$..plot4 <- jmvcore::OptionBool$new(
+                "plot4",
+                plot4,
+                default=FALSE)
+            private$..width4 <- jmvcore::OptionInteger$new(
+                "width4",
+                width4,
+                default=500)
+            private$..height4 <- jmvcore::OptionInteger$new(
+                "height4",
+                height4,
+                default=500)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -137,7 +163,6 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..modelfitp)
             self$.addOption(private$..mat)
             self$.addOption(private$..wrightmap)
-            self$.addOption(private$..esc)
             self$.addOption(private$..total)
             self$.addOption(private$..pmeasure)
             self$.addOption(private$..pse)
@@ -151,6 +176,12 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..plot2)
             self$.addOption(private$..st)
             self$.addOption(private$..plot3)
+            self$.addOption(private$..width)
+            self$.addOption(private$..height)
+            self$.addOption(private$..num)
+            self$.addOption(private$..plot4)
+            self$.addOption(private$..width4)
+            self$.addOption(private$..height4)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -164,7 +195,6 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         modelfitp = function() private$..modelfitp$value,
         mat = function() private$..mat$value,
         wrightmap = function() private$..wrightmap$value,
-        esc = function() private$..esc$value,
         total = function() private$..total$value,
         pmeasure = function() private$..pmeasure$value,
         pse = function() private$..pse$value,
@@ -177,7 +207,13 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         to = function() private$..to$value,
         plot2 = function() private$..plot2$value,
         st = function() private$..st$value,
-        plot3 = function() private$..plot3$value),
+        plot3 = function() private$..plot3$value,
+        width = function() private$..width$value,
+        height = function() private$..height$value,
+        num = function() private$..num$value,
+        plot4 = function() private$..plot4$value,
+        width4 = function() private$..width4$value,
+        height4 = function() private$..height4$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -190,7 +226,6 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..modelfitp = NA,
         ..mat = NA,
         ..wrightmap = NA,
-        ..esc = NA,
         ..total = NA,
         ..pmeasure = NA,
         ..pse = NA,
@@ -203,7 +238,13 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..to = NA,
         ..plot2 = NA,
         ..st = NA,
-        ..plot3 = NA)
+        ..plot3 = NA,
+        ..width = NA,
+        ..height = NA,
+        ..num = NA,
+        ..plot4 = NA,
+        ..width4 = NA,
+        ..height4 = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -215,7 +256,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         stand = function() private$.items[["stand"]],
         mf = function() private$.items[["mf"]],
         plot = function() private$.items[["plot"]],
-        esc = function() private$.items[["esc"]],
+        plot4 = function() private$.items[["plot4"]],
         inplot = function() private$.items[["inplot"]],
         outplot = function() private$.items[["outplot"]],
         total = function() private$.items[["total"]],
@@ -408,28 +449,24 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 options=options,
                 name="plot",
                 title="Wright Map",
-                width=500,
-                height=500,
                 renderFun=".plot",
                 visible="(wrightmap)",
                 clearWith=list(
-                    "vars"),
+                    "vars",
+                    "width",
+                    "height"),
                 refs="ShinyItemAnalysis"))
-            self$add(jmvcore::Array$new(
+            self$add(jmvcore::Image$new(
                 options=options,
-                name="esc",
+                name="plot4",
                 title="Expected Score Curve",
-                items="(vars)",
+                visible="(plot4)",
+                renderFun=".plot4",
                 clearWith=list(
-                    "vars"),
-                template=jmvcore::Image$new(
-                    options=options,
-                    title="$key",
-                    width=400,
-                    height=400,
-                    visible="(esc)",
-                    renderFun=".escPlot",
-                    clearWith=list())))
+                    "vars",
+                    "num",
+                    "width4",
+                    "height4")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="inplot",
@@ -559,7 +596,6 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param modelfitp .
 #' @param mat .
 #' @param wrightmap .
-#' @param esc .
 #' @param inplot .
 #' @param outplot .
 #' @param angle a number from 0 to 90 defining the angle of the x-axis labels,
@@ -568,6 +604,12 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot2 .
 #' @param st .
 #' @param plot3 .
+#' @param width .
+#' @param height .
+#' @param num .
+#' @param plot4 .
+#' @param width4 .
+#' @param height4 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -577,7 +619,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$esc} \tab \tab \tab \tab \tab an array of plots \cr
+#'   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$total} \tab \tab \tab \tab \tab an output \cr
@@ -610,14 +652,19 @@ dichotomous <- function(
     modelfitp = FALSE,
     mat = FALSE,
     wrightmap = TRUE,
-    esc = FALSE,
     inplot = FALSE,
     outplot = FALSE,
     angle = 0,
     to = FALSE,
     plot2 = FALSE,
     st = FALSE,
-    plot3 = FALSE) {
+    plot3 = FALSE,
+    width = 500,
+    height = 500,
+    num = 1,
+    plot4 = FALSE,
+    width4 = 500,
+    height4 = 500) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dichotomous requires jmvcore to be installed (restart may be required)")
@@ -641,14 +688,19 @@ dichotomous <- function(
         modelfitp = modelfitp,
         mat = mat,
         wrightmap = wrightmap,
-        esc = esc,
         inplot = inplot,
         outplot = outplot,
         angle = angle,
         to = to,
         plot2 = plot2,
         st = st,
-        plot3 = plot3)
+        plot3 = plot3,
+        width = width,
+        height = height,
+        num = num,
+        plot4 = plot4,
+        width4 = width4,
+        height4 = height4)
 
     analysis <- dichotomousClass$new(
         options = options,
