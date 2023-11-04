@@ -13,12 +13,21 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             padjust = "BH",
             padjust1 = "BH",
             zplot = FALSE,
-            iccplot = FALSE,
+            plot3 = FALSE,
             plot1 = FALSE,
             gmh = FALSE,
             fn = "2,3,4",
             plot2 = FALSE,
-            padjust2 = "BH", ...) {
+            padjust2 = "BH",
+            width1 = 500,
+            height1 = 500,
+            width2 = 500,
+            height2 = 500,
+            width3 = 500,
+            height3 = 500,
+            width4 = 500,
+            height4 = 500,
+            num = 1, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -79,9 +88,9 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "zplot",
                 zplot,
                 default=FALSE)
-            private$..iccplot <- jmvcore::OptionBool$new(
-                "iccplot",
-                iccplot,
+            private$..plot3 <- jmvcore::OptionBool$new(
+                "plot3",
+                plot3,
                 default=FALSE)
             private$..plot1 <- jmvcore::OptionBool$new(
                 "plot1",
@@ -112,6 +121,43 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "BY",
                     "fdr"),
                 default="BH")
+            private$..width1 <- jmvcore::OptionInteger$new(
+                "width1",
+                width1,
+                default=500)
+            private$..height1 <- jmvcore::OptionInteger$new(
+                "height1",
+                height1,
+                default=500)
+            private$..width2 <- jmvcore::OptionInteger$new(
+                "width2",
+                width2,
+                default=500)
+            private$..height2 <- jmvcore::OptionInteger$new(
+                "height2",
+                height2,
+                default=500)
+            private$..width3 <- jmvcore::OptionInteger$new(
+                "width3",
+                width3,
+                default=500)
+            private$..height3 <- jmvcore::OptionInteger$new(
+                "height3",
+                height3,
+                default=500)
+            private$..width4 <- jmvcore::OptionInteger$new(
+                "width4",
+                width4,
+                default=500)
+            private$..height4 <- jmvcore::OptionInteger$new(
+                "height4",
+                height4,
+                default=500)
+            private$..num <- jmvcore::OptionInteger$new(
+                "num",
+                num,
+                default=1,
+                min=1)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
@@ -120,12 +166,21 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..padjust)
             self$.addOption(private$..padjust1)
             self$.addOption(private$..zplot)
-            self$.addOption(private$..iccplot)
+            self$.addOption(private$..plot3)
             self$.addOption(private$..plot1)
             self$.addOption(private$..gmh)
             self$.addOption(private$..fn)
             self$.addOption(private$..plot2)
             self$.addOption(private$..padjust2)
+            self$.addOption(private$..width1)
+            self$.addOption(private$..height1)
+            self$.addOption(private$..width2)
+            self$.addOption(private$..height2)
+            self$.addOption(private$..width3)
+            self$.addOption(private$..height3)
+            self$.addOption(private$..width4)
+            self$.addOption(private$..height4)
+            self$.addOption(private$..num)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -135,12 +190,21 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         padjust = function() private$..padjust$value,
         padjust1 = function() private$..padjust1$value,
         zplot = function() private$..zplot$value,
-        iccplot = function() private$..iccplot$value,
+        plot3 = function() private$..plot3$value,
         plot1 = function() private$..plot1$value,
         gmh = function() private$..gmh$value,
         fn = function() private$..fn$value,
         plot2 = function() private$..plot2$value,
-        padjust2 = function() private$..padjust2$value),
+        padjust2 = function() private$..padjust2$value,
+        width1 = function() private$..width1$value,
+        height1 = function() private$..height1$value,
+        width2 = function() private$..width2$value,
+        height2 = function() private$..height2$value,
+        width3 = function() private$..width3$value,
+        height3 = function() private$..height3$value,
+        width4 = function() private$..width4$value,
+        height4 = function() private$..height4$value,
+        num = function() private$..num$value),
     private = list(
         ..vars = NA,
         ..group = NA,
@@ -149,12 +213,21 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..padjust = NA,
         ..padjust1 = NA,
         ..zplot = NA,
-        ..iccplot = NA,
+        ..plot3 = NA,
         ..plot1 = NA,
         ..gmh = NA,
         ..fn = NA,
         ..plot2 = NA,
-        ..padjust2 = NA)
+        ..padjust2 = NA,
+        ..width1 = NA,
+        ..height1 = NA,
+        ..width2 = NA,
+        ..height2 = NA,
+        ..width3 = NA,
+        ..height3 = NA,
+        ..width4 = NA,
+        ..height4 = NA,
+        ..num = NA)
 )
 
 difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -169,7 +242,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot1 = function() private$.items[["plot1"]],
         gmh = function() private$.items[["gmh"]],
         plot2 = function() private$.items[["plot2"]],
-        iccplot = function() private$.items[["iccplot"]]),
+        plot3 = function() private$.items[["plot3"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -254,28 +327,28 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="zplot",
                 title="Z statistic plot",
-                width=500,
-                height=500,
                 renderFun=".plot",
                 visible="(zplot)",
                 refs="difR",
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust")))
+                    "padjust",
+                    "width1",
+                    "height1")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
                 title="Mantel-Haenszel plot",
-                width=500,
-                height=500,
                 renderFun=".plot1",
                 visible="(plot1)",
                 refs="difR",
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust1")))
+                    "padjust1",
+                    "width3",
+                    "height3")))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="gmh",
@@ -308,29 +381,29 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="plot2",
                 title="Generalized Mantel-Haenszel plot",
-                width=500,
-                height=500,
                 renderFun=".plot2",
                 visible="(plot2)",
                 refs="difR",
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust2")))
-            self$add(jmvcore::Array$new(
+                    "padjust2",
+                    "width4",
+                    "height4")))
+            self$add(jmvcore::Image$new(
                 options=options,
-                name="iccplot",
+                name="plot3",
                 title="Item Characteristic Curve plot for DIF",
-                items="(vars)",
-                refs="ShinyItemAnalysis",
-                template=jmvcore::Image$new(
-                    options=options,
-                    title="$key",
-                    width=400,
-                    height=400,
-                    visible="(iccplot)",
-                    renderFun=".iccplot",
-                    clearWith=list())))}))
+                renderFun=".plot3",
+                visible="(plot3)",
+                refs="difR",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "padjust",
+                    "width2",
+                    "height2",
+                    "num")))}))
 
 difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "difBase",
@@ -364,12 +437,21 @@ difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param padjust .
 #' @param padjust1 .
 #' @param zplot .
-#' @param iccplot .
+#' @param plot3 .
 #' @param plot1 .
 #' @param gmh .
 #' @param fn .
 #' @param plot2 .
 #' @param padjust2 .
+#' @param width1 .
+#' @param height1 .
+#' @param width2 .
+#' @param height2 .
+#' @param width3 .
+#' @param height3 .
+#' @param width4 .
+#' @param height4 .
+#' @param num .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -380,7 +462,7 @@ difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$gmh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$iccplot} \tab \tab \tab \tab \tab an array of plots \cr
+#'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -399,12 +481,21 @@ dif <- function(
     padjust = "BH",
     padjust1 = "BH",
     zplot = FALSE,
-    iccplot = FALSE,
+    plot3 = FALSE,
     plot1 = FALSE,
     gmh = FALSE,
     fn = "2,3,4",
     plot2 = FALSE,
-    padjust2 = "BH") {
+    padjust2 = "BH",
+    width1 = 500,
+    height1 = 500,
+    width2 = 500,
+    height2 = 500,
+    width3 = 500,
+    height3 = 500,
+    width4 = 500,
+    height4 = 500,
+    num = 1) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dif requires jmvcore to be installed (restart may be required)")
@@ -426,12 +517,21 @@ dif <- function(
         padjust = padjust,
         padjust1 = padjust1,
         zplot = zplot,
-        iccplot = iccplot,
+        plot3 = plot3,
         plot1 = plot1,
         gmh = gmh,
         fn = fn,
         plot2 = plot2,
-        padjust2 = padjust2)
+        padjust2 = padjust2,
+        width1 = width1,
+        height1 = height1,
+        width2 = width2,
+        height2 = height2,
+        width3 = width3,
+        height3 = height3,
+        width4 = width4,
+        height4 = height4,
+        num = num)
 
     analysis <- difClass$new(
         options = options,

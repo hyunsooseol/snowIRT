@@ -53,6 +53,31 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       
     )
   
+  if(isTRUE(self$options$zplot)){
+    width <- self$options$width1
+    height <- self$options$height1
+    self$results$zplot$setSize(width, height)
+  }
+  
+  
+  if(isTRUE(self$options$plot3)){
+    width <- self$options$width2
+    height <- self$options$height2
+    self$results$plot3$setSize(width, height)
+  }
+  
+  if(isTRUE(self$options$plot1)){
+    width <- self$options$width3
+    height <- self$options$height3
+    self$results$plot1$setSize(width, height)
+  }  
+  
+  if(isTRUE(self$options$plot2)){
+    width <- self$options$width4
+    height <- self$options$height4
+    self$results$plot2$setSize(width, height)
+  }  
+  
   
   if (length(self$options$vars) <= 1)
     self$setStatus('complete')
@@ -321,7 +346,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
  
   # prepare dif icc plot--------
   
-  image<- self$results$iccplot
+  image<- self$results$plot3
   image$setState(itempar)
   
   }
@@ -342,30 +367,34 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   TRUE
 },
 
-.iccplot=function(image,...){
+.plot3=function(image,...){
 
-  itempar <- image$parent$state
+#  itempar <- image$parent$state
   
-  if (is.null(itempar))
+  if (is.null(image$state))
     return()
   
-  images <- self$results$iccplot
+  itempar<- image$state
   
-  index <- 1
+  #images <- self$results$plot3
   
-  for (item in images$items) {
-    if (identical(image, item))
-      break()
-    
-    index <- index + 1
-  }
+  # index <- 1
+  # 
+  # for (item in images$items) {
+  #   if (identical(image, item))
+  #     break()
+  #   
+  #   index <- index + 1
+  # }
   
   
-  plot2 <- ShinyItemAnalysis::plotDIFirt(parameters = itempar, 
-                                         item = index, 
+  num <- self$options$num
+  
+  plot3 <- ShinyItemAnalysis::plotDIFirt(parameters = itempar, 
+                                         item = num, 
                                          test = "Raju")
   
-  print(plot2)
+  print(plot3)
   TRUE
   
 },

@@ -13,12 +13,21 @@ dif(
   padjust = "BH",
   padjust1 = "BH",
   zplot = FALSE,
-  iccplot = FALSE,
+  plot3 = FALSE,
   plot1 = FALSE,
   gmh = FALSE,
   fn = "2,3,4",
   plot2 = FALSE,
-  padjust2 = "BH"
+  padjust2 = "BH",
+  width1 = 500,
+  height1 = 500,
+  width2 = 500,
+  height2 = 500,
+  width3 = 500,
+  height3 = 500,
+  width4 = 500,
+  height4 = 500,
+  num = 1
 )
 }
 \arguments{
@@ -38,7 +47,7 @@ dif(
 
 \item{zplot}{.}
 
-\item{iccplot}{.}
+\item{plot3}{.}
 
 \item{plot1}{.}
 
@@ -49,6 +58,24 @@ dif(
 \item{plot2}{.}
 
 \item{padjust2}{.}
+
+\item{width1}{.}
+
+\item{height1}{.}
+
+\item{width2}{.}
+
+\item{height2}{.}
+
+\item{width3}{.}
+
+\item{height3}{.}
+
+\item{width4}{.}
+
+\item{height4}{.}
+
+\item{num}{.}
 }
 \value{
 A results object containing:
@@ -61,7 +88,7 @@ A results object containing:
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$gmh} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
-  \code{results$iccplot} \tab \tab \tab \tab \tab an array of plots \cr
+  \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

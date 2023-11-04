@@ -79,8 +79,6 @@ items:
     - name: zplot
       title: 'Z statistic plot'
       type: Image
-      width:  500
-      height: 500
       renderFun: .plot
       visible: (zplot)
       refs: difR
@@ -88,12 +86,12 @@ items:
         - vars
         - group
         - padjust
+        - width1
+        - height1
 
     - name: plot1
       title: 'Mantel-Haenszel plot'
       type: Image
-      width:  500
-      height: 500
       renderFun: .plot1
       visible: (plot1)
       refs: difR
@@ -101,6 +99,8 @@ items:
         - vars
         - group
         - padjust1
+        - width3
+        - height3
 
     - name: gmh
       title:  '` Generalized Mantel-Haenszel method - ${padjust2}`'
@@ -133,8 +133,6 @@ items:
     - name: plot2
       title: 'Generalized Mantel-Haenszel plot'
       type: Image
-      width:  500
-      height: 500
       renderFun: .plot2
       visible: (plot2)
       refs: difR
@@ -142,23 +140,21 @@ items:
         - vars
         - group
         - padjust2
+        - width4
+        - height4
 
-    - name: iccplot
+    - name: plot3
       title: 'Item Characteristic Curve plot for DIF'
-      type: Array
-      description: an array of plots
-      items: (vars)
-      refs: ShinyItemAnalysis
-      template:
-          type: Image
-          title: $key
-          description: ICC plot
-          width:  400
-          height: 400
-          visible: (iccplot)
-          renderFun: .iccplot
-          clearWith: []
-
-
+      type: Image
+      renderFun: .plot3
+      visible: (plot3)
+      refs: difR
+      clearWith:
+        - vars
+        - group
+        - padjust
+        - width2
+        - height2
+        - num
 
 ...
