@@ -12,7 +12,11 @@ deltam(
   plot = FALSE,
   normal = FALSE,
   puri,
-  plot1 = FALSE
+  plot1 = FALSE,
+  width = 500,
+  height = 500,
+  width1 = 500,
+  height1 = 500
 )
 }
 \arguments{
@@ -31,6 +35,14 @@ deltam(
 \item{puri}{.}
 
 \item{plot1}{.}
+
+\item{width}{.}
+
+\item{height}{.}
+
+\item{width1}{.}
+
+\item{height1}{.}
 }
 \value{
 A results object containing:

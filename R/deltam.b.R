@@ -25,7 +25,6 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </head>
             <body>
             <div class='instructions'>
-            <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
             <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
             <P>2. The focal group should be coded as 1.</P>
@@ -44,6 +43,20 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       "Detection threshold: 1.5"
       
     )
+  
+  
+  
+  if(isTRUE(self$options$plot)){
+    width <- self$options$width
+    height <- self$options$height
+    self$results$plot$setSize(width, height)
+  }
+  
+  if(isTRUE(self$options$plot1)){
+    width <- self$options$width1
+    height <- self$options$height1
+    self$results$plot1$setSize(width, height)
+  }  
   
   
   if (length(self$options$vars) <= 1)

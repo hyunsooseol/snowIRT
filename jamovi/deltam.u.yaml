@@ -36,15 +36,6 @@ children:
             children:
               - type: CheckBox
                 name: fixed
-              - type: CheckBox
-                name: plot
-      - type: LayoutBox
-        margin: large
-        cell:
-          column: 1
-          row: 0
-        stretchFactor: 1
-        children:
           - type: Label
             label: Normal method
             children:
@@ -54,5 +45,37 @@ children:
                   - type: ComboBox
                     name: puri
                     enable: (normal)
+      - type: LayoutBox
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        stretchFactor: 1
+        children:
+          - type: Label
+            label: 'Plots'
+            children:
+              - type: CheckBox
+                name: plot 
+                style: list-inline
+                children:
+                  - type: TextBox
+                    name: width
+                    format: number
+                    enable: (plot)
+                  - type: TextBox
+                    name: height
+                    format: number
+                    enable: (plot)              
               - type: CheckBox
                 name: plot1
+                style: list-inline
+                children:
+                  - type: TextBox
+                    name: width1
+                    format: number
+                    enable: (plot1)
+                  - type: TextBox
+                    name: height1
+                    format: number
+                    enable: (plot1)

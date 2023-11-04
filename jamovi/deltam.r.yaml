@@ -45,15 +45,15 @@ items:
       type:  Preformatted
 
     - name:  plot
-      title: Fixed DIF plot
+      title: Fixed DIF 
       type:  Image
       visible: (plot)
-      width: 400
-      height: 400
       renderFun: .plot
       clearWith:
         - vars
         - group
+        - width
+        - height
 
     - name: normal
       title: 'Perpendicular distances(after the last iteration)'
@@ -80,15 +80,15 @@ items:
       type:  Preformatted
 
     - name:  plot1
-      title: Normal DIF plot
+      title: Normal DIF 
       type:  Image
       visible: (plot1)
-      width: 400
-      height: 400
       renderFun: .plot1
       clearWith:
         - vars
         - group
+        - width1
+        - height1
 ...
 
 
