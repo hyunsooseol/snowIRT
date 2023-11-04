@@ -42,8 +42,6 @@ items:
       title: ICC plot
       type:  Image
       visible: (plot)
-      width: 500
-      height: 500
       renderFun: .plot
       refs: difNLR
       clearWith:
@@ -54,5 +52,7 @@ items:
         - match
         - padjust
         - num
+        - width
+        - height
  
 ...

@@ -402,8 +402,8 @@ clrClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                              
       
     
-     # plot2 <- plot2+ggtheme
-      
+      #plot2 <- plot2+ggtheme
+     
       print(plot2)
       TRUE
       

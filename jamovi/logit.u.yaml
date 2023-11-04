@@ -76,7 +76,14 @@ children:
              - name: num
                type: TextBox
                format: number
-    
+             - type: TextBox
+               name: width
+               format: number
+               enable: (plot)
+             - type: TextBox
+               name: height
+               format: number
+               enable: (plot)   
 
 
 

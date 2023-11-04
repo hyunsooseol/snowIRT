@@ -15,7 +15,9 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             method = TRUE,
             puri = FALSE,
             num = 1,
-            plot = TRUE, ...) {
+            plot = TRUE,
+            width = 500,
+            height = 500, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -90,6 +92,14 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot",
                 plot,
                 default=TRUE)
+            private$..width <- jmvcore::OptionInteger$new(
+                "width",
+                width,
+                default=500)
+            private$..height <- jmvcore::OptionInteger$new(
+                "height",
+                height,
+                default=500)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
@@ -101,6 +111,8 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..puri)
             self$.addOption(private$..num)
             self$.addOption(private$..plot)
+            self$.addOption(private$..width)
+            self$.addOption(private$..height)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -112,7 +124,9 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         method = function() private$..method$value,
         puri = function() private$..puri$value,
         num = function() private$..num$value,
-        plot = function() private$..plot$value),
+        plot = function() private$..plot$value,
+        width = function() private$..width$value,
+        height = function() private$..height$value),
     private = list(
         ..vars = NA,
         ..group = NA,
@@ -123,7 +137,9 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..method = NA,
         ..puri = NA,
         ..num = NA,
-        ..plot = NA)
+        ..plot = NA,
+        ..width = NA,
+        ..height = NA)
 )
 
 logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -183,8 +199,6 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="plot",
                 title="ICC plot",
                 visible="(plot)",
-                width=500,
-                height=500,
                 renderFun=".plot",
                 refs="difNLR",
                 clearWith=list(
@@ -194,7 +208,9 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "type",
                     "match",
                     "padjust",
-                    "num")))}))
+                    "num",
+                    "width",
+                    "height")))}))
 
 logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "logitBase",
@@ -231,6 +247,8 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param puri .
 #' @param num .
 #' @param plot .
+#' @param width .
+#' @param height .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -256,7 +274,9 @@ logit <- function(
     method = TRUE,
     puri = FALSE,
     num = 1,
-    plot = TRUE) {
+    plot = TRUE,
+    width = 500,
+    height = 500) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logit requires jmvcore to be installed (restart may be required)")
@@ -280,7 +300,9 @@ logit <- function(
         method = method,
         puri = puri,
         num = num,
-        plot = plot)
+        plot = plot,
+        width = width,
+        height = height)
 
     analysis <- logitClass$new(
         options = options,

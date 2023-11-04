@@ -28,7 +28,6 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </head>
             <body>
             <div class='instructions'>
-            <p><b>Instructions</b></p>
             <p>____________________________________________________________________________________</p>
             <p>1. Performs DIF detection procedure for ordinal data based either on adjacent category logit model or on cumulative logit model.</p>
             <P>2. The focal group should be coded as 1.</P>
@@ -47,6 +46,13 @@ logitClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                 )
 
+            
+            if(isTRUE(self$options$plot)){
+              width <- self$options$width
+              height <- self$options$height
+              self$results$plot$setSize(width, height)
+            }
+            
 
             if (length(self$options$vars) <= 1)
                 self$setStatus('complete')
