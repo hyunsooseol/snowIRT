@@ -45,7 +45,9 @@ polytomous(
   width7 = 500,
   height7 = 500,
   width3 = 500,
-  height3 = 500
+  height3 = 500,
+  width2 = 500,
+  height2 = 500
 )
 }
 \arguments{
@@ -131,6 +133,10 @@ where 0 degrees represents completely horizontal labels.}
 \item{width3}{.}
 
 \item{height3}{.}
+
+\item{width2}{.}
+
+\item{height2}{.}
 }
 \value{
 A results object containing:
