@@ -7,8 +7,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     public = list(
         initialize = function(
             dep = NULL,
-            facet = NULL,
-            id = NULL, ...) {
+            id = NULL,
+            facet = NULL, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -19,31 +19,32 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..dep <- jmvcore::OptionVariable$new(
                 "dep",
                 dep)
-            private$..facet <- jmvcore::OptionVariable$new(
-                "facet",
-                facet)
             private$..id <- jmvcore::OptionVariable$new(
                 "id",
                 id)
+            private$..facet <- jmvcore::OptionVariables$new(
+                "facet",
+                facet)
 
             self$.addOption(private$..dep)
-            self$.addOption(private$..facet)
             self$.addOption(private$..id)
+            self$.addOption(private$..facet)
         }),
     active = list(
         dep = function() private$..dep$value,
-        facet = function() private$..facet$value,
-        id = function() private$..id$value),
+        id = function() private$..id$value,
+        facet = function() private$..facet$value),
     private = list(
         ..dep = NA,
-        ..facet = NA,
-        ..id = NA)
+        ..id = NA,
+        ..facet = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "facetResults",
     inherit = jmvcore::Group,
     active = list(
+        instructions = function() private$.items[["instructions"]],
         text = function() private$.items[["text"]]),
     private = list(),
     public=list(
@@ -52,6 +53,11 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="",
                 title="Facet Model")
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="instructions",
+                title="Instructions",
+                visible=TRUE))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
@@ -83,10 +89,11 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' 
 #' @param data .
 #' @param dep .
-#' @param facet .
 #' @param id .
+#' @param facet .
 #' @return A results object containing:
 #' \tabular{llllll}{
+#'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #' }
 #'
@@ -94,27 +101,27 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 facet <- function(
     data,
     dep,
-    facet,
-    id) {
+    id,
+    facet) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
 
     if ( ! missing(dep)) dep <- jmvcore::resolveQuo(jmvcore::enquo(dep))
-    if ( ! missing(facet)) facet <- jmvcore::resolveQuo(jmvcore::enquo(facet))
     if ( ! missing(id)) id <- jmvcore::resolveQuo(jmvcore::enquo(id))
+    if ( ! missing(facet)) facet <- jmvcore::resolveQuo(jmvcore::enquo(facet))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
             `if`( ! missing(dep), dep, NULL),
-            `if`( ! missing(facet), facet, NULL),
-            `if`( ! missing(id), id, NULL))
+            `if`( ! missing(id), id, NULL),
+            `if`( ! missing(facet), facet, NULL))
 
 
     options <- facetOptions$new(
         dep = dep,
-        facet = facet,
-        id = id)
+        id = id,
+        facet = facet)
 
     analysis <- facetClass$new(
         options = options,

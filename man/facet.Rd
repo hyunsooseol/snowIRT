@@ -4,20 +4,21 @@
 \alias{facet}
 \title{Facet Model}
 \usage{
-facet(data, dep, facet, id)
+facet(data, dep, id, facet)
 }
 \arguments{
 \item{data}{.}
 
 \item{dep}{.}
 
-\item{facet}{.}
-
 \item{id}{.}
+
+\item{facet}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
+  \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 }
 }

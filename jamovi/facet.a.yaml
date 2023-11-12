@@ -10,15 +10,17 @@ options:
       type: Data
 
     - name: dep
-      title: 'Response'
+      title: 'Score'
+      type: Variable
+
+    - name: id
+      title: 'Id'
       type: Variable
 
     - name: facet
-      title: 'Facet'
-      type: Variable
+      title: 'Facets'
+      type: Variables
  
-    - name: id
-      title: 'Subject'
-      type: Variable
+
  
 ...

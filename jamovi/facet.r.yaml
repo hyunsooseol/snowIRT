@@ -4,6 +4,11 @@ title: Facet Model
 jrs:   '1.1'
 
 items:
+    - name: instructions
+      title: Instructions
+      type: Html
+      visible: True
+      
     - name:  text
       title: Facet Model
       type:  Preformatted
