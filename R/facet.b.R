@@ -79,14 +79,16 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
          facets = dplyr::select(data, self$options$facet)
         
-         self$results$text$setContent(head(facets))
+         #self$results$text$setContent(head(facets))
         
-           res <- TAM::tam.mml.mfr(resp = self$options$dep, 
-                               facets = facets, 
-                               pid = self$options$id,
-                               formulaA = formula)
+        
+         res <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
+                                   facets = facets, 
+                                   pid = data[[self$options$id]],
+                                   formulaA = formula)
            
-         # self$results$text$setContent(res)
+           
+           self$results$text$setContent(res)
           
         })
 )
