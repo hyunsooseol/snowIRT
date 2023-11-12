@@ -50,6 +50,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .run = function() {
 
         # example with dataset (facet1.csv) ----------
+        # facet1<- read.csv("facet1.csv")
         # attach(facet1)
         # facets = dplyr::select(facet1, raters:trait)
         # formula <- ~ trait + raters +step
@@ -57,8 +58,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         #                         facets =  facets,
         #                         formulaA = formula,
         #                         pid=subjects)
-        # 
-        # summary(res)
         
         #https://rpubs.com/isbell_daniel/735520
         
