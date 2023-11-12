@@ -1,0 +1,24 @@
+---
+name:  facet
+title: Facet Model
+menuGroup: snowIRT
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: dep
+      title: 'Response'
+      type: Variable
+
+    - name: facet
+      title: 'Facet'
+      type: Variable
+ 
+    - name: id
+      title: 'Subject'
+      type: Variable
+ 
+...

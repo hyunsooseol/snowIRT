@@ -1,12 +1,12 @@
 ---
 title: Item Response Theory
 name: snowIRT
-version: 4.9.9
+version: 5.0.0
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2023-11-04'
+date: '2023-11-12'
 type: R
 description: >-
   This module includes IRT, item distractor analysis, item and person
@@ -25,6 +25,12 @@ analyses:
     ns: snowIRT
     menuGroup: snowIRT
     menuTitle: Polytomous Rasch Model
+    menuSubgroup: IRT
+  - title: Facet Model
+    name: facet
+    ns: snowIRT
+    menuGroup: snowIRT
+    menuTitle: Facet Model
     menuSubgroup: IRT
   - title: Raju & Mantel-Haenszel method
     name: dif
