@@ -4,7 +4,7 @@
 \alias{facet}
 \title{Facet Model}
 \usage{
-facet(data, dep, id, facet, fm = FALSE)
+facet(data, dep, id, facet, fm = FALSE, ifit = FALSE)
 }
 \arguments{
 \item{data}{.}
@@ -16,6 +16,8 @@ facet(data, dep, id, facet, fm = FALSE)
 \item{facet}{.}
 
 \item{fm}{.}
+
+\item{ifit}{.}
 }
 \value{
 A results object containing:
@@ -23,6 +25,7 @@ A results object containing:
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$fm} \tab \tab \tab \tab \tab a table \cr
+  \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

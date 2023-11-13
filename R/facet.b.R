@@ -8,6 +8,7 @@
 #' @importFrom TAM tam.personfit
 #' @importFrom TAM tam.wle
 #' @importFrom TAM tam.threshold
+#' @importFrom TAM msq.itemfit
 #' @import ggplot2
 #' @export
 
@@ -73,22 +74,22 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # Formula---------------
         
         facets <- vapply(facets, function(x) jmvcore::composeTerm(x), '')
-        facets <- paste0(facets, collapse='+')
-        formula <- as.formula(paste0('~ step +', facets))
+        facets <- paste0(facets, collapse='*')
+        formula <- as.formula(paste0('~ step+', facets))
         
       
          facets = dplyr::select(data, self$options$facet)
         
-         #self$results$text$setContent(head(facets))
+         #self$results$text$setContent(formula)
         
         
          res <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
                                    facets = facets, 
                                    pid = data[[self$options$id]],
                                    formulaA = formula)
-           
-         
-           self$results$text$setContent(res$xsi.facets)
+        
+        
+           #self$results$text$setContent(res$xsi.facets)
           
            # Facet table----------------
            
@@ -98,7 +99,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            im<- as.data.frame(im)
            
            items <- as.vector(im[[1]])
-           #items <- im[[1]]
+          
          
             dif<- as.vector(im[[3]])
             se<- as.vector(im[[4]])
@@ -114,8 +115,40 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              table$addRow(rowKey = items[i], values = row)
            }
            
+          
+            # item fit statistics------------
+            ## fit is shown for the rater*item combinations
            
+              ifit <- TAM::msq.itemfit(res)
+            
+           # self$results$text$setContent(ifit)
            
-           
+            # Item fit table------------
+            
+            table <- self$results$ifit
+            
+            ifit <- as.data.frame(ifit$itemfit)
+            
+            outfit.t<- as.vector(ifit[4])
+            outfit.t<- outfit.t$Outfit
+            p <- as.vector(ifit[5])
+            p<- p$Outfit_p
+            
+            items<- as.vector(ifit[[1]])
+            
+            for (i in seq_along(items)) {
+              
+              row <- list()
+              
+              row[["outfit.t"]] <-outfit.t[i]
+              
+              row[["p"]] <- p[i]
+              
+              table$addRow(rowKey = items[i], values = row)
+            }
+            
+            
+            
+            
         })
 )

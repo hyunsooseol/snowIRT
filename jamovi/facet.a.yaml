@@ -26,4 +26,8 @@ options:
       type: Bool
       default: false
  
+    - name: ifit
+      title: 'Item fit'
+      type: Bool
+      default: false
 ...

@@ -38,3 +38,5 @@ children:
         children:
           - type: CheckBox
             name: fm
+          - type: CheckBox
+            name: ifit

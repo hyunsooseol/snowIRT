@@ -9,7 +9,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             dep = NULL,
             id = NULL,
             facet = NULL,
-            fm = FALSE, ...) {
+            fm = FALSE,
+            ifit = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -30,22 +31,29 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "fm",
                 fm,
                 default=FALSE)
+            private$..ifit <- jmvcore::OptionBool$new(
+                "ifit",
+                ifit,
+                default=FALSE)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
             self$.addOption(private$..facet)
             self$.addOption(private$..fm)
+            self$.addOption(private$..ifit)
         }),
     active = list(
         dep = function() private$..dep$value,
         id = function() private$..id$value,
         facet = function() private$..facet$value,
-        fm = function() private$..fm$value),
+        fm = function() private$..fm$value,
+        ifit = function() private$..ifit$value),
     private = list(
         ..dep = NA,
         ..id = NA,
         ..facet = NA,
-        ..fm = NA)
+        ..fm = NA,
+        ..ifit = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -54,7 +62,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         text = function() private$.items[["text"]],
-        fm = function() private$.items[["fm"]]),
+        fm = function() private$.items[["fm"]],
+        ifit = function() private$.items[["ifit"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -94,7 +103,31 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="se", 
                         `title`="SE", 
-                        `type`="number"))))}))
+                        `type`="number"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="ifit",
+                title="Item fit",
+                visible="(ifit)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="outfit.t", 
+                        `title`="Outfit_t", 
+                        `type`="number"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"))))}))
 
 facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "facetBase",
@@ -125,11 +158,13 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param id .
 #' @param facet .
 #' @param fm .
+#' @param ifit .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$fm} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -144,7 +179,8 @@ facet <- function(
     dep,
     id,
     facet,
-    fm = FALSE) {
+    fm = FALSE,
+    ifit = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -164,7 +200,8 @@ facet <- function(
         dep = dep,
         id = id,
         facet = facet,
-        fm = fm)
+        fm = fm,
+        ifit = ifit)
 
     analysis <- facetClass$new(
         options = options,

@@ -37,5 +37,27 @@ items:
           title: SE
           type: number
          
+    - name: ifit
+      title:  'Item fit'
+      type: Table
+      visible: (ifit)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
 
+        - name: outfit.t
+          title: 'Outfit_t'
+          type: number
+          
+        - name: p
+          title: 'p'
+          format: zto,pvalue
 ...
