@@ -21,6 +21,9 @@ options:
       title: 'Facets'
       type: Variables
  
-
+    - name: fm
+      title: 'Facet measure'
+      type: Bool
+      default: false
  
 ...

@@ -25,4 +25,16 @@ children:
           - type: VariablesListBox
             name: facet
             isTarget: true
-
+  - type: LayoutBox
+    stretchFactor: 1
+    margin: large
+    children:
+      - type: Label
+        label: 'Tables'
+        fitToGrid: true
+        cell:
+          column: 0
+          row: 0
+        children:
+          - type: CheckBox
+            name: fm

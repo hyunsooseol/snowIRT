@@ -4,7 +4,7 @@
 \alias{facet}
 \title{Facet Model}
 \usage{
-facet(data, dep, id, facet)
+facet(data, dep, id, facet, fm = FALSE)
 }
 \arguments{
 \item{data}{.}
@@ -14,13 +14,22 @@ facet(data, dep, id, facet)
 \item{id}{.}
 
 \item{facet}{.}
+
+\item{fm}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$fm} \tab \tab \tab \tab \tab a table \cr
 }
+
+Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+
+\code{results$fm$asDF}
+
+\code{as.data.frame(results$fm)}
 }
 \description{
 Facet Model

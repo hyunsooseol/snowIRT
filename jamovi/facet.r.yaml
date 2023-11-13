@@ -13,4 +13,29 @@ items:
       title: Facet Model
       type:  Preformatted
 
+    - name: fm
+      title:  'Facet measure'
+      type: Table
+      visible: (fm)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: measure
+          title: Measure
+          type: number
+          
+        - name: se
+          title: SE
+          type: number
+         
+
 ...

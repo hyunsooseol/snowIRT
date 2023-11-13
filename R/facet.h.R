@@ -8,7 +8,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         initialize = function(
             dep = NULL,
             id = NULL,
-            facet = NULL, ...) {
+            facet = NULL,
+            fm = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -25,19 +26,26 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..facet <- jmvcore::OptionVariables$new(
                 "facet",
                 facet)
+            private$..fm <- jmvcore::OptionBool$new(
+                "fm",
+                fm,
+                default=FALSE)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
             self$.addOption(private$..facet)
+            self$.addOption(private$..fm)
         }),
     active = list(
         dep = function() private$..dep$value,
         id = function() private$..id$value,
-        facet = function() private$..facet$value),
+        facet = function() private$..facet$value,
+        fm = function() private$..fm$value),
     private = list(
         ..dep = NA,
         ..id = NA,
-        ..facet = NA)
+        ..facet = NA,
+        ..fm = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -45,7 +53,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        text = function() private$.items[["text"]]),
+        text = function() private$.items[["text"]],
+        fm = function() private$.items[["fm"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -61,7 +70,31 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
-                title="Facet Model"))}))
+                title="Facet Model"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="fm",
+                title="Facet measure",
+                visible="(fm)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="measure", 
+                        `title`="Measure", 
+                        `type`="number"),
+                    list(
+                        `name`="se", 
+                        `title`="SE", 
+                        `type`="number"))))}))
 
 facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "facetBase",
@@ -91,18 +124,27 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param dep .
 #' @param id .
 #' @param facet .
+#' @param fm .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$fm} \tab \tab \tab \tab \tab a table \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$fm$asDF}
+#'
+#' \code{as.data.frame(results$fm)}
 #'
 #' @export
 facet <- function(
     data,
     dep,
     id,
-    facet) {
+    facet,
+    fm = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -121,7 +163,8 @@ facet <- function(
     options <- facetOptions$new(
         dep = dep,
         id = id,
-        facet = facet)
+        facet = facet,
+        fm = fm)
 
     analysis <- facetClass$new(
         options = options,

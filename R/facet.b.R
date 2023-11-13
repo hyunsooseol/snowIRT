@@ -87,8 +87,35 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                    pid = data[[self$options$id]],
                                    formulaA = formula)
            
-           
-           self$results$text$setContent(res)
+         
+           self$results$text$setContent(res$xsi.facets)
           
+           # Facet table----------------
+           
+           table<- self$results$fm
+          
+           im<- res$xsi.facets
+           im<- as.data.frame(im)
+           
+           items <- as.vector(im[[1]])
+           #items <- im[[1]]
+         
+            dif<- as.vector(im[[3]])
+            se<- as.vector(im[[4]])
+         
+           for (i in seq_along(items)) {
+             
+             row <- list()
+             
+             row[["measure"]] <-dif[i]
+             
+             row[["se"]] <- se[i]
+             
+             table$addRow(rowKey = items[i], values = row)
+           }
+           
+           
+           
+           
         })
 )
