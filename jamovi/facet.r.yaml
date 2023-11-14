@@ -10,7 +10,7 @@ items:
       visible: True
       
     - name:  text
-      title: Facet Model
+      title: 'WLE Reliability'
       type:  Preformatted
 
     - name: im
@@ -132,4 +132,33 @@ items:
         - name: p
           title: p
           format: zto,pvalue     
+
+    - name: pm
+      title:  'Person measure'
+      type: Table
+      visible: (pm)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: ps
+          title: 'Score'
+          type: integer
+          
+        - name: pt
+          title: 'Theta'
+          type: number         
+
+        - name: pe
+          title: 'SE'
+          type: number  
+
 ...

@@ -13,7 +13,8 @@ facet(
   im = FALSE,
   inter = FALSE,
   sm = FALSE,
-  ifit = FALSE
+  ifit = FALSE,
+  pm = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ facet(
 \item{sm}{.}
 
 \item{ifit}{.}
+
+\item{pm}{.}
 }
 \value{
 A results object containing:
@@ -45,6 +48,7 @@ A results object containing:
   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
+  \code{results$pm} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

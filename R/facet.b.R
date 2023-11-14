@@ -9,6 +9,7 @@
 #' @importFrom TAM tam.wle
 #' @importFrom TAM tam.threshold
 #' @importFrom TAM msq.itemfit
+#' @importFrom TAM tam.wle
 #' @import ggplot2
 #' @export
 
@@ -88,7 +89,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                 formulaA = formula)
         
         
-        self$results$text$setContent(res$xsi.facets)
+      #  self$results$text$setContent(res$xsi.facets)
         
          # Facet estimates----------
          
@@ -227,7 +228,60 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               table$addRow(rowKey = items[i], values = row)
             }
 
+           # Person ability----------
+            persons <- TAM::tam.wle(res)
             
+            per <-data.frame(persons$pid, persons$PersonScores,
+                             persons$theta, persons$error,
+                             persons$WLE.rel) 
+            
+            
+            # WLE Reliability-------
+            
+            pw<- as.vector(per[[5]])[1]
+            self$results$text$setContent(pw)
+            
+            
+            # Person measure table-------------
+            
+            table <- self$results$pm
+            
+            # ps<- as.vector(per[[2]])
+            # pt<- as.vector(per[[3]])
+            # pe<- as.vector(per[[4]])
+            # pw<- as.vector(per[[5]])
+            # 
+            # self$results$text$setContent(pw)
+            # 
+            # items <- as.vector(per[[1]])
+            # 
+            # for (i in seq_along(items)) {
+            #   
+            #   row <- list()
+            #   
+            #   row[["ps"]] <- ps[i]
+            #   row[["pt"]] <- pt[i]
+            #   row[["pe"]] <- pe[i]
+            #   row[["pw"]] <- pw[i]
+            #   
+            #   table$addRow(rowKey = items[i], values = row)
+            # }
+            # 
+            
+            names<- dimnames(per)[[1]]
+            
+            for (name in names) {
+              
+              row <- list()
+              
+              row[["ps"]]   <-  per[name, 2]
+              row[["pt"]] <-  per[name, 3]
+              row[["pe"]] <-  per[name, 4]
+            #  row[["pw"]] <-  per[name, 5]
+              
+              table$addRow(rowKey=name, values=row)
+              
+            }
             
             
         })

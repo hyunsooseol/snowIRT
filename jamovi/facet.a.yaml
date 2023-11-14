@@ -41,12 +41,17 @@ options:
       default: false
 
     - name: sm
-      title: 'Step measue'
+      title: 'Step measure'
       type: Bool
       default: false
 
     - name: ifit
       title: 'Fit measue for interaction'
+      type: Bool
+      default: false
+
+    - name: pm
+      title: 'Person measure'
       type: Bool
       default: false
 ...

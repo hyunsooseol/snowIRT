@@ -49,3 +49,16 @@ children:
         children: 
           - type: CheckBox
             name: ifit
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
+          - type: Label
+            label: 'Person measure'
+            children:
+              - type: CheckBox
+                name: pm        
