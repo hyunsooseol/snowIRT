@@ -12,22 +12,36 @@ options:
     - name: dep
       title: 'Score'
       type: Variable
+      suggested:
+         - continuous
+      permitted:
+        - numeric    
 
     - name: id
-      title: 'Id'
+      title: 'Subject'
       type: Variable
 
     - name: facet
       title: 'Facets'
       type: Variables
  
-    - name: fm
-      title: 'Facet measure'
+    - name: rm
+      title: 'Rater measure'
       type: Bool
       default: false
  
-    - name: ifit
-      title: 'Item fit'
+    - name: im
+      title: 'Item measue'
+      type: Bool
+      default: false
+
+    - name: inter
+      title: 'Interaction measure'
+      type: Bool
+      default: false
+
+    - name: sm
+      title: 'Step measue'
       type: Bool
       default: false
 ...

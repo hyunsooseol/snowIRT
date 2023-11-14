@@ -73,6 +73,11 @@ datasets:
     description: Health Literacy Survey
     tags:
       - Polytomous
+  - name: Facet
+    path: facet.omv
+    description: Facet model
+    tags:
+      - Facet
   - name: dif
     path: dif.omv
     description: Raju & MH method

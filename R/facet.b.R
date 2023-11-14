@@ -19,7 +19,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     private = list(
 
       .init = function() {
-        if (is.null(self$data) | is.null(self$options$dep)) {
+        if (is.null(self$data) | is.null(self$options$facet)) {
           self$results$instructions$setVisible(visible = TRUE)
           
         }
@@ -62,7 +62,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         #https://rpubs.com/isbell_daniel/735520
         
-        
         dep <- self$options$dep
         id <- self$options$id
         facets <- self$options$facet
@@ -77,33 +76,48 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         facets <- paste0(facets, collapse='*')
         formula <- as.formula(paste0('~ step+', facets))
         
+        
+        facets = dplyr::select(data, self$options$facet)
+        
+        #self$results$text$setContent(formula)
+        
+        
+        res <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
+                                facets = facets, 
+                                pid = data[[self$options$id]],
+                                formulaA = formula)
+        
+        
+        self$results$text$setContent(res$xsi.facets)
+        
+         # Facet estimates----------
+         
+         facet.estimates <- res$xsi.facets # Whole estimates
+         
+         im <- subset(facet.estimates, facet.estimates$facet == "task")
+         
+       #  self$results$text$setContent(im)
       
-         facets = dplyr::select(data, self$options$facet)
-        
-         #self$results$text$setContent(formula)
-        
-        
-         res <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
-                                   facets = facets, 
-                                   pid = data[[self$options$id]],
-                                   formulaA = formula)
-        
-        
-           #self$results$text$setContent(res$xsi.facets)
-          
-           # Facet table----------------
+         # rater measure----------   
+       rm <- subset(facet.estimates, facet.estimates$facet == "rater")
+      
+       # interaction-------
+       inter <- subset(facet.estimates, facet.estimates$facet == "rater:task")
+       
+         # step measure-----------
+         
+        sm <- subset(facet.estimates, facet.estimates$facet == "step")
+         
+         # Item measure table----------------
            
-           table<- self$results$fm
+           table<- self$results$im
           
-           im<- res$xsi.facets
            im<- as.data.frame(im)
+           dif<- as.vector(im[[3]])
+           se<- as.vector(im[[4]])
            
            items <- as.vector(im[[1]])
           
-         
-            dif<- as.vector(im[[3]])
-            se<- as.vector(im[[4]])
-         
            for (i in seq_along(items)) {
              
              row <- list()
@@ -115,38 +129,104 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              table$addRow(rowKey = items[i], values = row)
            }
            
-          
-            # item fit statistics------------
-            ## fit is shown for the rater*item combinations
+           # Rater measure table----------------
            
-              ifit <- TAM::msq.itemfit(res)
-            
-           # self$results$text$setContent(ifit)
+           table<- self$results$rm
            
-            # Item fit table------------
-            
-            table <- self$results$ifit
-            
-            ifit <- as.data.frame(ifit$itemfit)
-            
-            outfit.t<- as.vector(ifit[4])
-            outfit.t<- outfit.t$Outfit
-            p <- as.vector(ifit[5])
-            p<- p$Outfit_p
-            
-            items<- as.vector(ifit[[1]])
-            
-            for (i in seq_along(items)) {
-              
-              row <- list()
-              
-              row[["outfit.t"]] <-outfit.t[i]
-              
-              row[["p"]] <- p[i]
-              
-              table$addRow(rowKey = items[i], values = row)
-            }
-            
+           rm<- as.data.frame(rm)
+           
+           dif<- as.vector(rm[[3]])
+           se<- as.vector(rm[[4]])
+           
+           items <- as.vector(rm[[1]])
+           
+           for (i in seq_along(items)) {
+             
+             row <- list()
+             
+             row[["measure"]] <-dif[i]
+             
+             row[["se"]] <- se[i]
+             
+             table$addRow(rowKey = items[i], values = row)
+           }
+           
+           # Interaction measure table----------------
+           
+           table<- self$results$inter
+           
+           inter<- as.data.frame(inter)
+           
+           dif<- as.vector(inter[[3]])
+           se<- as.vector(inter[[4]])
+           
+           items <- as.vector(inter[[1]])
+           
+           for (i in seq_along(items)) {
+             
+             row <- list()
+             
+             row[["measure"]] <-dif[i]
+             
+             row[["se"]] <- se[i]
+             
+             table$addRow(rowKey = items[i], values = row)
+           }
+           
+           # Step measure table----------------
+           
+           table<- self$results$sm
+           
+           sm<- as.data.frame(sm)
+           
+           dif<- as.vector(sm[[3]])
+           se<- as.vector(sm[[4]])
+           
+           items <- as.vector(sm[[1]])
+           
+           for (i in seq_along(items)) {
+             
+             row <- list()
+             
+             row[["measure"]] <-dif[i]
+             
+             row[["se"]] <- se[i]
+             
+             table$addRow(rowKey = items[i], values = row)
+           }
+           
+           
+           #  # item fit statistics------------
+           #  ## fit is shown for the rater*item combinations
+           # 
+           #    ifit <- TAM::msq.itemfit(res)
+           #  
+           # # self$results$text$setContent(ifit)
+           # 
+           #  # Item fit table------------
+           #  
+           #  table <- self$results$ifit
+           #  
+           #  ifit <- as.data.frame(ifit$itemfit)
+           #  
+           #  outfit.t<- as.vector(ifit[4])
+           #  outfit.t<- outfit.t$Outfit
+           #  p <- as.vector(ifit[5])
+           #  p<- p$Outfit_p
+           #  
+           #  items<- as.vector(ifit[[1]])
+           #  
+           #  for (i in seq_along(items)) {
+           #    
+           #    row <- list()
+           #    
+           #    row[["outfit.t"]] <-outfit.t[i]
+           #    
+           #    row[["p"]] <- p[i]
+           #    
+           #    table$addRow(rowKey = items[i], values = row)
+           #  }
+           #  
             
             
             

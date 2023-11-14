@@ -4,7 +4,7 @@
 \alias{facet}
 \title{Facet Model}
 \usage{
-facet(data, dep, id, facet, fm = FALSE, ifit = FALSE)
+facet(data, dep, id, facet, rm = FALSE, im = FALSE, inter = FALSE, sm = FALSE)
 }
 \arguments{
 \item{data}{.}
@@ -15,24 +15,30 @@ facet(data, dep, id, facet, fm = FALSE, ifit = FALSE)
 
 \item{facet}{.}
 
-\item{fm}{.}
+\item{rm}{.}
 
-\item{ifit}{.}
+\item{im}{.}
+
+\item{inter}{.}
+
+\item{sm}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
-  \code{results$fm} \tab \tab \tab \tab \tab a table \cr
-  \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
+  \code{results$im} \tab \tab \tab \tab \tab a table \cr
+  \code{results$rm} \tab \tab \tab \tab \tab a table \cr
+  \code{results$inter} \tab \tab \tab \tab \tab a table \cr
+  \code{results$sm} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$fm$asDF}
+\code{results$im$asDF}
 
-\code{as.data.frame(results$fm)}
+\code{as.data.frame(results$im)}
 }
 \description{
 Facet Model

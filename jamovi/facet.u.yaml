@@ -20,7 +20,7 @@ children:
             isTarget: true
             maxItemCount: 1
       - type: TargetLayoutBox
-        label: Facet
+        label: 'Facets'
         children:
           - type: VariablesListBox
             name: facet
@@ -30,13 +30,17 @@ children:
     margin: large
     children:
       - type: Label
-        label: 'Tables'
+        label: Tables
         fitToGrid: true
         cell:
           column: 0
           row: 0
         children:
           - type: CheckBox
-            name: fm
+            name: im
           - type: CheckBox
-            name: ifit
+            name: rm
+          - type: CheckBox
+            name: inter
+          - type: CheckBox
+            name: sm
