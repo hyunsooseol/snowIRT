@@ -62,3 +62,5 @@ children:
             children:
               - type: CheckBox
                 name: pm        
+              - type: CheckBox
+                name: pfit     

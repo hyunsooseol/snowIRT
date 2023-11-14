@@ -54,4 +54,10 @@ options:
       title: 'Person measure'
       type: Bool
       default: false
+      
+    - name: pfit
+      title: 'Person fit'
+      type: Bool
+      default: false      
+      
 ...

@@ -277,12 +277,34 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               row[["ps"]]   <-  per[name, 2]
               row[["pt"]] <-  per[name, 3]
               row[["pe"]] <-  per[name, 4]
-            #  row[["pw"]] <-  per[name, 5]
+           
+              table$addRow(rowKey=name, values=row)
+              
+            }
+            
+           # Person fit table-----------
+            
+            pfit <- TAM::tam.personfit(res)
+            
+            pfit <- data.frame(pfit$outfitPerson,
+                               pfit$infitPerson)
+            
+            table <- self$results$pfit
+            
+            names<- dimnames(pfit)[[1]]
+            
+            for (name in names) {
+              
+              row <- list()
+              
+              row[["outfit"]]   <-  pfit[name, 1]
+              row[["infit"]] <-  pfit[name, 2]
+             
               
               table$addRow(rowKey=name, values=row)
               
             }
             
-            
+             
         })
 )

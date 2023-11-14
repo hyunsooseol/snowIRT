@@ -161,4 +161,27 @@ items:
           title: 'SE'
           type: number  
 
+    - name: pfit
+      title:  'Person fit'
+      type: Table
+      visible: (pfit)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: outfit
+          title: 'Outfit'
+          type: number
+          
+        - name: infit
+          title: 'Infit'
+          format: number     
 ...
