@@ -196,37 +196,37 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            }
            
            
-           #  # item fit statistics------------
-           #  ## fit is shown for the rater*item combinations
-           # 
-           #    ifit <- TAM::msq.itemfit(res)
-           #  
-           # # self$results$text$setContent(ifit)
-           # 
-           #  # Item fit table------------
-           #  
-           #  table <- self$results$ifit
-           #  
-           #  ifit <- as.data.frame(ifit$itemfit)
-           #  
-           #  outfit.t<- as.vector(ifit[4])
-           #  outfit.t<- outfit.t$Outfit
-           #  p <- as.vector(ifit[5])
-           #  p<- p$Outfit_p
-           #  
-           #  items<- as.vector(ifit[[1]])
-           #  
-           #  for (i in seq_along(items)) {
-           #    
-           #    row <- list()
-           #    
-           #    row[["outfit.t"]] <-outfit.t[i]
-           #    
-           #    row[["p"]] <- p[i]
-           #    
-           #    table$addRow(rowKey = items[i], values = row)
-           #  }
-           #  
+            # item fit statistics------------
+            ## fit is shown for the rater*item combinations
+
+              ifit <- TAM::msq.itemfit(res)
+
+           # self$results$text$setContent(ifit)
+
+            # Item fit table------------
+
+            table <- self$results$ifit
+
+            ifit <- as.data.frame(ifit$itemfit)
+
+            outfit.t<- as.vector(ifit[4])
+            outfit<- outfit.t$Outfit
+            p <- as.vector(ifit[5])
+            p<- p$Outfit_p
+
+            items<- as.vector(ifit[[1]])
+
+            for (i in seq_along(items)) {
+
+              row <- list()
+
+              row[["outfit"]] <-outfit[i]
+
+              row[["p"]] <- p[i]
+
+              table$addRow(rowKey = items[i], values = row)
+            }
+
             
             
             

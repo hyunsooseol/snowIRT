@@ -44,4 +44,9 @@ options:
       title: 'Step measue'
       type: Bool
       default: false
+
+    - name: ifit
+      title: 'Fit measue for interaction'
+      type: Bool
+      default: false
 ...

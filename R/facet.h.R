@@ -12,7 +12,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             rm = FALSE,
             im = FALSE,
             inter = FALSE,
-            sm = FALSE, ...) {
+            sm = FALSE,
+            ifit = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -49,6 +50,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "sm",
                 sm,
                 default=FALSE)
+            private$..ifit <- jmvcore::OptionBool$new(
+                "ifit",
+                ifit,
+                default=FALSE)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
@@ -57,6 +62,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..im)
             self$.addOption(private$..inter)
             self$.addOption(private$..sm)
+            self$.addOption(private$..ifit)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -65,7 +71,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         rm = function() private$..rm$value,
         im = function() private$..im$value,
         inter = function() private$..inter$value,
-        sm = function() private$..sm$value),
+        sm = function() private$..sm$value,
+        ifit = function() private$..ifit$value),
     private = list(
         ..dep = NA,
         ..id = NA,
@@ -73,7 +80,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..rm = NA,
         ..im = NA,
         ..inter = NA,
-        ..sm = NA)
+        ..sm = NA,
+        ..ifit = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -85,7 +93,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         im = function() private$.items[["im"]],
         rm = function() private$.items[["rm"]],
         inter = function() private$.items[["inter"]],
-        sm = function() private$.items[["sm"]]),
+        sm = function() private$.items[["sm"]],
+        ifit = function() private$.items[["ifit"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -197,7 +206,31 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="se", 
                         `title`="SE", 
-                        `type`="number"))))}))
+                        `type`="number"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="ifit",
+                title="Item fit",
+                visible="(ifit)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="outfit", 
+                        `title`="Outfit_t", 
+                        `type`="number"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"))))}))
 
 facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "facetBase",
@@ -231,6 +264,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param im .
 #' @param inter .
 #' @param sm .
+#' @param ifit .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -239,6 +273,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -256,7 +291,8 @@ facet <- function(
     rm = FALSE,
     im = FALSE,
     inter = FALSE,
-    sm = FALSE) {
+    sm = FALSE,
+    ifit = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -279,7 +315,8 @@ facet <- function(
         rm = rm,
         im = im,
         inter = inter,
-        sm = sm)
+        sm = sm,
+        ifit = ifit)
 
     analysis <- facetClass$new(
         options = options,

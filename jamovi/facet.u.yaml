@@ -30,7 +30,7 @@ children:
     margin: large
     children:
       - type: Label
-        label: Tables
+        label: 'Facet measure'
         fitToGrid: true
         cell:
           column: 0
@@ -44,3 +44,8 @@ children:
             name: inter
           - type: CheckBox
             name: sm
+      - type: Label
+        label: 'Fit'
+        children: 
+          - type: CheckBox
+            name: ifit
