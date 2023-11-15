@@ -122,7 +122,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        inter <- subset(facet.estimates, facet.estimates$facet == "rater:task")
        
          inter<- inter |> tidyr::separate(parameter, c("rater", "task"), ":")
-         inter$task <-  gsub("task", "", inter$task) 
+         inter$task <-  gsub("tasktask", "task", inter$task) 
          inter <- data.frame(inter$rater, inter$task, inter$xsi, inter$se.xsi)
          colnames(inter) <- c("Rater", "Task","Measure","SE")
          
