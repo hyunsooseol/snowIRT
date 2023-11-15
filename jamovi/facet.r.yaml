@@ -1,6 +1,6 @@
 ---
 name:  facet
-title: Facet Model
+title: Many Facet Model
 jrs:   '1.1'
 
 items:
@@ -184,4 +184,18 @@ items:
         - name: infit
           title: 'Infit'
           format: number     
+
+    - name: plot1
+      title: 'Rater plot'
+      type:  Image
+      visible: (plot1)
+      renderFun: .plot1
+      refs: eRm
+      clearWith:
+        - dep
+        - id
+        - facet
+        - width1
+        - height1
+        - angle
 ...

@@ -321,7 +321,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             super$initialize(
                 options=options,
                 name="",
-                title="Dichotomous Rasch Model",
+                title="Dichotomous Model",
                 refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
@@ -629,7 +629,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 weightsSupport = 'none')
         }))
 
-#' Dichotomous Rasch Model
+#' Dichotomous Model
 #'
 #' 
 #' @param data The data as a data frame.

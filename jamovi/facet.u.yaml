@@ -1,4 +1,4 @@
-title: Facet Model
+title: Many Facet Model
 name: facet
 jus: '3.0'
 stage: 0
@@ -20,7 +20,7 @@ children:
             isTarget: true
             maxItemCount: 1
       - type: TargetLayoutBox
-        label: 'Facets'
+        label: Facets
         children:
           - type: VariablesListBox
             name: facet
@@ -30,7 +30,7 @@ children:
     margin: large
     children:
       - type: Label
-        label: 'Facet measure'
+        label: Facet measure
         fitToGrid: true
         cell:
           column: 0
@@ -46,9 +46,16 @@ children:
             name: sm
       - type: Label
         label: 'Fit'
-        children: 
+        children:
           - type: CheckBox
             name: ifit
+      - type: Label
+        label: 'Person measure'
+        children:
+          - type: CheckBox
+            name: pm
+          - type: CheckBox
+            name: pfit
       - type: LayoutBox
         stretchFactor: 1
         margin: large
@@ -58,9 +65,24 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Person measure'
+            label: 'Bar plots'
             children:
+              - type: TextBox
+                name: angle
+                format: number
+                suggestedValues:
+                  - value: 0
+                  - value: 45
+                  - value: 90
               - type: CheckBox
-                name: pm        
-              - type: CheckBox
-                name: pfit     
+                name: plot1
+                style: list-inline
+                children:
+                  - type: TextBox
+                    name: width1
+                    format: number
+                    enable: (plot1)
+                  - type: TextBox
+                    name: height1
+                    format: number
+                    enable: (plot1)

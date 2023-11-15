@@ -44,8 +44,13 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>"
         )
         
-        
+        if(isTRUE(self$options$plot1)){
+          width <- self$options$width1
+          height <- self$options$height1
+          self$results$plot1$setSize(width, height)
+        }  
       
+        
       },
       
       
@@ -62,6 +67,12 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         #                         pid=subjects)
         
         #https://rpubs.com/isbell_daniel/735520
+        
+        if (is.null(self$options$dep) ||
+            is.null(self$options$id) ||
+            is.null(self$options$facet)) return()
+        
+        
         
         dep <- self$options$dep
         id <- self$options$id
@@ -109,7 +120,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          
         sm <- subset(facet.estimates, facet.estimates$facet == "step")
          
-         # Item measure table----------------
+         # Task measure table----------------
            
            table<- self$results$im
           
@@ -151,6 +162,18 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              
              table$addRow(rowKey = items[i], values = row)
            }
+           
+           if(isTRUE(self$options$plot1)){
+           
+             rm<- as.data.frame(rm)
+             colnames(rm) <- c("Rater", "facet", "Value", "SE")
+             
+            # Rater bar plot--------
+           image <- self$results$plot1
+           image$setState(rm)
+           
+           }
+           
            
            # Interaction measure table----------------
            
@@ -304,7 +327,45 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               table$addRow(rowKey=name, values=row)
               
             }
-            
+      },
+      
+      .plot1 = function(image, ggtheme, theme,...) {
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        rm <- image$state
+        
+         fill <- theme$fill[2]
+         color <- theme$color[1]
+        
+        plot1 <- ggplot(data=rm, aes(x=Rater, y=Value)) +
+        
+          geom_bar(
+            stat="identity",
+           # position="dodge",
+           # width = 0.7,
+             fill=fill,
+             color=color
+          ) +  theme_bw()
+    
+       
+        if (self$options$angle > 0) {
+          plot1 <- plot1 + ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+              angle = self$options$angle, hjust = 1
+            )
+          )
+        }
+       
+        plot1+ggtheme 
+        
+        print(plot1)
+        TRUE
+        
+      }
+      
+      
              
-        })
+        )
 )

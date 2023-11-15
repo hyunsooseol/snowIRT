@@ -422,7 +422,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Polytomous Rasch Model",
+                title="Polytomous Model",
                 refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
@@ -884,7 +884,7 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 weightsSupport = 'none')
         }))
 
-#' Polytomous Rasch Model
+#' Polytomous Model
 #'
 #' 
 #' @param data The data as a data frame.

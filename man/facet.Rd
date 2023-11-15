@@ -2,7 +2,7 @@
 % Please edit documentation in R/facet.h.R
 \name{facet}
 \alias{facet}
-\title{Facet Model}
+\title{Many Facet Model}
 \usage{
 facet(
   data,
@@ -15,7 +15,11 @@ facet(
   sm = FALSE,
   ifit = FALSE,
   pm = FALSE,
-  pfit = FALSE
+  pfit = FALSE,
+  angle = 0,
+  plot1 = FALSE,
+  width1 = 500,
+  height1 = 500
 )
 }
 \arguments{
@@ -40,6 +44,14 @@ facet(
 \item{pm}{.}
 
 \item{pfit}{.}
+
+\item{angle}{.}
+
+\item{plot1}{.}
+
+\item{width1}{.}
+
+\item{height1}{.}
 }
 \value{
 A results object containing:
@@ -53,6 +65,7 @@ A results object containing:
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
+  \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -62,5 +75,5 @@ Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.f
 \code{as.data.frame(results$im)}
 }
 \description{
-Facet Model
+Many Facet Model
 }

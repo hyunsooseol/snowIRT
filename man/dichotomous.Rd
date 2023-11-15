@@ -2,7 +2,7 @@
 % Please edit documentation in R/dichotomous.h.R
 \name{dichotomous}
 \alias{dichotomous}
-\title{Dichotomous Rasch Model}
+\title{Dichotomous Model}
 \usage{
 dichotomous(
   data,
@@ -132,5 +132,5 @@ Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.f
 \code{as.data.frame(results$items)}
 }
 \description{
-Dichotomous Rasch Model
+Dichotomous Model
 }

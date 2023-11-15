@@ -14,23 +14,23 @@ description: >-
   Scores Curve,and Item Characteristic Curves for DIF using MML estimation of
   the Rasch measurement model.
 analyses:
-  - title: Dichotomous Rasch Model
+  - title: Dichotomous Model
     name: dichotomous
     ns: snowIRT
     menuGroup: snowIRT
-    menuTitle: Dichotomous Rasch Model
+    menuTitle: Dichotomous Model
     menuSubgroup: IRT
-  - title: Polytomous Rasch Model
+  - title: Polytomous Model
     name: polytomous
     ns: snowIRT
     menuGroup: snowIRT
-    menuTitle: Polytomous Rasch Model
+    menuTitle: Polytomous Model
     menuSubgroup: IRT
-  - title: Facet Model
+  - title: Many Facet Model
     name: facet
     ns: snowIRT
     menuGroup: snowIRT
-    menuTitle: Facet Model
+    menuTitle: Many Facet Model
     menuSubgroup: IRT
   - title: Raju & Mantel-Haenszel method
     name: dif

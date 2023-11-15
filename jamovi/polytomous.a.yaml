@@ -1,6 +1,6 @@
 ---
 name:  polytomous
-title: Polytomous Rasch Model
+title: Polytomous Model
 menuGroup: snowIRT
 menuSubgroup: IRT
 version: '1.0.0'

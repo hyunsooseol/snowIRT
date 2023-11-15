@@ -2,7 +2,7 @@
 % Please edit documentation in R/polytomous.h.R
 \name{polytomous}
 \alias{polytomous}
-\title{Polytomous Rasch Model}
+\title{Polytomous Model}
 \usage{
 polytomous(
   data,
@@ -169,5 +169,5 @@ A results object containing:
 }
 }
 \description{
-Polytomous Rasch Model
+Polytomous Model
 }
