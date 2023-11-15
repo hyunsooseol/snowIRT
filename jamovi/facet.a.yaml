@@ -46,7 +46,7 @@ options:
       default: false
 
     - name: ifit
-      title: 'Fit measue for interaction'
+      title: 'Interaction fit '
       type: Bool
       default: false
 
@@ -60,15 +60,8 @@ options:
       type: Bool
       default: false      
 
-    - name: angle
-      title: Angle of x-axis labels
-      type: Number
-      min: 0
-      max: 90
-      default: 0
-
     - name: plot1
-      title: 'Rater plot'
+      title: 'Rater'
       type: Bool
       default: false
 
@@ -78,6 +71,21 @@ options:
       default: 500
       
     - name: height1
+      type: Integer
+      title: "X"
+      default: 500      
+
+    - name: plot2
+      title: 'Item'
+      type: Bool
+      default: false
+
+    - name: width2
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height2
       type: Integer
       title: "X"
       default: 500      

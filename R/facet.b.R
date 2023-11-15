@@ -50,6 +50,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$plot1$setSize(width, height)
         }  
       
+        if(isTRUE(self$options$plot2)){
+          width <- self$options$width2
+          height <- self$options$height2
+          self$results$plot2$setSize(width, height)
+        }  
         
       },
       
@@ -116,7 +121,13 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        # interaction-------
        inter <- subset(facet.estimates, facet.estimates$facet == "rater:task")
        
-         # step measure-----------
+         inter<- inter |> tidyr::separate(parameter, c("rater", "task"), ":")
+         inter$task <-  gsub("task", "", inter$task) 
+         inter <- data.frame(inter$rater, inter$task, inter$xsi, inter$se.xsi)
+         colnames(inter) <- c("Rater", "Task","Measure","SE")
+         
+         
+       # step measure-----------
          
         sm <- subset(facet.estimates, facet.estimates$facet == "step")
          
@@ -141,6 +152,19 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              table$addRow(rowKey = items[i], values = row)
            }
            
+           # Item bar plot----------
+           
+           if(isTRUE(self$options$plot2)){
+             
+             im <- as.data.frame(im)
+             colnames(im) <- c("Task", "facet", "Value", "SE")
+             
+             # Rater bar plot--------
+             image <- self$results$plot2
+             image$setState(im)
+             
+           }
+           
            # Rater measure table----------------
            
            table<- self$results$rm
@@ -163,6 +187,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              table$addRow(rowKey = items[i], values = row)
            }
            
+           
+           # Rater bar plot----------
+           
            if(isTRUE(self$options$plot1)){
            
              rm<- as.data.frame(rm)
@@ -174,28 +201,52 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            
            }
            
-           
+          
            # Interaction measure table----------------
            
            table<- self$results$inter
            
            inter<- as.data.frame(inter)
            
+           names <- dimnames(inter)[[1]]
+           
+           rater <- as.vector(inter[[1]])
+           task <- as.vector(inter[[2]])
            dif<- as.vector(inter[[3]])
            se<- as.vector(inter[[4]])
            
            items <- as.vector(inter[[1]])
            
-           for (i in seq_along(items)) {
+           # for (i in seq_along(items)) {
+           #   
+           #   row <- list()
+           #   
+           #   row[["task"]] <- task[i]
+           #   row[["measure"]] <-dif[i]
+           #   row[["se"]] <- se[i]
+           #   
+           #   table$addRow(rowKey = items[i], values = row)
+           # }
+           
+           for (name in names) {
              
              row <- list()
              
-             row[["measure"]] <-dif[i]
+             row[["rater"]]   <-  inter[name, 1]
+             row[["task"]]   <-  inter[name, 2]
+             row[["measure"]] <-  inter[name, 3]
+             row[["se"]] <-  inter[name, 4]
              
-             row[["se"]] <- se[i]
+             table$addRow(rowKey=name, values=row)
              
-             table$addRow(rowKey = items[i], values = row)
            }
+           
+           
+           
+           
+           
+           
+           
            
            # Step measure table----------------
            
@@ -344,26 +395,63 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           geom_bar(
             stat="identity",
            # position="dodge",
-           # width = 0.7,
+            width = 0.7,
              fill=fill,
              color=color
-          ) +  theme_bw()
+          ) +  theme_bw() + coord_flip()
     
-       
-        if (self$options$angle > 0) {
-          plot1 <- plot1 + ggplot2::theme(
-            axis.text.x = ggplot2::element_text(
-              angle = self$options$angle, hjust = 1
-            )
-          )
-        }
+        # 
+        # if (self$options$angle > 0) {
+        #   plot1 <- plot1 + ggplot2::theme(
+        #     axis.text.x = ggplot2::element_text(
+        #       angle = self$options$angle, hjust = 1
+        #     )
+        #   )
+        # }
        
         plot1+ggtheme 
         
         print(plot1)
         TRUE
         
+      },
+      
+      .plot2 = function(image, ggtheme, theme,...) {
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        im <- image$state
+        
+        fill <- theme$fill[2]
+        color <- theme$color[1]
+        
+        plot2 <- ggplot(data=im, aes(x=Task, y=Value)) +
+          
+          geom_bar(
+            stat="identity",
+            #position="dodge",
+            width = 0.7,
+            fill=fill,
+            color=color
+          ) +  theme_bw()+ coord_flip()
+        
+        
+        # if (self$options$angle > 0) {
+        #   plot2 <- plot2 + ggplot2::theme(
+        #     axis.text.x = ggplot2::element_text(
+        #       angle = self$options$angle, hjust = 1
+        #     )
+        #   )
+        # }
+        
+        plot2+ggtheme 
+        
+        print(plot2)
+        TRUE
+        
       }
+      
       
       
              

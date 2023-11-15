@@ -77,6 +77,14 @@ items:
           type: 'text'
           content: ($key)
 
+        - name: rater
+          title: 'Rater'
+          type: 'text'
+          
+        - name: task
+          title: 'Task'
+          type: 'text'
+          
         - name: measure
           title: Measure
           type: number
@@ -186,16 +194,30 @@ items:
           format: number     
 
     - name: plot1
-      title: 'Rater plot'
+      title: 'Rater'
       type:  Image
       visible: (plot1)
       renderFun: .plot1
-      refs: eRm
+      refs: snowIRT
       clearWith:
         - dep
         - id
         - facet
         - width1
         - height1
+        - angle
+
+    - name: plot2
+      title: 'Item'
+      type:  Image
+      visible: (plot2)
+      renderFun: .plot2
+      refs: snowIRT
+      clearWith:
+        - dep
+        - id
+        - facet
+        - width2
+        - height2
         - angle
 ...
