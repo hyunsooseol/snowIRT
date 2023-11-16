@@ -32,10 +32,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <body>
             <div class='instructions'>
             <p>____________________________________________________________________________________</p>
-            <p>1. The variables should be named <b>'rater'</b> and <b>'task'(task1, task2. . .)</b> respectively. Any other variable name will result in an error message.</b>
-            <p>2. In the Facet variable box, you must put the variable <b>'rater'</b> first.</p>
-            <p>3. You can currently only put <b>two variables</b> in the Facet variable box.</p>
-            <p>4. We recommend using <a href='https://www.winsteps.com' target = '_blank'>Facet software</a> for analyzing various experimental designs.</p>
+            <p>1. If your data format is in wide, you need to convert it to long format in order to run analysis.</p>
+            <p>2. The variables should be named <b>'rater'</b> and <b>'task'(task1, task2. . .)</b> respectively. Any other variable name will result in an error message.</b>
+            <p>3. In the Facet variable box, you must put the variable <b>'rater'</b> first.</p>
+            <p>4. You can currently only put <b>two variables</b> in the Facet variable box.</p>
+            <p>5. We recommend using <a href='https://www.winsteps.com' target = '_blank'>Facet software</a> for analyzing various experimental designs.</p>
             <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
             <p>____________________________________________________________________________________</p>
             </div>
