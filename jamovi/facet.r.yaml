@@ -8,13 +8,17 @@ items:
       title: Instructions
       type: Html
       visible: True
+
+    - name:  text1
+      title: ''
+      type:  Preformatted
       
     - name:  text
       title: 'WLE Reliability'
       type:  Preformatted
 
     - name: im
-      title:  'Item measure'
+      title:  'Task measure'
       type: Table
       visible: (im)
       clearWith:
@@ -118,7 +122,7 @@ items:
           type: number          
 
     - name: ifit
-      title:  'Item fit'
+      title:  'Interaction fit: Rater X Task'
       type: Table
       visible: (ifit)
       clearWith:
@@ -132,6 +136,14 @@ items:
           title: ''
           type: 'text'
           content: ($key)
+
+        - name: rater
+          title: 'Rater'
+          type: 'text'
+
+        - name: task
+          title: 'Task'
+          type: 'text'
 
         - name: outfit
           title: 'Outfit_t'
@@ -194,7 +206,7 @@ items:
           format: number     
 
     - name: plot1
-      title: 'Rater'
+      title: 'Rater plot'
       type:  Image
       visible: (plot1)
       renderFun: .plot1
@@ -205,10 +217,9 @@ items:
         - facet
         - width1
         - height1
-        - angle
-
+ 
     - name: plot2
-      title: 'Item'
+      title: 'Task plot'
       type:  Image
       visible: (plot2)
       renderFun: .plot2
@@ -219,5 +230,20 @@ items:
         - facet
         - width2
         - height2
+ 
+    - name: plot3
+      title: 'Rater X Task plot'
+      type:  Image
+      visible: (plot3)
+      renderFun: .plot3
+      refs: snowIRT
+      clearWith:
+        - dep
+        - id
+        - facet
+        - width3
+        - height3
         - angle
+        
+
 ...

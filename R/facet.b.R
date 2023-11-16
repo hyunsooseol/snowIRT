@@ -32,12 +32,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <body>
             <div class='instructions'>
             <p>____________________________________________________________________________________</p>
-            <p>1. Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
-            <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
-            <p>3. The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
-            <p>4. The <b>eRm</b> R package was used for the person-item map for PCM.</p>
-            <p>5. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a>.</p>
-            <p>6. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
+            <p>1. The variables should be named <b>'rater'</b> and <b>'task'(task1, task2. . .)</b> respectively. Any other variable name will result in an error message.</b>
+            <p>2. In the Facet variable box, you must put the variable <b>'rater'</b> first.</p>
+            <p>3. You can currently only put <b>two variables</b> in the Facet variable box.</p>
+            <p>4. We recommend using <a href='https://www.winsteps.com' target = '_blank'>Facet software</a> for analyzing various experimental designs.</p>
+            <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
             <p>____________________________________________________________________________________</p>
             </div>
             </body>
@@ -56,16 +55,24 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$plot2$setSize(width, height)
         }  
         
+        if(isTRUE(self$options$plot3)){
+          width <- self$options$width3
+          height <- self$options$height3
+          self$results$plot3$setSize(width, height)
+        }
+
+
+        
       },
       
       
       .run = function() {
 
-        # example with dataset (facet1.csv) ----------
-        # facet1<- read.csv("facet1.csv")
-        # attach(facet1)
-        # facets = dplyr::select(facet1, raters:trait)
-        # formula <- ~ trait + raters +step
+        # example ----------
+        # facet<- read.csv("facet.csv")
+        # attach(facet)
+        # facets = dplyr::select(facet, rater:task)
+        # formula <- ~ task + rater +step
         # res <- TAM::tam.mml.mfr(score,
         #                         facets =  facets,
         #                         formulaA = formula,
@@ -105,7 +112,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                 formulaA = formula)
         
         
-      #  self$results$text$setContent(res$xsi.facets)
+        #self$results$text1$setContent(res$xsi.facets)
         
          # Facet estimates----------
          
@@ -113,9 +120,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          
          im <- subset(facet.estimates, facet.estimates$facet == "task")
          
-       #  self$results$text$setContent(im)
-      
-         # rater measure----------   
+       # rater measure----------   
        rm <- subset(facet.estimates, facet.estimates$facet == "rater")
       
        # interaction-------
@@ -130,6 +135,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        # step measure-----------
          
         sm <- subset(facet.estimates, facet.estimates$facet == "step")
+         
          
          # Task measure table----------------
            
@@ -215,7 +221,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            dif<- as.vector(inter[[3]])
            se<- as.vector(inter[[4]])
            
-           items <- as.vector(inter[[1]])
+           #items <- as.vector(inter[[1]])
            
            # for (i in seq_along(items)) {
            #   
@@ -241,9 +247,10 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              
            }
            
+           # Interaction plot--------------
            
-           
-           
+           image <- self$results$plot3
+           image$setState(inter)
            
            
            
@@ -271,38 +278,49 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            }
            
            
-            # item fit statistics------------
-            ## fit is shown for the rater*item combinations
+            # Interaction fit table------------
+            # fit is shown for the rater*item combinations
 
               ifit <- TAM::msq.itemfit(res)
-
-           # self$results$text$setContent(ifit)
-
+              ifit <- as.data.frame(ifit$itemfit)
+              ifit<- dplyr::select(ifit, c("item", "Outfit_t","Outfit_p"))
+           
+              # THe order !!!(rater * item), otherwise table will be empty!!!
+              ifit$item <-  gsub("-rater", "rater", ifit$item) 
+              ifit$item <-  gsub("tasktask", "task", ifit$item) 
+              ifit<- ifit |> tidyr::separate(item, c("rater", "task"), "-")
+              
+              ifit<- data.frame(ifit)
+           
             # Item fit table------------
 
             table <- self$results$ifit
 
-            ifit <- as.data.frame(ifit$itemfit)
-
-            outfit.t<- as.vector(ifit[4])
-            outfit<- outfit.t$Outfit
-            p <- as.vector(ifit[5])
-            p<- p$Outfit_p
-
-            items<- as.vector(ifit[[1]])
-
-            for (i in seq_along(items)) {
-
-              row <- list()
-
-              row[["outfit"]] <-outfit[i]
-
-              row[["p"]] <- p[i]
-
-              table$addRow(rowKey = items[i], values = row)
-            }
-
-           # Person ability----------
+            names <- dimnames(ifit)[[1]]
+           
+            rater <- as.vector(ifit[[1]])
+            task <- as.vector(ifit[[2]])
+            outfit<- as.vector(ifit[[3]])
+            p<- as.vector(ifit[[4]])
+           
+           
+           for (name in names) {
+             
+             row <- list()
+             
+             row[["rater"]]   <-  ifit[name, 1]
+             row[["task"]]   <-  ifit[name, 2]
+             row[["outfit"]] <-  ifit[name, 3]
+             row[["p"]] <-  ifit[name, 4]
+             
+             table$addRow(rowKey=name, values=row)
+             
+           }
+           
+           
+            
+            
+            # Person ability----------
             persons <- TAM::tam.wle(res)
             
             per <-data.frame(persons$pid, persons$PersonScores,
@@ -400,14 +418,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              color=color
           ) +  theme_bw() + coord_flip()
     
-        # 
-        # if (self$options$angle > 0) {
-        #   plot1 <- plot1 + ggplot2::theme(
-        #     axis.text.x = ggplot2::element_text(
-        #       angle = self$options$angle, hjust = 1
-        #     )
-        #   )
-        # }
        
         plot1+ggtheme 
         
@@ -437,23 +447,41 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           ) +  theme_bw()+ coord_flip()
         
         
-        # if (self$options$angle > 0) {
-        #   plot2 <- plot2 + ggplot2::theme(
-        #     axis.text.x = ggplot2::element_text(
-        #       angle = self$options$angle, hjust = 1
-        #     )
-        #   )
-        # }
-        
         plot2+ggtheme 
         
         print(plot2)
         TRUE
         
+      },
+      
+      .plot3 = function(image, ggtheme, theme,...) {
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        inter <- image$state
+      
+        plot3<- ggplot(inter, aes(x=Task, y=Measure, group=Rater)) +
+          geom_line(size=1.2,aes(color=Rater))+
+          geom_point(size=3,aes(color=Rater)) +  theme_bw()
+        
+
+        if (self$options$angle > 0) {
+          plot3 <- plot3 + ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+              angle = self$options$angle, hjust = 1
+            )
+          )
+        }
+        
+        plot3+ggtheme 
+        
+        print(plot3)
+        TRUE
+        
+        
+      
       }
-      
-      
-      
              
         )
 )

@@ -20,43 +20,51 @@ options:
     - name: id
       title: 'Subject'
       type: Variable
+      suggested:
+        - nominal
+      permitted:
+        - factor
 
     - name: facet
       title: 'Facets'
       type: Variables
+      suggested:
+        - nominal
+      permitted:
+        - factor
  
     - name: rm
-      title: 'Rater measure'
+      title: 'Rater'
       type: Bool
       default: false
  
     - name: im
-      title: 'Item measue'
+      title: 'Task'
       type: Bool
       default: false
 
     - name: inter
-      title: 'Interaction measure'
+      title: 'Rater X Task'
       type: Bool
       default: false
 
     - name: sm
-      title: 'Step measure'
+      title: 'Step'
       type: Bool
       default: false
 
     - name: ifit
-      title: 'Interaction fit '
+      title: 'Rater X Task'
       type: Bool
       default: false
 
     - name: pm
-      title: 'Person measure'
+      title: 'Measure'
       type: Bool
       default: false
       
     - name: pfit
-      title: 'Person fit'
+      title: 'Fit'
       type: Bool
       default: false      
 
@@ -76,7 +84,7 @@ options:
       default: 500      
 
     - name: plot2
-      title: 'Item'
+      title: 'Task'
       type: Bool
       default: false
 
@@ -89,4 +97,26 @@ options:
       type: Integer
       title: "X"
       default: 500      
+
+    - name: plot3
+      title: 'Rater X Task'
+      type: Bool
+      default: false
+
+    - name: width3
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height3
+      type: Integer
+      title: "Height"
+      default: 500
+
+    - name: angle
+      title: Angle of x-axis labels
+      type: Number
+      min: 0
+      max: 90
+      default: 0
 ...

@@ -21,7 +21,11 @@ facet(
   height1 = 500,
   plot2 = FALSE,
   width2 = 500,
-  height2 = 500
+  height2 = 500,
+  plot3 = FALSE,
+  width3 = 500,
+  height3 = 500,
+  angle = 0
 )
 }
 \arguments{
@@ -58,11 +62,20 @@ facet(
 \item{width2}{.}
 
 \item{height2}{.}
+
+\item{plot3}{.}
+
+\item{width3}{.}
+
+\item{height3}{.}
+
+\item{angle}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
+  \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
@@ -73,6 +86,7 @@ A results object containing:
   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
