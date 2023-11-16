@@ -119,4 +119,19 @@ options:
       min: 0
       max: 90
       default: 0
+
+    - name: plot4
+      title: 'Wrightmap'
+      type: Bool
+      default: false      
+
+    - name: width4
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height4
+      type: Integer
+      title: "X"
+      default: 500   
 ...

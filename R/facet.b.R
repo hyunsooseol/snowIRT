@@ -10,6 +10,7 @@
 #' @importFrom TAM tam.threshold
 #' @importFrom TAM msq.itemfit
 #' @importFrom TAM tam.wle
+#' @importFrom ShinyItemAnalysis ggWrightMap
 #' @import ggplot2
 #' @export
 
@@ -32,12 +33,12 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <body>
             <div class='instructions'>
             <p>____________________________________________________________________________________</p>
-            <p>1. If your data format is in wide, you need to convert it to long format in order to run analysis.</p>
+            <p>1. If your data format is in wide, you need to convert it to <b>long format</b> in order to run analysis.</p>
             <p>2. The variables should be named <b>'rater'</b> and <b>'task'(task1, task2. . .)</b> respectively. Any other variable name will result in an error message.</b>
             <p>3. In the Facet variable box, you must put the variable <b>'rater'</b> first.</p>
             <p>4. You can currently only put <b>two variables</b> in the Facet variable box.</p>
             <p>5. We recommend using <a href='https://www.winsteps.com' target = '_blank'>Facet software</a> for analyzing various experimental designs.</p>
-            <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
+            <p>6. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
             <p>____________________________________________________________________________________</p>
             </div>
             </body>
@@ -62,7 +63,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$plot3$setSize(width, height)
         }
 
-
+        if(isTRUE(self$options$plot4)){
+          width <- self$options$width4
+          height <- self$options$height4
+          self$results$plot4$setSize(width, height)
+        }
         
       },
       
@@ -115,11 +120,12 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         #self$results$text1$setContent(res$xsi.facets)
         
-         # Facet estimates----------
+         # Facet estimates--------------------------
          
          facet.estimates <- res$xsi.facets # Whole estimates
-         
-         im <- subset(facet.estimates, facet.estimates$facet == "task")
+        
+        # Task measure---------------------------- 
+        im <- subset(facet.estimates, facet.estimates$facet == "task")
          
        # rater measure----------   
        rm <- subset(facet.estimates, facet.estimates$facet == "rater")
@@ -131,12 +137,42 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          inter$task <-  gsub("tasktask", "task", inter$task) 
          inter <- data.frame(inter$rater, inter$task, inter$xsi, inter$se.xsi)
          colnames(inter) <- c("Rater", "Task","Measure","SE")
-         
-         
+      
        # step measure-----------
+       sm <- subset(facet.estimates, facet.estimates$facet == "step")
+       
+        # Person ability----------
+         persons <- TAM::tam.wle(res)
          
-        sm <- subset(facet.estimates, facet.estimates$facet == "step")
+         per <-data.frame(persons$pid, persons$PersonScores,
+                          persons$theta, persons$error,
+                          persons$WLE.rel) 
          
+         # WLE Reliability-------
+         
+         pw<- as.vector(per[[5]])[1]
+         self$results$text$setContent(pw)  
+       
+         # Wrightmap plot---------
+         
+         if(isTRUE(self$options$plot4)){  
+           
+           itemm<- data.frame(im$parameter, im$xsi)
+           colnames(itemm) <- c("vars", "measure")
+           
+           itemm$vars <-  gsub("tasktask", "task", itemm$vars)
+           
+           #self$results$text1$setContent(itemm)
+           
+           vars <- as.vector(itemm[[1]])
+           ime <- as.vector(itemm[[2]]) 
+           pme <- as.vector(per[[3]])
+           
+           image <- self$results$plot4
+           state <- list(pme, ime, vars)
+           image$setState(state)
+           
+         }
          
          # Task measure table----------------
            
@@ -254,8 +290,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            image$setState(inter)
            
            
-           
-           
            # Step measure table----------------
            
            table<- self$results$sm
@@ -319,20 +353,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            }
            
            
-            
-            
-            # Person ability----------
-            persons <- TAM::tam.wle(res)
-            
-            per <-data.frame(persons$pid, persons$PersonScores,
-                             persons$theta, persons$error,
-                             persons$WLE.rel) 
-            
-            
-            # WLE Reliability-------
-            
-            pw<- as.vector(per[[5]])[1]
-            self$results$text$setContent(pw)
+           
             
             
             # Person measure table-------------
@@ -397,7 +418,10 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               table$addRow(rowKey=name, values=row)
               
             }
-      },
+      
+           
+            
+            },
       
       .plot1 = function(image, ggtheme, theme,...) {
         
@@ -480,8 +504,25 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         print(plot3)
         TRUE
         
-        
+      },
       
+      .plot4 = function(image,...) {
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        personmeasure <- image$state[[1]]
+        imeasure <- image$state[[2]]
+        vars <- image$state[[3]]
+        
+        plot4<- ShinyItemAnalysis::ggWrightMap(personmeasure, imeasure,
+                                               item.names = vars,
+                                               # rel_widths = c(1, 1), 
+                                               color = "deepskyblue")
+        
+        print(plot4)
+        TRUE
+        
       }
              
         )

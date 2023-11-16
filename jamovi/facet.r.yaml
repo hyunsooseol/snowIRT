@@ -244,6 +244,18 @@ items:
         - width3
         - height3
         - angle
-        
+
+    - name: plot4
+      title: 'Wright map'
+      type:  Image
+      visible: (plot4)
+      renderFun: .plot4
+      refs: snowIRT
+      clearWith:
+        - dep
+        - id
+        - facet
+        - width4
+        - height4   
 
 ...

@@ -25,7 +25,10 @@ facet(
   plot3 = FALSE,
   width3 = 500,
   height3 = 500,
-  angle = 0
+  angle = 0,
+  plot4 = FALSE,
+  width4 = 500,
+  height4 = 500
 )
 }
 \arguments{
@@ -70,6 +73,12 @@ facet(
 \item{height3}{.}
 
 \item{angle}{.}
+
+\item{plot4}{.}
+
+\item{width4}{.}
+
+\item{height4}{.}
 }
 \value{
 A results object containing:
@@ -87,6 +96,7 @@ A results object containing:
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

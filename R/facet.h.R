@@ -25,7 +25,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             plot3 = FALSE,
             width3 = 500,
             height3 = 500,
-            angle = 0, ...) {
+            angle = 0,
+            plot4 = FALSE,
+            width4 = 500,
+            height4 = 500, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -124,6 +127,18 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 min=0,
                 max=90,
                 default=0)
+            private$..plot4 <- jmvcore::OptionBool$new(
+                "plot4",
+                plot4,
+                default=FALSE)
+            private$..width4 <- jmvcore::OptionInteger$new(
+                "width4",
+                width4,
+                default=500)
+            private$..height4 <- jmvcore::OptionInteger$new(
+                "height4",
+                height4,
+                default=500)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
@@ -145,6 +160,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..width3)
             self$.addOption(private$..height3)
             self$.addOption(private$..angle)
+            self$.addOption(private$..plot4)
+            self$.addOption(private$..width4)
+            self$.addOption(private$..height4)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -166,7 +184,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot3 = function() private$..plot3$value,
         width3 = function() private$..width3$value,
         height3 = function() private$..height3$value,
-        angle = function() private$..angle$value),
+        angle = function() private$..angle$value,
+        plot4 = function() private$..plot4$value,
+        width4 = function() private$..width4$value,
+        height4 = function() private$..height4$value),
     private = list(
         ..dep = NA,
         ..id = NA,
@@ -187,7 +208,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..plot3 = NA,
         ..width3 = NA,
         ..height3 = NA,
-        ..angle = NA)
+        ..angle = NA,
+        ..plot4 = NA,
+        ..width4 = NA,
+        ..height4 = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -206,7 +230,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pfit = function() private$.items[["pfit"]],
         plot1 = function() private$.items[["plot1"]],
         plot2 = function() private$.items[["plot2"]],
-        plot3 = function() private$.items[["plot3"]]),
+        plot3 = function() private$.items[["plot3"]],
+        plot4 = function() private$.items[["plot4"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -454,7 +479,20 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "facet",
                     "width3",
                     "height3",
-                    "angle")))}))
+                    "angle")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot4",
+                title="Wright map",
+                visible="(plot4)",
+                renderFun=".plot4",
+                refs="snowIRT",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "width4",
+                    "height4")))}))
 
 facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "facetBase",
@@ -501,6 +539,9 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param width3 .
 #' @param height3 .
 #' @param angle .
+#' @param plot4 .
+#' @param width4 .
+#' @param height4 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -516,6 +557,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -546,7 +588,10 @@ facet <- function(
     plot3 = FALSE,
     width3 = 500,
     height3 = 500,
-    angle = 0) {
+    angle = 0,
+    plot4 = FALSE,
+    width4 = 500,
+    height4 = 500) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -584,7 +629,10 @@ facet <- function(
         plot3 = plot3,
         width3 = width3,
         height3 = height3,
-        angle = angle)
+        angle = angle,
+        plot4 = plot4,
+        width4 = width4,
+        height4 = height4)
 
     analysis <- facetClass$new(
         options = options,
