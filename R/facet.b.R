@@ -118,6 +118,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                 formulaA = formula)
         
         
+        #self$results$text1$setContent(res)
         #self$results$text1$setContent(res$xsi.facets)
         
          # Facet estimates--------------------------

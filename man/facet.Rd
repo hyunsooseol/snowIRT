@@ -86,8 +86,8 @@ A results object containing:
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
-  \code{results$im} \tab \tab \tab \tab \tab a table \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
+  \code{results$im} \tab \tab \tab \tab \tab a table \cr
   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
@@ -101,9 +101,9 @@ A results object containing:
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$im$asDF}
+\code{results$rm$asDF}
 
-\code{as.data.frame(results$im)}
+\code{as.data.frame(results$rm)}
 }
 \description{
 Many Facet Rasch Model

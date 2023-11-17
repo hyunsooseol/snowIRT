@@ -221,8 +221,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         instructions = function() private$.items[["instructions"]],
         text1 = function() private$.items[["text1"]],
         text = function() private$.items[["text"]],
-        im = function() private$.items[["im"]],
         rm = function() private$.items[["rm"]],
+        im = function() private$.items[["im"]],
         inter = function() private$.items[["inter"]],
         sm = function() private$.items[["sm"]],
         ifit = function() private$.items[["ifit"]],
@@ -254,9 +254,9 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="WLE Reliability"))
             self$add(jmvcore::Table$new(
                 options=options,
-                name="im",
-                title="Task measure",
-                visible="(im)",
+                name="rm",
+                title="Rater measure",
+                visible="(rm)",
                 clearWith=list(
                     "dep",
                     "id",
@@ -278,9 +278,9 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
-                name="rm",
-                title="Rater measure",
-                visible="(rm)",
+                name="im",
+                title="Task measure",
+                visible="(im)",
                 clearWith=list(
                     "dep",
                     "id",
@@ -547,8 +547,8 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$im} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$im} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
@@ -562,9 +562,9 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$im$asDF}
+#' \code{results$rm$asDF}
 #'
-#' \code{as.data.frame(results$im)}
+#' \code{as.data.frame(results$rm)}
 #'
 #' @export
 facet <- function(
