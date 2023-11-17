@@ -26,11 +26,11 @@ analyses:
     menuGroup: snowIRT
     menuTitle: Polytomous Model
     menuSubgroup: IRT
-  - title: Many Facet Model
+  - title: Many Facet Rasch Model
     name: facet
     ns: snowIRT
     menuGroup: snowIRT
-    menuTitle: Many Facet Model
+    menuTitle: Many Facet Rasch Model
     menuSubgroup: IRT
   - title: Raju & Mantel-Haenszel method
     name: dif

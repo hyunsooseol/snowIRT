@@ -238,7 +238,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Many Facet Model")
+                title="Many Facet Rasch Model")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",
@@ -515,7 +515,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 weightsSupport = 'auto')
         }))
 
-#' Many Facet Model
+#' Many Facet Rasch Model
 #'
 #' 
 #' @param data .

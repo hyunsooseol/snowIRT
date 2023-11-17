@@ -2,7 +2,7 @@
 % Please edit documentation in R/facet.h.R
 \name{facet}
 \alias{facet}
-\title{Many Facet Model}
+\title{Many Facet Rasch Model}
 \usage{
 facet(
   data,
@@ -106,5 +106,5 @@ Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.f
 \code{as.data.frame(results$im)}
 }
 \description{
-Many Facet Model
+Many Facet Rasch Model
 }

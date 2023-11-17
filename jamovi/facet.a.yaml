@@ -1,6 +1,6 @@
 ---
 name:  facet
-title: Many Facet Model
+title: Many Facet Rasch Model
 menuGroup: snowIRT
 version: '1.0.0'
 jas: '1.2'
@@ -10,7 +10,7 @@ options:
       type: Data
 
     - name: dep
-      title: 'Score'
+      title: 'Response'
       type: Variable
       suggested:
          - continuous
