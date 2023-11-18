@@ -73,11 +73,6 @@ datasets:
     description: Health Literacy Survey
     tags:
       - Polytomous
-  - name: facet
-    path: facet.omv
-    description: simulation dataset
-    tags:
-      - Facet
   - name: guilford
     path: guilford.omv
     description: Guilford dataset

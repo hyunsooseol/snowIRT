@@ -74,17 +74,27 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       .run = function() {
 
-        # example ----------
-        # facet<- read.csv("facet.csv")
+       # Example------------------------------
+        # Wide to long for dataset using reshape packate
+        # data <- read.csv("guilford.csv")
+        # attach(data)
+        # long<- reshape::melt(data, id.vars =c("subject","rater"),
+        #                      variable_name = "task")
+        
+        
+        #-----------------------------------------
+        # facet<- read.csv("long.csv")
         # attach(facet)
         # facets = dplyr::select(facet, rater:task)
         # formula <- ~ task + rater +step
-        # res <- TAM::tam.mml.mfr(score,
+        # res <- TAM::tam.mml.mfr(value,
         #                         facets =  facets,
         #                         formulaA = formula,
-        #                         pid=subjects)
+        #                         pid=subject)
+        # res1 <- res$xsi.facets 
         
-        #https://rpubs.com/isbell_daniel/735520
+        #---------------------------------------------
+        
         
         if (is.null(self$options$dep) ||
             is.null(self$options$id) ||
@@ -123,16 +133,17 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
          # Facet estimates--------------------------
          
-         facet.estimates <- res$xsi.facets # Whole estimates
+         res1 <- res$xsi.facets # Whole estimates
         
         # Task measure---------------------------- 
-        im <- subset(facet.estimates, facet.estimates$facet == "task")
+        im <- subset(res1, res1$facet == "task")
+        im$parameter <-  gsub("tasktask", "task", im$parameter) 
          
        # rater measure----------   
-       rm <- subset(facet.estimates, facet.estimates$facet == "rater")
+       rm <- subset(res1, res1$facet == "rater")
       
        # interaction-------
-       inter <- subset(facet.estimates, facet.estimates$facet == "rater:task")
+       inter <- subset(res1, res1$facet == "rater:task")
        
          inter<- inter |> tidyr::separate(parameter, c("rater", "task"), ":")
          inter$task <-  gsub("tasktask", "task", inter$task) 
@@ -140,9 +151,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          colnames(inter) <- c("Rater", "Task","Measure","SE")
       
        # step measure-----------
-       sm <- subset(facet.estimates, facet.estimates$facet == "step")
+       sm <- subset(res1, res1$facet == "step")
        
-        # Person ability----------
+      #---------------------------------------------------------------------
+         
+         # Person ability----------
          persons <- TAM::tam.wle(res)
          
          per <-data.frame(persons$pid, persons$PersonScores,
