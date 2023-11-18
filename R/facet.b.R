@@ -332,7 +332,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
               ifit <- TAM::msq.itemfit(res)
               ifit <- as.data.frame(ifit$itemfit)
-              ifit<- dplyr::select(ifit, c("item", "Outfit_t","Outfit_p"))
+              ifit<- dplyr::select(ifit, c("item", "Outfit","Infit"))
            
               # THe order !!!(rater * item), otherwise table will be empty!!!
               ifit$item <-  gsub("-rater", "rater", ifit$item) 
@@ -350,7 +350,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             rater <- as.vector(ifit[[1]])
             task <- as.vector(ifit[[2]])
             outfit<- as.vector(ifit[[3]])
-            p<- as.vector(ifit[[4]])
+            infit<- as.vector(ifit[[4]])
            
            
            for (name in names) {
@@ -360,7 +360,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              row[["rater"]]   <-  ifit[name, 1]
              row[["task"]]   <-  ifit[name, 2]
              row[["outfit"]] <-  ifit[name, 3]
-             row[["p"]] <-  ifit[name, 4]
+             row[["infit"]] <-  ifit[name, 4]
              
              table$addRow(rowKey=name, values=row)
              

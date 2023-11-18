@@ -146,12 +146,12 @@ items:
           type: 'text'
 
         - name: outfit
-          title: 'Outfit_t'
+          title: 'Outfit'
           type: number
           
-        - name: p
-          title: p
-          format: zto,pvalue     
+        - name: infit
+          title: 'Infit'
+          type: number     
 
     - name: pm
       title:  'Person measure'

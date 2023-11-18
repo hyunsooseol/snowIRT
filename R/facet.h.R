@@ -382,12 +382,12 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="outfit", 
-                        `title`="Outfit_t", 
+                        `title`="Outfit", 
                         `type`="number"),
                     list(
-                        `name`="p", 
-                        `title`="p", 
-                        `format`="zto,pvalue"))))
+                        `name`="infit", 
+                        `title`="Infit", 
+                        `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pm",
