@@ -172,6 +172,15 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          if(isTRUE(self$options$plot4)){  
            
            itemm<- data.frame(im$parameter, im$xsi)
+           
+           # added rater measure into item-------
+           
+           rmm <- subset(res1, res1$facet == "rater")
+           rmm<- data.frame(rmm$parameter, rmm$xsi)
+           colnames(rmm) <- c("im.parameter", "im.xsi")
+           itemm <- rbind(itemm, rmm)
+           #---------------------------------
+           
            colnames(itemm) <- c("vars", "measure")
            
            itemm$vars <-  gsub("task", "", itemm$vars)
@@ -532,7 +541,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         plot4<- ShinyItemAnalysis::ggWrightMap(personmeasure, imeasure,
                                                item.names = vars,
                                                binwidth = 0.2,
-                                               # rel_widths = c(1, 1), 
+                                              # size=18,
+                                               ylab.b = "Facet measure",
+                                               rel_widths = c(1, 1.5),
                                                color = "deepskyblue")
         
         print(plot4)
