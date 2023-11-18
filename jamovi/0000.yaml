@@ -78,6 +78,11 @@ datasets:
     description: Guilford dataset
     tags:
       - Facet
+  - name: sirt
+    path: sirt.omv
+    description: simulation dataset
+    tags:
+      - Facet
   - name: dif
     path: dif.omv
     description: Raju & MH method
