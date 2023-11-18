@@ -34,7 +34,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <div class='instructions'>
             <p>____________________________________________________________________________________</p>
             <p>1. If your data format is in wide, you need to convert it to <b>long format</b> in order to run analysis.</p>
-            <p>2. The variables should be named <b>'rater'</b> and <b>'task'(task1, task2. . .)</b> respectively. Any other variable name will result in an error message.</b>
+            <p>2. The variables should be named <b>'rater'</b> and <b>'task'</b> respectively. Any other variable name will result in an error message.</b>
             <p>3. In the Facet variable box, you must put the variable <b>'rater'</b> first.</p>
             <p>4. You can currently only put <b>two variables</b> in the Facet variable box.</p>
             <p>5. We recommend using <a href='https://www.winsteps.com' target = '_blank'>Facet software</a> for analyzing various experimental designs.</p>
@@ -137,16 +137,16 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         # Task measure---------------------------- 
         im <- subset(res1, res1$facet == "task")
-        im$parameter <-  gsub("tasktask", "task", im$parameter) 
+        im$parameter <-  gsub("task", "", im$parameter) 
          
        # rater measure----------   
        rm <- subset(res1, res1$facet == "rater")
       
-       # interaction-------
+       # interaction measure-------
        inter <- subset(res1, res1$facet == "rater:task")
        
          inter<- inter |> tidyr::separate(parameter, c("rater", "task"), ":")
-         inter$task <-  gsub("tasktask", "task", inter$task) 
+         inter$task <-  gsub("task", "", inter$task) 
          inter <- data.frame(inter$rater, inter$task, inter$xsi, inter$se.xsi)
          colnames(inter) <- c("Rater", "Task","Measure","SE")
       
@@ -174,7 +174,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            itemm<- data.frame(im$parameter, im$xsi)
            colnames(itemm) <- c("vars", "measure")
            
-           itemm$vars <-  gsub("tasktask", "task", itemm$vars)
+           itemm$vars <-  gsub("task", "", itemm$vars)
            
            #self$results$text1$setContent(itemm)
            
@@ -336,7 +336,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            
               # THe order !!!(rater * item), otherwise table will be empty!!!
               ifit$item <-  gsub("-rater", "rater", ifit$item) 
-              ifit$item <-  gsub("tasktask", "task", ifit$item) 
+              ifit$item <-  gsub("task", "", ifit$item) 
               ifit<- ifit |> tidyr::separate(item, c("rater", "task"), "-")
               
               ifit<- data.frame(ifit)
