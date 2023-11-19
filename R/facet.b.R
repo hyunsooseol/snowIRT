@@ -540,7 +540,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         plot4<- ShinyItemAnalysis::ggWrightMap(personmeasure, imeasure,
                                                item.names = vars,
-                                               binwidth = 0.2,
+                                               binwidth = 0.5,
                                               # size=18,
                                                ylab.b = "Facet measure",
                                                rel_widths = c(1, 1.5),
