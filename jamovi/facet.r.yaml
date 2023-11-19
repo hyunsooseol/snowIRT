@@ -246,7 +246,7 @@ items:
         - angle
 
     - name: plot4
-      title: 'Wright map'
+      title: 'Wright Map'
       type:  Image
       visible: (plot4)
       renderFun: .plot4

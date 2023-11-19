@@ -121,7 +121,7 @@ options:
       default: 0
 
     - name: plot4
-      title: 'Wrightmap'
+      title: 'Wright Map'
       type: Bool
       default: false      
 

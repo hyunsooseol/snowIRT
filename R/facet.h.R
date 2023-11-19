@@ -483,7 +483,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot4",
-                title="Wright map",
+                title="Wright Map",
                 visible="(plot4)",
                 renderFun=".plot4",
                 refs="snowIRT",
