@@ -77,7 +77,7 @@ options:
       default: false
 
     - name: wplot
-      title: Wright map
+      title: 'Wright Map'
       type: Bool
       default: TRUE
 

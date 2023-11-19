@@ -67,7 +67,7 @@ options:
       default: false
 
     - name: wrightmap
-      title: Wright map
+      title: 'Wright Map'
       type: Bool
       default: TRUE      
 
