@@ -57,8 +57,10 @@ children:
             children:
               - type: CheckBox
                 name: ifit
+              - type: CheckBox
+                name: sifit  
           - type: Label
-            label: Person measure
+            label: 'Person measure'
             children:
               - type: CheckBox
                 name: pm

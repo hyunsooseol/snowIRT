@@ -144,7 +144,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         # Rater X Subject measure table--------------
         
-        if(isTRUE(self$options$rs)){
+        if(isTRUE(self$options$rs | self$options$plot5)){
           
           facets = dplyr::select(data, subject:task)
           formula <- ~ rater*subject+task +step
@@ -154,6 +154,48 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                   pid = data[[self$options$id]],
                                   formulaA = formula)
           out1 <- out$xsi.facets
+          
+          
+          if(isTRUE(self$options$sifit))
+          {
+            
+            sifit <- TAM::msq.itemfit(out)
+            sifit <- as.data.frame(sifit$itemfit)
+           
+            sifit<- dplyr::select(sifit, c("item", "Outfit_t","Outfit_p"))
+            
+            # THe order !!!(rater * item), otherwise table will be empty!!!
+            sifit$item <-  gsub("-rater", "rater", sifit$item) 
+            sifit$item <-  gsub("task", "", sifit$item) 
+          
+            sifit<- sifit |> tidyr::separate(item, c("rater","subject", "task"), "-")
+            
+            sifit<- data.frame(sifit)
+            #self$results$text1$setContent(sifit) 
+            # Item fit table------------
+            
+            table <- self$results$sifit
+            
+            names <- dimnames(sifit)[[1]]
+            
+         
+            for (name in names) {
+              
+              row <- list()
+              
+              row[["rater"]]   <-  sifit[name, 1]
+              row[["subject"]]   <-  sifit[name, 2]
+              row[["task"]]   <-  sifit[name, 3]
+              row[["outfit"]] <-  sifit[name, 4]
+              row[["p"]] <-  sifit[name, 5]
+              
+              table$addRow(rowKey=name, values=row)
+              
+            }
+            
+            
+            }
+          
           
           #---------------------------
           
@@ -185,16 +227,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             table$addRow(rowKey=name, values=row)
             
           }
-          
-          if(isTRUE(self$options$plot5)){
          
            image <- self$results$plot5
            image$setState(rs)
-           
-          }
-          
-        }
         
+        }
         
         
         # Task measure---------------------------- 
@@ -418,10 +455,10 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             names <- dimnames(ifit)[[1]]
            
-            rater <- as.vector(ifit[[1]])
-            task <- as.vector(ifit[[2]])
-            outfit<- as.vector(ifit[[3]])
-            infit<- as.vector(ifit[[4]])
+            # rater <- as.vector(ifit[[1]])
+            # task <- as.vector(ifit[[2]])
+            # outfit<- as.vector(ifit[[3]])
+            # infit<- as.vector(ifit[[4]])
            
            
            for (name in names) {

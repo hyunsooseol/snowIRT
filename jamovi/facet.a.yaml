@@ -63,6 +63,11 @@ options:
       type: Bool
       default: false
 
+    - name: sifit
+      title: 'Rater X Subject X Task'
+      type: Bool
+      default: false
+
     - name: pm
       title: 'Measure'
       type: Bool

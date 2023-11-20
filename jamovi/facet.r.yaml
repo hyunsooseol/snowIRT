@@ -10,9 +10,9 @@ items:
       visible: True
 
     - name:  text1
-      title: ''
+      title: ' '
       type:  Preformatted
-      
+
     - name:  text
       title: 'WLE Reliability'
       type:  Preformatted
@@ -184,6 +184,42 @@ items:
         - name: infit
           title: 'Infit'
           type: number     
+
+    - name: sifit
+      title:  'Interaction fit: Rater X Subject X Task'
+      type: Table
+      visible: (sifit)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: rater
+          title: 'Rater'
+          type: 'text'
+
+        - name: subject
+          title: 'Subject'
+          type: 'text'
+  
+        - name: task
+          title: 'Task'
+          type: 'text'
+
+        - name: outfit
+          title: 'Outfit_t'
+          type: number
+          
+        - name: p
+          title: 'p'
+          format: zto,pvalue    
 
     - name: pm
       title:  'Person measure'

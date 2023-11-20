@@ -15,6 +15,7 @@ facet(
   rs = FALSE,
   sm = FALSE,
   ifit = FALSE,
+  sifit = FALSE,
   pm = FALSE,
   pfit = FALSE,
   plot1 = FALSE,
@@ -27,6 +28,10 @@ facet(
   width3 = 500,
   height3 = 500,
   angle = 0,
+  plot5 = FALSE,
+  width5 = 500,
+  height5 = 500,
+  angle1 = 0,
   plot4 = FALSE,
   width4 = 500,
   height4 = 500
@@ -53,6 +58,8 @@ facet(
 
 \item{ifit}{.}
 
+\item{sifit}{.}
+
 \item{pm}{.}
 
 \item{pfit}{.}
@@ -77,6 +84,14 @@ facet(
 
 \item{angle}{.}
 
+\item{plot5}{.}
+
+\item{width5}{.}
+
+\item{height5}{.}
+
+\item{angle1}{.}
+
 \item{plot4}{.}
 
 \item{width4}{.}
@@ -87,7 +102,6 @@ facet(
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-  \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
@@ -95,12 +109,15 @@ A results object containing:
   \code{results$rs} \tab \tab \tab \tab \tab a table \cr
   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
+  \code{results$sifit} \tab \tab \tab \tab \tab a table \cr
   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot5} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
+  \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

@@ -15,6 +15,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             rs = FALSE,
             sm = FALSE,
             ifit = FALSE,
+            sifit = FALSE,
             pm = FALSE,
             pfit = FALSE,
             plot1 = FALSE,
@@ -85,6 +86,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..ifit <- jmvcore::OptionBool$new(
                 "ifit",
                 ifit,
+                default=FALSE)
+            private$..sifit <- jmvcore::OptionBool$new(
+                "sifit",
+                sifit,
                 default=FALSE)
             private$..pm <- jmvcore::OptionBool$new(
                 "pm",
@@ -176,6 +181,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..rs)
             self$.addOption(private$..sm)
             self$.addOption(private$..ifit)
+            self$.addOption(private$..sifit)
             self$.addOption(private$..pm)
             self$.addOption(private$..pfit)
             self$.addOption(private$..plot1)
@@ -206,6 +212,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         rs = function() private$..rs$value,
         sm = function() private$..sm$value,
         ifit = function() private$..ifit$value,
+        sifit = function() private$..sifit$value,
         pm = function() private$..pm$value,
         pfit = function() private$..pfit$value,
         plot1 = function() private$..plot1$value,
@@ -235,6 +242,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..rs = NA,
         ..sm = NA,
         ..ifit = NA,
+        ..sifit = NA,
         ..pm = NA,
         ..pfit = NA,
         ..plot1 = NA,
@@ -269,6 +277,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         rs = function() private$.items[["rs"]],
         sm = function() private$.items[["sm"]],
         ifit = function() private$.items[["ifit"]],
+        sifit = function() private$.items[["sifit"]],
         pm = function() private$.items[["pm"]],
         pfit = function() private$.items[["pfit"]],
         plot1 = function() private$.items[["plot1"]],
@@ -291,7 +300,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text1",
-                title=""))
+                title=" "))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
@@ -466,6 +475,42 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
+                name="sifit",
+                title="Interaction fit: Rater X Subject X Task",
+                visible="(sifit)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="rater", 
+                        `title`="Rater", 
+                        `type`="text"),
+                    list(
+                        `name`="subject", 
+                        `title`="Subject", 
+                        `type`="text"),
+                    list(
+                        `name`="task", 
+                        `title`="Task", 
+                        `type`="text"),
+                    list(
+                        `name`="outfit", 
+                        `title`="Outfit_t", 
+                        `type`="number"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `format`="zto,pvalue"))))
+            self$add(jmvcore::Table$new(
+                options=options,
                 name="pm",
                 title="Person measure",
                 visible="(pm)",
@@ -618,6 +663,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param rs .
 #' @param sm .
 #' @param ifit .
+#' @param sifit .
 #' @param pm .
 #' @param pfit .
 #' @param plot1 .
@@ -648,6 +694,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$rs} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$sifit} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
@@ -675,6 +722,7 @@ facet <- function(
     rs = FALSE,
     sm = FALSE,
     ifit = FALSE,
+    sifit = FALSE,
     pm = FALSE,
     pfit = FALSE,
     plot1 = FALSE,
@@ -721,6 +769,7 @@ facet <- function(
         rs = rs,
         sm = sm,
         ifit = ifit,
+        sifit = sifit,
         pm = pm,
         pfit = pfit,
         plot1 = plot1,
