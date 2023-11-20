@@ -34,7 +34,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             <div class='instructions'>
             <p>____________________________________________________________________________________</p>
             <p>1. If your data format is in wide, you need to convert it to <b>long format</b> in order to run analysis.</p>
-            <p>2. The variables should be named <b>'rater'</b> and <b>'task'</b> respectively. Any other variable name will result in an error message.</b>
+            <p>2. The variables should be named <b>'subject'</b>,<b>'rater'</b> and <b>'task'</b> respectively. Any other variable name will result in an error message.</b>
             <p>3. In the Facet variable box, you must put the variable <b>'rater'</b> first.</p>
             <p>4. You can currently only put <b>two variables</b> in the Facet variable box.</p>
             <p>5. We recommend using <a href='https://www.winsteps.com' target = '_blank'>Facet software</a> for analyzing various experimental designs.</p>
