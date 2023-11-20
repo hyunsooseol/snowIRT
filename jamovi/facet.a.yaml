@@ -48,6 +48,11 @@ options:
       type: Bool
       default: false
 
+    - name: rs
+      title: 'Rater X Subject'
+      type: Bool
+      default: false
+
     - name: sm
       title: 'Step'
       type: Bool
@@ -114,6 +119,28 @@ options:
       default: 500
 
     - name: angle
+      title: Angle of x-axis labels
+      type: Number
+      min: 0
+      max: 90
+      default: 0
+
+    - name: plot5
+      title: 'Rater X Subject'
+      type: Bool
+      default: false
+
+    - name: width5
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height5
+      type: Integer
+      title: "Height"
+      default: 500
+
+    - name: angle1
       title: Angle of x-axis labels
       type: Number
       min: 0

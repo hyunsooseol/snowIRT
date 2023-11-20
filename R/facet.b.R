@@ -69,6 +69,12 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$plot4$setSize(width, height)
         }
         
+        if(isTRUE(self$options$plot5)){
+          width <- self$options$width5
+          height <- self$options$height5
+          self$results$plot5$setSize(width, height)
+        }
+        
       },
       
       
@@ -134,6 +140,62 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          # Facet estimates--------------------------
          
          res1 <- res$xsi.facets # Whole estimates
+        
+        
+        # Rater X Subject measure table--------------
+        
+        if(isTRUE(self$options$rs)){
+          
+          facets = dplyr::select(data, subject:task)
+          formula <- ~ rater*subject+task +step
+          
+          out <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
+                                  facets = facets, 
+                                  pid = data[[self$options$id]],
+                                  formulaA = formula)
+          out1 <- out$xsi.facets
+          
+          #---------------------------
+          
+          rs <- subset(out1, out1$facet == "rater:subject")
+          
+          rs<- rs |> tidyr::separate(parameter, c("rater", "subject"), ":")
+         # inter$task <-  gsub("task", "", inter$task) 
+          rs <- data.frame(rs$rater, rs$subject, rs$xsi, rs$se.xsi)
+          colnames(rs) <- c("Rater", "Subject","Measure","SE")
+          
+          # Rater X subject measure table----------------
+          
+          table<- self$results$rs
+          
+          rs<- as.data.frame(rs)
+          
+          names <- dimnames(rs)[[1]]
+          
+        
+          for (name in names) {
+            
+            row <- list()
+            
+            row[["rater"]]   <-  rs[name, 1]
+            row[["subject"]]   <-  rs[name, 2]
+            row[["measure"]] <-  rs[name, 3]
+            row[["se"]] <-  rs[name, 4]
+            
+            table$addRow(rowKey=name, values=row)
+            
+          }
+          
+          if(isTRUE(self$options$plot5)){
+         
+           image <- self$results$plot5
+           image$setState(rs)
+           
+          }
+          
+        }
+        
+        
         
         # Task measure---------------------------- 
         im <- subset(res1, res1$facet == "task")
@@ -276,10 +338,10 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            
            names <- dimnames(inter)[[1]]
            
-           rater <- as.vector(inter[[1]])
-           task <- as.vector(inter[[2]])
-           dif<- as.vector(inter[[3]])
-           se<- as.vector(inter[[4]])
+           # rater <- as.vector(inter[[1]])
+           # task <- as.vector(inter[[2]])
+           # dif<- as.vector(inter[[3]])
+           # se<- as.vector(inter[[4]])
            
            #items <- as.vector(inter[[1]])
            
@@ -547,6 +609,33 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                                color = "deepskyblue")
         
         print(plot4)
+        TRUE
+        
+      },
+      
+      .plot5 = function(image, ggtheme, theme,...) {
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        rs <- image$state
+        
+        plot5<- ggplot(rs, aes(x=Subject, y=Measure, group=Rater)) +
+          geom_line(size=1.2,aes(color=Rater))+
+          geom_point(size=3,aes(color=Rater)) +  theme_bw()
+        
+        
+        if (self$options$angle1 > 0) {
+          plot5 <- plot5 + ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+              angle = self$options$angle1, hjust = 1
+            )
+          )
+        }
+        
+        plot5+ggtheme 
+        
+        print(plot5)
         TRUE
         
       }
