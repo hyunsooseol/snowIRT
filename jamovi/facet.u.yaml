@@ -26,51 +26,74 @@ children:
             name: facet
             isTarget: true
             maxItemCount: 2
-  - type: LayoutBox
-    margin: large
-    stretchFactor: 1
+  - type: CollapseBox
+    label: 'Facet Analysis'
+    margin: normal
+    collapsed: true
     children:
       - type: LayoutBox
-        cell:
-          column: 0
-          row: 0
+        margin: large
         stretchFactor: 1
         children:
-          - type: Label
-            label: Facet measure
+          - type: LayoutBox
+            cell:
+              column: 0
+              row: 0
+            stretchFactor: 1
             children:
-              - type: CheckBox
-                name: rm
-              - type: CheckBox
-                name: im
-              - type: CheckBox
-                name: sm
-          - type: Label
-            label: Interaction measure
-            children:
-              - type: CheckBox
-                name: inter
-          - type: Label
-            label: Interaction fit
-            children:
-              - type: CheckBox
-                name: ifit
-          - type: Label
-            label: Person measure
-            children:
-              - type: CheckBox
-                name: pm
-              - type: CheckBox
-                name: pfit
+              - type: Label
+                label: Facet measure
+                children:
+                  - type: CheckBox
+                    name: rm
+                  - type: CheckBox
+                    name: im
+                  - type: CheckBox
+                    name: sm
+              - type: Label
+                label: Interaction measure
+                children:
+                  - type: CheckBox
+                    name: inter
+              - type: Label
+                label: Interaction fit
+                children:
+                  - type: CheckBox
+                    name: ifit
       - type: LayoutBox
+        stretchFactor: 1
+        margin: large
         cell:
           column: 1
           row: 0
-        stretchFactor: 1
+        fitToGrid: true
         children:
           - type: Label
-            label: Plots
+            label: ''
             children:
+              - type: Label
+                label: 'Person measure'
+                children:
+                  - type: CheckBox
+                    name: pm
+                  - type: CheckBox
+                    name: pfit
+  - type: CollapseBox
+    label: 'Plots'
+    margin: normal
+    collapsed: true
+    children:
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        children:
+          - type: Label
+            label: ''
+            fitToGrid: true
+            cell:
+              column: 0
+              row: 0
+            children:        
               - type: CheckBox
                 name: plot1
                 style: list-inline
@@ -114,6 +137,17 @@ children:
                       - value: 0
                       - value: 45
                       - value: 90
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
+          - type: Label
+            label: ''
+            children:
               - type: CheckBox
                 name: plot4
                 style: list-inline
