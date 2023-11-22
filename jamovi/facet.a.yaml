@@ -155,4 +155,25 @@ options:
       type: Integer
       title: "Height"
       default: 500
+
+    - name: plot6
+      title: 'Item response curve'
+      type: Bool
+      default: false      
+
+    - name: num1
+      title: 'Plot number'
+      default: 1
+      type: Integer
+      min: 1
+
+    - name: width6
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height6
+      type: Integer
+      title: "Height"
+      default: 500
 ...

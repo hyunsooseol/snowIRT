@@ -271,4 +271,18 @@ items:
         - num
         - width5
         - height5
+
+    - name: plot6
+      title: 'Item Response Curve'
+      type:  Image
+      visible: (plot6)
+      renderFun: .plot6
+      refs: snowIRT
+      clearWith:
+        - dep
+        - id
+        - facet
+        - num1
+        - width6
+        - height6
 ...

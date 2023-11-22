@@ -75,6 +75,13 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$plot5$setSize(width, height)
         }
         
+        if(isTRUE(self$options$plot6)){
+          width <- self$options$width6
+          height <- self$options$height6
+          self$results$plot6$setSize(width, height)
+        }
+        
+        
       },
       
       
@@ -146,6 +153,14 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         } 
         
         
+        if(isTRUE(self$options$plot6)){
+          
+          image <- self$results$plot6
+          image$setState(res)
+          
+          
+        } 
+       
         
         # Facet estimates--------------------------
          
@@ -705,8 +720,28 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         print(plot5)
         TRUE
         
-      }
+      },
       
+      # Item response curve-------------------
+      
+      .plot6 = function(image, ...) {
+        
+        num1 <- self$options$num1
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        res <- image$state
+        
+        plot6 <- plot(res,
+                      items = num1,
+                      type = "items",
+                      export = FALSE)
+        
+        print(plot6)
+        TRUE
+        
+      }
       
       
         )

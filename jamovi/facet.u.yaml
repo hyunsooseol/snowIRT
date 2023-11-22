@@ -175,3 +175,18 @@ children:
                     name: height5
                     format: number
                     enable: (plot5)
+              - type: CheckBox
+                name: plot6
+                children: 
+                  - name: num1
+                    type: TextBox
+                    format: number
+                    enable: (plot6) 
+                  - type: TextBox
+                    name: width6
+                    format: number
+                    enable: (plot6)
+                  - type: TextBox
+                    name: height6
+                    format: number
+                    enable: (plot6)
