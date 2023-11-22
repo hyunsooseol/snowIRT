@@ -97,38 +97,6 @@ items:
           title: SE
           type: number   
  
-    - name: rs
-      title:  'Rater X Subject'
-      type: Table
-      visible: (rs)
-      clearWith:
-        - dep
-        - id
-        - facet
-      refs: TAM
-        
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
-
-        - name: rater
-          title: 'Rater'
-          type: 'text'
-          
-        - name: subject
-          title: 'Subject'
-          type: 'text'
-          
-        - name: measure
-          title: Measure
-          type: number
-          
-        - name: se
-          title: SE
-          type: number   
- 
     - name: sm
       title:  'Step measure'
       type: Table
@@ -184,42 +152,6 @@ items:
         - name: infit
           title: 'Infit'
           type: number     
-
-    - name: sifit
-      title:  'Interaction fit: Rater X Subject X Task'
-      type: Table
-      visible: (sifit)
-      clearWith:
-        - dep
-        - id
-        - facet
-      refs: TAM
-        
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
-
-        - name: rater
-          title: 'Rater'
-          type: 'text'
-
-        - name: subject
-          title: 'Subject'
-          type: 'text'
-  
-        - name: task
-          title: 'Task'
-          type: 'text'
-
-        - name: outfit
-          title: 'Outfit_t'
-          type: number
-          
-        - name: p
-          title: 'p'
-          format: zto,pvalue    
 
     - name: pm
       title:  'Person measure'
@@ -313,20 +245,6 @@ items:
         - height3
         - angle
 
-    - name: plot5
-      title: 'Rater X Subject plot'
-      type:  Image
-      visible: (plot5)
-      renderFun: .plot5
-      refs: snowIRT
-      clearWith:
-        - dep
-        - id
-        - facet
-        - width5
-        - height5
-        - angle1
-
     - name: plot4
       title: 'Wright Map'
       type:  Image
@@ -340,4 +258,17 @@ items:
         - width4
         - height4   
 
+    - name: plot5
+      title: 'Expected Scores Curve'
+      type:  Image
+      visible: (plot5)
+      renderFun: .plot5
+      refs: snowIRT
+      clearWith:
+        - dep
+        - id
+        - facet
+        - num
+        - width5
+        - height5
 ...

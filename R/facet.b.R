@@ -137,102 +137,113 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         #self$results$text1$setContent(res)
         #self$results$text1$setContent(res$xsi.facets)
         
-         # Facet estimates--------------------------
+        if(isTRUE(self$options$plot5)){
+          
+          image <- self$results$plot5
+          image$setState(res)
+          
+          
+        } 
+        
+        
+        
+        # Facet estimates--------------------------
          
          res1 <- res$xsi.facets # Whole estimates
         
         
-        # Rater X Subject measure table--------------
+        # Rater X Subject measure table (Not running with large subjects now)--------------
         
-        if(isTRUE(self$options$rs | self$options$plot5)){
+        # if(isTRUE(self$options$rs | self$options$plot5)){
+        #   
+        #   facets = dplyr::select(data, subject:task)
+        #   formula <- ~ rater*subject+task +step
+        #   
+        #   out <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
+        #                           facets = facets, 
+        #                           pid = data[[self$options$id]],
+        #                           formulaA = formula)
+        #   out1 <- out$xsi.facets
+        #   
           
-          facets = dplyr::select(data, subject:task)
-          formula <- ~ rater*subject+task +step
+          # if(isTRUE(self$options$sifit))
+          # {
+          #   
+          #   sifit <- TAM::msq.itemfit(out)
+          #   sifit <- as.data.frame(sifit$itemfit)
+          #  
+          #   sifit<- dplyr::select(sifit, c("item", "Outfit_t","Outfit_p"))
+          #   
+          #   # THe order !!!(rater * item), otherwise table will be empty!!!
+          #   sifit$item <-  gsub("-rater", "rater", sifit$item) 
+          #   sifit$item <-  gsub("task", "", sifit$item) 
+          # 
+          #   sifit<- sifit |> tidyr::separate(item, c("rater","subject", "task"), "-")
+          #   
+          #   sifit<- data.frame(sifit)
+          #   #self$results$text1$setContent(sifit) 
+          #   # Item fit table------------
+          #   
+          #   table <- self$results$sifit
+          #   
+          #   names <- dimnames(sifit)[[1]]
+          #   
+          # 
+          #   for (name in names) {
+          #     
+          #     row <- list()
+          #     
+          #     row[["rater"]]   <-  sifit[name, 1]
+          #     row[["subject"]]   <-  sifit[name, 2]
+          #     row[["task"]]   <-  sifit[name, 3]
+          #     row[["outfit"]] <-  sifit[name, 4]
+          #     row[["p"]] <-  sifit[name, 5]
+          #     
+          #     table$addRow(rowKey=name, values=row)
+          #     
+          #   }
+          #   
+          #   
+          #   }
+          # 
+          # #---------------------------
           
-          out <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
-                                  facets = facets, 
-                                  pid = data[[self$options$id]],
-                                  formulaA = formula)
-          out1 <- out$xsi.facets
-          
-          
-          if(isTRUE(self$options$sifit))
-          {
-            
-            sifit <- TAM::msq.itemfit(out)
-            sifit <- as.data.frame(sifit$itemfit)
-           
-            sifit<- dplyr::select(sifit, c("item", "Outfit_t","Outfit_p"))
-            
-            # THe order !!!(rater * item), otherwise table will be empty!!!
-            sifit$item <-  gsub("-rater", "rater", sifit$item) 
-            sifit$item <-  gsub("task", "", sifit$item) 
-          
-            sifit<- sifit |> tidyr::separate(item, c("rater","subject", "task"), "-")
-            
-            sifit<- data.frame(sifit)
-            #self$results$text1$setContent(sifit) 
-            # Item fit table------------
-            
-            table <- self$results$sifit
-            
-            names <- dimnames(sifit)[[1]]
-            
-         
-            for (name in names) {
-              
-              row <- list()
-              
-              row[["rater"]]   <-  sifit[name, 1]
-              row[["subject"]]   <-  sifit[name, 2]
-              row[["task"]]   <-  sifit[name, 3]
-              row[["outfit"]] <-  sifit[name, 4]
-              row[["p"]] <-  sifit[name, 5]
-              
-              table$addRow(rowKey=name, values=row)
-              
-            }
-            
-            
-            }
-          
-          
-          #---------------------------
-          
-          rs <- subset(out1, out1$facet == "rater:subject")
-          
-          rs<- rs |> tidyr::separate(parameter, c("rater", "subject"), ":")
-         # inter$task <-  gsub("task", "", inter$task) 
-          rs <- data.frame(rs$rater, rs$subject, rs$xsi, rs$se.xsi)
-          colnames(rs) <- c("Rater", "Subject","Measure","SE")
-          
-          # Rater X subject measure table----------------
-          
-          table<- self$results$rs
-          
-          rs<- as.data.frame(rs)
-          
-          names <- dimnames(rs)[[1]]
-          
-        
-          for (name in names) {
-            
-            row <- list()
-            
-            row[["rater"]]   <-  rs[name, 1]
-            row[["subject"]]   <-  rs[name, 2]
-            row[["measure"]] <-  rs[name, 3]
-            row[["se"]] <-  rs[name, 4]
-            
-            table$addRow(rowKey=name, values=row)
-            
-          }
-         
-           image <- self$results$plot5
-           image$setState(rs)
-        
-        }
-        
+        #   rs <- subset(out1, out1$facet == "rater:subject")
+        #   
+        #   rs<- rs |> tidyr::separate(parameter, c("rater", "subject"), ":")
+        #  # inter$task <-  gsub("task", "", inter$task) 
+        #   rs <- data.frame(rs$rater, rs$subject, rs$xsi, rs$se.xsi)
+        #   colnames(rs) <- c("Rater", "Subject","Measure","SE")
+        #   
+        #   # Rater X subject measure table----------------
+        #   
+        #   table<- self$results$rs
+        #   
+        #   rs<- as.data.frame(rs)
+        #   
+        #   self$results$text1$setContent(rs) 
+        #   
+        #   names <- dimnames(rs)[[1]]
+        #   
+        # 
+        #   for (name in names) {
+        #     
+        #     row <- list()
+        #     
+        #     row[["rater"]]   <-  rs[name, 1]
+        #     row[["subject"]]   <-  rs[name, 2]
+        #     row[["measure"]] <-  rs[name, 3]
+        #     row[["se"]] <-  rs[name, 4]
+        #     
+        #     table$addRow(rowKey=name, values=row)
+        #     
+        #   }
+        #  
+        #    image <- self$results$plot5
+        #    image$setState(rs)
+        # 
+        # }
+        # 
         
         # Task measure---------------------------- 
         im <- subset(res1, res1$facet == "task")
@@ -475,9 +486,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            }
            
            
-           
-            
-            
             # Person measure table-------------
             
             table <- self$results$pm
@@ -650,32 +658,56 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       },
       
-      .plot5 = function(image, ggtheme, theme,...) {
+      # .plot5 = function(image, ggtheme, theme,...) {
+      #   
+      #   if (is.null(image$state))
+      #     return(FALSE)
+      #   
+      #   rs <- image$state
+      #   
+      #   plot5<- ggplot(rs, aes(x=Subject, y=Measure, group=Rater)) +
+      #     geom_line(size=1.2,aes(color=Rater))+
+      #     geom_point(size=3,aes(color=Rater)) +  theme_bw()
+      #   
+      #   
+      #   if (self$options$angle1 > 0) {
+      #     plot5 <- plot5 + ggplot2::theme(
+      #       axis.text.x = ggplot2::element_text(
+      #         angle = self$options$angle1, hjust = 1
+      #       )
+      #     )
+      #   }
+      #   
+      #   plot5+ggtheme 
+      #   
+      #   print(plot5)
+      #   TRUE
+      #   
+      # }
+      #   
+      
+      # Expected score curves-------------------
+      
+      .plot5 = function(image, ...) {
         
+        num <- self$options$num
+       
         if (is.null(image$state))
           return(FALSE)
         
-        rs <- image$state
-        
-        plot5<- ggplot(rs, aes(x=Subject, y=Measure, group=Rater)) +
-          geom_line(size=1.2,aes(color=Rater))+
-          geom_point(size=3,aes(color=Rater)) +  theme_bw()
-        
-        
-        if (self$options$angle1 > 0) {
-          plot5 <- plot5 + ggplot2::theme(
-            axis.text.x = ggplot2::element_text(
-              angle = self$options$angle1, hjust = 1
-            )
-          )
-        }
-        
-        plot5+ggtheme 
+        res <- image$state
+       
+        plot5 <- plot(res,
+                      items = num,
+                      type = "expected",
+                      export = FALSE)
         
         print(plot5)
         TRUE
         
       }
-             
+      
+      
+      
         )
 )

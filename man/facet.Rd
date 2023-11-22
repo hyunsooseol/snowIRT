@@ -12,10 +12,8 @@ facet(
   rm = FALSE,
   im = FALSE,
   inter = FALSE,
-  rs = FALSE,
   sm = FALSE,
   ifit = FALSE,
-  sifit = FALSE,
   pm = FALSE,
   pfit = FALSE,
   plot1 = FALSE,
@@ -28,13 +26,13 @@ facet(
   width3 = 500,
   height3 = 500,
   angle = 0,
-  plot5 = FALSE,
-  width5 = 500,
-  height5 = 500,
-  angle1 = 0,
   plot4 = FALSE,
   width4 = 500,
-  height4 = 500
+  height4 = 500,
+  plot5 = FALSE,
+  num = 1,
+  width5 = 500,
+  height5 = 500
 )
 }
 \arguments{
@@ -52,13 +50,9 @@ facet(
 
 \item{inter}{.}
 
-\item{rs}{.}
-
 \item{sm}{.}
 
 \item{ifit}{.}
-
-\item{sifit}{.}
 
 \item{pm}{.}
 
@@ -84,19 +78,19 @@ facet(
 
 \item{angle}{.}
 
-\item{plot5}{.}
-
-\item{width5}{.}
-
-\item{height5}{.}
-
-\item{angle1}{.}
-
 \item{plot4}{.}
 
 \item{width4}{.}
 
 \item{height4}{.}
+
+\item{plot5}{.}
+
+\item{num}{.}
+
+\item{width5}{.}
+
+\item{height5}{.}
 }
 \value{
 A results object containing:
@@ -107,17 +101,15 @@ A results object containing:
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
-  \code{results$rs} \tab \tab \tab \tab \tab a table \cr
   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
-  \code{results$sifit} \tab \tab \tab \tab \tab a table \cr
   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
-  \code{results$plot5} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot5} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

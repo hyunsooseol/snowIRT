@@ -48,11 +48,6 @@ options:
       type: Bool
       default: false
 
-    - name: rs
-      title: 'Rater X Subject'
-      type: Bool
-      default: false
-
     - name: sm
       title: 'Step'
       type: Bool
@@ -60,11 +55,6 @@ options:
 
     - name: ifit
       title: 'Rater X Task'
-      type: Bool
-      default: false
-
-    - name: sifit
-      title: 'Rater X Subject X Task'
       type: Bool
       default: false
 
@@ -130,28 +120,6 @@ options:
       max: 90
       default: 0
 
-    - name: plot5
-      title: 'Rater X Subject'
-      type: Bool
-      default: false
-
-    - name: width5
-      type: Integer
-      title: "Width"
-      default: 500
-      
-    - name: height5
-      type: Integer
-      title: "Height"
-      default: 500
-
-    - name: angle1
-      title: Angle of x-axis labels
-      type: Number
-      min: 0
-      max: 90
-      default: 0
-
     - name: plot4
       title: 'Wright Map'
       type: Bool
@@ -166,4 +134,25 @@ options:
       type: Integer
       title: "X"
       default: 500   
+
+    - name: plot5
+      title: 'Expected scores curve'
+      type: Bool
+      default: false      
+
+    - name: num
+      title: 'Plot number'
+      default: 1
+      type: Integer
+      min: 1
+
+    - name: width5
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height5
+      type: Integer
+      title: "Height"
+      default: 500
 ...

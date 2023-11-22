@@ -37,7 +37,7 @@ children:
         stretchFactor: 1
         children:
           - type: Label
-            label: 'Facet measure'
+            label: Facet measure
             children:
               - type: CheckBox
                 name: rm
@@ -46,21 +46,17 @@ children:
               - type: CheckBox
                 name: sm
           - type: Label
-            label: 'Interaction measure'
+            label: Interaction measure
             children:
               - type: CheckBox
                 name: inter
-              - type: CheckBox
-                name: rs
           - type: Label
-            label: 'Interaction fit'
+            label: Interaction fit
             children:
               - type: CheckBox
                 name: ifit
-              - type: CheckBox
-                name: sifit  
           - type: Label
-            label: 'Person measure'
+            label: Person measure
             children:
               - type: CheckBox
                 name: pm
@@ -73,7 +69,7 @@ children:
         stretchFactor: 1
         children:
           - type: Label
-            label: 'Plots'
+            label: Plots
             children:
               - type: CheckBox
                 name: plot1
@@ -119,25 +115,6 @@ children:
                       - value: 45
                       - value: 90
               - type: CheckBox
-                name: plot5
-                children:
-                  - type: TextBox
-                    name: width5
-                    format: number
-                    enable: (plot5)
-                  - type: TextBox
-                    name: height5
-                    format: number
-                    enable: (plot5)
-                  - type: TextBox
-                    name: angle1
-                    format: number
-                    enable: (plot5)
-                    suggestedValues:
-                      - value: 0
-                      - value: 45
-                      - value: 90
-              - type: CheckBox
                 name: plot4
                 style: list-inline
                 children:
@@ -149,3 +126,18 @@ children:
                     name: height4
                     format: number
                     enable: (plot4)
+              - type: CheckBox
+                name: plot5
+                children: 
+                  - name: num
+                    type: TextBox
+                    format: number
+                    enable: (plot5) 
+                  - type: TextBox
+                    name: width5
+                    format: number
+                    enable: (plot5)
+                  - type: TextBox
+                    name: height5
+                    format: number
+                    enable: (plot5)
