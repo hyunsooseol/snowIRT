@@ -48,6 +48,11 @@ options:
       type: Bool
       default: false
 
+    - name: raw
+      title: 'Raw score'
+      type: Bool
+      default: false
+
     - name: sm
       title: 'Step'
       type: Bool

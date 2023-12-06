@@ -98,8 +98,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         #-----------------------------------------
         # facet<- read.csv("long.csv")
         # attach(facet)
+        # formula <- ~ rater*task+step 
         # facets = dplyr::select(facet, rater:task)
-        # formula <- ~ task + rater +step
+        # 
         # res <- TAM::tam.mml.mfr(value,
         #                         facets =  facets,
         #                         formulaA = formula,
@@ -267,6 +268,38 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
        # rater measure----------   
        rm <- subset(res1, res1$facet == "rater")
       
+        #interaction(Raw score)-----------------
+        
+        if(isTRUE(self$options$raw)){
+        
+        para<- res$item$item
+        score<- res$item$M
+        raw <- data.frame(para, score)
+        
+        raw$para <-  gsub("task", "", raw$para) 
+        raw$para <-  gsub("-rater", "rater", raw$para) 
+        raw<- raw |> tidyr::separate(para, c("rater", "item"), "-")
+        
+        table <- self$results$raw
+        
+        names <- dimnames(raw)[[1]]
+        
+        
+        for (name in names) {
+          
+          row <- list()
+          
+          row[["rater"]]   <-  raw[name, 1]
+          row[["task"]]   <-  raw[name, 2]
+          row[["score"]] <-  raw[name, 3]
+         
+          table$addRow(rowKey=name, values=row)
+          
+        }
+        
+        }
+        
+        
        # interaction measure-------
        inter <- subset(res1, res1$facet == "rater:task")
        
@@ -275,7 +308,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
          inter <- data.frame(inter$rater, inter$task, inter$xsi, inter$se.xsi)
          colnames(inter) <- c("Rater", "Task","Measure","SE")
       
-       # step measure-----------
+      
+         # step measure-----------
        sm <- subset(res1, res1$facet == "step")
        
       #---------------------------------------------------------------------
@@ -398,7 +432,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
            table<- self$results$inter
            
            inter<- as.data.frame(inter)
-           
            names <- dimnames(inter)[[1]]
            
            # rater <- as.vector(inter[[1]])

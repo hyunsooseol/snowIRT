@@ -12,6 +12,7 @@ facet(
   rm = FALSE,
   im = FALSE,
   inter = FALSE,
+  raw = FALSE,
   sm = FALSE,
   ifit = FALSE,
   pm = FALSE,
@@ -53,6 +54,8 @@ facet(
 \item{im}{.}
 
 \item{inter}{.}
+
+\item{raw}{.}
 
 \item{sm}{.}
 
@@ -112,6 +115,7 @@ A results object containing:
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
+  \code{results$raw} \tab \tab \tab \tab \tab a table \cr
   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr

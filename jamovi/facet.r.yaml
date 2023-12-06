@@ -65,8 +65,36 @@ items:
           title: SE
           type: number
 
+    - name: raw
+      title:  'Rater X Task(raw score)'
+      type: Table
+      visible: (raw)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: rater
+          title: 'Rater'
+          type: 'text'
+          
+        - name: task
+          title: 'Task'
+          type: 'text'
+ 
+        - name: score
+          title: 'Score'
+          type: number
+ 
     - name: inter
-      title:  'Rater X Task'
+      title:  'Rater X Task(logits)'
       type: Table
       visible: (inter)
       clearWith:
@@ -88,7 +116,7 @@ items:
         - name: task
           title: 'Task'
           type: 'text'
-          
+ 
         - name: measure
           title: Measure
           type: number

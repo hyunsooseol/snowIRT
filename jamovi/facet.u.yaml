@@ -54,6 +54,8 @@ children:
                 label: Interaction measure
                 children:
                   - type: CheckBox
+                    name: raw
+                  - type: CheckBox
                     name: inter
               - type: Label
                 label: Interaction fit

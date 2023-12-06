@@ -12,6 +12,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             rm = FALSE,
             im = FALSE,
             inter = FALSE,
+            raw = FALSE,
             sm = FALSE,
             ifit = FALSE,
             pm = FALSE,
@@ -76,6 +77,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..inter <- jmvcore::OptionBool$new(
                 "inter",
                 inter,
+                default=FALSE)
+            private$..raw <- jmvcore::OptionBool$new(
+                "raw",
+                raw,
                 default=FALSE)
             private$..sm <- jmvcore::OptionBool$new(
                 "sm",
@@ -188,6 +193,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..rm)
             self$.addOption(private$..im)
             self$.addOption(private$..inter)
+            self$.addOption(private$..raw)
             self$.addOption(private$..sm)
             self$.addOption(private$..ifit)
             self$.addOption(private$..pm)
@@ -221,6 +227,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         rm = function() private$..rm$value,
         im = function() private$..im$value,
         inter = function() private$..inter$value,
+        raw = function() private$..raw$value,
         sm = function() private$..sm$value,
         ifit = function() private$..ifit$value,
         pm = function() private$..pm$value,
@@ -253,6 +260,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..rm = NA,
         ..im = NA,
         ..inter = NA,
+        ..raw = NA,
         ..sm = NA,
         ..ifit = NA,
         ..pm = NA,
@@ -289,6 +297,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         text = function() private$.items[["text"]],
         rm = function() private$.items[["rm"]],
         im = function() private$.items[["im"]],
+        raw = function() private$.items[["raw"]],
         inter = function() private$.items[["inter"]],
         sm = function() private$.items[["sm"]],
         ifit = function() private$.items[["ifit"]],
@@ -370,8 +379,36 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
+                name="raw",
+                title="Rater X Task(raw score)",
+                visible="(raw)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="rater", 
+                        `title`="Rater", 
+                        `type`="text"),
+                    list(
+                        `name`="task", 
+                        `title`="Task", 
+                        `type`="text"),
+                    list(
+                        `name`="score", 
+                        `title`="Score", 
+                        `type`="number"))))
+            self$add(jmvcore::Table$new(
+                options=options,
                 name="inter",
-                title="Rater X Task",
+                title="Rater X Task(logits)",
                 visible="(inter)",
                 clearWith=list(
                     "dep",
@@ -621,6 +658,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param rm .
 #' @param im .
 #' @param inter .
+#' @param raw .
 #' @param sm .
 #' @param ifit .
 #' @param pm .
@@ -653,6 +691,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$im} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$raw} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
@@ -681,6 +720,7 @@ facet <- function(
     rm = FALSE,
     im = FALSE,
     inter = FALSE,
+    raw = FALSE,
     sm = FALSE,
     ifit = FALSE,
     pm = FALSE,
@@ -730,6 +770,7 @@ facet <- function(
         rm = rm,
         im = im,
         inter = inter,
+        raw = raw,
         sm = sm,
         ifit = ifit,
         pm = pm,
