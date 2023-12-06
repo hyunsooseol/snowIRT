@@ -51,15 +51,12 @@ children:
                   - type: CheckBox
                     name: sm
               - type: Label
-                label: Interaction measure
+                label: 'Interaction(Rater X Task)'
                 children:
                   - type: CheckBox
                     name: raw
                   - type: CheckBox
                     name: inter
-              - type: Label
-                label: Interaction fit
-                children:
                   - type: CheckBox
                     name: ifit
       - type: LayoutBox

@@ -297,9 +297,9 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         text = function() private$.items[["text"]],
         rm = function() private$.items[["rm"]],
         im = function() private$.items[["im"]],
+        sm = function() private$.items[["sm"]],
         raw = function() private$.items[["raw"]],
         inter = function() private$.items[["inter"]],
-        sm = function() private$.items[["sm"]],
         ifit = function() private$.items[["ifit"]],
         pm = function() private$.items[["pm"]],
         pfit = function() private$.items[["pfit"]],
@@ -379,8 +379,32 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
+                name="sm",
+                title="Step measure",
+                visible="(sm)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="measure", 
+                        `title`="Measure", 
+                        `type`="number"),
+                    list(
+                        `name`="se", 
+                        `title`="SE", 
+                        `type`="number"))))
+            self$add(jmvcore::Table$new(
+                options=options,
                 name="raw",
-                title="Rater X Task(raw score)",
+                title="Interaction: raw score",
                 visible="(raw)",
                 clearWith=list(
                     "dep",
@@ -408,7 +432,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="inter",
-                title="Rater X Task(logits)",
+                title="Interaction: Measure",
                 visible="(inter)",
                 clearWith=list(
                     "dep",
@@ -439,32 +463,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
-                name="sm",
-                title="Step measure",
-                visible="(sm)",
-                clearWith=list(
-                    "dep",
-                    "id",
-                    "facet"),
-                refs="TAM",
-                columns=list(
-                    list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="($key)"),
-                    list(
-                        `name`="measure", 
-                        `title`="Measure", 
-                        `type`="number"),
-                    list(
-                        `name`="se", 
-                        `title`="SE", 
-                        `type`="number"))))
-            self$add(jmvcore::Table$new(
-                options=options,
                 name="ifit",
-                title="Interaction fit: Rater X Task",
+                title="Interaction: Fit",
                 visible="(ifit)",
                 clearWith=list(
                     "dep",
@@ -691,9 +691,9 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$im} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$raw} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr

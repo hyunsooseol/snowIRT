@@ -115,9 +115,9 @@ A results object containing:
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
+  \code{results$sm} \tab \tab \tab \tab \tab a table \cr
   \code{results$raw} \tab \tab \tab \tab \tab a table \cr
   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
-  \code{results$sm} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr

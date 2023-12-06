@@ -65,8 +65,33 @@ items:
           title: SE
           type: number
 
+
+    - name: sm
+      title:  'Step measure'
+      type: Table
+      visible: (sm)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+        
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: ($key)
+
+        - name: measure
+          title: Measure
+          type: number
+          
+        - name: se
+          title: SE
+          type: number          
+
     - name: raw
-      title:  'Rater X Task(raw score)'
+      title:  'Interaction: raw score'
       type: Table
       visible: (raw)
       clearWith:
@@ -94,7 +119,7 @@ items:
           type: number
  
     - name: inter
-      title:  'Rater X Task(logits)'
+      title:  'Interaction: Measure'
       type: Table
       visible: (inter)
       clearWith:
@@ -125,32 +150,8 @@ items:
           title: SE
           type: number   
  
-    - name: sm
-      title:  'Step measure'
-      type: Table
-      visible: (sm)
-      clearWith:
-        - dep
-        - id
-        - facet
-      refs: TAM
-        
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
-
-        - name: measure
-          title: Measure
-          type: number
-          
-        - name: se
-          title: SE
-          type: number          
-
     - name: ifit
-      title:  'Interaction fit: Rater X Task'
+      title:  'Interaction: Fit'
       type: Table
       visible: (ifit)
       clearWith:

@@ -44,7 +44,7 @@ options:
       default: false
 
     - name: inter
-      title: 'Rater X Task'
+      title: 'Measure'
       type: Bool
       default: false
 
@@ -59,7 +59,7 @@ options:
       default: false
 
     - name: ifit
-      title: 'Rater X Task'
+      title: 'Fit'
       type: Bool
       default: false
 
