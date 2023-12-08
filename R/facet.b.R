@@ -546,7 +546,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               ifit<- dplyr::select(ifit, c("item", "Outfit","Infit"))
               
               Index<- dimnames(ifit)[[1]]
-              ifit$Index <- as.factor(Index)
+              ifit$Index <- Index
               
               ifit<- dplyr::select(ifit, c("Outfit","Infit","Index"))
               
@@ -813,28 +813,10 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           return(FALSE)
         
         ifit <- image$state
-      
-        # Modified R code with corrected syntax
-        # Assuming 'Outfit' and 'Infit' are columns in the data frame 'ifit'
-        # Ensure proper quoting of color names and fix syntax errors
-        
-        # plot7 <- ggplot(ifit, aes(x = Index)) +
-        #   ggplot2::geom_point(aes(y = Outfit, color = "Outfit"), size = 1, stroke = 2) +
-        #   ggplot2::geom_point(aes(y = Infit, color = "Infit"), size = 1, stroke = 2) +
-        #   
-        #   ggplot2::geom_hline(yintercept = 1.5, linetype = "dotted", color = 'red', size = 1.5) +
-        #   ggplot2::geom_hline(yintercept = 0.5, linetype = "dotted", color = 'red', size = 1.5) +
-        #   
-        #   labs(title = "",
-        #        x = "Index",
-        #        y = "Values") +
-        #   
-        #   ggplot2::scale_color_manual(values = c("Outfit" = "blue", "Infit" = "red"))
-        # 
-        
+ 
         plot7<- ggplot2::ggplot(ifit, aes(x = Index, y = Value, shape = Fit))+
+          
           geom_point(size=3, stroke=2)+
-
           ggplot2::scale_shape_manual(values=c(3, 4))+
 
             labs(title = "",
@@ -844,9 +826,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           ggplot2::geom_hline(yintercept = 1.5,linetype = "dotted", color='red', size=1.5)+
           ggplot2::geom_hline(yintercept = 0.5,linetype = "dotted", color='red', size=1.5)
 
-        
+         
+        plot7 <- plot7+ggtheme
         
         if (self$options$angle1 > 0) {
+          
           plot7 <- plot7 + ggplot2::theme(
             axis.text.x = ggplot2::element_text(
               angle = self$options$angle1, hjust = 1
@@ -854,8 +838,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           )
         }
         
-        
-        plot7 <- plot7+ggtheme
         
         print(plot7)
         TRUE

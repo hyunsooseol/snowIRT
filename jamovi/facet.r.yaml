@@ -261,7 +261,7 @@ items:
         - height2
  
     - name: plot3
-      title: 'Rater X Task plot'
+      title: 'Interaction: Rater X Task'
       type:  Image
       visible: (plot3)
       renderFun: .plot3

@@ -609,7 +609,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
-                title="Rater X Task plot",
+                title="Interaction: Rater X Task",
                 visible="(plot3)",
                 renderFun=".plot3",
                 refs="snowIRT",
