@@ -81,6 +81,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$plot6$setSize(width, height)
         }
         
+        if(isTRUE(self$options$plot7)){
+          width <- self$options$width7
+          height <- self$options$height7
+          self$results$plot7$setSize(width, height)
+        }
         
       },
       
@@ -533,6 +538,28 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              
            }
            
+            
+            if(isTRUE(self$options$plot7)){
+              
+              ifit <- TAM::msq.itemfit(res)
+              ifit <- as.data.frame(ifit$itemfit)
+              ifit<- dplyr::select(ifit, c("item", "Outfit","Infit"))
+              
+              Index<- dimnames(ifit)[[1]]
+              ifit$Index <- as.factor(Index)
+              
+              ifit<- dplyr::select(ifit, c("Outfit","Infit","Index"))
+              
+              ifit.plot<- reshape2::melt(ifit,
+                                         id.vars='Index',
+                                         variable.name="Fit",
+                                         value.name='Value')
+              
+              image <- self$results$plot7
+              image$setState(ifit.plot)
+              
+              
+            }
            
             # Person measure table-------------
             
@@ -774,6 +801,64 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         print(plot6)
         TRUE
         
+      },
+      
+ 
+      # interaction fit plot--------------
+      
+      
+      .plot7 = function(image,ggtheme, theme,...) {
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        ifit <- image$state
+      
+        # Modified R code with corrected syntax
+        # Assuming 'Outfit' and 'Infit' are columns in the data frame 'ifit'
+        # Ensure proper quoting of color names and fix syntax errors
+        
+        # plot7 <- ggplot(ifit, aes(x = Index)) +
+        #   ggplot2::geom_point(aes(y = Outfit, color = "Outfit"), size = 1, stroke = 2) +
+        #   ggplot2::geom_point(aes(y = Infit, color = "Infit"), size = 1, stroke = 2) +
+        #   
+        #   ggplot2::geom_hline(yintercept = 1.5, linetype = "dotted", color = 'red', size = 1.5) +
+        #   ggplot2::geom_hline(yintercept = 0.5, linetype = "dotted", color = 'red', size = 1.5) +
+        #   
+        #   labs(title = "",
+        #        x = "Index",
+        #        y = "Values") +
+        #   
+        #   ggplot2::scale_color_manual(values = c("Outfit" = "blue", "Infit" = "red"))
+        # 
+        
+        plot7<- ggplot2::ggplot(ifit, aes(x = Index, y = Value, shape = Fit))+
+          geom_point(size=3, stroke=2)+
+
+          ggplot2::scale_shape_manual(values=c(3, 4))+
+
+            labs(title = "",
+                 x = "Rater X Task",
+                 y = "Values") +
+          
+          ggplot2::geom_hline(yintercept = 1.5,linetype = "dotted", color='red', size=1.5)+
+          ggplot2::geom_hline(yintercept = 0.5,linetype = "dotted", color='red', size=1.5)
+
+        
+        
+        if (self$options$angle1 > 0) {
+          plot7 <- plot7 + ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+              angle = self$options$angle1, hjust = 1
+            )
+          )
+        }
+        
+        
+        plot7 <- plot7+ggtheme
+        
+        print(plot7)
+        TRUE
       }
       
       

@@ -181,4 +181,27 @@ options:
       type: Integer
       title: "Height"
       default: 500
+
+    - name: plot7
+      title: 'Interaction fit'
+      type: Bool
+      default: false      
+
+    - name: width7
+      type: Integer
+      title: "Width"
+      default: 500
+      
+    - name: height7
+      type: Integer
+      title: "Height"
+      default: 500
+
+    - name: angle1
+      title: Angle of x-axis labels
+      type: Number
+      min: 0
+      max: 90
+      default: 0
+
 ...

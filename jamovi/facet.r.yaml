@@ -274,6 +274,20 @@ items:
         - height3
         - angle
 
+    - name:  plot7
+      title: 'Interaction Fit'
+      type:  Image
+      visible: (plot7)
+      renderFun: .plot7
+      refs: snowIRT 
+      clearWith:
+        - dep
+        - id
+        - facet
+        - width7
+        - height7
+        - angle1
+
     - name: plot4
       title: 'Wright Map'
       type:  Image

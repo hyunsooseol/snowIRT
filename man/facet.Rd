@@ -37,7 +37,11 @@ facet(
   plot6 = FALSE,
   num1 = 1,
   width6 = 500,
-  height6 = 500
+  height6 = 500,
+  plot7 = FALSE,
+  width7 = 500,
+  height7 = 500,
+  angle1 = 0
 )
 }
 \arguments{
@@ -106,6 +110,14 @@ facet(
 \item{width6}{.}
 
 \item{height6}{.}
+
+\item{plot7}{.}
+
+\item{width7}{.}
+
+\item{height7}{.}
+
+\item{angle1}{.}
 }
 \value{
 A results object containing:
@@ -124,6 +136,7 @@ A results object containing:
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot7} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot5} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot6} \tab \tab \tab \tab \tab an image \cr
