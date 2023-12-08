@@ -151,7 +151,7 @@ items:
           type: number   
  
     - name: ifit
-      title:  'Interaction: Fit'
+      title:  'Interaction fit: Rater X Task'
       type: Table
       visible: (ifit)
       clearWith:
@@ -181,6 +181,10 @@ items:
         - name: infit
           title: 'Infit'
           type: number     
+
+        - name: marker
+          title: 'Marker'
+          type: 'text'
 
     - name: pm
       title:  'Person measure'
@@ -234,6 +238,10 @@ items:
           title: 'Infit'
           format: number     
 
+        - name: marker
+          title: 'Marker'
+          type: 'text'
+
     - name: plot1
       title: 'Rater plot'
       type:  Image
@@ -275,7 +283,7 @@ items:
         - angle
 
     - name:  plot7
-      title: 'Interaction Fit'
+      title: 'Interaction Fit: Rater X Task'
       type:  Image
       visible: (plot7)
       renderFun: .plot7
@@ -288,6 +296,19 @@ items:
         - height7
         - angle1
 
+    - name:  plot8
+      title: 'Person Fit'
+      type:  Image
+      visible: (plot8)
+      renderFun: .plot8
+      refs: snowIRT 
+      clearWith:
+        - dep
+        - id
+        - facet
+        - width8
+        - height8
+ 
     - name: plot4
       title: 'Wright Map'
       type:  Image

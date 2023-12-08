@@ -86,7 +86,13 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           height <- self$options$height7
           self$results$plot7$setSize(width, height)
         }
-        
+    
+        if(isTRUE(self$options$plot8)){
+          width <- self$options$width8
+          height <- self$options$height8
+          self$results$plot8$setSize(width, height)
+        }
+            
       },
       
       
@@ -512,18 +518,16 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               ifit<- ifit |> tidyr::separate(item, c("rater", "task"), "-")
               
               ifit<- data.frame(ifit)
+              
+              # Display '*' when both infit and outfit values exceed 1.5
+              ifit$marker <- ifelse(ifit$Outfit > 1.5 & 
+                                      ifit$Infit > 1.5, '*', '')
            
             # Item fit table------------
 
             table <- self$results$ifit
 
             names <- dimnames(ifit)[[1]]
-           
-            # rater <- as.vector(ifit[[1]])
-            # task <- as.vector(ifit[[2]])
-            # outfit<- as.vector(ifit[[3]])
-            # infit<- as.vector(ifit[[4]])
-           
            
            for (name in names) {
              
@@ -533,6 +537,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              row[["task"]]   <-  ifit[name, 2]
              row[["outfit"]] <-  ifit[name, 3]
              row[["infit"]] <-  ifit[name, 4]
+             row[["marker"]] <-  ifit[name, 5]
              
              table$addRow(rowKey=name, values=row)
              
@@ -602,12 +607,18 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             }
             
            # Person fit table-----------
-            
+           
             pfit <- TAM::tam.personfit(res)
-            
             pfit <- data.frame(pfit$outfitPerson,
                                pfit$infitPerson)
             
+            names(pfit) <- c("outfit", "infit")
+            
+            # Display '*' when both infit and outfit values exceed 1.5
+            pfit$marker <- ifelse(pfit$outfit > 1.5 & 
+                                  pfit$infit > 1.5, '*', '')
+            
+           
             table <- self$results$pfit
             
             names<- dimnames(pfit)[[1]]
@@ -618,14 +629,42 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               
               row[["outfit"]]   <-  pfit[name, 1]
               row[["infit"]] <-  pfit[name, 2]
-             
+              row[["marker"]] <-  pfit[name, 3]
               
               table$addRow(rowKey=name, values=row)
               
             }
       
-           
+            # Person fit plot------------------
+            # Person ability----------
+            # persons <- TAM::tam.wle(res)
+            # 
+            # per <-data.frame(persons$pid, persons$PersonScores,
+            #                  persons$theta, persons$error,
+            #                  persons$WLE.rel) 
             
+            if(isTRUE(self$options$plot8)){
+              
+              pfit <- TAM::tam.personfit(res)
+              pfit <- data.frame(pfit$outfitPerson,
+                                 pfit$infitPerson)
+              
+              names(pfit) <- c("outfit", "infit")
+              
+              pfit$Measure <- per$persons.theta
+              
+              pf<- reshape2::melt(pfit,
+                                  id.vars='Measure',
+                                  variable.name="Fit",
+                                  value.name='Value')
+              
+              image <- self$results$plot8
+              
+              image$setState(pf)
+              
+            }
+            
+       
             },
       
       .plot1 = function(image, ggtheme, theme,...) {
@@ -840,6 +879,29 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         
         print(plot7)
+        TRUE
+      },
+      
+      .plot8 = function(image,ggtheme, theme,...) {
+        
+        if (is.null(image$state))
+          return(FALSE)
+        
+        pf <- image$state
+        
+        plot8<- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit))+
+          geom_point(size=3, stroke=2)+
+          
+          ggplot2::scale_shape_manual(values=c(3, 4))+
+          #ggplot2::scale_color_manual(values=c("red", "blue")+
+          ggplot2::coord_cartesian(xlim=c(-4, 4),ylim=c(0, 3))+
+          ggplot2::geom_hline(yintercept = 1.5,linetype = "dotted", color='red', size=1.5)+ 
+          ggplot2::geom_hline(yintercept = 0.5,linetype = "dotted", color='red', size=1.5)    
+        
+        
+        plot8 <- plot8+ggtheme
+        
+        print(plot8)
         TRUE
       }
       

@@ -155,6 +155,18 @@ children:
                       - value: 0
                       - value: 45
                       - value: 90
+              - type: CheckBox
+                name: plot8
+                style: list-inline
+                children:
+                  - type: TextBox
+                    name: width8
+                    format: number
+                    enable: (plot8)
+                  - type: TextBox
+                    name: height8
+                    format: number
+                    enable: (plot8)
       - type: LayoutBox
         stretchFactor: 1
         margin: large

@@ -204,4 +204,19 @@ options:
       max: 90
       default: 0
 
+    - name: plot8
+      title: 'Person fit'
+      type: Bool
+      default: false      
+
+    - name: width8
+      type: Integer
+      title: "Size: "
+      default: 500
+      
+    - name: height8
+      type: Integer
+      title: "X"
+      default: 500   
+
 ...
