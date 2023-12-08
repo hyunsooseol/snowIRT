@@ -555,7 +555,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"),
                     list(
                         `name`="marker", 
-                        `title`="Marker", 
+                        `title`="Diagnosis", 
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -611,7 +611,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `format`="number"),
                     list(
                         `name`="marker", 
-                        `title`="Marker", 
+                        `title`="Diagnosis", 
                         `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,

@@ -45,6 +45,21 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>"
         )
         
+        if (self$options$ifit)
+          self$results$ifit$setNote(
+            "Note",
+            "Display '*' when both Infit and Outfit values exceed 1.5."
+
+          )
+
+        if (self$options$pfit)
+          self$results$pfit$setNote(
+            "Note",
+            "Display '*' when both Infit and Outfit values exceed 1.5."
+
+          )
+
+        
         if(isTRUE(self$options$plot1)){
           width <- self$options$width1
           height <- self$options$height1

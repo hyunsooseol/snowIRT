@@ -183,7 +183,7 @@ items:
           type: number     
 
         - name: marker
-          title: 'Marker'
+          title: 'Diagnosis'
           type: 'text'
 
     - name: pm
@@ -239,7 +239,7 @@ items:
           format: number     
 
         - name: marker
-          title: 'Marker'
+          title: 'Diagnosis'
           type: 'text'
 
     - name: plot1
