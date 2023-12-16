@@ -48,14 +48,14 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         if (self$options$ifit)
           self$results$ifit$setNote(
             "Note",
-            "Display '*' when both Infit and Outfit values exceed 1.5."
+            "Display 'X' when both Infit and Outfit values exceed 1.5."
 
           )
 
         if (self$options$pfit)
           self$results$pfit$setNote(
             "Note",
-            "Display '*' when both Infit and Outfit values exceed 1.5."
+            "Display 'X' when both Infit and Outfit values exceed 1.5."
 
           )
 
@@ -536,7 +536,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               
               # Display '*' when both infit and outfit values exceed 1.5
               ifit$marker <- ifelse(ifit$Outfit > 1.5 & 
-                                      ifit$Infit > 1.5, '*', '')
+                                      ifit$Infit > 1.5, 'X', '')
            
             # Item fit table------------
 
@@ -631,7 +631,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
             # Display '*' when both infit and outfit values exceed 1.5
             pfit$marker <- ifelse(pfit$outfit > 1.5 & 
-                                  pfit$infit > 1.5, '*', '')
+                                  pfit$infit > 1.5, 'X', '')
             
            
             table <- self$results$pfit
