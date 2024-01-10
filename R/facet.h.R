@@ -394,7 +394,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Many Facet Rasch Model")
+                title="Many Facet Rasch Model",
+                refs="snowIRT")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="instructions",

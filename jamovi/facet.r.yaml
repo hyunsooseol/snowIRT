@@ -2,7 +2,7 @@
 name:  facet
 title: Many Facet Rasch Model
 jrs:   '1.1'
-
+refs: snowIRT
 items:
     - name: instructions
       title: Instructions
