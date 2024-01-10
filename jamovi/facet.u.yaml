@@ -220,3 +220,25 @@ children:
                     name: height6
                     format: number
                     enable: (plot6)
+  - type: CollapseBox
+    label: 'Generalizability theory'
+    margin: normal
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: LayoutBox
+            cell:
+              column: 0
+              row: 0
+            stretchFactor: 1
+            children:
+              - type: Label
+                label: 'Variance components'
+                children:
+                  - type: CheckBox
+                    name: g
+                  - type: CheckBox
+                    name: d

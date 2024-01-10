@@ -13,6 +13,10 @@ items:
       title: ' '
       type:  Preformatted
 
+    - name:  text2
+      title: 'Generalizability '
+      type:  Preformatted
+
     - name:  text
       title: 'WLE Reliability'
       type:  Preformatted
@@ -349,4 +353,60 @@ items:
         - num1
         - width6
         - height6
+
+    - name: g
+      title:  'Variance components: G study'
+      type: Table
+      visible: (g)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: gtheory
+        
+      columns:
+        - name: name
+          title: 'Source'
+          type: 'text'
+          content: ($key)
+
+        - name: var
+          title: 'variance'
+          type: number
+          
+        - name: percent
+          title: 'Percent'
+          type: number        
+
+        - name: n
+          title: 'n'
+          type: integer     
+
+    - name: d
+      title:  'Variance components: D study'
+      type: Table
+      visible: (d)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: gtheory
+        
+      columns:
+        - name: name
+          title: 'Source'
+          type: 'text'
+          content: ($key)
+
+        - name: var
+          title: 'variance'
+          type: number
+          
+        - name: percent
+          title: 'Percent'
+          type: number        
+
+        - name: n
+          title: 'n'
+          type: integer     
 ...

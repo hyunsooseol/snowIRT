@@ -2,9 +2,9 @@ refs:
    snowIRT:
        type: 'software'
        author: Seol, H.
-       year: 2023
+       year: 2024
        title: "snowIRT: Item Response Theory for jamovi"
-       publisher: '(Version 5.0.3) [jamovi module]. URL https://github.com/hyunsooseol/snowIRT'
+       publisher: '(Version 5.0.4) [jamovi module]. URL https://github.com/hyunsooseol/snowIRT'
        url: https://github.com/hyunsooseol/snowIRT
 
    TAM:

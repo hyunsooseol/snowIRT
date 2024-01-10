@@ -44,7 +44,9 @@ facet(
   angle1 = 0,
   plot8 = FALSE,
   width8 = 500,
-  height8 = 500
+  height8 = 500,
+  g = FALSE,
+  d = FALSE
 )
 }
 \arguments{
@@ -127,12 +129,17 @@ facet(
 \item{width8}{.}
 
 \item{height8}{.}
+
+\item{g}{.}
+
+\item{d}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
@@ -150,6 +157,8 @@ A results object containing:
   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot5} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot6} \tab \tab \tab \tab \tab an image \cr
+  \code{results$g} \tab \tab \tab \tab \tab a table \cr
+  \code{results$d} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

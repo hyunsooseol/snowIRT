@@ -11,6 +11,8 @@
 #' @importFrom TAM msq.itemfit
 #' @importFrom TAM tam.wle
 #' @importFrom ShinyItemAnalysis ggWrightMap
+#' @importFrom gtheory gstudy
+#' @importFrom gtheory dstudy
 #' @import ggplot2
 #' @export
 
@@ -677,6 +679,69 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               
               image$setState(pf)
               
+            }
+            
+            ###### Generalizability theory--------------------
+            
+            if(isTRUE(self$options$g || self$options$d)){
+            
+              dep <- self$options$dep
+              id <- self$options$id
+              
+            formula <- "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)"
+            
+            gstudy.out<- gtheory::gstudy(data = data, formula = formula)
+            dstudy.out<- gtheory::dstudy(gstudy.out, colname.objects = id, data = data, colname.scores = dep)
+            
+           
+            # G study table----------------
+            
+            table<- self$results$g
+            
+            gstudy<- as.data.frame(gstudy.out)
+            
+            var<- as.vector(gstudy[[2]])
+            percent<- as.vector(gstudy[[3]])
+            n <- as.vector(gstudy[[4]])
+            
+            items <- as.vector(gstudy[[1]])
+            
+            for (i in seq_along(items)) {
+              
+              row <- list()
+              
+              row[["var"]] <-var[i]
+              row[["percent"]] <- percent[i]
+              row[["n"]] <- n[i]
+              
+              table$addRow(rowKey = items[i], values = row)
+            }
+            
+            # G study table(Variance components)----------------
+            
+            table<- self$results$d
+            
+            dstudy<- as.data.frame(dstudy.out$components)
+            
+            var<- as.vector(dstudy[[2]])
+            percent<- as.vector(dstudy[[3]])
+            n <- as.vector(dstudy[[4]])
+            
+            items <- as.vector(dstudy[[1]])
+            
+            for (i in seq_along(items)) {
+              
+              row <- list()
+              
+              row[["var"]] <-var[i]
+              row[["percent"]] <- percent[i]
+              row[["n"]] <- n[i]
+              
+              table$addRow(rowKey = items[i], values = row)
+            }
+            
+            self$results$text2$setContent(dstudy.out$generalizability)
+            
             }
             
        

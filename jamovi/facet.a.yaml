@@ -13,7 +13,7 @@ options:
       title: 'Response'
       type: Variable
       suggested:
-         - continuous
+        - continuous
       permitted:
         - numeric    
 
@@ -219,4 +219,13 @@ options:
       title: "X"
       default: 500   
 
+    - name: g
+      title: 'G Study'
+      type: Bool
+      default: false
+
+    - name: d
+      title: 'D Study'
+      type: Bool
+      default: false
 ...
