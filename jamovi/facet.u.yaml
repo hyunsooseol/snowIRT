@@ -240,10 +240,16 @@ children:
                 format: string
                 stretchFactor: 3
               - type: Label
-                label: Variance components
+                label: 'Variance components'
                 children:
                   - type: CheckBox
                     name: g
                   - type: CheckBox
                     name: d
+              - type: Label
+                label: 'Measures'
+                children: 
+                  - type: CheckBox
+                    name: mea
+
  

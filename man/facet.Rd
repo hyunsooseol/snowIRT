@@ -47,7 +47,8 @@ facet(
   height8 = 500,
   g = FALSE,
   d = FALSE,
-  formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)"
+  formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)",
+  mea = FALSE
 )
 }
 \arguments{
@@ -136,13 +137,14 @@ facet(
 \item{d}{.}
 
 \item{formula}{.}
+
+\item{mea}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
-  \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
@@ -162,6 +164,7 @@ A results object containing:
   \code{results$plot6} \tab \tab \tab \tab \tab an image \cr
   \code{results$g} \tab \tab \tab \tab \tab a table \cr
   \code{results$d} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mea} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
