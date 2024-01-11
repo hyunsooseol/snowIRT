@@ -687,8 +687,12 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
               dep <- self$options$dep
               id <- self$options$id
+              formula <- self$options$formula
               
-            formula <- "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)"
+            # formula <- "value ~ (1 | subject) +(1 | rater) + (1 | task) + 
+            # (1 | subject:rater) +
+            # (1 | rater:task) + 
+            # (1 | subject:task)"
             
             gstudy.out<- gtheory::gstudy(data = data, formula = formula)
             dstudy.out<- gtheory::dstudy(gstudy.out, colname.objects = id, data = data, colname.scores = dep)

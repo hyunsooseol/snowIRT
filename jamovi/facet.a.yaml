@@ -4,7 +4,6 @@ title: Many Facet Rasch Model
 menuGroup: snowIRT
 version: '1.0.0'
 jas: '1.2'
-
 options:
     - name: data
       type: Data
@@ -228,4 +227,9 @@ options:
       title: 'D Study'
       type: Bool
       default: false
+
+    - name: formula
+      title: 'Formula'
+      type: String
+      default: "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)"
 ...

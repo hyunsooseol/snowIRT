@@ -27,7 +27,7 @@ children:
             isTarget: true
             maxItemCount: 2
   - type: CollapseBox
-    label: 'Facet Analysis'
+    label: Facet Analysis
     margin: normal
     collapsed: true
     children:
@@ -51,7 +51,7 @@ children:
                   - type: CheckBox
                     name: sm
               - type: Label
-                label: 'Interaction(Rater X Task)'
+                label: Interaction(Rater X Task)
                 children:
                   - type: CheckBox
                     name: raw
@@ -71,14 +71,14 @@ children:
             label: ''
             children:
               - type: Label
-                label: 'Person measure'
+                label: Person measure
                 children:
                   - type: CheckBox
                     name: pm
                   - type: CheckBox
                     name: pfit
   - type: CollapseBox
-    label: 'Plots'
+    label: Plots
     margin: normal
     collapsed: true
     children:
@@ -92,7 +92,7 @@ children:
             cell:
               column: 0
               row: 0
-            children:        
+            children:
               - type: CheckBox
                 name: plot1
                 style: list-inline
@@ -192,11 +192,11 @@ children:
                     enable: (plot4)
               - type: CheckBox
                 name: plot5
-                children: 
+                children:
                   - name: num
                     type: TextBox
                     format: number
-                    enable: (plot5) 
+                    enable: (plot5)
                   - type: TextBox
                     name: width5
                     format: number
@@ -207,11 +207,11 @@ children:
                     enable: (plot5)
               - type: CheckBox
                 name: plot6
-                children: 
+                children:
                   - name: num1
                     type: TextBox
                     format: number
-                    enable: (plot6) 
+                    enable: (plot6)
                   - type: TextBox
                     name: width6
                     format: number
@@ -235,10 +235,15 @@ children:
               row: 0
             stretchFactor: 1
             children:
+              - type: TextBox
+                name: formula
+                format: string
+                stretchFactor: 3
               - type: Label
-                label: 'Variance components'
+                label: Variance components
                 children:
                   - type: CheckBox
                     name: g
                   - type: CheckBox
                     name: d
+ 

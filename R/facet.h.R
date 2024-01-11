@@ -46,7 +46,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             width8 = 500,
             height8 = 500,
             g = FALSE,
-            d = FALSE, ...) {
+            d = FALSE,
+            formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)", ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -233,6 +234,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "d",
                 d,
                 default=FALSE)
+            private$..formula <- jmvcore::OptionString$new(
+                "formula",
+                formula,
+                default="value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)")
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
@@ -275,6 +280,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..height8)
             self$.addOption(private$..g)
             self$.addOption(private$..d)
+            self$.addOption(private$..formula)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -317,7 +323,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         width8 = function() private$..width8$value,
         height8 = function() private$..height8$value,
         g = function() private$..g$value,
-        d = function() private$..d$value),
+        d = function() private$..d$value,
+        formula = function() private$..formula$value),
     private = list(
         ..dep = NA,
         ..id = NA,
@@ -359,7 +366,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..width8 = NA,
         ..height8 = NA,
         ..g = NA,
-        ..d = NA)
+        ..d = NA,
+        ..formula = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -868,6 +876,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param height8 .
 #' @param g .
 #' @param d .
+#' @param formula .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -943,7 +952,8 @@ facet <- function(
     width8 = 500,
     height8 = 500,
     g = FALSE,
-    d = FALSE) {
+    d = FALSE,
+    formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -1002,7 +1012,8 @@ facet <- function(
         width8 = width8,
         height8 = height8,
         g = g,
-        d = d)
+        d = d,
+        formula = formula)
 
     analysis <- facetClass$new(
         options = options,

@@ -46,7 +46,8 @@ facet(
   width8 = 500,
   height8 = 500,
   g = FALSE,
-  d = FALSE
+  d = FALSE,
+  formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)"
 )
 }
 \arguments{
@@ -133,6 +134,8 @@ facet(
 \item{g}{.}
 
 \item{d}{.}
+
+\item{formula}{.}
 }
 \value{
 A results object containing:
