@@ -683,19 +683,45 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
             ###### Generalizability theory--------------------
             
-            if(isTRUE(self$options$g || self$options$d)){
+            if(isTRUE(self$options$g || self$options$d) || self$options$mea){
             
               dep <- self$options$dep
               id <- self$options$id
-              formula <- self$options$formula
-              
+            
+            formula <- self$options$formula
+            # facet <- self$options$facet
+            
+            # Example----------------------
             # formula <- "value ~ (1 | subject) +(1 | rater) + (1 | task) + 
             # (1 | subject:rater) +
             # (1 | rater:task) + 
             # (1 | subject:task)"
+             
+              # Example---------- 
+              # vars <- c('A', 'B', 'C')  # you'll populate this from self$options$...
+              # response <- 'bruce'
+              # fmla <- as.formula(paste0(jmvcore::composeTerm(response), '~', paste(jmvcore::composeTerms(vars), collapse='*')))
+              # trms <- attr(terms(fmla), 'term.labels')
+              # trms[1:6] #example---
+              # funnyTerms <- paste0('(1|', trms, ')')
+              # finalFmla <- paste0(jmvcore::composeTerm(response), '~', paste(funnyTerms, collapse='+'))
+              # finalFmla
+              # 
+              # 
+              # vars <- c(self$options$id, self$options$facet)  
+              # response <- self$options$dep
+              # fmla <- as.formula(paste0(jmvcore::composeTerm(response), '~', paste(jmvcore::composeTerms(vars), collapse='*')))
+              # trms <- attr(terms(fmla), 'term.labels')
+              # funnyTerms <- paste0('(1|', trms, ')')
+              # formula <- paste0(jmvcore::composeTerm(response), '~', paste(funnyTerms, collapse='+'))
+              # 
+              # 
+              # self$results$text1$setContent(formula)
+              # 
+              
             
             gstudy.out<- gtheory::gstudy(data = data, formula = formula)
-            dstudy.out<- gtheory::dstudy(gstudy.out, colname.objects = id, data = data, colname.scores = dep)
+            ds<- gtheory::dstudy(gstudy.out, colname.objects = id, data = data, colname.scores = dep)
             
            
             # G study table----------------
@@ -725,7 +751,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
             table<- self$results$d
             
-            dstudy<- as.data.frame(dstudy.out$components)
+            dstudy<- as.data.frame(ds$components)
             
             var<- as.vector(dstudy[[2]])
             percent<- as.vector(dstudy[[3]])
@@ -744,8 +770,26 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               table$addRow(rowKey = items[i], values = row)
             }
             
-            self$results$text2$setContent(dstudy.out$generalizability)
+            # self$results$text2$setContent(dstudy.out$generalizability)
             
+            # Measures of D study---------------
+            gen <- ds$generalizability
+            depe <- ds$dependability
+            uni <- ds$var.universe
+           
+            if(isTRUE(self$options$mea)){
+            
+              table<- self$results$mea
+           
+            row <- list()
+            
+            row[['generalizability']] <- gen
+            row[['dependability']] <- depe
+            row[['universe']] <- uni
+          
+            table$setRow(rowNo = 1, values = row)
+            
+            }
             }
             
        

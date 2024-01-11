@@ -13,16 +13,12 @@ items:
       title: ' '
       type:  Preformatted
 
-    - name:  text2
-      title: 'Generalizability '
-      type:  Preformatted
-
     - name:  text
       title: 'WLE Reliability'
       type:  Preformatted
 
     - name: rm
-      title:  'Rater measure'
+      title: 'Rater measure'
       type: Table
       visible: (rm)
       clearWith:
@@ -409,4 +405,32 @@ items:
         - name: n
           title: 'n'
           type: integer     
+
+    - name: mea
+      title: 'Measures of D Study'
+      type: Table
+      visible: (mea)
+      rows: 1
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: gtheory
+
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: D Study
+        - name: generalizability
+          title: 'Generalizability'
+          type: number
+        - name: dependability
+          title: 'Dependability'
+          type: number
+        - name: universe
+          title: 'Universe score variance'
+          type: number
+
+
 ...

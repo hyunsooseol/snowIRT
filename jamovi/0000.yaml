@@ -31,12 +31,6 @@ analyses:
     menuGroup: snowIRT
     menuTitle: Many Facet Rasch Model
     menuSubgroup: IRT
-    description: |
-      The Analysis of Covariance (ANCOVA) is used to explore the relationship
-      between a continuous dependent variable, one or more categorical
-      explanatory variables, and one or more continuous explanatory variables
-      (or covariates). It is essentially the same analysis as ANOVA, but
-      with the addition of covariates.
   - title: Raju & Mantel-Haenszel method
     name: dif
     ns: snowIRT
@@ -88,6 +82,11 @@ datasets:
     description: simulation dataset
     tags:
       - Facet
+  - name: brennan
+    path: Brennan.omv
+    description: page 116 of Brennan’s book(2001)
+    tags:
+      - Generalizability
   - name: dif
     path: dif.omv
     description: Raju & MH method
