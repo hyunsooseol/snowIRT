@@ -407,7 +407,7 @@ items:
           type: integer     
 
     - name: mea
-      title: 'Measures of D Study'
+      title: 'Coefficients'
       type: Table
       visible: (mea)
       rows: 1
@@ -432,5 +432,27 @@ items:
           title: 'Universe score variance'
           type: number
 
+    - name: error
+      title: 'Error variance'
+      type: Table
+      visible: (error)
+      rows: 1
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: gtheory
+
+      columns:
+        - name: name
+          title: ''
+          type: 'text'
+          content: D Study
+        - name: relative
+          title: 'Relative'
+          type: number
+        - name: absolute
+          title: 'Absolute'
+          type: number
 
 ...

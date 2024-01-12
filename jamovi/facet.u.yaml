@@ -247,9 +247,10 @@ children:
                   - type: CheckBox
                     name: d
               - type: Label
-                label: 'Measures'
+                label: 'Measures of D study'
                 children: 
                   - type: CheckBox
                     name: mea
-
+                  - type: CheckBox
+                    name: error
  

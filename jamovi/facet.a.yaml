@@ -234,9 +234,12 @@ options:
       default: "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)"
 
     - name: mea
-      title: 'Measures of D Study'
+      title: 'Coefficients'
       type: Bool
       default: false
 
-
+    - name: error
+      title: 'Error variance'
+      type: Bool
+      default: false
 ...

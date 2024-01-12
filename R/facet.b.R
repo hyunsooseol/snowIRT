@@ -683,7 +683,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             
             ###### Generalizability theory--------------------
             
-            if(isTRUE(self$options$g || self$options$d) || self$options$mea){
+            if(isTRUE(self$options$g || self$options$d) || self$options$mea || self$options$error){
             
               dep <- self$options$dep
               id <- self$options$id
@@ -776,7 +776,10 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             gen <- ds$generalizability
             depe <- ds$dependability
             uni <- ds$var.universe
-           
+           rel <- ds$var.error.rel
+           abs <- ds$var.error.abs
+            
+            
             if(isTRUE(self$options$mea)){
             
               table<- self$results$mea
@@ -790,6 +793,21 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             table$setRow(rowNo = 1, values = row)
             
             }
+            
+           if(isTRUE(self$options$error)){
+             
+             table<- self$results$error
+             
+             row <- list()
+             
+             row[['relative']] <- rel
+             row[['absolute']] <- abs
+           
+             table$setRow(rowNo = 1, values = row)
+             
+           }
+            
+            
             }
             
        

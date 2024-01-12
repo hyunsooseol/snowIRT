@@ -48,7 +48,8 @@ facet(
   g = FALSE,
   d = FALSE,
   formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)",
-  mea = FALSE
+  mea = FALSE,
+  error = FALSE
 )
 }
 \arguments{
@@ -139,6 +140,8 @@ facet(
 \item{formula}{.}
 
 \item{mea}{.}
+
+\item{error}{.}
 }
 \value{
 A results object containing:
@@ -165,6 +168,7 @@ A results object containing:
   \code{results$g} \tab \tab \tab \tab \tab a table \cr
   \code{results$d} \tab \tab \tab \tab \tab a table \cr
   \code{results$mea} \tab \tab \tab \tab \tab a table \cr
+  \code{results$error} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

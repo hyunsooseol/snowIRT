@@ -48,7 +48,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             g = FALSE,
             d = FALSE,
             formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)",
-            mea = FALSE, ...) {
+            mea = FALSE,
+            error = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -243,6 +244,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "mea",
                 mea,
                 default=FALSE)
+            private$..error <- jmvcore::OptionBool$new(
+                "error",
+                error,
+                default=FALSE)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
@@ -287,6 +292,7 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..d)
             self$.addOption(private$..formula)
             self$.addOption(private$..mea)
+            self$.addOption(private$..error)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -331,7 +337,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         g = function() private$..g$value,
         d = function() private$..d$value,
         formula = function() private$..formula$value,
-        mea = function() private$..mea$value),
+        mea = function() private$..mea$value,
+        error = function() private$..error$value),
     private = list(
         ..dep = NA,
         ..id = NA,
@@ -375,7 +382,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..g = NA,
         ..d = NA,
         ..formula = NA,
-        ..mea = NA)
+        ..mea = NA,
+        ..error = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -403,7 +411,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot6 = function() private$.items[["plot6"]],
         g = function() private$.items[["g"]],
         d = function() private$.items[["d"]],
-        mea = function() private$.items[["mea"]]),
+        mea = function() private$.items[["mea"]],
+        error = function() private$.items[["error"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -816,7 +825,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="mea",
-                title="Measures of D Study",
+                title="Coefficients",
                 visible="(mea)",
                 rows=1,
                 clearWith=list(
@@ -841,6 +850,31 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="universe", 
                         `title`="Universe score variance", 
+                        `type`="number"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="error",
+                title="Error variance",
+                visible="(error)",
+                rows=1,
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="gtheory",
+                columns=list(
+                    list(
+                        `name`="name", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="D Study"),
+                    list(
+                        `name`="relative", 
+                        `title`="Relative", 
+                        `type`="number"),
+                    list(
+                        `name`="absolute", 
+                        `title`="Absolute", 
                         `type`="number"))))}))
 
 facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -911,6 +945,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param d .
 #' @param formula .
 #' @param mea .
+#' @param error .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -935,6 +970,7 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$g} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$d} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mea} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$error} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -988,7 +1024,8 @@ facet <- function(
     g = FALSE,
     d = FALSE,
     formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)",
-    mea = FALSE) {
+    mea = FALSE,
+    error = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -1049,7 +1086,8 @@ facet <- function(
         g = g,
         d = d,
         formula = formula,
-        mea = mea)
+        mea = mea,
+        error = error)
 
     analysis <- facetClass$new(
         options = options,
