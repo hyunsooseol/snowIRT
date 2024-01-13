@@ -395,7 +395,7 @@ items:
           content: ($key)
 
         - name: var
-          title: 'variance'
+          title: 'Variance'
           type: number
           
         - name: percent

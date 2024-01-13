@@ -812,7 +812,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="var", 
-                        `title`="variance", 
+                        `title`="Variance", 
                         `type`="number"),
                     list(
                         `name`="percent", 
