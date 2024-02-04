@@ -18,7 +18,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             disc = FALSE,
             sum1 = FALSE,
             plot = FALSE,
-            angle = 0,
+            angle = 90,
             plot1 = FALSE,
             disi = NULL,
             plot2 = FALSE,
@@ -96,9 +96,9 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..angle <- jmvcore::OptionNumber$new(
                 "angle",
                 angle,
-                min=0,
+                min=45,
                 max=90,
-                default=0)
+                default=90)
             private$..plot1 <- jmvcore::OptionBool$new(
                 "plot1",
                 plot1,
@@ -481,7 +481,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
-                title="Empirical Item Characteristic Curve",
+                title="`Empirical Item Characteristic Curve: Item ${num1}`",
                 requiresData=TRUE,
                 visible="(plot3)",
                 renderFun=".plot3",
@@ -530,8 +530,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param disc .
 #' @param sum1 .
 #' @param plot .
-#' @param angle a number from 0 to 90 defining the angle of the x-axis labels,
-#'   where 0 degrees represents completely horizontal labels.
+#' @param angle .
 #' @param plot1 .
 #' @param disi .
 #' @param plot2 .
@@ -582,7 +581,7 @@ item <- function(
     disc = FALSE,
     sum1 = FALSE,
     plot = FALSE,
-    angle = 0,
+    angle = 90,
     plot1 = FALSE,
     disi,
     plot2 = FALSE,

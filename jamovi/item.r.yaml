@@ -208,7 +208,7 @@ items:
         - key
 
     - name:  plot3
-      title: 'Empirical Item Characteristic Curve'
+      title: '`Empirical Item Characteristic Curve: Item ${num1}`'      
       type:  Image
       requiresData: true
       visible: (plot3)

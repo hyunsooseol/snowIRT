@@ -486,7 +486,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
   
   plot1 <- ShinyItemAnalysis::DDplot(dicho, discrim = disi, k = 3, l = 1, u = 3)
    
-  
   if (self$options$angle > 0) {
     plot1 <- plot1 + ggplot2::theme(
       axis.text.x = ggplot2::element_text(

@@ -18,7 +18,7 @@ item(
   disc = FALSE,
   sum1 = FALSE,
   plot = FALSE,
-  angle = 0,
+  angle = 90,
   plot1 = FALSE,
   disi,
   plot2 = FALSE,
@@ -60,8 +60,7 @@ item(
 
 \item{plot}{.}
 
-\item{angle}{a number from 0 to 90 defining the angle of the x-axis labels,
-where 0 degrees represents completely horizontal labels.}
+\item{angle}{.}
 
 \item{plot1}{.}
 
