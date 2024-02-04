@@ -89,11 +89,8 @@ children:
                     enable: (wrightmap)
               - type: CheckBox
                 name: plot4
+                style: list-inline
                 children:
-                  - name: num
-                    type: TextBox
-                    format: number
-                    enable: (plot4)
                   - type: TextBox
                     name: width4
                     format: number
@@ -102,6 +99,10 @@ children:
                     name: height4
                     format: number
                     enable: (plot4)
+              - name: num
+                type: TextBox
+                format: number
+                enable: (plot4)      
       - type: LayoutBox
         stretchFactor: 1
         margin: large
