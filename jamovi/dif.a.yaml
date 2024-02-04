@@ -153,13 +153,13 @@ options:
 
     - name: width2
       type: Integer
-      title: "Width "
+      title: "Size: "
       default: 500
       
     - name: height2
       type: Integer
-      title: "Height"
-      default: 500    
+      title: "X"
+      default: 500
       
     - name: width3
       type: Integer

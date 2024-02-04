@@ -51,11 +51,8 @@ children:
                 enable: (zplot)         
           - type: CheckBox
             name: plot3
+            style: list-inline
             children:
-              - name: num
-                type: TextBox
-                format: number
-                enable: (plot3)
               - type: TextBox
                 name: width2
                 format: number
@@ -64,6 +61,10 @@ children:
                 name: height2
                 format: number
                 enable: (plot3)                    
+          - name: num
+            type: TextBox
+            format: number
+            enable: (plot3)
       - type: LayoutBox
         cell:
           column: 1
