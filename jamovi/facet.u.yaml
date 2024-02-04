@@ -78,7 +78,7 @@ children:
                   - type: CheckBox
                     name: pfit
   - type: CollapseBox
-    label: Plots
+    label: 'Plots'
     margin: normal
     collapsed: true
     children:
@@ -119,6 +119,7 @@ children:
                     enable: (plot2)
               - type: CheckBox
                 name: plot3
+                style: list-inline
                 children:
                   - type: TextBox
                     name: width3
@@ -128,16 +129,17 @@ children:
                     name: height3
                     format: number
                     enable: (plot3)
-                  - type: TextBox
-                    name: angle
-                    format: number
-                    enable: (plot3)
-                    suggestedValues:
-                      - value: 0
-                      - value: 45
-                      - value: 90
+              - type: TextBox
+                name: angle
+                format: number
+                enable: (plot3)
+                suggestedValues:
+                  - value: 0
+                  - value: 45
+                  - value: 90
               - type: CheckBox
                 name: plot7
+                style: list-inline
                 children:
                   - type: TextBox
                     name: width7
@@ -147,14 +149,14 @@ children:
                     name: height7
                     format: number
                     enable: (plot7)
-                  - type: TextBox
-                    name: angle1
-                    format: number
-                    enable: (plot7)
-                    suggestedValues:
-                      - value: 0
-                      - value: 45
-                      - value: 90
+              - type: TextBox
+                name: angle1
+                format: number
+                enable: (plot7)
+                suggestedValues:
+                  - value: 0
+                  - value: 45
+                  - value: 90
               - type: CheckBox
                 name: plot8
                 style: list-inline
@@ -192,11 +194,8 @@ children:
                     enable: (plot4)
               - type: CheckBox
                 name: plot5
+                style: list-inline
                 children:
-                  - name: num
-                    type: TextBox
-                    format: number
-                    enable: (plot5)
                   - type: TextBox
                     name: width5
                     format: number
@@ -205,13 +204,14 @@ children:
                     name: height5
                     format: number
                     enable: (plot5)
+              - name: num
+                type: TextBox
+                format: number
+                enable: (plot5)
               - type: CheckBox
                 name: plot6
+                style: list-inline
                 children:
-                  - name: num1
-                    type: TextBox
-                    format: number
-                    enable: (plot6)
                   - type: TextBox
                     name: width6
                     format: number
@@ -220,6 +220,10 @@ children:
                     name: height6
                     format: number
                     enable: (plot6)
+              - name: num1
+                type: TextBox
+                format: number
+                enable: (plot6)
   - type: CollapseBox
     label: 'Generalizability theory'
     margin: normal

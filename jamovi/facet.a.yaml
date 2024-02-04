@@ -109,13 +109,13 @@ options:
 
     - name: width3
       type: Integer
-      title: "Width"
+      title: "Size: "
       default: 500
       
     - name: height3
       type: Integer
-      title: "Height"
-      default: 500
+      title: "X"
+      default: 500      
 
     - name: angle
       title: Angle of x-axis labels
@@ -152,13 +152,13 @@ options:
 
     - name: width5
       type: Integer
-      title: "Width"
+      title: "Size: "
       default: 500
       
     - name: height5
       type: Integer
-      title: "Height"
-      default: 500
+      title: "X"
+      default: 500   
 
     - name: plot6
       title: 'Item response curve'
@@ -173,13 +173,13 @@ options:
 
     - name: width6
       type: Integer
-      title: "Width"
+      title: "Size: "
       default: 500
       
     - name: height6
       type: Integer
-      title: "Height"
-      default: 500
+      title: "X"
+      default: 500       
 
     - name: plot7
       title: 'Interaction fit'
@@ -188,13 +188,13 @@ options:
 
     - name: width7
       type: Integer
-      title: "Width"
+      title: "Size: "
       default: 500
       
     - name: height7
       type: Integer
-      title: "Height"
-      default: 500
+      title: "X"
+      default: 500      
 
     - name: angle1
       title: Angle of x-axis labels
