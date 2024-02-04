@@ -118,11 +118,8 @@ children:
             children:
               - type: CheckBox
                 name: plot4
+                style: list-inline
                 children:
-                  - name: num
-                    type: TextBox
-                    format: number
-                    enable: (plot4)
                   - type: TextBox
                     name: width4
                     format: number
@@ -131,13 +128,14 @@ children:
                     name: height4
                     format: number
                     enable: (plot4)
+              - name: num
+                type: TextBox
+                format: number
+                enable: (plot4)
               - type: CheckBox
                 name: plot6
+                style: list-inline
                 children:
-                  - name: num1
-                    type: TextBox
-                    format: number
-                    enable: (plot6)
                   - type: TextBox
                     name: width6
                     format: number
@@ -146,6 +144,10 @@ children:
                     name: height6
                     format: number
                     enable: (plot6)
+              - name: num1
+                type: TextBox
+                format: number
+                enable: (plot6)
       - type: LayoutBox
         stretchFactor: 1
         margin: large
