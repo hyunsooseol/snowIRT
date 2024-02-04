@@ -75,7 +75,7 @@ options:
       default: FALSE  
       
     - name: plot
-      title: Distractor plot
+      title: 'Distractor plot'
       type: Bool
       default: FALSE
 
@@ -136,31 +136,31 @@ options:
 
     - name: width
       type: Integer
-      title: "Width "
+      title: "Size: "
       default: 500
       
     - name: height
       type: Integer
-      title: "Height"
-      default: 500      
+      title: "X"
+      default: 500
 
     - name: width1
       type: Integer
-      title: "Width "
+      title: "Size: "
       default: 500
       
     - name: height1
       type: Integer
-      title: "Height"
-      default: 500      
+      title: "X"
+      default: 500
 
     - name: width3
       type: Integer
-      title: "Width "
+      title: "Size: "
       default: 500
       
     - name: height3
       type: Integer
-      title: "Height"
-      default: 500      
+      title: "X"
+      default: 500
 ...
