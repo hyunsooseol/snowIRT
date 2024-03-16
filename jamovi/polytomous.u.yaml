@@ -39,7 +39,7 @@ children:
               - type: CheckBox
                 name: outfit
           - type: Label
-            label: Partical credit model
+            label: Partial credit model
             children:
               - type: CheckBox
                 name: thresh
