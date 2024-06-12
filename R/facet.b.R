@@ -141,54 +141,18 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         if (is.null(self$options$dep) ||
             is.null(self$options$id) ||
             is.null(self$options$facet)) return()
+ 
+        res <- private$.dataClear()
         
-        
-        
-        dep <- self$options$dep
-        id <- self$options$id
-        facets <- self$options$facet
-        
-        data <- self$data
-        data <- na.omit(data)
-        data <- as.data.frame(data)
-        
-        # Formula---------------
-        
-        facets <- vapply(facets, function(x) jmvcore::composeTerm(x), '')
-        facets <- paste0(facets, collapse='*')
-        formula <- as.formula(paste0('~ step+', facets))
-        
-        
-        facets = dplyr::select(data, self$options$facet)
-        
-        #self$results$text$setContent(formula)
-        
-        
-        res <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
-                                facets = facets, 
-                                pid = data[[self$options$id]],
-                                formulaA = formula)
-        
-        
-        #self$results$text1$setContent(res)
-        #self$results$text1$setContent(res$xsi.facets)
-        
-        if(isTRUE(self$options$plot5)){
-          
-          image <- self$results$plot5
-          image$setState(res)
-          
-          
-        } 
-        
-        
-        if(isTRUE(self$options$plot6)){
-          
-          image <- self$results$plot6
-          image$setState(res)
-          
-          
-        } 
+        # if(isTRUE(self$options$plot5)){
+        #   image <- self$results$plot5
+        #  image$setState(res)
+        #  } 
+        # 
+        # if(isTRUE(self$options$plot6)){
+        #   image <- self$results$plot6
+        #   image$setState(res)
+        #   } 
        
         
         # Facet estimates--------------------------
@@ -330,16 +294,16 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
        # interaction measure-------
        inter <- subset(res1, res1$facet == "rater:task")
-       
+
          inter<- inter |> tidyr::separate(parameter, c("rater", "task"), ":")
-         inter$task <-  gsub("task", "", inter$task) 
+         inter$task <-  gsub("task", "", inter$task)
          inter <- data.frame(inter$rater, inter$task, inter$xsi, inter$se.xsi)
          colnames(inter) <- c("Rater", "Task","Measure","SE")
-      
-      
+
+
          # step measure-----------
        sm <- subset(res1, res1$facet == "step")
-       
+
       #---------------------------------------------------------------------
          
          # Person ability----------
@@ -680,138 +644,42 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               image$setState(pf)
               
             }
-            
-            ###### Generalizability theory--------------------
-            
-            if(isTRUE(self$options$g || self$options$d) || self$options$mea || self$options$error){
-            
-              dep <- self$options$dep
-              id <- self$options$id
-            
-            formula <- self$options$formula
-            # facet <- self$options$facet
-            
-            # Example----------------------
-            # formula <- "value ~ (1 | subject) +(1 | rater) + (1 | task) + 
-            # (1 | subject:rater) +
-            # (1 | rater:task) + 
-            # (1 | subject:task)"
-             
-              # Example---------- 
-              # vars <- c('A', 'B', 'C')  # you'll populate this from self$options$...
-              # response <- 'bruce'
-              # fmla <- as.formula(paste0(jmvcore::composeTerm(response), '~', paste(jmvcore::composeTerms(vars), collapse='*')))
-              # trms <- attr(terms(fmla), 'term.labels')
-              # trms[1:6] #example---
-              # funnyTerms <- paste0('(1|', trms, ')')
-              # finalFmla <- paste0(jmvcore::composeTerm(response), '~', paste(funnyTerms, collapse='+'))
-              # finalFmla
-              # 
-              # 
-              # vars <- c(self$options$id, self$options$facet)  
-              # response <- self$options$dep
-              # fmla <- as.formula(paste0(jmvcore::composeTerm(response), '~', paste(jmvcore::composeTerms(vars), collapse='*')))
-              # trms <- attr(terms(fmla), 'term.labels')
-              # funnyTerms <- paste0('(1|', trms, ')')
-              # formula <- paste0(jmvcore::composeTerm(response), '~', paste(funnyTerms, collapse='+'))
-              # 
-              # 
-              # self$results$text1$setContent(formula)
-              # 
-              
-            
-            gstudy.out<- gtheory::gstudy(data = data, formula = formula)
-            ds<- gtheory::dstudy(gstudy.out, colname.objects = id, data = data, colname.scores = dep)
-            
-           
-            # G study table----------------
-            
-            table<- self$results$g
-            
-            gstudy<- as.data.frame(gstudy.out)
-            
-            var<- as.vector(gstudy[[2]])
-            percent<- as.vector(gstudy[[3]])
-            n <- as.vector(gstudy[[4]])
-            
-            items <- as.vector(gstudy[[1]])
-            
-            for (i in seq_along(items)) {
-              
-              row <- list()
-              
-              row[["var"]] <-var[i]
-              row[["percent"]] <- percent[i]
-              row[["n"]] <- n[i]
-              
-              table$addRow(rowKey = items[i], values = row)
-            }
-            
-            # G study table(Variance components)----------------
-            
-            table<- self$results$d
-            
-            dstudy<- as.data.frame(ds$components)
-            
-            var<- as.vector(dstudy[[2]])
-            percent<- as.vector(dstudy[[3]])
-            n <- as.vector(dstudy[[4]])
-            
-            items <- as.vector(dstudy[[1]])
-            
-            for (i in seq_along(items)) {
-              
-              row <- list()
-              
-              row[["var"]] <-var[i]
-              row[["percent"]] <- percent[i]
-              row[["n"]] <- n[i]
-              
-              table$addRow(rowKey = items[i], values = row)
-            }
-            
-            # self$results$text2$setContent(dstudy.out$generalizability)
-            
-            # Measures of D study---------------
-            gen <- ds$generalizability
-            depe <- ds$dependability
-            uni <- ds$var.universe
-           rel <- ds$var.error.rel
-           abs <- ds$var.error.abs
-            
-            
-            if(isTRUE(self$options$mea)){
-            
-              table<- self$results$mea
-           
-            row <- list()
-            
-            row[['generalizability']] <- gen
-            row[['dependability']] <- depe
-            row[['universe']] <- uni
-          
-            table$setRow(rowNo = 1, values = row)
-            
-            }
-            
-           if(isTRUE(self$options$error)){
-             
-             table<- self$results$error
-             
-             row <- list()
-             
-             row[['relative']] <- rel
-             row[['absolute']] <- abs
-           
-             table$setRow(rowNo = 1, values = row)
-             
-           }
-            
-            
-            }
-            
-       
-            },
+  
+      },
+      
+      .dataClear = function() {
+        
+        dep <- self$options$dep
+        id <- self$options$id
+        facets <- self$options$facet
+        
+        data <- self$data
+        data <- na.omit(data)
+        data <- as.data.frame(data)
+        
+        # Formula---------------
+        
+        facets <- vapply(facets, function(x) jmvcore::composeTerm(x), '')
+        facets <- paste0(facets, collapse='*')
+        formula <- as.formula(paste0('~ step+', facets))
+        
+        
+        facets = dplyr::select(data, self$options$facet)
+        #self$results$text$setContent(formula)
+        
+        
+        res <- TAM::tam.mml.mfr(resp = data[[self$options$dep]],
+                                facets = facets, 
+                                pid = data[[self$options$id]],
+                                formulaA = formula)
+        #self$results$text1$setContent(res)
+        #self$results$text1$setContent(res$xsi.facets)
+        
+        #retlist <- list(res=res)
+        return(res)
+      
+      },
+      
       
       .plot1 = function(image, ggtheme, theme,...) {
         
@@ -951,12 +819,18 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .plot5 = function(image, ...) {
         
         num <- self$options$num
+        # 
+        # if (is.null(image$state))
+        #   return(FALSE)
+        # 
+        # res <- image$state
        
-        if (is.null(image$state))
+        if(!self$options$plot5)
           return(FALSE)
         
-        res <- image$state
-       
+        res <- private$.dataClear()
+        
+        
         plot5 <- plot(res,
                       items = num,
                       type = "expected",
@@ -973,10 +847,15 @@ facetClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         num1 <- self$options$num1
         
-        if (is.null(image$state))
+        # if (is.null(image$state))
+        #   return(FALSE)
+        # 
+        # res <- image$state
+        
+        if(!self$options$plot6)
           return(FALSE)
         
-        res <- image$state
+        res <- private$.dataClear()
         
         plot6 <- plot(res,
                       items = num1,

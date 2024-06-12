@@ -7,7 +7,7 @@
         `author`="Seol, H.", 
         `year`=2024, 
         `title`="snowIRT: Item Response Theory for jamovi", 
-        `publisher`="(Version 5.0.6) [jamovi module]. URL https://github.com/hyunsooseol/snowIRT", 
+        `publisher`="(Version 5.0.7) [jamovi module]. URL https://github.com/hyunsooseol/snowIRT", 
         `url`="https://github.com/hyunsooseol/snowIRT"), 
     `TAM`=list(
         `type`="software", 
@@ -68,10 +68,4 @@
         `author`="Revelle, W.", 
         `year`=2022, 
         `title`="psych: Procedures for Psychological, Psychometric, and Personality Research", 
-        `publisher`="(Version 2.2.9) [R package]. URL https://CRAN.R-project.org/package=psych"), 
-    `gtheory`=list(
-        `type`="software", 
-        `author`="Christopher T.", 
-        `year`=2016, 
-        `title`="gtheory: Apply Generalizability Theory with R", 
-        `publisher`="(Version 0.1.2) [R package]. URL https://CRAN.R-project.org/package=gtheory"))
+        `publisher`="(Version 2.2.9) [R package]. URL https://CRAN.R-project.org/package=psych"))

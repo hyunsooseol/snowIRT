@@ -44,12 +44,7 @@ facet(
   angle1 = 0,
   plot8 = FALSE,
   width8 = 500,
-  height8 = 500,
-  g = FALSE,
-  d = FALSE,
-  formula = "value ~ (1 | subject) + (1 | task) + (1 | rater:task) + (1 | subject:task)",
-  mea = FALSE,
-  error = FALSE
+  height8 = 500
 )
 }
 \arguments{
@@ -132,16 +127,6 @@ facet(
 \item{width8}{.}
 
 \item{height8}{.}
-
-\item{g}{.}
-
-\item{d}{.}
-
-\item{formula}{.}
-
-\item{mea}{.}
-
-\item{error}{.}
 }
 \value{
 A results object containing:
@@ -165,10 +150,6 @@ A results object containing:
   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot5} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot6} \tab \tab \tab \tab \tab an image \cr
-  \code{results$g} \tab \tab \tab \tab \tab a table \cr
-  \code{results$d} \tab \tab \tab \tab \tab a table \cr
-  \code{results$mea} \tab \tab \tab \tab \tab a table \cr
-  \code{results$error} \tab \tab \tab \tab \tab a table \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
