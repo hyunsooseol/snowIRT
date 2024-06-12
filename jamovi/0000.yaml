@@ -82,11 +82,6 @@ datasets:
     description: simulation dataset
     tags:
       - Facet
-  - name: brennan
-    path: Brennan.omv
-    description: page 116 of Brennan’s book(2001)
-    tags:
-      - Generalizability
   - name: dif
     path: dif.omv
     description: Raju & MH method
