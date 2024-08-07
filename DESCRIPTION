@@ -20,6 +20,8 @@ Imports:
     dplyr,
     ShinyItemAnalysis,
     CTT,
+    CDM,
+    TAM,
     deltaPlotR,
     difNLR,
     ggplot2,
