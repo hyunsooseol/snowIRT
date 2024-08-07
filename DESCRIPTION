@@ -15,7 +15,6 @@ Imports:
     R6,
     stats,
     plyr,
-    CDM,
     RcppArmadillo,
     difR,
     dplyr,
