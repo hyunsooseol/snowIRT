@@ -748,6 +748,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Item Characteristic Curve(ICC)",
                 visible="(plot4)",
                 renderFun=".plot4",
+                requiresData=TRUE,
                 clearWith=list(
                     "vars",
                     "num",
@@ -759,6 +760,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Item category for PCM",
                 visible="(plot6)",
                 renderFun=".plot6",
+                requiresData=TRUE,
                 clearWith=list(
                     "vars",
                     "num1",

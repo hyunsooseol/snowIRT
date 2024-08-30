@@ -162,6 +162,7 @@ items:
       type: Image
       visible: (plot4)
       renderFun: .plot4
+      requiresData: true
       clearWith:
         - vars
         - num

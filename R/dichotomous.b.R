@@ -102,23 +102,14 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateMatrixTable(results)
        
           # prepare Expected score curve plot---------
-       #   private$.prepareEscPlot(data)
+          #private$.prepareEscPlot(data)
         
           # Summary of total score-----
           private$.populateToTable(results)
           
           #Standard score---------
           private$.populateStTable(results)
-          
-         
-          # populate output variables-----
-          # private$.populateTotalOutputs(results)
-          # private$.populatePmeasureOutputs(results)
-          # private$.populatePseOutputs(results)
-          # private$.populatePinfitOutputs(results)
-          # private$.populatePoutfitOutputs(results)
-          # private$.populateResidOutputs(results)
-          # 
+ 
           }
         
       },
@@ -165,19 +156,18 @@ adjustment; Ho= the data fit the Rasch model."
         }
         
         #################################################
-        set.seed(1234)
-      
-        # estimate the Rasch model with MMLE-----
-        
-        tamobj = TAM::tam.mml(resp = as.matrix(data))
+        # set.seed(1234)
+        # 
+        # # estimate the Rasch model with MMLE-----
+        # 
+        # tamobj = TAM::tam.mml(resp = as.matrix(data))
         
         ##################################################
-        
+        tamobj <- private$.computeTamobj()
         
         # computing item mean
         prop <- tamobj$item$M
-        
-        
+ 
         # estimate item difficulty measure---------------
         imeasure <-tamobj$xsi$xsi
         
@@ -240,8 +230,8 @@ adjustment; Ho= the data fit the Rasch model."
         
        #tamp = TAM::tam(resp =as.matrix(data))
        
-        image <- self$results$plot4
-        image$setState(tamobj)
+        # image <- self$results$plot4
+        # image$setState(tamobj)
        
         
        # Infit plot------------------------
@@ -642,48 +632,30 @@ adjustment; Ho= the data fit the Rasch model."
 },
 
 
-
 # #Prepare Expected score curve functions------------
-# 
-# .prepareEscPlot = function(data) {
-# 
-#   set.seed(1234)
-#   tamp = TAM::tam(resp =as.matrix(data))
-# 
-#     # Prepare Data For ESC Plot -------
-# 
-#   image <- self$results$plot4
-#   image$setState(tamp)
-# 
-# 
-# },
+ 
+ # .prepareEscPlot = function(data) {
+ # 
+ #   set.seed(1234)
+ #   tamp = TAM::tam(resp =as.matrix(data))
+ # 
+ # # Prepare Data For ESC Plot -------
+ # 
+ #   image <- self$results$plot4
+ #   image$setState(tamp)
+ # 
+ # },
 
 
  .plot4 = function(image, ...) {
-   
   
    num <- self$options$num
-   #tamp <- image$parent$state
    
-   # if (is.null(tamp))
-   #   return()
-   
-   if (is.null(image$state))
+   if(!self$options$plot4)
      return(FALSE)
+  
+   tamobj <- private$.computeTamobj() 
    
-   tamobj <- image$state
-   
-   #esc <- self$results$plot4
-   
-   # index <- 1
-   # 
-   # for (item in images$items) {
-   #   if (identical(image, item))
-   #     break()
-   # 
-   #   index <- index + 1
-   # }
-
     plot4 <- plot(tamobj,
                   items = num,
                   #type="items" produce item response curve not expected curve
@@ -692,8 +664,7 @@ adjustment; Ho= the data fit the Rasch model."
 
   print(plot4)
    TRUE
-   
-   
+  
  },
  
 
@@ -825,6 +796,17 @@ adjustment; Ho= the data fit the Rasch model."
         data <- jmvcore::naOmit(data)
         
         return(data)
-      }
+      },
+
+.computeTamobj=function(){
+  
+  data <- private$.cleanData()
+  
+  set.seed(1234)
+  tamobj = TAM::tam(resp =as.matrix(data))
+  
+  return(tamobj)
+  
+}
     )
   )

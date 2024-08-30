@@ -282,6 +282,7 @@ items:
       type: Image
       visible: (plot4)
       renderFun: .plot4
+      requiresData: true
       clearWith:
         - vars
         - num
@@ -293,6 +294,7 @@ items:
       type: Image
       visible: (plot6)
       renderFun: .plot6
+      requiresData: true
       clearWith:
         - vars
         - num1

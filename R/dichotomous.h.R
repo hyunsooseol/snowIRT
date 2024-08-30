@@ -510,6 +510,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 title="Expected Score Curve",
                 visible="(plot4)",
                 renderFun=".plot4",
+                requiresData=TRUE,
                 clearWith=list(
                     "vars",
                     "num",
