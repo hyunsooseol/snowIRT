@@ -21,30 +21,50 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     "difClass",
     inherit = difBase,
     private = list(
-        
+      .htmlwidget = NULL, 
 #=============================================================
         
 .init = function() {
+  
+  private$.htmlwidget <- HTMLWidget$new()
+  
   if (is.null(self$data) | is.null(self$options$vars)) {
     self$results$instructions$setVisible(visible = TRUE)
     
   }
   
+  # self$results$instructions$setContent(
+  #   "<html>
+  #           <head>
+  #           </head>
+  #           <body>
+  #           <div class='instructions'>
+  #           <p>____________________________________________________________________________________</p>
+  #           <p>1. Performs DIF detection using <b>difR</b> R package.
+  #           <P>2. For Raju and MH method, the focal group should be coded as <b>1</b>.</P>
+  #           <p>3. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+  #           <p>____________________________________________________________________________________</p>
+  #           </div>
+  #           </body>
+  #           </html>"
+  # )
+  
   self$results$instructions$setContent(
-    "<html>
-            <head>
-            </head>
-            <body>
-            <div class='instructions'>
-            <p>____________________________________________________________________________________</p>
-            <p>1. Performs DIF detection using <b>difR</b> R package.
-            <P>2. For Raju and MH method, the focal group should be coded as <b>1</b>.</P>
-            <p>3. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
-            <p>____________________________________________________________________________________</p>
-            </div>
-            </body>
-            </html>"
-  )
+    private$.htmlwidget$generate_accordion(
+      title="Instructions",
+      content = paste(
+        '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
+        '<div style="text-align:justify;">',
+        '<ul>',
+        '<li>Performs DIF detection using <b>difR</b> R package.</li>',
+        '<li>For Raju and MH method, the focal group should be coded as <b>1</b>.</li>',
+        '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+        '</ul></div></div>'
+        
+      )
+      
+    )
+  )           
   
   if (self$options$raju)
     self$results$raju$setNote(

@@ -12,31 +12,53 @@ deltamClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "deltamClass",
     inherit = deltamBase,
     private = list(
- 
+      .htmlwidget = NULL, 
+      
         .init = function() {
-            if (is.null(self$data) | is.null(self$options$vars)) {
+      
+          private$.htmlwidget <- HTMLWidget$new()
+          
+          if (is.null(self$data) | is.null(self$options$vars)) {
                 self$results$instructions$setVisible(visible = TRUE)
                 
             }
             
-  self$results$instructions$setContent(
-    "<html>
-            <head>
-            </head>
-            <body>
-            <div class='instructions'>
-            <p>____________________________________________________________________________________</p>
-            <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
-            <P>2. The focal group should be coded as 1.</P>
-            <p>3. The Angoff delta method is described in the <a href='https://ppw.kuleuven.be/okp/_pdf/Magis2011ADMRI.pdf'  target = '_blank'>paper.</a></p>  
-            <p>4. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
-            <p>____________________________________________________________________________________</p>
-            </div>
-            </body>
-            </html>"
-      
+  # self$results$instructions$setContent(
+  #   "<html>
+  #           <head>
+  #           </head>
+  #           <body>
+  #           <div class='instructions'>
+  #           <p>____________________________________________________________________________________</p>
+  #           <p>1. Each variable should be coded as 0 or 1 with the 'Grouping variable'in jamovi.</p>
+  #           <P>2. The focal group should be coded as 1.</P>
+  #           <p>3. The Angoff delta method is described in the <a href='https://ppw.kuleuven.be/okp/_pdf/Magis2011ADMRI.pdf'  target = '_blank'>paper.</a></p>  
+  #           <p>4. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+  #           <p>____________________________________________________________________________________</p>
+  #           </div>
+  #           </body>
+  #           </html>"
+  #     
+  #           )
+
+          self$results$instructions$setContent(
+            private$.htmlwidget$generate_accordion(
+              title="Instructions",
+              content = paste(
+                '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
+                '<div style="text-align:justify;">',
+                '<ul>',
+                '<li>Each variable should be coded as 0 or 1 with the <b>Grouping variable</b>in jamovi.</li>',
+                '<li>The focal group should be coded as 1.</li>',
+                '<li>The Angoff delta method is described in the <a href="https://ppw.kuleuven.be/okp/_pdf/Magis2011ADMRI.pdf"  target = "_blank">paper</a>.</li>',
+                '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+                '</ul></div></div>'
+                
+              )
+              
             )
-           
+          )          
+                     
   if (self$options$fixed)
     self$results$fixed$setNote(
       "Note",

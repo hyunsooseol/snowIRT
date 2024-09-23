@@ -21,32 +21,55 @@ itemClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "itemClass",
     inherit = itemBase,
     private = list(
-       
+      .htmlwidget = NULL, 
+      
+      
         .init = function() {
             
+          private$.htmlwidget <- HTMLWidget$new()
+          
             if (is.null(self$data) | is.null(self$options$vars)) {
                 
                 self$results$instructions$setVisible(visible = TRUE)
                 
             }
             
-            self$results$instructions$setContent(
-                "<html>
-            <head>
-            </head>
-            <body>
-            <div class='instructions'>
-            <p>____________________________________________________________________________________</p>
-            <P>1. Enter the correct answer separated by commas, but there must be no spaces between commas.</p>
-            <p>2. To resolve error messages like 'breaks are not unique', we need to add more questions and respondents.</p>
-            <P>3. By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</p>
-            <p>4. Feature requests and bug reports can be made on the <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
-            <p>____________________________________________________________________________________</p>
-            </div>
-            </body>
-            </html>"
-            )
+            # self$results$instructions$setContent(
+            #     "<html>
+            # <head>
+            # </head>
+            # <body>
+            # <div class='instructions'>
+            # <p>____________________________________________________________________________________</p>
+            # <P>1. Enter the correct answer separated by commas, but there must be no spaces between commas.</p>
+            # <p>2. To resolve error messages like 'breaks are not unique', we need to add more questions and respondents.</p>
+            # <P>3. By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</p>
+            # <p>4. Feature requests and bug reports can be made on the <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
+            # <p>____________________________________________________________________________________</p>
+            # </div>
+            # </body>
+            # </html>"
+            # )
            
+          self$results$instructions$setContent(
+            private$.htmlwidget$generate_accordion(
+              title="Instructions",
+              content = paste(
+                '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
+                '<div style="text-align:justify;">',
+                '<ul>',
+                '<li>Enter the correct answer separated by commas, but there must be no spaces between commas.</li>',
+                '<li>To resolve error messages like <b>breaks are not unique</b>, we need to add more questions and respondents.</li>',
+                '<li>By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</li>',
+                '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+                '</ul></div></div>'
+                
+              )
+              
+            )
+          )         
+          
+          
             if (self$options$disc)
               self$results$disc$setNote(
                 "Note",

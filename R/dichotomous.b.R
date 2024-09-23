@@ -23,31 +23,57 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
     "dichotomousClass",
     inherit = dichotomousBase,
     private = list(
+      
+      .htmlwidget = NULL, 
+      
+      
       #=============================================================
       
       .init = function() {
+        
+        private$.htmlwidget <- HTMLWidget$new()
+        
         if (is.null(self$data) | is.null(self$options$vars)) {
           self$results$instructions$setVisible(visible = TRUE)
           
         }
         
+        # self$results$instructions$setContent(
+        #   "<html>
+        #     <head>
+        #     </head>
+        #     <body>
+        #     <div class='instructions'>
+        #     <p>____________________________________________________________________________________</p>
+        #     <p>1. Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
+        #     <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
+        #     <p>3. The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</p>
+        #     <p>4. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a>.</p>
+        #     <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
+        #     <p>____________________________________________________________________________________</p>
+        #     </div>
+        #     </body>
+        #     </html>"
+        # )
+        
         self$results$instructions$setContent(
-          "<html>
-            <head>
-            </head>
-            <body>
-            <div class='instructions'>
-            <p>____________________________________________________________________________________</p>
-            <p>1. Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</p>
-            <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
-            <p>3. The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</p>
-            <p>4. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a>.</p>
-            <p>5. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
-            <p>____________________________________________________________________________________</p>
-            </div>
-            </body>
-            </html>"
-        )
+          private$.htmlwidget$generate_accordion(
+            title="Instructions",
+            content = paste(
+              '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
+              '<div style="text-align:justify;">',
+              '<ul>',
+              '<li>Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</li>',
+              '<li><b>Person Analysis</b> will be displayed in the datasheet.</li>',
+              '<li>The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</li>',
+              '<li>The rationale of snowIRT module is described in the <a href="https://bookdown.org/dkatz/Rasch_Biome/" target = "_blank">documentation</a>.</li>',
+              '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+              '</ul></div></div>'
+              
+            )
+            
+          )
+        )          
         
         #  private$.initItemsTable()
         
