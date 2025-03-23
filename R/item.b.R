@@ -1,6 +1,4 @@
 
-# This file is a generated template, your changes will not be overwritten
-
 # ITEM ANALYSIS
 #' @import ggplot2
 
@@ -9,7 +7,9 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
     "itemClass",
     inherit = itemBase,
     private = list(
+      .cache = list(),
       .htmlwidget = NULL,
+      
       .init = function() {
         private$.htmlwidget <- HTMLWidget$new()
         if (is.null(self$data) | is.null(self$options$vars)) {
@@ -56,21 +56,29 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
       },
       
-      
       .run = function() {
-        if (length(self$options$vars) < 2)
-          return()
-        #get the data--------
+        if (length(self$options$vars) < 2) return()
         data <- self$data
         data <- na.omit(data)
-        
         key <- self$options$key
         key1 <- strsplit(self$options$key, ',')[[1]]
-        
+
+        # check and compute---
+        if (is.null(private$.cache$counts)) {
+          private$.computeRES()
+        }
+        # results---
+        counts <- private$.cache$counts
+        ts <- private$.cache$ts
+        prop <- private$.cache$prop
+        res <- private$.cache$res
+        dicho <- private$.cache$dicho
+
         # Counts of respondents-----------
         
-        counts <- CTT::distractor.analysis(data, key1)
+        #counts <- CTT::distractor.analysis(data, key1)
         #---------------------------------------------
+        #counts<- results$counts
         
         if (isTRUE(self$options$count)) {
           vars <- self$options$vars
@@ -96,14 +104,16 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         ### Total summary############
         
-        group1 <- self$options$group1
+        #group1 <- self$options$group1
         
         #------------------------------------------------
-        ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
+        #ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
         #-------------------------------------------------
+        #ts<- results$ts
         
         if (isTRUE(self$options$sum1)) {
           vars <- self$options$vars
+          
           table <- self$results$sum1
           tab <- NULL
           for (i in seq_along(vars)) {
@@ -130,8 +140,10 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         # Proportions of respondents--------
         
-        prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
+        #prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
         #---------------------------------------
+        #prop<- results$prop
+        
         if (isTRUE(self$options$prop)) {
           table <- self$results$prop
           tab <- NULL
@@ -155,8 +167,10 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         #summary-------------
         
-        res <- CTT::distractorAnalysis(data, key1)
+        #res <- CTT::distractorAnalysis(data, key1)
         #--------------------------------------
+        #res<- results$res
+        
         if (isTRUE(self$options$sum)) {
           table <- self$results$sum
           tab <- NULL
@@ -179,8 +193,9 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         # Scores, scored file-----------
-        
-        dicho <- CTT::score(data, key1, output.scored = TRUE)
+        #dicho <- CTT::score(data, key1, output.scored = TRUE)
+        #--------------------------------------------
+        #dicho<- results$dicho
         dicho <- dicho$scored
         dicho <- as.data.frame(dicho) # dichotomous matrix
         
@@ -195,10 +210,10 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           
         }
         
-        
         # Save scoring-----------------
         
         if (self$options$scoring == TRUE) {
+          
           binary <- CTT::score(data, key1, output.scored = TRUE)
           
           keys <- 1:length(self$options$vars)
@@ -271,6 +286,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         if (self$options$plot2 == TRUE) {
           dicho <- CTT::score(data, key1, output.scored = TRUE)
+          
           binary <- dicho$scored
           score <- rowSums(binary)
           df <- data.frame(score)
@@ -280,7 +296,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           image2$setState(state)
         }
       },
-      #################################################################
+      #-------------
       
       .plot2 = function(image2, ggtheme, theme, ...) {
         if (is.null(image2$state))
@@ -318,7 +334,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         print(plot2)
         TRUE
       },
-      
       
       .plot = function(image, ...) {
         data <- self$data
@@ -366,6 +381,24 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         )
         print(plot3)
         TRUE
+      },
+      
+      .computeRES = function() {
+        if (length(self$options$vars) < 2)
+          return()
+        
+        data <- self$data
+        data <- na.omit(data)
+        key1 <- strsplit(self$options$key, ',')[[1]]
+        group1 <- self$options$group1
+        
+        # chche---
+        private$.cache$counts <- CTT::distractor.analysis(data, key1)
+        private$.cache$ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
+        private$.cache$prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
+        private$.cache$res <- CTT::distractorAnalysis(data, key1)
+        private$.cache$dicho <- CTT::score(data, key1, output.scored = TRUE)
       }
+      
     )
   )
