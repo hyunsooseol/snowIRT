@@ -7,11 +7,10 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
     "dichotomousClass",
     inherit = dichotomousBase,
     private = list(
-      .cache = list(),   
-      .htmlwidget = NULL, 
- 
+      .cache = list(),
+      .htmlwidget = NULL,
+      
       .init = function() {
-        
         private$.htmlwidget <- HTMLWidget$new()
         
         if (is.null(self$data) | is.null(self$options$vars)) {
@@ -19,23 +18,21 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
           
         }
         
-        self$results$instructions$setContent(
-          private$.htmlwidget$generate_accordion(
-            title="Instructions",
-            content = paste(
-              '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
-              '<div style="text-align:justify;">',
-              '<ul>',
-              '<li>Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</li>',
-              '<li><b>Person Analysis</b> will be displayed in the datasheet.</li>',
-              '<li>The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</li>',
-              '<li>The rationale of snowIRT module is described in the <a href="https://bookdown.org/dkatz/Rasch_Biome/" target = "_blank">documentation</a>.</li>',
-              '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
-              '</ul></div></div>'
-              
-            )
+        self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
+          title = "Instructions",
+          content = paste(
+            '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
+            '<div style="text-align:justify;">',
+            '<ul>',
+            '<li>Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</li>',
+            '<li><b>Person Analysis</b> will be displayed in the datasheet.</li>',
+            '<li>The result tables are estimated by Marginal Maximum Likelihood estimation(MMLE).</li>',
+            '<li>The rationale of snowIRT module is described in the <a href="https://bookdown.org/dkatz/Rasch_Biome/" target = "_blank">documentation</a>.</li>',
+            '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+            '</ul></div></div>'
+            
           )
-        )          
+        ))
         if (self$options$modelfitp)
           self$results$mf$scale$setNote(
             "Note",
@@ -51,8 +48,8 @@ adjustment; Ho= the data fit the Rasch model."
         if (length(self$options$vars) <= 1)
           self$setStatus('complete')
       },
- 
- .run = function() {
+      
+      .run = function() {
         # Ready--------
         ready <- TRUE
         if (is.null(self$options$vars) ||
@@ -61,9 +58,11 @@ adjustment; Ho= the data fit the Rasch model."
         if (ready) {
           data <- private$.cleanData()
           #results <- private$.compute(data)
-
-          if (is.null(private$.cache$tamobj)) private$.cache$tamobj <- private$.computeTamobj()
-          if (is.null(private$.cache$results)) private$.cache$results <- private$.compute(data)
+          
+          if (is.null(private$.cache$tamobj))
+            private$.cache$tamobj <- private$.computeTamobj()
+          if (is.null(private$.cache$results))
+            private$.cache$results <- private$.compute(data)
           
           tamobj <- private$.cache$tamobj
           results <- private$.cache$results
@@ -76,48 +75,47 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateMatrixTable(results)
           # prepare Expected score curve plot---------
           #private$.prepareEscPlot(data)
-        
+          
           # Summary of total score-----
           private$.populateToTable(results)
           #Standard score---------
           private$.populateStTable(results)
-          }
+        }
       },
       # compute results=====================================================
       
       .compute = function(data) {
-        
-        if(isTRUE(self$options$wrightmap)){
+        if (isTRUE(self$options$wrightmap)) {
           width <- self$options$width
           height <- self$options$height
           self$results$plot$setSize(width, height)
         }
         
-        if(isTRUE(self$options$plot4)){
+        if (isTRUE(self$options$plot4)) {
           width <- self$options$width4
           height <- self$options$height4
           self$results$plot4$setSize(width, height)
         }
         
-        if(isTRUE(self$options$inplot)){
+        if (isTRUE(self$options$inplot)) {
           width <- self$options$width1
           height <- self$options$height1
           self$results$inplot$setSize(width, height)
         }
         
-        if(isTRUE(self$options$outplot)){
+        if (isTRUE(self$options$outplot)) {
           width <- self$options$width1
           height <- self$options$height1
           self$results$outplot$setSize(width, height)
         }
         
-        if(isTRUE(self$options$plot3)){
+        if (isTRUE(self$options$plot3)) {
           width <- self$options$width3
           height <- self$options$height3
           self$results$plot3$setSize(width, height)
         }
         
-        if(isTRUE(self$options$plot2)){
+        if (isTRUE(self$options$plot2)) {
           width <- self$options$width2
           height <- self$options$height2
           self$results$plot2$setSize(width, height)
@@ -125,9 +123,9 @@ adjustment; Ho= the data fit the Rasch model."
         
         #################################################
         # set.seed(1234)
-        # 
+        #
         # # estimate the Rasch model with MMLE-----
-        # 
+        #
         # tamobj = TAM::tam.mml(resp = as.matrix(data))
         
         ##################################################
@@ -137,9 +135,9 @@ adjustment; Ho= the data fit the Rasch model."
         
         # computing item mean
         prop <- tamobj$item$M
- 
+        
         # estimate item difficulty measure---------------
-        imeasure <-tamobj$xsi$xsi
+        imeasure <- tamobj$xsi$xsi
         
         # estimate standard error of the item parameter-----
         ise <- tamobj$xsi$se.xsi
@@ -148,12 +146,12 @@ adjustment; Ho= the data fit the Rasch model."
         infit <- fit$itemfit$Infit
         outfit <- fit$itemfit$Outfit
         # computing person separation reliability-------
-        person<- TAM::tam.wle(tamobj)
-        reliability<- person$WLE.rel
+        person <- TAM::tam.wle(tamobj)
+        reliability <- person$WLE.rel
         
         # person statistics
-        total<- person$PersonScores
-        pmeasure<- person$theta
+        total <- person$PersonScores
+        pmeasure <- person$theta
         pse <- person$error
         
         #computing an effect size of model fit(MADaQ3) using MML-------
@@ -169,7 +167,7 @@ adjustment; Ho= the data fit the Rasch model."
         mat <- model$Q3.matr
         
         # total score calculation
-        score <- apply(data, 1,sum)
+        score <- apply(data, 1, sum)
         
         # summary of total score
         to <- psych::describe(score)
@@ -188,20 +186,20 @@ adjustment; Ho= the data fit the Rasch model."
         
         # esc plot------------------
         
-       #tamp = TAM::tam(resp =as.matrix(data))
-       
+        #tamp = TAM::tam(resp =as.matrix(data))
+        
         # image <- self$results$plot4
         # image$setState(tamobj)
-       # Infit plot------------------------
+        # Infit plot------------------------
         Item <- fit$itemfit$parameter
-        infit1 <- data.frame(Item,infit)
+        infit1 <- data.frame(Item, infit)
         
         image <- self$results$inplot
         image$setState(infit1)
         
         # Outfit plot------------------------
         Item <- fit$itemfit$parameter
-        outfit1 <- data.frame(Item,outfit)
+        outfit1 <- data.frame(Item, outfit)
         
         image <- self$results$outplot
         image$setState(outfit1)
@@ -214,7 +212,7 @@ adjustment; Ho= the data fit the Rasch model."
         color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
         df2 <- data.frame(score)
         
-        state <- list(df2, score,color)
+        state <- list(df2, score, color)
         image2 <- self$results$plot2
         image2$setState(state)
         
@@ -225,89 +223,85 @@ adjustment; Ho= the data fit the Rasch model."
         zsco <- sort(unique(scale(score)))   # Z-score
         tsco <- 50 + 10 * zsco               # T-score
         
-        st<- cbind(tosc, perc, zsco, tsco)
-        st<- as.data.frame(st)
+        st <- cbind(tosc, perc, zsco, tsco)
+        st <- as.data.frame(st)
         
         #### Person Statistics###########################
-       
+        
         # Person tables------------
         
-        if(self$options$total==TRUE){
-        
-          self$results$total$setRowNums(rownames(data))     
+        if (self$options$total == TRUE) {
+          self$results$total$setRowNums(rownames(data))
           self$results$total$setValues(total)
         }
         
-        if(self$options$pmeasure==TRUE){
-
+        if (self$options$pmeasure == TRUE) {
           self$results$pmeasure$setRowNums(rownames(data))
           self$results$pmeasure$setValues(pmeasure)
         }
-
-        if(self$options$pse==TRUE){
-
+        
+        if (self$options$pse == TRUE) {
           self$results$pse$setRowNums(rownames(data))
           self$results$pse$setValues(pse)
         }
         # person infit---------
         pfit <- TAM::tam.personfit(tamobj)
         pinfit <- pfit$infitPerson
-      
+        
         # person outfit---------
         pfit <- TAM::tam.personfit(tamobj)
         poutfit <- pfit$outfitPerson
         
         # Residual----------
         
-        res <- TAM::IRT.residuals(tamobj )
+        res <- TAM::IRT.residuals(tamobj)
         resid <- res$stand_residuals
         
-        if(self$options$pinfit==TRUE){
-          
+        if (self$options$pinfit == TRUE) {
           self$results$pinfit$setRowNums(rownames(data))
           self$results$pinfit$setValues(pinfit)
         }
         
-        if(self$options$poutfit==TRUE){
-          
+        if (self$options$poutfit == TRUE) {
           self$results$poutfit$setRowNums(rownames(data))
           self$results$poutfit$setValues(poutfit)
         }
         
-        if(self$options$resid==TRUE){
-          
+        if (self$options$resid == TRUE) {
           keys <- 1:length(self$options$vars)
-              titles <- paste("Item", 1:length(self$options$vars))
-              descriptions <- paste("Item", 1:length(self$options$vars))
-              measureTypes <- rep("continuous", length(self$options$vars))
-
-              self$results$resid$set(
-                keys=keys,
-                titles=titles,
-                descriptions=descriptions,
-                measureTypes=measureTypes
-              )
-              self$results$resid$setRowNums(rownames(data))
-              resid <- as.data.frame(resid)
-
-              for (i in 1:length(self$options$vars)) {
-                scores <- as.numeric(resid[, i])
-                self$results$resid$setValues(index=i, scores)
-              }
-            }
-
-   # Person fit plot3----------------------
-       
+          titles <- paste("Item", 1:length(self$options$vars))
+          descriptions <- paste("Item", 1:length(self$options$vars))
+          measureTypes <- rep("continuous", length(self$options$vars))
+          
+          self$results$resid$set(
+            keys = keys,
+            titles = titles,
+            descriptions = descriptions,
+            measureTypes = measureTypes
+          )
+          self$results$resid$setRowNums(rownames(data))
+          resid <- as.data.frame(resid)
+          
+          for (i in 1:length(self$options$vars)) {
+            scores <- as.numeric(resid[, i])
+            self$results$resid$setValues(index = i, scores)
+          }
+        }
+        
+        # Person fit plot3----------------------
+        
         Measure <- pmeasure
         Infit <- pinfit
         Outfit <- poutfit
         
-        df <- data.frame(Measure,Infit,Outfit)
+        df <- data.frame(Measure, Infit, Outfit)
         
-        pf<- reshape2::melt(df,
-                       id.vars='Measure',
-                       variable.name="Fit",
-                       value.name='Value')
+        pf <- reshape2::melt(
+          df,
+          id.vars = 'Measure',
+          variable.name = "Fit",
+          value.name = 'Value'
+        )
         
         image <- self$results$plot3
         image$setState(pf)
@@ -322,55 +316,53 @@ adjustment; Ho= the data fit the Rasch model."
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
             'mat' = mat,
-            'to'=to,
-            'st'=st,
-            'person'=person,
-            'total'=total,
-            'pmeasure'=pmeasure,
-            'pse'=pse,
-            'pinfit'=pinfit,
-            'poutfit'=poutfit,
-            'resid'=resid
-          
-            )
+            'to' = to,
+            'st' = st,
+            'person' = person,
+            'total' = total,
+            'pmeasure' = pmeasure,
+            'pse' = pse,
+            'pinfit' = pinfit,
+            'poutfit' = poutfit,
+            'resid' = resid
+            
+          )
       },
       
       # Standard score----------
       
       .populateStTable = function(results) {
-        
         table <- self$results$stand$st
         st <- results$st
-        names<- dimnames(st)[[1]]
+        names <- dimnames(st)[[1]]
         
         for (name in names) {
           row <- list()
-          row[['Total']] <- st[name,1]
-          row[['Percentile']] <- st[name,2]
-          row[['Z']] <- st[name,3]
-          row[['T']] <- st[name,4]
-          table$addRow(rowKey=name, values=row)
+          row[['Total']] <- st[name, 1]
+          row[['Percentile']] <- st[name, 2]
+          row[['Z']] <- st[name, 3]
+          row[['T']] <- st[name, 4]
+          table$addRow(rowKey = name, values = row)
         }
       },
       
       # Summary of total score---------
       
       .populateToTable = function(results) {
-        
-        table <- self$results$stand$to 
+        table <- self$results$stand$to
         
         to <- results$to
         
-        n<- to$n
-        min<- to$min
-        max<- to$max
-        mean<- to$mean
-        median<- to$median
-        sd<- to$sd
+        n <- to$n
+        min <- to$min
+        max <- to$max
+        mean <- to$mean
+        median <- to$median
+        sd <- to$sd
         se <- to$se
-        skew<- to$skew
-        kurtosis<- to$kurtosis
-
+        skew <- to$skew
+        kurtosis <- to$kurtosis
+        
         row <- list()
         row[['N']] <- n
         row[['Minimum']] <- min
@@ -386,8 +378,7 @@ adjustment; Ho= the data fit the Rasch model."
       #### Init. tables ====================================================
       
       .initItemsTable = function() {
-        
-       table <- self$results$items
+        table <- self$results$items
         for (i in seq_along(items))
           table$addFootnote(rowKey = items[i], 'name')
       },
@@ -395,8 +386,6 @@ adjustment; Ho= the data fit the Rasch model."
       # populate scale table-------------------
       
       .populateScaleTable = function(results) {
-        
-       
         table <- self$results$mf$scale
         reliability <- results$reliability
         modelfit <- results$modelfit
@@ -461,7 +450,6 @@ adjustment; Ho= the data fit the Rasch model."
       # populate item table==============================================
       
       .populateItemsTable = function(results) {
-        
         table <- self$results$items
         items <- self$options$vars
         prop <- results$prop
@@ -479,147 +467,176 @@ adjustment; Ho= the data fit the Rasch model."
           table$setRow(rowKey = items[i], values = row)
         }
       },
-  # Wrightmapt Plot-----------------------------------------------    
-  
-.plot = function(image,...){
-  
-  if (is.null(image$state))
-    return(FALSE)
-  pmeasure <- image$state[[1]]
-  imeasure <- image$state[[2]]
-  vars <- image$state[[3]]
-  plot<- ShinyItemAnalysis::ggWrightMap(pmeasure, imeasure,
-                                        item.names = vars,
-                                        color = "deepskyblue")
-  #plot <- plot+ggtheme
-  print(plot)
-  TRUE
-},
-# #Prepare Expected score curve functions------------
- 
- # .prepareEscPlot = function(data) {
- # 
- #   set.seed(1234)
- #   tamp = TAM::tam(resp =as.matrix(data))
- # 
- # # Prepare Data For ESC Plot -------
- # 
- #   image <- self$results$plot4
- #   image$setState(tamp)
- # 
- # },
- .plot4 = function(image, ...) {
-  
-   num <- self$options$num
-   if(!self$options$plot4)
-     return(FALSE)
-   #tamobj <- private$.computeTamobj() 
-   tamobj <- private$.cache$tamobj
-    
-   plot4 <- plot(tamobj,
-                  items = num,
-                  #type="items" produce item response curve not expected curve
-                  type = "expected",
-                  export = FALSE)
-  print(plot4)
-   TRUE
- },
-
-.inPlot = function(image, ggtheme, theme,...) {
-  
-  if (is.null(image$state))
-    return(FALSE)
- 
-  infit1 <- image$state
- 
-  plot <- ggplot(infit1, aes(x = Item, y=infit)) +
-    geom_point(shape = 4, color = 'black',
-               fill = 'white', size = 3, stroke = 2) +
-    geom_hline(yintercept = 1.5, linetype = "dotted", color='red', size=1.5) +
-    geom_hline(yintercept = 0.5, linetype = "dotted", color='red', size=1.5) +
-    ggtitle("Item Infit")
-  plot <- plot+ggtheme
-  
-  if (self$options$angle > 0) {
-    plot <- plot + ggplot2::theme(
-      axis.text.x = ggplot2::element_text(
-        angle = self$options$angle, hjust = 1
-      )
-    )
-  }
-  print(plot)
-  TRUE
-  },
-
-.outPlot = function(image, ggtheme, theme,...) {
-  
-  if (is.null(image$state))
-    return(FALSE)
-  
-  outfit1 <- image$state
-
-  plot <- ggplot(outfit1, aes(x = Item, y=outfit)) + 
-    geom_point(shape = 4, color = 'black', 
-               fill = 'white', size = 3, stroke = 2) +
-    geom_hline(yintercept = 1.5, linetype = "dotted", color='red', size=1.5) +
-    geom_hline(yintercept = 0.5, linetype = "dotted", color='red', size=1.5) +
-    ggtitle("Item Outfit")
-  
-  plot <- plot+ggtheme
-  
-  if (self$options$angle > 0) {
-    plot <- plot + ggplot2::theme(
-      axis.text.x = ggplot2::element_text(
-        angle = self$options$angle, hjust = 1
-      )
-    )
-  }
-  print(plot)
-  TRUE
-},
-
-#Histogram of total score------
-.plot2 = function(image2, ggtheme, theme,...) {
-  
-  if (is.null(image2$state))
-    return(FALSE)
-  df2 <- image2$state[[1]]
-  score <- image2$state[[2]]
-  color <- image2$state[[3]]
-  
-  plot2 <- ggplot(df2, aes(score)) +
-    geom_histogram(binwidth = 1, fill = color, col = "black") +
-    xlab("Total score") +
-    ylab("Number of respondents") +
-    ShinyItemAnalysis::theme_app()
-  plot2 <- plot2+ggtheme
-  print(plot2)
-  TRUE
-},
-
-.plot3 = function(image,ggtheme, theme,...) {
-  
-  if (is.null(image$state))
-    return(FALSE)
-  
-  pf <- image$state
-
-  plot3<- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit))+
-      geom_point(size=3, stroke=2)+
-    
-  ggplot2::scale_shape_manual(values=c(3, 4))+
-  #ggplot2::scale_color_manual(values=c("red", "blue")+
-  ggplot2::coord_cartesian(xlim=c(-4, 4),ylim=c(0, 3))+
-  ggplot2::geom_hline(yintercept = 1.5,linetype = "dotted", color='red', size=1.5)+ 
-  ggplot2::geom_hline(yintercept = 0.5,linetype = "dotted", color='red', size=1.5)    
-  plot3 <- plot3+ggtheme
-  print(plot3)
-  TRUE
-},
-
-#### Helper functions =================================
+      # Wrightmapt Plot-----------------------------------------------
       
-.cleanData = function() {
+      .plot = function(image, ...) {
+        if (is.null(image$state))
+          return(FALSE)
+        pmeasure <- image$state[[1]]
+        imeasure <- image$state[[2]]
+        vars <- image$state[[3]]
+        plot <- ShinyItemAnalysis::ggWrightMap(pmeasure,
+                                               imeasure,
+                                               item.names = vars,
+                                               color = "deepskyblue")
+        #plot <- plot+ggtheme
+        print(plot)
+        TRUE
+      },
+      # #Prepare Expected score curve functions------------
+      
+      # .prepareEscPlot = function(data) {
+      #
+      #   set.seed(1234)
+      #   tamp = TAM::tam(resp =as.matrix(data))
+      #
+      # # Prepare Data For ESC Plot -------
+      #
+      #   image <- self$results$plot4
+      #   image$setState(tamp)
+      #
+      # },
+      .plot4 = function(image, ...) {
+        num <- self$options$num
+        if (!self$options$plot4)
+          return(FALSE)
+        #tamobj <- private$.computeTamobj()
+        tamobj <- private$.cache$tamobj
+        
+        plot4 <- plot(tamobj,
+                      items = num,
+                      #type="items" produce item response curve not expected curve
+                      type = "expected",
+                      export = FALSE)
+        print(plot4)
+        TRUE
+      },
+      
+      .inPlot = function(image, ggtheme, theme, ...) {
+        if (is.null(image$state))
+          return(FALSE)
+        
+        infit1 <- image$state
+        
+        plot <- ggplot(infit1, aes(x = Item, y = infit)) +
+          geom_point(
+            shape = 4,
+            color = 'black',
+            fill = 'white',
+            size = 3,
+            stroke = 2
+          ) +
+          geom_hline(
+            yintercept = 1.5,
+            linetype = "dotted",
+            color = 'red',
+            size = 1.5
+          ) +
+          geom_hline(
+            yintercept = 0.5,
+            linetype = "dotted",
+            color = 'red',
+            size = 1.5
+          ) +
+          ggtitle("Item Infit")
+        plot <- plot + ggtheme
+        
+        if (self$options$angle > 0) {
+          plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
+        }
+        print(plot)
+        TRUE
+      },
+      
+      .outPlot = function(image, ggtheme, theme, ...) {
+        if (is.null(image$state))
+          return(FALSE)
+        
+        outfit1 <- image$state
+        
+        plot <- ggplot(outfit1, aes(x = Item, y = outfit)) +
+          geom_point(
+            shape = 4,
+            color = 'black',
+            fill = 'white',
+            size = 3,
+            stroke = 2
+          ) +
+          geom_hline(
+            yintercept = 1.5,
+            linetype = "dotted",
+            color = 'red',
+            size = 1.5
+          ) +
+          geom_hline(
+            yintercept = 0.5,
+            linetype = "dotted",
+            color = 'red',
+            size = 1.5
+          ) +
+          ggtitle("Item Outfit")
+        
+        plot <- plot + ggtheme
+        
+        if (self$options$angle > 0) {
+          plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
+        }
+        print(plot)
+        TRUE
+      },
+      
+      #Histogram of total score------
+      .plot2 = function(image2, ggtheme, theme, ...) {
+        if (is.null(image2$state))
+          return(FALSE)
+        df2 <- image2$state[[1]]
+        score <- image2$state[[2]]
+        color <- image2$state[[3]]
+        
+        plot2 <- ggplot(df2, aes(score)) +
+          geom_histogram(binwidth = 1,
+                         fill = color,
+                         col = "black") +
+          xlab("Total score") +
+          ylab("Number of respondents") +
+          ShinyItemAnalysis::theme_app()
+        plot2 <- plot2 + ggtheme
+        print(plot2)
+        TRUE
+      },
+      
+      .plot3 = function(image, ggtheme, theme, ...) {
+        if (is.null(image$state))
+          return(FALSE)
+        
+        pf <- image$state
+        
+        plot3 <- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit)) +
+          geom_point(size = 3, stroke = 2) +
+          
+          ggplot2::scale_shape_manual(values = c(3, 4)) +
+          #ggplot2::scale_color_manual(values=c("red", "blue")+
+          ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
+          ggplot2::geom_hline(
+            yintercept = 1.5,
+            linetype = "dotted",
+            color = 'red',
+            size = 1.5
+          ) +
+          ggplot2::geom_hline(
+            yintercept = 0.5,
+            linetype = "dotted",
+            color = 'red',
+            size = 1.5
+          )
+        plot3 <- plot3 + ggtheme
+        print(plot3)
+        TRUE
+      },
+      
+      #### Helper functions =================================
+      
+      .cleanData = function() {
         items <- self$options$vars
         
         data <- list()
@@ -633,16 +650,15 @@ adjustment; Ho= the data fit the Rasch model."
         
         return(data)
       },
-
-.computeTamobj=function(){
-  
-  data <- private$.cleanData()
-  
-  set.seed(1234)
-  tamobj = TAM::tam(resp =as.matrix(data))
-  
-  return(tamobj)
-  
-}
+      
+      .computeTamobj = function() {
+        data <- private$.cleanData()
+        
+        set.seed(1234)
+        tamobj = TAM::tam(resp = as.matrix(data))
+        
+        return(tamobj)
+        
+      }
     )
   )
