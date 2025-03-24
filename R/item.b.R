@@ -64,8 +64,9 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         key1 <- strsplit(self$options$key, ',')[[1]]
 
         # check and compute---
-        if (is.null(private$.cache$counts)) {
+        if (is.null(private$.cache$is_ready)) {
           private$.computeRES()
+          private$.cache$is_ready <- TRUE
         }
         # results---
         counts <- private$.cache$counts
