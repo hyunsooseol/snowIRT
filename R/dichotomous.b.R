@@ -45,46 +45,6 @@ adjustment; Ho= the data fit the Rasch model."
             "Note",
             "Infit= Information-weighted mean square statistic; Outfit= Outlier-sensitive means square statistic."
           )
-        if (length(self$options$vars) <= 1)
-          self$setStatus('complete')
-      },
-      
-      .run = function() {
-        # Ready--------
-        ready <- TRUE
-        if (is.null(self$options$vars) ||
-            length(self$options$vars) < 2)
-          ready <- FALSE
-        if (ready) {
-          data <- private$.cleanData()
-          #results <- private$.compute(data)
-          
-          if (is.null(private$.cache$tamobj))
-            private$.cache$tamobj <- private$.computeTamobj()
-          if (is.null(private$.cache$results))
-            private$.cache$results <- private$.compute(data)
-          
-          tamobj <- private$.cache$tamobj
-          results <- private$.cache$results
-          
-          # populate scale table-----
-          private$.populateScaleTable(results)
-          # populate item table----
-          private$.populateItemsTable(results)
-          # Populate q3 matrix table-----
-          private$.populateMatrixTable(results)
-          # prepare Expected score curve plot---------
-          #private$.prepareEscPlot(data)
-          
-          # Summary of total score-----
-          private$.populateToTable(results)
-          #Standard score---------
-          private$.populateStTable(results)
-        }
-      },
-      # compute results=====================================================
-      
-      .compute = function(data) {
         if (isTRUE(self$options$wrightmap)) {
           width <- self$options$width
           height <- self$options$height
@@ -120,6 +80,47 @@ adjustment; Ho= the data fit the Rasch model."
           height <- self$options$height2
           self$results$plot2$setSize(width, height)
         }
+        
+        if (length(self$options$vars) <= 1)
+          self$setStatus('complete')
+      },
+      
+      .run = function() {
+        # Ready--------
+        ready <- TRUE
+        if (is.null(self$options$vars) ||
+            length(self$options$vars) < 2)
+          ready <- FALSE
+        if (ready) {
+          
+          data <- private$.cleanData()
+         
+          if (is.null(private$.cache$tamobj))
+            private$.cache$tamobj <- private$.computeTamobj()
+          if (is.null(private$.cache$results))
+            private$.cache$results <- private$.compute(data)
+          
+          tamobj <- private$.cache$tamobj
+          results <- private$.cache$results
+                    
+          # populate scale table-----
+          private$.populateScaleTable(results)
+          # populate item table----
+          private$.populateItemsTable(results)
+          # Populate q3 matrix table-----
+          private$.populateMatrixTable(results)
+          # prepare Expected score curve plot---------
+          #private$.prepareEscPlot(data)
+          
+          # Summary of total score-----
+          private$.populateToTable(results)
+          #Standard score---------
+          private$.populateStTable(results)
+        }
+      },
+      # compute results=====================================================
+      
+      .compute = function(data) {
         
         #################################################
         # set.seed(1234)
