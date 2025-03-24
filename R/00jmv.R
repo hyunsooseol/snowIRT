@@ -5,9 +5,9 @@
     `snowIRT`=list(
         `type`="software", 
         `author`="Seol, H.", 
-        `year`=2024, 
+        `year`=2025, 
         `title`="snowIRT: Item Response Theory for jamovi", 
-        `publisher`="(Version 5.0.9) [jamovi module]. URL https://github.com/hyunsooseol/snowIRT", 
+        `publisher`="(Version 5.1.0) [jamovi module]. URL https://github.com/hyunsooseol/snowIRT", 
         `url`="https://github.com/hyunsooseol/snowIRT"), 
     `TAM`=list(
         `type`="software", 
