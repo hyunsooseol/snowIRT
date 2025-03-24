@@ -109,7 +109,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             is.null(self$options$facet))
           return()
         
-        res <- private$.dataClear()
+        #res <- private$.dataClear()
         
         if (is.null(private$.allCache)) {
           private$.allCache <- private$.dataClear()
