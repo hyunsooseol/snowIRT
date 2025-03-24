@@ -1,21 +1,4 @@
 
-# This file is a generated template, your changes will not be overwritten
-
-# Dichotomous Rasch model
-#' @importFrom R6 R6Class
-#' @import jmvcore
-#' @import difR
-#' @import TAM 
-#' @importFrom dplyr filter
-#' @importFrom dplyr select
-#' @importFrom TAM tam.mml
-#' @importFrom difR difRaju
-#' @importFrom difR difMH
-#' @importFrom difR difGMH
-#' @importFrom ShinyItemAnalysis plotDIFirt
-#' @export
-
-
 
 difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     "difClass",
@@ -32,22 +15,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     self$results$instructions$setVisible(visible = TRUE)
     
   }
-  
-  # self$results$instructions$setContent(
-  #   "<html>
-  #           <head>
-  #           </head>
-  #           <body>
-  #           <div class='instructions'>
-  #           <p>____________________________________________________________________________________</p>
-  #           <p>1. Performs DIF detection using <b>difR</b> R package.
-  #           <P>2. For Raju and MH method, the focal group should be coded as <b>1</b>.</P>
-  #           <p>3. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub.</a></p>
-  #           <p>____________________________________________________________________________________</p>
-  #           </div>
-  #           </body>
-  #           </html>"
-  # )
   
   self$results$instructions$setContent(
     private$.htmlwidget$generate_accordion(
@@ -78,8 +45,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     height <- self$options$height1
     self$results$zplot$setSize(width, height)
   }
-  
-  
   if(isTRUE(self$options$plot3)){
     width <- self$options$width2
     height <- self$options$height2
@@ -97,37 +62,25 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     height <- self$options$height4
     self$results$plot2$setSize(width, height)
   }  
-  
-  
   if (length(self$options$vars) <= 1)
     self$setStatus('complete')
-  
 },
 
 #=================================================
-
-
 .run = function() {
   
   
   data <- self$data
-  
   groupVarName <- self$options$group
-  
   vars <- self$options$vars
-  
   varNames <- c(groupVarName, vars)
-  
   padjust<- self$options$padjust
   padjust1<- self$options$padjust1
   padjust2<- self$options$padjust2
   
   #--------------------------------------------
   
-  if (is.null(groupVarName))
-    
-    return()
-  
+  if (is.null(groupVarName)) return()
   data <- select(self$data, varNames)
   
   for (var in vars)
@@ -135,16 +88,11 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     data[[var]] <- jmvcore::toNumeric(data[[var]])
   
   # exclude rows with missings in the grouping variable
-  
   data <- data[!is.na(data[[groupVarName]]), ]
-  
   groupLevels <- base::levels(data[[groupVarName]])
   
   # Generalized MH method--------------
-  
   if (length(groupLevels) > 2){
-    
-  
     if(isTRUE(self$options$gmh | self$options$plot2)){
       
       fn <- as.numeric(strsplit(self$options$fn, ',')[[1]])
@@ -153,16 +101,8 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
                           groupVarName,
                           focal.names = fn,
                           p.adjust.method = padjust2)
-      
-      
-     # self$results$text$setContent(gmh)
-      
-      
-      if (is.null(self$options$group))
-        return()
-      
+      if (is.null(self$options$group)) return()
       table <- self$results$gmh
-      
       items <- self$options$vars
       
       # get result---
@@ -174,24 +114,16 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
       
       for (i in seq_along(items)) {
         row <- list()
-        
         row[["gmhstat"]] <- gmhstat[i]
-        
         row[["p"]] <- p[i]
-        
         row[["padjust"]] <- padjust[i]
-        
         table$setRow(rowKey = items[i], values = row)
       }
       
       # GMH Plot -------
       image2 <- self$results$plot2
       image2$setState(gmh)
-      
-      
     }
-    
-      
     }
     
    else{
@@ -217,8 +149,6 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
   
   # calculating item parameter for each group----------
-  
-  
   item.1PL <- rbind(ref1, focal1)
   
   res1 <- difR::difRaju(
@@ -227,16 +157,13 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     p.adjust.method = padjust,
     same.scale = FALSE
   )
-  
-  
+
   # Calculating Mantel-Haenszel using difR::difMH()-------
   
   if(isTRUE(self$options$mh | self$options$plot1)){
   
   # example:
   # difR::difMH(verbal, group = "Gender", focal.name = 1)
-  
-  
   mh <- difR::difMH(data,
                     groupVarName,
                     # data[[groupVarName]],
@@ -248,11 +175,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     return()
   
   table <- self$results$mh
-  
   items <- self$options$vars
   
   # get result---
-  
   mhstat <- as.vector(mh$MH)
   p <- as.vector(mh$p.value)
   padjust <- as.vector(mh$adjusted.p)
@@ -260,37 +185,24 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
   for (i in seq_along(items)) {
     row <- list()
-    
     row[["mhstat"]] <- mhstat[i]
-    
     row[["p"]] <- p[i]
-    
     row[["padjust"]] <- padjust[i]
-    
     table$setRow(rowKey = items[i], values = row)
   }
   
   # MH Plot -------
   image1 <- self$results$plot1
   image1$setState(mh)
-  
-  
   }
-  
-  
-  
   # ICC PLOT RESULT----------
   
   # Coefficients for all items
   itempar <- res1$itemParInit
-  
-  
   #dif result---------
   
   zstat <- as.vector(res1$RajuZ)
-  
   p <- as.vector(res1$p.value)
-  
   padjust <- as.vector(res1$adjusted.p)
   
   
@@ -325,12 +237,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     )
   
   
-  if (is.null(self$options$group))
-    
-    return()
-  
+  if (is.null(self$options$group)) return()
+ 
   table <- self$results$raju
-  
   items <- self$options$vars
   
   # get result---
@@ -344,22 +253,14 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   
   for (i in seq_along(items)) {
     row <- list()
-    
     row[["zstat"]] <- zstat[i]
-    
     row[["p"]] <- p[i]
-    
     row[["padjust"]] <- padjust[i]
-    
     row[["delta"]] <- delta[i]
-    
     row[["es"]] <- es[i]
-    
-    
     table$setRow(rowKey = items[i], values = row)
   }
-  
-  
+
   # Prepare Data For Plot -------
   image <- self$results$zplot
   image$setState(res1)
@@ -380,9 +281,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     return(FALSE)
   
   plotData <- image$state
-  
   plot <- plot(plotData)
-  
   print(plot)
   TRUE
 },
@@ -406,17 +305,12 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
   #   
   #   index <- index + 1
   # }
-  
-  
   num <- self$options$num
-  
   plot3 <- ShinyItemAnalysis::plotDIFirt(parameters = itempar, 
                                          item = num, 
                                          test = "Raju")
-  
   print(plot3)
   TRUE
-  
 },
 
 .plot1 = function(image1, ...) {
@@ -425,9 +319,7 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     return(FALSE)
   
   plotData <- image1$state
-  
   plot1 <- plot(plotData)
-  
   print(plot1)
   TRUE
 },
@@ -438,13 +330,9 @@ difClass <- if (requireNamespace('jmvcore')) R6::R6Class(
     return(FALSE)
   
   plotData <- image2$state
-  
   plot2 <- plot(plotData)
-  
   print(plot2)
   TRUE
 }
-
-
-    )
+  )
 )
