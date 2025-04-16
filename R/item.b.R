@@ -1,4 +1,5 @@
 
+
 # ITEM ANALYSIS
 #' @import ggplot2
 
@@ -57,16 +58,25 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       },
       
       .run = function() {
-        if (length(self$options$vars) < 2) return()
+        if (length(self$options$vars) < 2)
+          return()
         data <- self$data
         data <- na.omit(data)
         key <- self$options$key
         key1 <- strsplit(self$options$key, ',')[[1]]
-
+        
+        if (!identical(private$.cache$options, self$options) ||
+            !identical(private$.cache$data, self$data)) {
+          private$.cache <- list()
+        }
+        
         # check and compute---
         if (is.null(private$.cache$is_ready)) {
           private$.computeRES()
           private$.cache$is_ready <- TRUE
+          
+          private$.cache$options <- self$options
+          private$.cache$data <- self$data
         }
         # results---
         counts <- private$.cache$counts
@@ -74,7 +84,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         prop <- private$.cache$prop
         res <- private$.cache$res
         dicho <- private$.cache$dicho
-
+        
         # Counts of respondents-----------
         
         #counts <- CTT::distractor.analysis(data, key1)
@@ -200,7 +210,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         dicho <- dicho$scored
         dicho <- as.data.frame(dicho) # dichotomous matrix
         
-        if (self$options$total == TRUE) {
+        if (isTRUE(self$options$total)) {
           binary <- CTT::score(data, key1, output.scored = TRUE)
           
           # Save total score---------
@@ -213,8 +223,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         # Save scoring-----------------
         
-        if (self$options$scoring == TRUE) {
-          
+        if (isTRUE(self$options$scoring)) {
           binary <- CTT::score(data, key1, output.scored = TRUE)
           
           keys <- 1:length(self$options$vars)
@@ -241,7 +250,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         # Empirical ICC-----------------
         
-        if (self$options$plot3 == TRUE) {
+        if (isTRUE(self$options$plot3)) {
           myscores <- CTT::score(data, key1, output.scored = TRUE)
           
           image3 <- self$results$plot3
@@ -285,7 +294,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         # Histogram of total score------------
         
-        if (self$options$plot2 == TRUE) {
+        if (isTRUE(self$options$plot2)) {
           dicho <- CTT::score(data, key1, output.scored = TRUE)
           
           binary <- dicho$scored
@@ -400,6 +409,5 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         private$.cache$res <- CTT::distractorAnalysis(data, key1)
         private$.cache$dicho <- CTT::score(data, key1, output.scored = TRUE)
       }
-      
     )
   )

@@ -65,7 +65,7 @@ deltamClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         varNames <- c(groupVarName, vars)
         if (is.null(groupVarName))
           return()
-        data <- select(self$data, varNames)
+        data <- jmvcore::select(self$data, varNames)
         for (var in vars)
           data[[var]] <- jmvcore::toNumeric(data[[var]])
         # exclude rows with missings in the grouping variable

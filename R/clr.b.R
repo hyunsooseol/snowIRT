@@ -3,6 +3,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
     "clrClass",
     inherit = clrBase,
     private = list(
+      .allCache = NULL,
       .htmlwidget = NULL,
       
       .init = function() {
@@ -25,8 +26,6 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             
           )
         ))
-        
-        
         if (self$options$clr)
           self$results$clr$setNote("Note", "'Overall' indicates test of homogeneity.")
         if (isTRUE(self$options$plot)) {
@@ -46,11 +45,6 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           height <- self$options$height2
           self$results$plot2$setSize(width, height)
         }
-        
-        
-        if (length(self$options$vars) <= 1)
-          self$setStatus('complete')
-        
       },
       #########################################################
       
@@ -64,7 +58,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (is.null(groupVarName))
           return()
         
-        data <- select(self$data, varNames)
+        data <- jmvcore::select(self$data, varNames)
         
         for (var in vars)
           data[[var]] <- jmvcore::toNumeric(data[[var]])
@@ -73,29 +67,39 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         data <- data[!is.na(data[[groupVarName]]), ]
         
-        #############################################################
+        if (is.null(private$.allCache)) {
+          private$.allCache <- private$.computeRES()
+        }
         
-        dif <- iarm::clr_tests(
-          dat.items = data[, -1],
-          dat.exo = data[[groupVarName]],
-          model = self$options$model
-        )
-        #########################################################
+        all <- private$.allCache
+        # #############################################################
+        #
+        # dif <- iarm::clr_tests(
+        #   dat.items = data[, -1],
+        #   dat.exo = data[[groupVarName]],
+        #   model = self$options$model
+        # )
+        # #########################################################
+        
         names <- c("Overall", groupVarName)
-        clr <- as.numeric(dif[, 1])
-        df <- as.numeric(dif[, 2])
-        pvalue <- as.numeric(dif[, 3])
+        clr <- as.numeric(all$dif[, 1])
+        df <- as.numeric(all$dif[, 2])
+        pvalue <- as.numeric(all$dif[, 3])
         res <- data.frame(names, clr, df, pvalue)
         
         # Creating table-------------
         if (isTRUE(self$options$clr)) {
           table <- self$results$clr
-          for (i in seq_along(1:2)) {
-            row <- list()
-            row[["name"]] <- res[i, 1]
-            row[["clr"]] <- res[i, 2]
-            row[["df"]] <- res[i, 3]
-            row[["p"]] <- res[i, 4]
+          stat_indices <- c(
+            name = 1,
+            clr = 2,
+            df = 3,
+            p = 4
+          )
+          for (i in seq_len(nrow(res))) {
+            row <- setNames(lapply(stat_indices, function(idx)
+              res[i, idx]),
+              names(stat_indices))
             table$addRow(rowKey = i, values = row)
           }
         }
@@ -163,10 +167,11 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        # Partial Gamma to detect Differential Item Functioning (DIF)------
-        
-        gam <- iarm::partgam_DIF(dat.items = data[, -1], dat.exo = data[[groupVarName]])
+        # # Partial Gamma to detect Differential Item Functioning (DIF)------
+        #
+        # gam <- iarm::partgam_DIF(dat.items = data[, -1], dat.exo = data[[groupVarName]])
         ################################################################
+        gam <- all$gam
         
         gamma <- gam$gamma
         se <- gam$se
@@ -238,7 +243,6 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
       },
       
-      
       .plot2 = function(image2, ggtheme, theme, ...) {
         if (is.null(image2$state))
           return(FALSE)
@@ -259,7 +263,38 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         )
         print(plot2)
         TRUE
+      },
+      
+      .computeRES = function() {
+        data <- self$data
+        groupVarName <- self$options$group
+        vars <- self$options$vars
+        varNames <- c(groupVarName, vars)
+        model <- self$options$model
         
+        if (is.null(groupVarName))
+          return()
+        
+        data <- jmvcore::select(self$data, varNames)
+        
+        for (var in vars)
+          data[[var]] <- jmvcore::toNumeric(data[[var]])
+        
+        # exclude rows with missings in the grouping variable
+        
+        data <- data[!is.na(data[[groupVarName]]), ]
+        
+        dif <- iarm::clr_tests(
+          dat.items = data[, -1],
+          dat.exo = data[[groupVarName]],
+          model = self$options$model
+        )
+        
+        # Partial Gamma to detect Differential Item Functioning (DIF)------
+        gam <- iarm::partgam_DIF(dat.items = data[, -1], dat.exo = data[[groupVarName]])
+        
+        res <- list(dif = dif, gam = gam)
+        return(res)
       }
     )
   )

@@ -109,10 +109,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             is.null(self$options$facet))
           return()
         
-        #res <- private$.dataClear()
-        
         if (is.null(private$.allCache)) {
-          private$.allCache <- private$.dataClear()
+          private$.allCache <- private$.computeRES()
         }
         res <- private$.allCache
         
@@ -158,8 +156,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # step measure-----------
         sm <- subset(res1, res1$facet == "step")
         
-        #---------------------------------------------------------------------
-        
         # Person ability----------
         persons <- TAM::tam.wle(res)
         
@@ -170,7 +166,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                           persons$WLE.rel)
         
         # WLE Reliability-------
-        
         pw <- as.vector(per[[5]])[1]
         self$results$text$setContent(pw)
         
@@ -185,11 +180,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           colnames(rmm) <- c("im.parameter", "im.xsi")
           itemm <- rbind(itemm, rmm)
           #---------------------------------
-          
           colnames(itemm) <- c("vars", "measure")
           itemm$vars <-  gsub("task", "", itemm$vars)
           #self$results$text1$setContent(itemm)
-          
           vars <- as.vector(itemm[[1]])
           ime <- as.vector(itemm[[2]])
           pme <- as.vector(per[[3]])
@@ -202,21 +195,31 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Task measure table----------------
         if (isTRUE(self$options$im)) {
           table <- self$results$im
-          
           im <- as.data.frame(im)
-          dif <- as.vector(im[[3]])
-          se <- as.vector(im[[4]])
-          
           items <- as.vector(im[[1]])
+          stat_indices <- c(measure = 3, se = 4)
           for (i in seq_along(items)) {
-            row <- list()
-            row[["measure"]] <- dif[i]
-            row[["se"]] <- se[i]
+            row <- setNames(lapply(stat_indices, function(idx)
+              im[[idx]][i]),
+              names(stat_indices))
             table$addRow(rowKey = items[i], values = row)
           }
+          
+          # table <- self$results$im
+          #
+          # im <- as.data.frame(im)
+          # dif <- as.vector(im[[3]])
+          # se <- as.vector(im[[4]])
+          #
+          # items <- as.vector(im[[1]])
+          # for (i in seq_along(items)) {
+          #   row <- list()
+          #   row[["measure"]] <- dif[i]
+          #   row[["se"]] <- se[i]
+          #   table$addRow(rowKey = items[i], values = row)
+          # }
         }
         # Item bar plot----------
-        
         if (isTRUE(self$options$plot2)) {
           im <- as.data.frame(im)
           colnames(im) <- c("Task", "facet", "Value", "SE")
@@ -228,17 +231,28 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Rater measure table----------------
         if (isTRUE(self$options$rm)) {
           table <- self$results$rm
-          
           rm <- as.data.frame(rm)
-          dif <- as.vector(rm[[3]])
-          se <- as.vector(rm[[4]])
           items <- as.vector(rm[[1]])
+          stat_indices <- c(measure = 3, se = 4)
           for (i in seq_along(items)) {
-            row <- list()
-            row[["measure"]] <- dif[i]
-            row[["se"]] <- se[i]
+            row <- setNames(lapply(stat_indices, function(idx)
+              rm[[idx]][i]),
+              names(stat_indices))
             table$addRow(rowKey = items[i], values = row)
           }
+          
+          # table <- self$results$rm
+          #
+          # rm <- as.data.frame(rm)
+          # dif <- as.vector(rm[[3]])
+          # se <- as.vector(rm[[4]])
+          # items <- as.vector(rm[[1]])
+          # for (i in seq_along(items)) {
+          #   row <- list()
+          #   row[["measure"]] <- dif[i]
+          #   row[["se"]] <- se[i]
+          #   table$addRow(rowKey = items[i], values = row)
+          # }
         }
         
         # Rater bar plot----------
@@ -255,14 +269,17 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (isTRUE(self$options$inter)) {
           table <- self$results$inter
           inter <- as.data.frame(inter)
-          names <- dimnames(inter)[[1]]
-          
-          for (name in names) {
-            row <- list()
-            row[["rater"]]   <-  inter[name, 1]
-            row[["task"]]   <-  inter[name, 2]
-            row[["measure"]] <-  inter[name, 3]
-            row[["se"]] <-  inter[name, 4]
+          row_names <- rownames(inter)
+          stat_indices <- c(
+            rater = 1,
+            task = 2,
+            measure = 3,
+            se = 4
+          )
+          for (name in row_names) {
+            row <- setNames(lapply(stat_indices, function(idx)
+              inter[name, idx]),
+              names(stat_indices))
             table$addRow(rowKey = name, values = row)
           }
         }
@@ -275,15 +292,12 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (isTRUE(self$options$sm)) {
           table <- self$results$sm
           sm <- as.data.frame(sm)
-          dif <- as.vector(sm[[3]])
-          se <- as.vector(sm[[4]])
           items <- as.vector(sm[[1]])
-          
+          stat_indices <- c(measure = 3, se = 4)
           for (i in seq_along(items)) {
-            row <- list()
-            row[["measure"]] <- dif[i]
-            row[["se"]] <- se[i]
-            
+            row <- setNames(lapply(stat_indices, function(idx)
+              sm[[idx]][i]),
+              names(stat_indices))
             table$addRow(rowKey = items[i], values = row)
           }
         }
@@ -308,17 +322,32 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Item fit table------------
         if (isTRUE(self$options$ifit)) {
           table <- self$results$ifit
-          
-          names <- dimnames(ifit)[[1]]
-          for (name in names) {
-            row <- list()
-            row[["rater"]]   <-  ifit[name, 1]
-            row[["task"]]   <-  ifit[name, 2]
-            row[["outfit"]] <-  ifit[name, 3]
-            row[["infit"]] <-  ifit[name, 4]
-            row[["marker"]] <-  ifit[name, 5]
+          row_names <- rownames(ifit)
+          stat_indices <- c(
+            rater = 1,
+            task = 2,
+            outfit = 3,
+            infit = 4,
+            marker = 5
+          )
+          for (name in row_names) {
+            row <- setNames(lapply(stat_indices, function(idx)
+              ifit[name, idx]),
+              names(stat_indices))
             table$addRow(rowKey = name, values = row)
           }
+          # table <- self$results$ifit
+          #
+          # names <- dimnames(ifit)[[1]]
+          # for (name in names) {
+          #   row <- list()
+          #   row[["rater"]]   <-  ifit[name, 1]
+          #   row[["task"]]   <-  ifit[name, 2]
+          #   row[["outfit"]] <-  ifit[name, 3]
+          #   row[["infit"]] <-  ifit[name, 4]
+          #   row[["marker"]] <-  ifit[name, 5]
+          #   table$addRow(rowKey = name, values = row)
+          # }
         }
         
         if (isTRUE(self$options$plot7)) {
@@ -337,7 +366,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             variable.name = "Fit",
             value.name = 'Value'
           )
-          
           image <- self$results$plot7
           image$setState(ifit.plot)
         }
@@ -345,12 +373,12 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Person measure table-------------
         if (isTRUE(self$options$pm)) {
           table <- self$results$pm
-          names <- dimnames(per)[[1]]
-          for (name in names) {
-            row <- list()
-            row[["ps"]]   <-  per[name, 2]
-            row[["pt"]] <-  per[name, 3]
-            row[["pe"]] <-  per[name, 4]
+          row_names <- rownames(per)
+          stat_indices <- c(ps = 2, pt = 3, pe = 4)
+          for (name in row_names) {
+            row <- setNames(lapply(stat_indices, function(idx)
+              per[name, idx]),
+              names(stat_indices))
             table$addRow(rowKey = name, values = row)
           }
         }
@@ -368,12 +396,16 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         if (isTRUE(self$options$pfit)) {
           table <- self$results$pfit
-          names <- dimnames(pfit)[[1]]
-          for (name in names) {
-            row <- list()
-            row[["outfit"]]   <-  pfit[name, 1]
-            row[["infit"]] <-  pfit[name, 2]
-            row[["marker"]] <-  pfit[name, 3]
+          
+          row_names <- rownames(pfit)
+          stat_indices <- c(outfit = 1,
+                            infit = 2,
+                            marker = 3)
+          
+          for (name in row_names) {
+            row <- setNames(lapply(stat_indices, function(idx)
+              pfit[name, idx]),
+              names(stat_indices))
             table$addRow(rowKey = name, values = row)
           }
         }
@@ -489,16 +521,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       
       .plot5 = function(image, ...) {
         num <- self$options$num
-        #
-        # if (is.null(image$state))
-        #   return(FALSE)
-        #
-        # res <- image$state
-        
         if (!self$options$plot5)
           return(FALSE)
-        
-        #res <- private$.dataClear()
         res <- private$.allCache
         
         plot5 <- plot(res,
@@ -513,18 +537,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       
       .plot6 = function(image, ...) {
         num1 <- self$options$num1
-        
-        # if (is.null(image$state))
-        #   return(FALSE)
-        #
-        # res <- image$state
-        
         if (!self$options$plot6)
           return(FALSE)
-        
-        #res <- private$.dataClear()
         res <- private$.allCache
-        
         plot6 <- plot(res,
                       items = num1,
                       type = "items",
@@ -597,7 +612,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         TRUE
       },
       #----------------------------------------------------
-      .dataClear = function() {
+      .computeRES = function() {
         dep <- self$options$dep
         id <- self$options$id
         facets <- self$options$facet

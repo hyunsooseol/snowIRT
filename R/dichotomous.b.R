@@ -80,21 +80,17 @@ adjustment; Ho= the data fit the Rasch model."
           height <- self$options$height2
           self$results$plot2$setSize(width, height)
         }
-        
-        if (length(self$options$vars) <= 1)
-          self$setStatus('complete')
       },
       
       .run = function() {
         # Ready--------
         ready <- TRUE
         if (is.null(self$options$vars) ||
-            length(self$options$vars) < 2)
+            length(self$options$vars) < 3)
           ready <- FALSE
         if (ready) {
-          
           data <- private$.cleanData()
-         
+          
           if (is.null(private$.cache$tamobj))
             private$.cache$tamobj <- private$.computeTamobj()
           if (is.null(private$.cache$results))
@@ -102,7 +98,7 @@ adjustment; Ho= the data fit the Rasch model."
           
           tamobj <- private$.cache$tamobj
           results <- private$.cache$results
-                    
+          
           # populate scale table-----
           private$.populateScaleTable(results)
           # populate item table----
@@ -121,7 +117,6 @@ adjustment; Ho= the data fit the Rasch model."
       # compute results=====================================================
       
       .compute = function(data) {
-        
         #################################################
         # set.seed(1234)
         #
@@ -224,8 +219,8 @@ adjustment; Ho= the data fit the Rasch model."
         zsco <- sort(unique(scale(score)))   # Z-score
         tsco <- 50 + 10 * zsco               # T-score
         
-        st <- cbind(tosc, perc, zsco, tsco)
-        st <- as.data.frame(st)
+        #st <- cbind(tosc, perc, zsco, tsco)
+        st <- as.data.frame(cbind(tosc, perc, zsco, tsco))
         
         #### Person Statistics###########################
         
@@ -254,7 +249,6 @@ adjustment; Ho= the data fit the Rasch model."
         poutfit <- pfit$outfitPerson
         
         # Residual----------
-        
         res <- TAM::IRT.residuals(tamobj)
         resid <- res$stand_residuals
         
@@ -290,22 +284,19 @@ adjustment; Ho= the data fit the Rasch model."
         }
         
         # Person fit plot3----------------------
-        
         Measure <- pmeasure
         Infit <- pinfit
         Outfit <- poutfit
-        
         df <- data.frame(Measure, Infit, Outfit)
-        
         pf <- reshape2::melt(
           df,
           id.vars = 'Measure',
           variable.name = "Fit",
           value.name = 'Value'
         )
-        
         image <- self$results$plot3
         image$setState(pf)
+        
         results <-
           list(
             'prop' = prop,
@@ -326,7 +317,6 @@ adjustment; Ho= the data fit the Rasch model."
             'pinfit' = pinfit,
             'poutfit' = poutfit,
             'resid' = resid
-            
           )
       },
       
@@ -353,28 +343,41 @@ adjustment; Ho= the data fit the Rasch model."
         table <- self$results$stand$to
         
         to <- results$to
-        
-        n <- to$n
-        min <- to$min
-        max <- to$max
-        mean <- to$mean
-        median <- to$median
-        sd <- to$sd
-        se <- to$se
-        skew <- to$skew
-        kurtosis <- to$kurtosis
-        
-        row <- list()
-        row[['N']] <- n
-        row[['Minimum']] <- min
-        row[['Maximum']] <- max
-        row[['Mean']] <- mean
-        row[['Median']] <- median
-        row[['SD']] <- sd
-        row[['SE']] <- se
-        row[['Skewness']] <- skew
-        row[['Kurtosis']] <- kurtosis
+        stat_names <- c(
+          N = "n",
+          Minimum = "min",
+          Maximum = "max",
+          Mean = "mean",
+          Median = "median",
+          SD = "sd",
+          SE = "se",
+          Skewness = "skew",
+          Kurtosis = "kurtosis"
+        )
+        row <- setNames(lapply(stat_names, function(x)
+          to[[x]]), names(stat_names))
         table$setRow(rowNo = 1, values = row)
+        # n <- to$n
+        # min <- to$min
+        # max <- to$max
+        # mean <- to$mean
+        # median <- to$median
+        # sd <- to$sd
+        # se <- to$se
+        # skew <- to$skew
+        # kurtosis <- to$kurtosis
+        #
+        # row <- list()
+        # row[['N']] <- n
+        # row[['Minimum']] <- min
+        # row[['Maximum']] <- max
+        # row[['Mean']] <- mean
+        # row[['Median']] <- median
+        # row[['SD']] <- sd
+        # row[['SE']] <- se
+        # row[['Skewness']] <- skew
+        # row[['Kurtosis']] <- kurtosis
+        # table$setRow(rowNo = 1, values = row)
       },
       #### Init. tables ====================================================
       
@@ -388,16 +391,23 @@ adjustment; Ho= the data fit the Rasch model."
       
       .populateScaleTable = function(results) {
         table <- self$results$mf$scale
-        reliability <- results$reliability
-        modelfit <- results$modelfit
-        modelfitp <- results$modelfitp
-        
-        row <- list()
-        row[['reliability']] <- reliability[1]
-        row[['modelfit']] <- modelfit
-        row[['modelfitp']] <- modelfitp
+        row <- list(
+          reliability = results$reliability[1],
+          modelfit    = results$modelfit,
+          modelfitp   = results$modelfitp
+        )
         
         table$setRow(rowNo = 1, values = row)
+        # reliability <- results$reliability
+        # modelfit <- results$modelfit
+        # modelfitp <- results$modelfitp
+        #
+        # row <- list()
+        # row[['reliability']] <- reliability[1]
+        # row[['modelfit']] <- modelfit
+        # row[['modelfitp']] <- modelfitp
+        #
+        # table$setRow(rowNo = 1, values = row)
       },
       # Populate q3 matrix table-----
       .populateMatrixTable = function(results) {
@@ -453,20 +463,31 @@ adjustment; Ho= the data fit the Rasch model."
       .populateItemsTable = function(results) {
         table <- self$results$items
         items <- self$options$vars
-        prop <- results$prop
-        imeasure <- results$imeasure
-        ise <- results$ise
-        infit <- results$infit
-        outfit <- results$outfit
+        stats <- list(
+          prop    = results$prop,
+          measure = results$imeasure,
+          ise     = results$ise,
+          infit   = results$infit,
+          outfit  = results$outfit
+        )
         for (i in seq_along(items)) {
-          row <- list()
-          row[["prop"]] <- prop[i]
-          row[["measure"]] <- imeasure[i]
-          row[["ise"]] <- ise[i]
-          row[["infit"]] <- infit[i]
-          row[["outfit"]] <- outfit[i]
+          row <- lapply(stats, function(x)
+            x[i])
           table$setRow(rowKey = items[i], values = row)
         }
+        # prop <- results$prop
+        # imeasure <- results$imeasure
+        # ise <- results$ise
+        # infit <- results$infit
+        # outfit <- results$outfit
+        # for (i in seq_along(items)) {
+        #   row <- list()
+        #   row[["prop"]] <- prop[i]
+        #   row[["measure"]] <- imeasure[i]
+        #   row[["ise"]] <- ise[i]
+        #   row[["infit"]] <- infit[i]
+        #   row[["outfit"]] <- outfit[i]
+        #   table$setRow(rowKey = items[i], values = row)
       },
       # Wrightmapt Plot-----------------------------------------------
       
@@ -657,9 +678,7 @@ adjustment; Ho= the data fit the Rasch model."
         
         set.seed(1234)
         tamobj = TAM::tam(resp = as.matrix(data))
-        
         return(tamobj)
-        
       }
     )
   )
