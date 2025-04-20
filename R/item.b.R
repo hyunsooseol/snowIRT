@@ -1,5 +1,4 @@
 
-
 # ITEM ANALYSIS
 #' @import ggplot2
 
@@ -60,37 +59,31 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       .run = function() {
         if (length(self$options$vars) < 2)
           return()
-        data <- self$data
-        data <- na.omit(data)
+        
+        # 데이터 전처리를 한 번만 수행
+        data <- na.omit(self$data)
         key <- self$options$key
         key1 <- strsplit(self$options$key, ',')[[1]]
         
+        # 캐시 검사 및 재계산 필요 여부 확인
         if (!identical(private$.cache$options, self$options) ||
             !identical(private$.cache$data, self$data)) {
           private$.cache <- list()
-        }
-        
-        # check and compute---
-        if (is.null(private$.cache$is_ready)) {
-          private$.computeRES()
+          private$.computeRES(data, key1)
           private$.cache$is_ready <- TRUE
           
           private$.cache$options <- self$options
           private$.cache$data <- self$data
         }
-        # results---
+        
+        # 캐시에서 결과 가져오기
         counts <- private$.cache$counts
         ts <- private$.cache$ts
         prop <- private$.cache$prop
         res <- private$.cache$res
         dicho <- private$.cache$dicho
         
-        # Counts of respondents-----------
-        
-        #counts <- CTT::distractor.analysis(data, key1)
-        #---------------------------------------------
-        #counts<- results$counts
-        
+        # Counts of respondents
         if (isTRUE(self$options$count)) {
           vars <- self$options$vars
           table <- self$results$count
@@ -98,7 +91,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           for (i in seq_along(vars)) {
             tab[[i]] <- as.data.frame.matrix(counts[[i]])
           }
-          tab <- tab
           for (i in seq_along(vars)) {
             table <- self$results$count[[i]]
             names <- dimnames(tab[[i]])[[1]]
@@ -113,25 +105,14 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        ### Total summary############
-        
-        #group1 <- self$options$group1
-        
-        #------------------------------------------------
-        #ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
-        #-------------------------------------------------
-        #ts<- results$ts
-        
+        # Total summary
         if (isTRUE(self$options$sum1)) {
           vars <- self$options$vars
-          
           table <- self$results$sum1
           tab <- NULL
           for (i in seq_along(vars)) {
             tab[[i]] <- as.data.frame.matrix(ts[[i]])
           }
-          tab <- tab
-          #self$results$text$setContent(tab)
           for (i in seq_along(vars)) {
             table <- self$results$sum1[[i]]
             names <- dimnames(tab[[i]])[[1]]
@@ -149,19 +130,14 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        # Proportions of respondents--------
-        
-        #prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
-        #---------------------------------------
-        #prop<- results$prop
-        
+        # Proportions of respondents
         if (isTRUE(self$options$prop)) {
+          vars <- self$options$vars
           table <- self$results$prop
           tab <- NULL
           for (i in seq_along(vars)) {
             tab[[i]] <- as.data.frame.matrix(prop[[i]])
           }
-          tab <- tab
           for (i in seq_along(vars)) {
             table <- self$results$prop[[i]]
             names <- dimnames(tab[[i]])[[1]]
@@ -176,19 +152,14 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        #summary-------------
-        
-        #res <- CTT::distractorAnalysis(data, key1)
-        #--------------------------------------
-        #res<- results$res
-        
+        # Summary
         if (isTRUE(self$options$sum)) {
+          vars <- self$options$vars
           table <- self$results$sum
           tab <- NULL
           for (i in seq_along(vars)) {
             tab[[i]] <- as.data.frame.matrix(res[[i]][1:4])
           }
-          tab <- tab
           for (i in seq_along(vars)) {
             table <- self$results$sum[[i]]
             names <- dimnames(tab[[i]])[[1]]
@@ -203,29 +174,18 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        # Scores, scored file-----------
-        #dicho <- CTT::score(data, key1, output.scored = TRUE)
-        #--------------------------------------------
-        #dicho<- results$dicho
-        dicho <- dicho$scored
-        dicho <- as.data.frame(dicho) # dichotomous matrix
+        # Scores, scored file
+        dicho_scored <- as.data.frame(dicho$scored) # dichotomous matrix
         
+        # Total score
         if (isTRUE(self$options$total)) {
-          binary <- CTT::score(data, key1, output.scored = TRUE)
-          
-          # Save total score---------
-          score <- as.vector(binary$score)
-          
+          score <- as.vector(dicho$score)
           self$results$total$setRowNums(rownames(data))
           self$results$total$setValues(score)
-          
         }
         
-        # Save scoring-----------------
-        
+        # Save scoring
         if (isTRUE(self$options$scoring)) {
-          binary <- CTT::score(data, key1, output.scored = TRUE)
-          
           keys <- 1:length(self$options$vars)
           titles <- paste("Item", 1:length(self$options$vars))
           descriptions <- paste("Item", 1:length(self$options$vars))
@@ -240,7 +200,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           
           self$results$scoring$setRowNums(rownames(data))
           
-          scoring <- as.data.frame(binary$scored)
+          scoring <- as.data.frame(dicho$scored)
           
           for (i in 1:length(self$options$vars)) {
             scores <- as.numeric(scoring[, i])
@@ -248,65 +208,53 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        # Empirical ICC-----------------
-        
+        # Empirical ICC
         if (isTRUE(self$options$plot3)) {
-          myscores <- CTT::score(data, key1, output.scored = TRUE)
-          
-          image3 <- self$results$plot3
-          image3$setState(myscores)
-          
+          self$results$plot3$setState(dicho)
         }
         
-        # traditional item analysis table--------------------
-        
-        it <- ShinyItemAnalysis::ItemAnalysis(dicho)
-        
-        dif <- it[1]
-        ULI <- it[13]
-        RIT <- it[11]
-        RIR <- it[10]
-        
-        discri <- data.frame(dif, ULI, RIT, RIR)
-        
-        #self$results$text$setContent(discri)
-        
-        dif <- discri$Difficulty
-        ULI <- discri$ULI
-        RIT <- discri$RIT
-        RIR <- discri$RIR
-        # self$results$text$setContent(dis)
-        disc <- self$options$disc
-        table <- self$results$disc
-        vars <- self$options$vars
-        for (i in seq_along(vars)) {
-          row <- list()
-          row[["dif"]] <-  dif[i]
-          row[["ULI"]] <-  ULI[i]
-          row[["RIT"]] <-  RIT[i]
-          row[["RIR"]] <-  RIR[i]
-          table$setRow(rowKey = vars[i], values = row)
+        # Traditional item analysis table
+        if (self$options$disc) {
+          it <- ShinyItemAnalysis::ItemAnalysis(dicho_scored)
+          
+          dif <- it[1]
+          ULI <- it[13]
+          RIT <- it[11]
+          RIR <- it[10]
+          
+          discri <- data.frame(dif, ULI, RIT, RIR)
+          
+          dif <- discri$Difficulty
+          ULI <- discri$ULI
+          RIT <- discri$RIT
+          RIR <- discri$RIR
+          
+          table <- self$results$disc
+          vars <- self$options$vars
+          for (i in seq_along(vars)) {
+            row <- list()
+            row[["dif"]] <-  dif[i]
+            row[["ULI"]] <-  ULI[i]
+            row[["RIT"]] <-  RIT[i]
+            row[["RIR"]] <-  RIR[i]
+            table$setRow(rowKey = vars[i], values = row)
+          }
         }
-        #  plot1----------
-        disi <- self$options$disi
-        image <- self$results$plot1
-        image$setState(dicho)
         
-        # Histogram of total score------------
+        # Plot1
+        if (isTRUE(self$options$plot1)) {
+          self$results$plot1$setState(dicho_scored)
+        }
         
+        # Histogram of total score
         if (isTRUE(self$options$plot2)) {
-          dicho <- CTT::score(data, key1, output.scored = TRUE)
-          
-          binary <- dicho$scored
-          score <- rowSums(binary)
+          score <- rowSums(dicho$scored)
           df <- data.frame(score)
           state <- list(score, df)
           
-          image2 <- self$results$plot2
-          image2$setState(state)
+          self$results$plot2$setState(state)
         }
       },
-      #-------------
       
       .plot2 = function(image2, ggtheme, theme, ...) {
         if (is.null(image2$state))
@@ -315,24 +263,11 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         score <- image2$state[[1]]
         df <- image2$state[[2]]
         
-        # plot2<- ggplot(df, aes(score)) +
-        #   geom_histogram(binwidth = 1) +
-        #   xlab("Total score") +
-        #   ylab("Number of respondents")
-        
-        # histogram
-        ggplot(df, aes(score)) +
-          geom_histogram(binwidth = 1, col = "black") +
-          xlab("Total score") +
-          ylab("Number of respondents") +
-          ShinyItemAnalysis::theme_app()
-        
-        # colors by cut-score
+        # 색상 계산 최적화
         cut <- median(score) # cut-score
         color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
-        df <- data.frame(score)
         
-        # histogram
+        # 직접 그래프 생성
         plot2 <- ggplot(df, aes(score)) +
           geom_histogram(binwidth = 1,
                          fill = color,
@@ -340,18 +275,18 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           xlab("Total score") +
           ylab("Number of respondents") +
           ShinyItemAnalysis::theme_app()
-        plot2 + ggtheme
+        
+        plot2 <- plot2 + ggtheme
         print(plot2)
         TRUE
       },
       
       .plot = function(image, ...) {
-        data <- self$data
-        data <- na.omit(data)
-        key <- self$options$key
+        data <- na.omit(self$data)
         key1 <- strsplit(self$options$key, ',')[[1]]
         nums <- self$options$num
         group <- self$options$group
+        
         plot <- ShinyItemAnalysis::plotDistractorAnalysis(data, key1, num.groups = group, item = nums)
         print(plot)
         TRUE
@@ -360,8 +295,10 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       .plot1 = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
           return(FALSE)
+        
         dicho <- image$state
         disi <- self$options$disi
+        
         plot1 <- ShinyItemAnalysis::DDplot(
           dicho,
           discrim = disi,
@@ -369,9 +306,11 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           l = 1,
           u = 3
         )
+        
         if (self$options$angle > 0) {
           plot1 <- plot1 + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
         }
+        
         print(plot1)
         TRUE
       },
@@ -382,6 +321,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         num1 <- self$options$num1
         myScores <- image3$state
+        
         plot3 <- CTT::cttICC(
           myScores$score,
           myScores$scored[, num1],
@@ -389,25 +329,24 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           colTheme = "spartans",
           cex = 1.5
         )
+        
         print(plot3)
         TRUE
       },
       
-      .computeRES = function() {
-        if (length(self$options$vars) < 2)
-          return()
-        
-        data <- self$data
-        data <- na.omit(data)
-        key1 <- strsplit(self$options$key, ',')[[1]]
+      .computeRES = function(data, key1) {
         group1 <- self$options$group1
         
-        # chche---
+        # 계산 결과를 캐시에 저장 - 순서 최적화
+        # 먼저 dicho 계산 (다른 계산에 필요할 수 있음)
+        dicho <- CTT::score(data, key1, output.scored = TRUE)
+        private$.cache$dicho <- dicho
+        
+        # 나머지 계산 수행 - 병렬 처리 가능한 작업들
         private$.cache$counts <- CTT::distractor.analysis(data, key1)
-        private$.cache$ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
         private$.cache$prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
+        private$.cache$ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
         private$.cache$res <- CTT::distractorAnalysis(data, key1)
-        private$.cache$dicho <- CTT::score(data, key1, output.scored = TRUE)
       }
     )
   )
