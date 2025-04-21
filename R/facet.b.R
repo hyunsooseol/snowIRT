@@ -1,8 +1,6 @@
-
 # This file is a generated template, your changes will not be overwritten
 #FACET ANALYSIS
 #' @import ggplot2
-
 
 facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
   R6::R6Class(
@@ -612,34 +610,33 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         TRUE
       },
       #----------------------------------------------------
+      # Optimized computation function
       .computeRES = function() {
         dep <- self$options$dep
         id <- self$options$id
         facets <- self$options$facet
         
-        data <- self$data
-        data <- na.omit(data)
-        data <- as.data.frame(data)
+        # Extract only needed columns to reduce memory usage
+        needed_cols <- unique(c(dep, id, facets))
+        data <- stats::na.omit(self$data[, needed_cols, drop = FALSE])
         
-        # Formula---------------
+        # Create formula more efficiently
+        facets_formula <- paste0(facets, collapse = '*')
+        formula <- stats::as.formula(paste0('~ step+', facets_formula))
         
-        facets <- vapply(facets, function(x)
-          jmvcore::composeTerm(x), '')
-        facets <- paste0(facets, collapse = '*')
-        formula <- as.formula(paste0('~ step+', facets))
+        # Extract facet data once
+        facet_data <- data[, facets, drop = FALSE]
         
-        
-        facets = dplyr::select(data, self$options$facet)
-        #self$results$text$setContent(formula)
+        # Run main computation
         res <- TAM::tam.mml.mfr(
-          resp = data[[self$options$dep]],
-          facets = facets,
-          pid = data[[self$options$id]],
+          resp = data[[dep]],
+          facets = facet_data,
+          pid = data[[id]],
           formulaA = formula
         )
-        #self$results$text1$setContent(res)
-        #self$results$text1$setContent(res$xsi.facets)
-        #retlist <- list(res=res)
+        # Clean up to free memory
+        rm(data, facet_data)
+        gc(verbose = FALSE)
         return(res)
       }
     )
