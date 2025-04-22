@@ -60,12 +60,10 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (length(self$options$vars) < 2)
           return()
         
-        # 데이터 전처리를 한 번만 수행
         data <- na.omit(self$data)
         key <- self$options$key
         key1 <- strsplit(self$options$key, ',')[[1]]
         
-        # 캐시 검사 및 재계산 필요 여부 확인
         if (!identical(private$.cache$options, self$options) ||
             !identical(private$.cache$data, self$data)) {
           private$.cache <- list()
@@ -76,7 +74,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           private$.cache$data <- self$data
         }
         
-        # 캐시에서 결과 가져오기
         counts <- private$.cache$counts
         ts <- private$.cache$ts
         prop <- private$.cache$prop
@@ -263,11 +260,9 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         score <- image2$state[[1]]
         df <- image2$state[[2]]
         
-        # 색상 계산 최적화
         cut <- median(score) # cut-score
         color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
         
-        # 직접 그래프 생성
         plot2 <- ggplot(df, aes(score)) +
           geom_histogram(binwidth = 1,
                          fill = color,
@@ -337,12 +332,9 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       .computeRES = function(data, key1) {
         group1 <- self$options$group1
         
-        # 계산 결과를 캐시에 저장 - 순서 최적화
-        # 먼저 dicho 계산 (다른 계산에 필요할 수 있음)
         dicho <- CTT::score(data, key1, output.scored = TRUE)
         private$.cache$dicho <- dicho
         
-        # 나머지 계산 수행 - 병렬 처리 가능한 작업들
         private$.cache$counts <- CTT::distractor.analysis(data, key1)
         private$.cache$prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
         private$.cache$ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
