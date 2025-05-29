@@ -20,6 +20,7 @@ analyses:
     menuTitle: Dichotomous Model
     menuSubgroup: IRT
     ribbon: analyses
+    category: analyses
   - title: Polytomous Model
     name: polytomous
     ns: snowIRT
@@ -27,6 +28,7 @@ analyses:
     menuTitle: Polytomous Model
     menuSubgroup: IRT
     ribbon: analyses
+    category: analyses
   - title: Many Facet Rasch Model
     name: facet
     ns: snowIRT
@@ -34,6 +36,7 @@ analyses:
     menuTitle: Many Facet Rasch Model
     menuSubgroup: IRT
     ribbon: analyses
+    category: analyses
   - title: Raju & Mantel-Haenszel method
     name: dif
     ns: snowIRT
@@ -41,6 +44,7 @@ analyses:
     menuTitle: Raju & Mantel-Haenszel method
     menuSubgroup: Differential Item Functioning
     ribbon: analyses
+    category: analyses
   - title: Delta method
     name: deltam
     ns: snowIRT
@@ -48,6 +52,7 @@ analyses:
     menuTitle: Delta method
     menuSubgroup: Differential Item Functioning
     ribbon: analyses
+    category: analyses
   - title: Distractor analysis
     name: item
     ns: snowIRT
@@ -55,6 +60,7 @@ analyses:
     menuTitle: Distractor analysis
     menuSubgroup: Multiple choice
     ribbon: analyses
+    category: analyses
   - title: DIF for ordinal data
     name: logit
     ns: snowIRT
@@ -62,6 +68,7 @@ analyses:
     menuTitle: DIF for ordinal data
     menuSubgroup: Differential Item Functioning
     ribbon: analyses
+    category: analyses
   - title: Conditional Likelihood Ratio Test
     name: clr
     ns: snowIRT
@@ -69,6 +76,7 @@ analyses:
     menuTitle: Conditional Likelihood Ratio Test
     menuSubgroup: Differential Item Functioning
     ribbon: analyses
+    category: analyses
 datasets:
   - name: dichotomous
     path: hls.omv

@@ -12,12 +12,9 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports:
     jmvcore (>= 0.8),
-    R6,
-    stats,
     plyr,
     RcppArmadillo,
     difR,
-    dplyr,
     ShinyItemAnalysis,
     CTT,
     CDM,
