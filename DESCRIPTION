@@ -25,5 +25,9 @@ Imports:
     iarm,
     eRm,
     psych,
-    reshape2
+    reshape2,
+    R6,
+    stats,
+    dplyr,
+    tidyr
  
