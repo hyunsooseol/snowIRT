@@ -26,4 +26,4 @@ Imports:
     eRm,
     psych,
     reshape2
-  
+Remotes: cran/gtheory  
