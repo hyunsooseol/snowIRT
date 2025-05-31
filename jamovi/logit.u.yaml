@@ -61,32 +61,6 @@ children:
                     enable: (method)
               - type: CheckBox
                 name: puri
-      - type: LayoutBox
-        cell:
-          column: 1
-          row: 0
-        stretchFactor: 1 
-        margin: large
-        children:
-          - type: Label
-            label: 'Plot'
-            children:
-              - type: CheckBox
-                name: plot
-                style: list-inline
-                children:
-                  - type: TextBox
-                    name: width
-                    format: number
-                    enable: (plot)
-                  - type: TextBox
-                    name: height
-                    format: number
-                    enable: (plot)   
-              - name: num
-                type: TextBox
-                format: number
-                enable: (plot)
 
 
 

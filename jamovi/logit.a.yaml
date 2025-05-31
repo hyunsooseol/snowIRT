@@ -99,24 +99,4 @@ options:
       type: Bool
       default: FALSE      
 
-    - name: num
-      title: Item number
-      default: 1
-      type: Integer
-      min: 1
-
-    - name: plot
-      title: ICC plot 
-      type: Bool
-      default: TRUE  
-
-    - name: width
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height
-      type: Integer
-      title: "X"
-      default: 500
 ...

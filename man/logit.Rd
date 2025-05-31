@@ -13,11 +13,7 @@ logit(
   match = "zscore",
   padjust = "BH",
   method = TRUE,
-  puri = FALSE,
-  num = 1,
-  plot = TRUE,
-  width = 500,
-  height = 500
+  puri = FALSE
 )
 }
 \arguments{
@@ -38,21 +34,12 @@ logit(
 \item{method}{.}
 
 \item{puri}{.}
-
-\item{num}{.}
-
-\item{plot}{.}
-
-\item{width}{.}
-
-\item{height}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$method} \tab \tab \tab \tab \tab a table \cr
-  \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

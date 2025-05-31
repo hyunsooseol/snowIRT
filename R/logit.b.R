@@ -34,13 +34,6 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             "Note",
             "Adj.p = The adjusted p-values by likelihood ratio test using multiple comparison."
           )
-        if (isTRUE(self$options$plot)) {
-          width <- self$options$width
-          height <- self$options$height
-          self$results$plot$setSize(width, height)
-        }
-        if (length(self$options$vars) <= 1)
-          self$setStatus('complete')
       },
       
       #=================================================
@@ -89,7 +82,6 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             model = self$options$model,
             type = self$options$type,
             match = self$options$match,
-            #   purify = self$options$puri,
             p.adjust.method = self$options$padjust,
           )
         }
@@ -104,32 +96,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           row[["padj"]] <- padj[i]
           table$setRow(rowKey = vars[i], values = row)
         }
-        # Normal dif plot--------
-        
-        image <- self$results$plot
-        image$setState(fit)
-      },
-      
-      
-      .plot = function(image, ggtheme, theme, ...) {
-        if (is.null(image$state))
-          return(FALSE)
-        
-        num <- self$options$num
-        model <- self$options$model
-        
-        fit <- image$state
-        
-        # plot <- plot(fit, item=num)
-        
-        if (self$options$model == "cumulative") {
-          plot <- plot(fit, item = num, plot.type = "cumulative")
-          
-        } else{
-          plot <- plot(fit, item = num, plot.type = "category")
-        }
-        print(plot)
-        TRUE
       }
+      
     )
   )

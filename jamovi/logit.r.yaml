@@ -38,21 +38,4 @@ items:
           title: 'Adj.p'
           format: zto,pvalue 
 
-    - name:  plot
-      title: ICC plot
-      type:  Image
-      visible: (plot)
-      renderFun: .plot
-      refs: difNLR
-      clearWith:
-        - vars
-        - group
-        - model
-        - type
-        - match
-        - padjust
-        - num
-        - width
-        - height
- 
 ...
