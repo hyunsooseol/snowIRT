@@ -69,7 +69,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Plots
+            label: ''
             fitToGrid: true
             cell:
               column: 0
@@ -112,7 +112,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Fit plots'
+            label: ''
             children:
               - type: CheckBox
                 name: inplot
