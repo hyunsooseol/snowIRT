@@ -541,26 +541,62 @@ adjustment; Ho= the data fit the Rasch model."
         infit1 <- image$state
         
         plot <- ggplot(infit1, aes(x = Item, y = infit)) +
+          # Refined circular point style
           geom_point(
-            shape = 4,
-            color = 'black',
-            fill = 'white',
-            size = 3,
-            stroke = 2
+            shape = 21,
+            color = '#2c3e50',
+            fill = '#3498db',
+            size = 3.2,
+            stroke = 1.1,
+            alpha = 0.85
           ) +
+          # Clean boundary lines
           geom_hline(
             yintercept = 1.5,
-            linetype = "dotted",
-            color = 'red',
-            size = 1.5
+            linetype = "solid",
+            color = '#e74c3c',
+            linewidth = 1,
+            alpha = 0.7
           ) +
           geom_hline(
             yintercept = 0.5,
-            linetype = "dotted",
-            color = 'red',
-            size = 1.5
+            linetype = "solid",
+            color = '#e74c3c',
+            linewidth = 1,
+            alpha = 0.7
           ) +
-          ggtitle("Item Infit")
+          ggtitle("") +
+          theme_minimal() +
+          theme(
+            # Background settings
+            panel.background = element_rect(fill = "#fafafa", color = NA),
+            plot.background = element_rect(fill = "white", color = NA),
+            
+            # Grid line settings
+            panel.grid.major.y = element_line(color = "#e8e8e8", linewidth = 0.4),
+            panel.grid.minor = element_blank(),
+            panel.grid.major.x = element_blank(),
+            
+            # Title and axis label styling
+            plot.title = element_text(
+              hjust = 0.5,
+              size = 15,
+              face = "bold",
+              color = "#2c3e50",
+              margin = margin(b = 15)
+            ),
+            axis.title = element_text(size = 11, color = "#34495e"),
+            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
+            axis.text.x = element_text(margin = margin(t = 6)),
+            axis.text.y = element_text(margin = margin(r = 6)),
+            
+            # Border settings
+            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            
+            # Margin adjustments
+            plot.margin = margin(15, 15, 15, 15)
+          )
+        
         plot <- plot + ggtheme
         
         if (self$options$angle > 0) {
@@ -570,6 +606,7 @@ adjustment; Ho= the data fit the Rasch model."
         TRUE
       },
       
+            
       .outPlot = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
           return(FALSE)
@@ -577,26 +614,61 @@ adjustment; Ho= the data fit the Rasch model."
         outfit1 <- image$state
         
         plot <- ggplot(outfit1, aes(x = Item, y = outfit)) +
+          # Refined circular point style
           geom_point(
-            shape = 4,
-            color = 'black',
-            fill = 'white',
-            size = 3,
-            stroke = 2
+            shape = 21,
+            color = '#2c3e50',
+            fill = '#3498db',
+            size = 3.2,
+            stroke = 1.1,
+            alpha = 0.85
           ) +
+          # Clean boundary lines
           geom_hline(
             yintercept = 1.5,
-            linetype = "dotted",
-            color = 'red',
-            size = 1.5
+            linetype = "solid",
+            color = '#e74c3c',
+            linewidth = 1,
+            alpha = 0.7
           ) +
           geom_hline(
             yintercept = 0.5,
-            linetype = "dotted",
-            color = 'red',
-            size = 1.5
+            linetype = "solid",
+            color = '#e74c3c',
+            linewidth = 1,
+            alpha = 0.7
           ) +
-          ggtitle("Item Outfit")
+          ggtitle("") +
+          theme_minimal() +
+          theme(
+            # Background settings
+            panel.background = element_rect(fill = "#fafafa", color = NA),
+            plot.background = element_rect(fill = "white", color = NA),
+            
+            # Grid line settings
+            panel.grid.major.y = element_line(color = "#e8e8e8", linewidth = 0.4),
+            panel.grid.minor = element_blank(),
+            panel.grid.major.x = element_blank(),
+            
+            # Title and axis label styling
+            plot.title = element_text(
+              hjust = 0.5,
+              size = 15,
+              face = "bold",
+              color = "#2c3e50",
+              margin = margin(b = 15)
+            ),
+            axis.title = element_text(size = 11, color = "#34495e"),
+            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
+            axis.text.x = element_text(margin = margin(t = 6)),
+            axis.text.y = element_text(margin = margin(r = 6)),
+            
+            # Border settings
+            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            
+            # Margin adjustments
+            plot.margin = margin(15, 15, 15, 15)
+          )
         
         plot <- plot + ggtheme
         
@@ -633,24 +705,79 @@ adjustment; Ho= the data fit the Rasch model."
         
         pf <- image$state
         
-        plot3 <- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit)) +
-          geom_point(size = 3, stroke = 2) +
-          
-          ggplot2::scale_shape_manual(values = c(3, 4)) +
-          #ggplot2::scale_color_manual(values=c("red", "blue")+
-          ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
+        plot3 <- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit, color = Fit)) +
+          # Modern point styling with refined shapes
+          geom_point(
+            size = 2.5,
+            stroke = 1,
+            alpha = 0.75
+          ) +
+          # Elegant shape and color mapping
+          ggplot2::scale_shape_manual(
+            values = c("Infit" = 16, "Outfit" = 17),  # Filled circle and triangle
+            name = "Fit"
+          ) +
+          ggplot2::scale_color_manual(
+            values = c("Infit" = '#2980b9', "Outfit" = '#e74c3c'),
+            name = "Fit"
+          ) +
+          # Clean boundary lines
           ggplot2::geom_hline(
             yintercept = 1.5,
-            linetype = "dotted",
-            color = 'red',
-            size = 1.5
+            linetype = "solid",
+            color = '#95a5a6',
+            linewidth = 0.8,
+            alpha = 0.8
           ) +
           ggplot2::geom_hline(
             yintercept = 0.5,
-            linetype = "dotted",
-            color = 'red',
-            size = 1.5
+            linetype = "solid",
+            color = '#95a5a6',
+            linewidth = 0.8,
+            alpha = 0.8
+          ) +
+          ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
+          ggtitle("") +
+          labs(
+            x = "Measure",
+            y = "Value"
+          ) +
+          theme_minimal() +
+          theme(
+            # Background settings
+            panel.background = element_rect(fill = "#fafafa", color = NA),
+            plot.background = element_rect(fill = "white", color = NA),
+            
+            # Grid line settings
+            panel.grid.major = element_line(color = "#f0f0f0", linewidth = 0.3),
+            panel.grid.minor = element_blank(),
+            
+            # Title and axis label styling
+            plot.title = element_text(
+              hjust = 0.5,
+              size = 15,
+              face = "bold",
+              color = "#2c3e50",
+              margin = margin(b = 15)
+            ),
+            axis.title = element_text(size = 11, color = "#34495e"),
+            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
+            
+            # Legend styling
+            legend.position = "right",
+            legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
+            legend.text = element_text(size = 10, color = "#7f8c8d"),
+            legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
+            legend.key = element_rect(fill = "transparent"),
+            legend.margin = margin(10, 10, 10, 10),
+            
+            # Border settings
+            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            
+            # Margin adjustments
+            plot.margin = margin(15, 15, 15, 15)
           )
+        
         plot3 <- plot3 + ggtheme
         print(plot3)
         TRUE
