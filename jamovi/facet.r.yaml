@@ -9,9 +9,9 @@ items:
       type: Html
       visible: True
 
-    - name:  text1
-      title: ' '
-      type:  Preformatted
+    # - name:  text1
+    #   title: ''
+    #   type:  Preformatted
 
     - name:  text
       title: 'WLE Reliability'
@@ -240,6 +240,71 @@ items:
         - name: marker
           title: 'Diagnosis'
           type: 'text'
+
+    - name: resid
+      title: 'Residual Analysis(|z| > 2.0)'
+      type: Table
+      visible: (resid)
+      clearWith:
+        - dep
+        - id
+        - facet
+      refs: TAM
+
+      columns:
+        - name: case
+          title: Case
+          type: text
+        - name: item
+          title: Item
+          type: text
+        - name: residual
+          title: Residual
+          type: number
+        - name: interpretation
+          title: Interpretation
+          type: text
+
+    - name: pca
+      title: Principal Component Analysis of Residuals
+      type: Table
+      visible: (pca)
+      refs: TAM
+      columns:
+        - name: component
+          title: Component
+          type: text
+        - name: eigenvalue
+          title: Eigenvalue
+          type: number
+        - name: variance_explained
+          title: Variance Explained (%)
+          type: number
+        - name: cumulative_variance
+          title: Cumulative Variance (%)
+          type: number
+
+    - name: local
+      title: Local Dependency Detection
+      type: Table
+      visible: (local)
+      refs: TAM
+      columns:
+        - name: item1
+          title: Item 1
+          type: text
+        - name: item2
+          title: Item 2
+          type: text
+        - name: loading1
+          title: Loading 1
+          type: number
+        - name: loading2
+          title: Loading 2
+          type: number
+        - name: dependency_strength
+          title: Dependency Strength
+          type: text 
 
     - name: plot1
       title: 'Rater plot'

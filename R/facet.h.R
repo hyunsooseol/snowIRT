@@ -17,6 +17,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             ifit = FALSE,
             pm = FALSE,
             pfit = FALSE,
+            resid = FALSE,
+            pca = FALSE,
+            local = FALSE,
             plot1 = FALSE,
             width1 = 500,
             height1 = 500,
@@ -104,6 +107,18 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..pfit <- jmvcore::OptionBool$new(
                 "pfit",
                 pfit,
+                default=FALSE)
+            private$..resid <- jmvcore::OptionBool$new(
+                "resid",
+                resid,
+                default=FALSE)
+            private$..pca <- jmvcore::OptionBool$new(
+                "pca",
+                pca,
+                default=FALSE)
+            private$..local <- jmvcore::OptionBool$new(
+                "local",
+                local,
                 default=FALSE)
             private$..plot1 <- jmvcore::OptionBool$new(
                 "plot1",
@@ -235,6 +250,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..ifit)
             self$.addOption(private$..pm)
             self$.addOption(private$..pfit)
+            self$.addOption(private$..resid)
+            self$.addOption(private$..pca)
+            self$.addOption(private$..local)
             self$.addOption(private$..plot1)
             self$.addOption(private$..width1)
             self$.addOption(private$..height1)
@@ -276,6 +294,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ifit = function() private$..ifit$value,
         pm = function() private$..pm$value,
         pfit = function() private$..pfit$value,
+        resid = function() private$..resid$value,
+        pca = function() private$..pca$value,
+        local = function() private$..local$value,
         plot1 = function() private$..plot1$value,
         width1 = function() private$..width1$value,
         height1 = function() private$..height1$value,
@@ -316,6 +337,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..ifit = NA,
         ..pm = NA,
         ..pfit = NA,
+        ..resid = NA,
+        ..pca = NA,
+        ..local = NA,
         ..plot1 = NA,
         ..width1 = NA,
         ..height1 = NA,
@@ -351,7 +375,6 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        text1 = function() private$.items[["text1"]],
         text = function() private$.items[["text"]],
         rm = function() private$.items[["rm"]],
         im = function() private$.items[["im"]],
@@ -361,6 +384,9 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ifit = function() private$.items[["ifit"]],
         pm = function() private$.items[["pm"]],
         pfit = function() private$.items[["pfit"]],
+        resid = function() private$.items[["resid"]],
+        pca = function() private$.items[["pca"]],
+        local = function() private$.items[["local"]],
         plot1 = function() private$.items[["plot1"]],
         plot2 = function() private$.items[["plot2"]],
         plot3 = function() private$.items[["plot3"]],
@@ -382,10 +408,6 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="text1",
-                title=" "))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
@@ -614,6 +636,83 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="marker", 
                         `title`="Diagnosis", 
                         `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="resid",
+                title="Residual Analysis(|z| > 2.0)",
+                visible="(resid)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="case", 
+                        `title`="Case", 
+                        `type`="text"),
+                    list(
+                        `name`="item", 
+                        `title`="Item", 
+                        `type`="text"),
+                    list(
+                        `name`="residual", 
+                        `title`="Residual", 
+                        `type`="number"),
+                    list(
+                        `name`="interpretation", 
+                        `title`="Interpretation", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="pca",
+                title="Principal Component Analysis of Residuals",
+                visible="(pca)",
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="component", 
+                        `title`="Component", 
+                        `type`="text"),
+                    list(
+                        `name`="eigenvalue", 
+                        `title`="Eigenvalue", 
+                        `type`="number"),
+                    list(
+                        `name`="variance_explained", 
+                        `title`="Variance Explained (%)", 
+                        `type`="number"),
+                    list(
+                        `name`="cumulative_variance", 
+                        `title`="Cumulative Variance (%)", 
+                        `type`="number"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="local",
+                title="Local Dependency Detection",
+                visible="(local)",
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="item1", 
+                        `title`="Item 1", 
+                        `type`="text"),
+                    list(
+                        `name`="item2", 
+                        `title`="Item 2", 
+                        `type`="text"),
+                    list(
+                        `name`="loading1", 
+                        `title`="Loading 1", 
+                        `type`="number"),
+                    list(
+                        `name`="loading2", 
+                        `title`="Loading 2", 
+                        `type`="number"),
+                    list(
+                        `name`="dependency_strength", 
+                        `title`="Dependency Strength", 
+                        `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
@@ -761,6 +860,9 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param ifit .
 #' @param pm .
 #' @param pfit .
+#' @param resid .
+#' @param pca .
+#' @param local .
 #' @param plot1 .
 #' @param width1 .
 #' @param height1 .
@@ -792,7 +894,6 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$im} \tab \tab \tab \tab \tab a table \cr
@@ -802,6 +903,9 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$resid} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$pca} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$local} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
@@ -832,6 +936,9 @@ facet <- function(
     ifit = FALSE,
     pm = FALSE,
     pfit = FALSE,
+    resid = FALSE,
+    pca = FALSE,
+    local = FALSE,
     plot1 = FALSE,
     width1 = 500,
     height1 = 500,
@@ -889,6 +996,9 @@ facet <- function(
         ifit = ifit,
         pm = pm,
         pfit = pfit,
+        resid = resid,
+        pca = pca,
+        local = local,
         plot1 = plot1,
         width1 = width1,
         height1 = height1,

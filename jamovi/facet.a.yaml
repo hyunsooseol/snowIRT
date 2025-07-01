@@ -72,6 +72,21 @@ options:
       type: Bool
       default: false      
 
+    - name: resid
+      title: 'Residual analysis'
+      type: Bool
+      default: false
+
+    - name: pca
+      title: 'Principal component analysis'
+      type: Bool
+      default: false
+
+    - name: local
+      title: 'Local dependency detection'
+      type: Bool
+      default: false
+
     - name: plot1
       title: 'Rater'
       type: Bool

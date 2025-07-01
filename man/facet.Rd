@@ -17,6 +17,9 @@ facet(
   ifit = FALSE,
   pm = FALSE,
   pfit = FALSE,
+  resid = FALSE,
+  pca = FALSE,
+  local = FALSE,
   plot1 = FALSE,
   width1 = 500,
   height1 = 500,
@@ -71,6 +74,12 @@ facet(
 \item{pm}{.}
 
 \item{pfit}{.}
+
+\item{resid}{.}
+
+\item{pca}{.}
+
+\item{local}{.}
 
 \item{plot1}{.}
 
@@ -132,7 +141,6 @@ facet(
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-  \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
@@ -142,6 +150,9 @@ A results object containing:
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
+  \code{results$resid} \tab \tab \tab \tab \tab a table \cr
+  \code{results$pca} \tab \tab \tab \tab \tab a table \cr
+  \code{results$local} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr

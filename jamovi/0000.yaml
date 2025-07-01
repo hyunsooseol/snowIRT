@@ -1,12 +1,12 @@
 ---
 title: Item Response Theory
 name: snowIRT
-version: 5.1.2
+version: 5.1.3
 jms: '1.0'
 authors:
   - Hyunsoo Seol
 maintainer: Hyunsoo Seol <snow@cau.ac.kr>
-date: '2025-05-29'
+date: '2025-07-01'
 type: R
 description: >-
   This module includes dichotomous, polytomous, and many facet model based on

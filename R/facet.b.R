@@ -8,6 +8,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
     inherit = facetBase,
     private = list(
       .allCache = NULL,
+      .residualCache = NULL, 
       .htmlwidget = NULL,
       
       .init = function() {
@@ -27,6 +28,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             '<li>The variables should be named <b>subject</b>,<b>rater</b> and <b>task</b> respectively. Any other variable name will result in an error message.</b></li>',
             '<li>In the Facet variable box, you must put the variable <b>rater</b> first.</li>',
             '<li>You can currently only put <b>two variables</b> in the Facet variable box.</li>',
+            '<li>Empty PCA or Local Dependency tables indicate insufficient variance in residuals or high missing values in the data.</li>',
             '<li>We recommend using <a href="https://www.winsteps.com" target = "_blank">Facet software</a> for analyzing various experimental designs.</li>',
             '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
             '</ul></div></div>'
@@ -39,6 +41,11 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (self$options$pfit)
           self$results$pfit$setNote("Note",
                                     "Display 'X' when both Infit and Outfit values exceed 1.5.")
+        
+        if (self$options$local)
+          self$results$local$setNote("Note",
+                                      "|Loading| > 0.3 indicates potential local dependency; > 0.5 indicates strong dependency requiring attention.")
+        
         if (isTRUE(self$options$plot1)) {
           width <- self$options$width1
           height <- self$options$height1
@@ -81,25 +88,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
       },
       .run = function() {
-        # Example------------------------------
-        # Wide to long for dataset using reshape packate
-        # data <- read.csv("guilford.csv")
-        # attach(data)
-        # long<- reshape::melt(data, id.vars =c("subject","rater"),
-        #                      variable_name = "task")
-        
-        
-        #-----------------------------------------
-        # facet<- read.csv("long.csv")
-        # attach(facet)
-        # formula <- ~ rater*task+step
-        # facets = dplyr::select(facet, rater:task)
-        #
-        # res <- TAM::tam.mml.mfr(value,
-        #                         facets =  facets,
-        #                         formulaA = formula,
-        #                         pid=subject)
-        # res1 <- res$xsi.facets
         
         #---------------------------------------------
         if (is.null(self$options$dep) ||
@@ -415,6 +403,162 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         #                  persons$theta, persons$error,
         #                  persons$WLE.rel)
         
+    # Residual analysis (show all cases with |residual| > 2.0)
+        if (isTRUE(self$options$resid)) {
+          
+          residuals_result <- private$.computeResiduals()
+          stand_resid <- residuals_result$stand_residuals
+          
+          # Find all large residuals (absolute value > 2.0)
+          large_residuals <- which(abs(stand_resid) > 2, arr.ind = TRUE)
+          
+          if (nrow(large_residuals) > 0) {
+            table <- self$results$resid
+            
+            # Sort by absolute residual value (largest first)
+            residual_values <- abs(stand_resid[large_residuals])
+            sorted_indices <- order(residual_values, decreasing = TRUE)
+            
+            # Show ALL cases (no limit)
+            n_show <- nrow(large_residuals)
+            
+            for (i in 1:n_show) {
+              idx <- sorted_indices[i]
+              row_idx <- large_residuals[idx, 1]
+              col_idx <- large_residuals[idx, 2]
+              residual_val <- stand_resid[row_idx, col_idx]
+              
+              # Simple case numbering
+              case_name <- paste0("Case ", i)
+              
+              item_name <- if (!is.null(colnames(stand_resid))) {
+                colnames(stand_resid)[col_idx]
+              } else {
+                paste0("Item_", col_idx)
+              }
+              
+              interpretation <- if (residual_val > 0) "Overfit" else "Underfit"
+              
+              # Add row to table
+              table$addRow(rowKey = i, values = list(
+                case = case_name,
+                item = item_name,
+                residual = residual_val,
+                interpretation = interpretation
+              ))
+            }
+          }
+        }
+        
+        # Principal Component Analysis of Residuals (무한값 처리 추가)
+        if (isTRUE(self$options$pca)) {
+          residuals_result <- private$.computeResiduals()
+          stand_resid <- residuals_result$stand_residuals
+          
+          # Remove rows/columns with NA or infinite values
+          valid_rows <- apply(stand_resid, 1, function(x) all(is.finite(x)))
+          valid_cols <- apply(stand_resid, 2, function(x) all(is.finite(x)))
+          clean_resid <- stand_resid[valid_rows, valid_cols, drop = FALSE]
+          
+          # Remove columns with zero variance
+          if (ncol(clean_resid) > 0 && nrow(clean_resid) > 0) {
+            col_vars <- apply(clean_resid, 2, var, na.rm = TRUE)
+            valid_var_cols <- !is.na(col_vars) & col_vars > 1e-10
+            clean_resid <- clean_resid[, valid_var_cols, drop = FALSE]
+          }
+          
+          if (ncol(clean_resid) > 1 && nrow(clean_resid) > 1) {
+            # Principal component analysis
+            pca_result <- prcomp(clean_resid, scale. = FALSE)
+            eigenvalues <- pca_result$sdev^2
+            
+            # Calculate variance explained
+            total_variance <- sum(eigenvalues)
+            variance_explained <- (eigenvalues / total_variance) * 100
+            cumulative_variance <- cumsum(variance_explained)
+            
+            # Show first 5 components
+            n_components <- min(5, length(eigenvalues))
+            
+            table <- self$results$pca
+            
+            for (i in 1:n_components) {
+              table$addRow(rowKey = i, values = list(
+                component = paste0("PC", i),
+                eigenvalue = eigenvalues[i],
+                variance_explained = variance_explained[i],
+                cumulative_variance = cumulative_variance[i]
+              ))
+            }
+          }
+        }
+        
+        # Local Dependency Detection (무한값 처리 추가)
+        if (isTRUE(self$options$local)) {
+          residuals_result <- private$.computeResiduals()
+          stand_resid <- residuals_result$stand_residuals
+          
+          # Remove rows/columns with NA or infinite values
+          valid_rows <- apply(stand_resid, 1, function(x) all(is.finite(x)))
+          valid_cols <- apply(stand_resid, 2, function(x) all(is.finite(x)))
+          clean_resid <- stand_resid[valid_rows, valid_cols, drop = FALSE]
+          
+          # Remove columns with zero variance
+          if (ncol(clean_resid) > 0 && nrow(clean_resid) > 0) {
+            col_vars <- apply(clean_resid, 2, var, na.rm = TRUE)
+            valid_var_cols <- !is.na(col_vars) & col_vars > 1e-10
+            clean_resid <- clean_resid[, valid_var_cols, drop = FALSE]
+          }
+          
+          if (ncol(clean_resid) > 1 && nrow(clean_resid) > 1) {
+            # Principal component analysis for dependency detection
+            pca_result <- prcomp(clean_resid, scale. = FALSE)
+            
+            # Get loadings on first principal component
+            loadings <- pca_result$rotation[, 1]
+            
+            # Find items with high loadings (> 0.3)
+            high_loading_items <- which(abs(loadings) > 0.3)
+            
+            if (length(high_loading_items) > 1) {
+              table <- self$results$local
+              
+              # Create pairs of potentially dependent items
+              item_pairs <- combn(high_loading_items, 2)
+              
+              for (i in 1:ncol(item_pairs)) {
+                idx1 <- item_pairs[1, i]
+                idx2 <- item_pairs[2, i]
+                
+                item1_name <- names(loadings)[idx1]
+                item2_name <- names(loadings)[idx2]
+                loading1 <- loadings[idx1]
+                loading2 <- loadings[idx2]
+                
+                # Determine dependency strength
+                avg_loading <- mean(abs(c(loading1, loading2)))
+                dependency_strength <- if (avg_loading > 0.5) {
+                  "Strong"
+                } else if (avg_loading > 0.3) {
+                  "Moderate"
+                } else {
+                  "Weak"
+                }
+                
+                table$addRow(rowKey = i, values = list(
+                  item1 = item1_name,
+                  item2 = item2_name,
+                  loading1 = loading1,
+                  loading2 = loading2,
+                  dependency_strength = dependency_strength
+                ))
+              }
+            }
+          }
+        }
+        
+        
+        
         if (isTRUE(self$options$plot8)) {
           pfit <- TAM::tam.personfit(res)
           pfit <- data.frame(pfit$outfitPerson, pfit$infitPerson)
@@ -638,6 +782,40 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         rm(data, facet_data)
         gc(verbose = FALSE)
         return(res)
+      },
+      
+    .computeResiduals = function() {
+      if (is.null(private$.allCache)) {
+        stop("Model result not available. Run analysis first.")
       }
-    )
+      
+      if (is.null(private$.residualCache)) {
+        res <- private$.allCache
+        private$.residualCache <- TAM::IRT.residuals(res)
+      }
+      
+      return(private$.residualCache)
+    }
+  
+     )
   )
+
+# Example------------------------------
+# Wide to long for dataset using reshape packate
+# data <- read.csv("guilford.csv")
+# attach(data)
+# long<- reshape::melt(data, id.vars =c("subject","rater"),
+#                      variable_name = "task")
+
+
+#-----------------------------------------
+# facet<- read.csv("long.csv")
+# attach(facet)
+# formula <- ~ rater*task+step
+# facets = dplyr::select(facet, rater:task)
+#
+# res <- TAM::tam.mml.mfr(value,
+#                         facets =  facets,
+#                         formulaA = formula,
+#                         pid=subject)
+# res1 <- res$xsi.facets
