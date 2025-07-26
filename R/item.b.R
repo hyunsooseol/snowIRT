@@ -79,7 +79,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               '<li>Go to jamovi Data view</li>',
               '<li>Select cells with missing values</li>',
               '<li>Replace them with <b>0</b> or <b>WRONG</b> (for incorrect answers)</li>',
-              '<li>Or use Transform → Recode to batch convert missing values</li>',
               '</ol>',
               '<p><strong>Why this matters:</strong> Missing values cannot be properly scored and may cause analysis errors.</p>',
               '</div></div>',
