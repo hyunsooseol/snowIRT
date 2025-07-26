@@ -24,6 +24,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             '<li>Enter the correct answer separated by commas, but there must be no spaces between commas.</li>',
             '<li>To resolve error messages like <b>breaks are not unique</b>, we need to add more questions and respondents.</li>',
             '<li>By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</li>',
+            '<li><b>Missing values handling:</b> Set missing values to 0 or "WRONG" in jamovi data view to prevent scoring errors.</li>',
             '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
             '</ul></div></div>'
           )
@@ -31,7 +32,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (self$options$disc)
           self$results$disc$setNote(
             "Note",
-            "ULI:Upper-Lower Index based on 3 groups, RIT:Item-Total correlation, RIR: Item-Rest correlation."
+            "ULI:Upper-Lower Index based on 3 groups, RIT:Item-Total correlation, RIR: Item-Rest correlation. Missing values should be recoded as 0 or incorrect answer in jamovi."
           )
         if (isTRUE(self$options$plot)) {
           width <- self$options$width
@@ -60,7 +61,45 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (length(self$options$vars) < 2)
           return()
         
-        data <- na.omit(self$data)
+        # 결측값 확인 및 경고 메시지
+        data <- self$data
+        has_missing <- any(is.na(data))
+        
+        if (has_missing) {
+          # 사용자에게 경고 메시지 표시
+          self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
+            title = "⚠️ Missing Values Detected",
+            content = paste(
+              '<div style="border: 2px solid #ffebcc; border-radius: 15px; padding: 15px; background-color: #fff3e0; margin-top: 10px;">',
+              '<div style="text-align:justify;">',
+              '<h4 style="color: #e65100;">Action Required:</h4>',
+              '<p><strong>Missing values detected in your data!</strong></p>',
+              '<p>To ensure proper scoring, please:</p>',
+              '<ol>',
+              '<li>Go to jamovi Data view</li>',
+              '<li>Select cells with missing values</li>',
+              '<li>Replace them with <b>0</b> or <b>WRONG</b> (for incorrect answers)</li>',
+              '<li>Or use Transform → Recode to batch convert missing values</li>',
+              '</ol>',
+              '<p><strong>Why this matters:</strong> Missing values cannot be properly scored and may cause analysis errors.</p>',
+              '</div></div>',
+              '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
+              '<div style="text-align:justify;">',
+              '<h4>General Instructions:</h4>',
+              '<ul>',
+              '<li>Enter the correct answer separated by commas, but there must be no spaces between commas.</li>',
+              '<li>To resolve error messages like <b>breaks are not unique</b>, we need to add more questions and respondents.</li>',
+              '<li>By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</li>',
+              '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+              '</ul></div></div>'
+            )
+          ))
+          
+          # 결측값이 있으면 분석을 중단하고 사용자에게 안내
+          return()
+        }
+        
+        # 결측값이 없는 경우에만 분석 진행
         key <- self$options$key
         key1 <- strsplit(self$options$key, ',')[[1]]
         
@@ -277,7 +316,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       },
       
       .plot = function(image, ...) {
-        data <- na.omit(self$data)
+        data <- self$data
         key1 <- strsplit(self$options$key, ',')[[1]]
         nums <- self$options$num
         group <- self$options$group
