@@ -278,7 +278,7 @@ items:
         - height5
 
     - name: plot4
-      title: 'Expected Score Curves'
+      title: 'Item Characteristic Curve'
       type: Array
       visible: (plot4)
       clearWith:

@@ -482,7 +482,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$add(jmvcore::Array$new(
                 options=options,
                 name="plot4",
-                title="Expected Score Curves",
+                title="Item Characteristic Curve",
                 visible="(plot4)",
                 clearWith=list(
                     "vars"),

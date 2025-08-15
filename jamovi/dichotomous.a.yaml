@@ -147,7 +147,7 @@ options:
       default: 500
 
     - name: plot4
-      title: 'Item Characteristic Curve(ICC)'
+      title: 'Item Characteristic Curve'
       type: Bool
       default: false
 
