@@ -34,14 +34,9 @@ polytomous(
   height = 500,
   width5 = 500,
   height5 = 500,
-  num = 1,
   plot4 = FALSE,
-  width4 = 500,
-  height4 = 500,
-  num1 = 1,
   plot6 = FALSE,
-  width6 = 500,
-  height6 = 500,
+  obs = "TRUE",
   width7 = 500,
   height7 = 500,
   width3 = 500,
@@ -110,21 +105,11 @@ where 0 degrees represents completely horizontal labels.}
 
 \item{height5}{.}
 
-\item{num}{.}
-
 \item{plot4}{.}
-
-\item{width4}{.}
-
-\item{height4}{.}
-
-\item{num1}{.}
 
 \item{plot6}{.}
 
-\item{width6}{.}
-
-\item{height6}{.}
+\item{obs}{.}
 
 \item{width7}{.}
 
@@ -153,8 +138,8 @@ A results object containing:
   \code{results$ss$to} \tab \tab \tab \tab \tab a table \cr
   \code{results$wplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$piplot} \tab \tab \tab \tab \tab an image \cr
-  \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
-  \code{results$plot6} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot4} \tab \tab \tab \tab \tab an array of images \cr
+  \code{results$plot6} \tab \tab \tab \tab \tab an array of images \cr
   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$total} \tab \tab \tab \tab \tab an output \cr

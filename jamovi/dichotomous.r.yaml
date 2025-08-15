@@ -158,17 +158,19 @@ items:
       refs: ShinyItemAnalysis      
 
     - name: plot4
-      title: 'Expected Score Curve'
-      type: Image
+      title: 'Expected Score Curves'
+      type: Array
       visible: (plot4)
-      renderFun: .plot4
-      requiresData: true
       clearWith:
         - vars
-        - num
-        - width4
-        - height4
-          
+      items: (vars)  
+      template:
+        title: 'Item $key'
+        type: Image
+        width: 500
+        height: 500
+        renderFun: .plot4
+
     - name: inplot
       title: 'Item Infit Plot'
       type: Image

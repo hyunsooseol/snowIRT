@@ -18,25 +18,6 @@ polytomousClass <- if (requireNamespace('jmvcore'))
           
         }
         
-        # self$results$instructions$setContent(
-        #   "<html>
-        #     <head>
-        #     </head>
-        #     <body>
-        #     <div class='instructions'>
-        #     <p>____________________________________________________________________________________</p>
-        #     <p>1. Note that Polytomous model needs <b>the bottom category to be coded as 0.</b>
-        #     <p>2. <b>Person Analysis</b> will be displayed in the datasheet.</p>
-        #     <p>3. The result tables are estimated by Marginal Maximum likelihood Estimation(MMLE).</p>
-        #     <p>4. The <b>eRm</b> R package was used for the person-item map for PCM.</p>
-        #     <p>5. The rationale of snowIRT module is described in the <a href='https://bookdown.org/dkatz/Rasch_Biome/' target = '_blank'>documentation</a>.</p>
-        #     <p>6. Feature requests and bug reports can be made on my <a href='https://github.com/hyunsooseol/snowIRT/issues'  target = '_blank'>GitHub</a>.</p>
-        #     <p>____________________________________________________________________________________</p>
-        #     </div>
-        #     </body>
-        #     </html>"
-        # )
-        
         self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
           title = "Instructions",
           content = paste(
@@ -87,18 +68,18 @@ adjustment; Ho= the data fit the Rasch model."
           self$results$piplot$setSize(width, height)
         }
         
-        if (isTRUE(self$options$plot4)) {
-          width <- self$options$width4
-          height <- self$options$height4
-          self$results$plot4$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$plot6)) {
-          width <- self$options$width6
-          height <- self$options$height6
-          self$results$plot6$setSize(width, height)
-        }
-        
+        # if (isTRUE(self$options$plot4)) {
+        #   width <- self$options$width4
+        #   height <- self$options$height4
+        #   self$results$plot4$setSize(width, height)
+        # }
+        # 
+        # if (isTRUE(self$options$plot6)) {
+        #   width <- self$options$width6
+        #   height <- self$options$height6
+        #   self$results$plot6$setSize(width, height)
+        # }
+
         if (isTRUE(self$options$inplot)) {
           width <- self$options$width7
           height <- self$options$height7
@@ -817,66 +798,74 @@ adjustment; Ho= the data fit the Rasch model."
         TRUE
       },
       
-      # ICC plot-----------------
-      
-      # .prepareIccPlot = function(data) {
-      #
-      #   # item characteristic curves based on partial credit model--------
-      #   set.seed(1234)
-      #   tam <- TAM::tam.mml(resp = as.matrix(data))
-      #
-      # # ICC Plot -------
-      #
-      #   image <- self$results$plot4
-      #   image$setState(tam)
-      #
-      # },
-      
       .plot4 = function(image, ...) {
-        # ICC plot-------------------
-        
-        num <- self$options$num
         if (!self$options$plot4)
           return(FALSE)
+        
         tamobj <- private$.cache$tamobj
-        #tamobj <- private$.computeTamobj()
-        plot4 <- plot(tamobj,
-                      items = num,
-                      #type="items" produce item response curve not expected curve
-                      type = "expected",
-                      export = FALSE)
-        print(plot4)
-        TRUE
+        
+        if (is.null(tamobj)) {
+          return(FALSE)
+        }
+        
+        all_items <- self$options$vars
+        n_items <- length(all_items)
+        
+        current_item <- as.numeric(gsub("\\D", "", image$key))
+        
+        if (is.na(current_item) || current_item > n_items) {
+          return(FALSE)
+        }
+        
+        tryCatch({
+          plot_result <- plot(tamobj, 
+                              items = current_item, 
+                              type = "expected", 
+                              export = FALSE,
+                              package = "graphics")  # using graphics 
+          
+          return(TRUE)
+        }, error = function(e) {
+          cat(paste("Error plotting item", current_item, ":", e$message, "\n"))
+          return(FALSE)
+        })
       },
-      # Prepare Expected score curve functions------------
-      
-      # .prepareEscPlot = function(data) {
-      #
-      #   set.seed(1234)
-      #   tamp = TAM::tam(resp =as.matrix(data))
-      #
-      #   # Prepare Data For ESC Plot -------
-      #
-      #   image <- self$results$plot6
-      #   image$setState(tamp)
-      #
-      # },
-      #
       
       .plot6 = function(image, ...) {
-        # 'Item category for PCM'
-        num1 <- self$options$num1
         if (!self$options$plot6)
           return(FALSE)
+        
         tamobj <- private$.cache$tamobj
-        #tamobj <- private$.computeTamobj()
-        plot6 <- plot(tamobj,
-                      items = num1,
-                      type = 'items',
-                      export = FALSE)
-        print(plot6)
-        TRUE
+        
+        if (is.null(tamobj)) {
+          return(FALSE)
+        }
+        
+        all_items <- self$options$vars
+        n_items <- length(all_items)
+        
+        current_item <- as.numeric(gsub("\\D", "", image$key))
+        
+        if (is.na(current_item) || current_item > n_items) {
+          return(FALSE)
+        }
+        
+        tryCatch({
+          plot_result <- plot(tamobj, 
+                              items = current_item, 
+                              type = "items", 
+                              export = FALSE,
+                              package = "graphics",
+                              observed=self$options$obs)  
+          
+          return(TRUE)
+        }, error = function(e) {
+          cat(paste("Error plotting item", current_item, ":", e$message, "\n"))
+          return(FALSE)
+        })
       },
+      
+  
       # infit plot---------------
       
       .prepareInfitPlot = function(data) {

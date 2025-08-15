@@ -51,11 +51,11 @@ adjustment; Ho= the data fit the Rasch model."
           self$results$plot$setSize(width, height)
         }
         
-        if (isTRUE(self$options$plot4)) {
-          width <- self$options$width4
-          height <- self$options$height4
-          self$results$plot4$setSize(width, height)
-        }
+        # if (isTRUE(self$options$plot4)) {
+        #   width <- self$options$width4
+        #   height <- self$options$height4
+        #   self$results$plot4$setSize(width, height)
+        # }
         
         if (isTRUE(self$options$inplot)) {
           width <- self$options$width1
@@ -505,35 +505,43 @@ adjustment; Ho= the data fit the Rasch model."
         print(plot)
         TRUE
       },
-      # #Prepare Expected score curve functions------------
       
-      # .prepareEscPlot = function(data) {
-      #
-      #   set.seed(1234)
-      #   tamp = TAM::tam(resp =as.matrix(data))
-      #
-      # # Prepare Data For ESC Plot -------
-      #
-      #   image <- self$results$plot4
-      #   image$setState(tamp)
-      #
-      # },
+      
       .plot4 = function(image, ...) {
-        num <- self$options$num
+        
         if (!self$options$plot4)
-          return(FALSE)
-        #tamobj <- private$.computeTamobj()
+           return(FALSE)
+
         tamobj <- private$.cache$tamobj
         
-        plot4 <- plot(tamobj,
-                      items = num,
-                      #type="items" produce item response curve not expected curve
-                      type = "expected",
-                      export = FALSE)
-        print(plot4)
-        TRUE
+        if (is.null(tamobj)) {
+          return(FALSE)
+        }
+        
+        all_items <- self$options$vars
+        n_items <- length(all_items)
+        
+        current_item <- as.numeric(gsub("\\D", "", image$key))
+        
+        if (is.na(current_item) || current_item > n_items) {
+          return(FALSE)
+        }
+        
+        tryCatch({
+          plot_result <- plot(tamobj, 
+                              items = current_item, 
+                              type = "expected", 
+                              export = FALSE,
+                              package = "graphics")  # using graphics 
+          
+          return(TRUE)
+        }, error = function(e) {
+          cat(paste("Error plotting item", current_item, ":", e$message, "\n"))
+          return(FALSE)
+        })
       },
       
+
       .inPlot = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
           return(FALSE)

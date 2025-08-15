@@ -26,10 +26,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             plot3 = FALSE,
             width = 500,
             height = 500,
-            num = 1,
             plot4 = FALSE,
-            width4 = 500,
-            height4 = 500,
             width1 = 500,
             height1 = 500,
             width3 = 500,
@@ -140,23 +137,10 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "height",
                 height,
                 default=500)
-            private$..num <- jmvcore::OptionInteger$new(
-                "num",
-                num,
-                default=1,
-                min=1)
             private$..plot4 <- jmvcore::OptionBool$new(
                 "plot4",
                 plot4,
                 default=FALSE)
-            private$..width4 <- jmvcore::OptionInteger$new(
-                "width4",
-                width4,
-                default=500)
-            private$..height4 <- jmvcore::OptionInteger$new(
-                "height4",
-                height4,
-                default=500)
             private$..width1 <- jmvcore::OptionInteger$new(
                 "width1",
                 width1,
@@ -208,10 +192,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..plot3)
             self$.addOption(private$..width)
             self$.addOption(private$..height)
-            self$.addOption(private$..num)
             self$.addOption(private$..plot4)
-            self$.addOption(private$..width4)
-            self$.addOption(private$..height4)
             self$.addOption(private$..width1)
             self$.addOption(private$..height1)
             self$.addOption(private$..width3)
@@ -246,10 +227,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         plot3 = function() private$..plot3$value,
         width = function() private$..width$value,
         height = function() private$..height$value,
-        num = function() private$..num$value,
         plot4 = function() private$..plot4$value,
-        width4 = function() private$..width4$value,
-        height4 = function() private$..height4$value,
         width1 = function() private$..width1$value,
         height1 = function() private$..height1$value,
         width3 = function() private$..width3$value,
@@ -283,10 +261,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..plot3 = NA,
         ..width = NA,
         ..height = NA,
-        ..num = NA,
         ..plot4 = NA,
-        ..width4 = NA,
-        ..height4 = NA,
         ..width1 = NA,
         ..height1 = NA,
         ..width3 = NA,
@@ -504,18 +479,20 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                     "width",
                     "height"),
                 refs="ShinyItemAnalysis"))
-            self$add(jmvcore::Image$new(
+            self$add(jmvcore::Array$new(
                 options=options,
                 name="plot4",
-                title="Expected Score Curve",
+                title="Expected Score Curves",
                 visible="(plot4)",
-                renderFun=".plot4",
-                requiresData=TRUE,
                 clearWith=list(
-                    "vars",
-                    "num",
-                    "width4",
-                    "height4")))
+                    "vars"),
+                items="(vars)",
+                template=jmvcore::Image$new(
+                    options=options,
+                    title="Item $key",
+                    width=500,
+                    height=500,
+                    renderFun=".plot4")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="inplot",
@@ -655,10 +632,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot3 .
 #' @param width .
 #' @param height .
-#' @param num .
 #' @param plot4 .
-#' @param width4 .
-#' @param height4 .
 #' @param width1 .
 #' @param height1 .
 #' @param width3 .
@@ -674,7 +648,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot4} \tab \tab \tab \tab \tab an array of images \cr
 #'   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$total} \tab \tab \tab \tab \tab an output \cr
@@ -716,10 +690,7 @@ dichotomous <- function(
     plot3 = FALSE,
     width = 500,
     height = 500,
-    num = 1,
     plot4 = FALSE,
-    width4 = 500,
-    height4 = 500,
     width1 = 500,
     height1 = 500,
     width3 = 500,
@@ -758,10 +729,7 @@ dichotomous <- function(
         plot3 = plot3,
         width = width,
         height = height,
-        num = num,
         plot4 = plot4,
-        width4 = width4,
-        height4 = height4,
         width1 = width1,
         height1 = height1,
         width3 = width3,

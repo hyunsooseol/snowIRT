@@ -186,47 +186,25 @@ options:
       title: "X"
       default: 500
 
-    - name: num
-      title: Item number
-      default: 1
-      type: Integer
-      min: 1
-
     - name: plot4
       title: 'Item Characteristic Curve(ICC)'
       type: Bool
       default: false
-
-    - name: width4
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height4
-      type: Integer
-      title: "X"
-      default: 500
-
-    - name: num1
-      title: Item number
-      default: 1
-      type: Integer
-      min: 1
 
     - name: plot6
       title: 'Item category for PCM' 
       type: Bool
       default: false
       
-    - name: width6
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height6
-      type: Integer
-      title: "X"
-      default: 500
+    - name: obs
+      title: 'Observed response'
+      type: List
+      options:
+        - title: 'TRUE'
+          name:  'TRUE'
+        - title: 'FALSE'
+          name: 'FALSE'
+      default: 'TRUE'
 
     - name: width7
       type: Integer

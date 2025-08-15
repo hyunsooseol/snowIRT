@@ -26,10 +26,7 @@ dichotomous(
   plot3 = FALSE,
   width = 500,
   height = 500,
-  num = 1,
   plot4 = FALSE,
-  width4 = 500,
-  height4 = 500,
   width1 = 500,
   height1 = 500,
   width3 = 500,
@@ -82,13 +79,7 @@ where 0 degrees represents completely horizontal labels.}
 
 \item{height}{.}
 
-\item{num}{.}
-
 \item{plot4}{.}
-
-\item{width4}{.}
-
-\item{height4}{.}
 
 \item{width1}{.}
 
@@ -112,7 +103,7 @@ A results object containing:
   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
-  \code{results$plot4} \tab \tab \tab \tab \tab an image \cr
+  \code{results$plot4} \tab \tab \tab \tab \tab an array of images \cr
   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$outplot} \tab \tab \tab \tab \tab an image \cr
   \code{results$total} \tab \tab \tab \tab \tab an output \cr

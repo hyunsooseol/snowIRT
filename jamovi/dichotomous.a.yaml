@@ -146,26 +146,10 @@ options:
       title: "X"
       default: 500
 
-    - name: num
-      title: Item number
-      default: 1
-      type: Integer
-      min: 1
-
     - name: plot4
       title: 'Item Characteristic Curve(ICC)'
       type: Bool
       default: false
-
-    - name: width4
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height4
-      type: Integer
-      title: "X"
-      default: 500
 
     - name: width1
       type: Integer

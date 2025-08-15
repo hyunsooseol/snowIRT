@@ -278,28 +278,33 @@ items:
         - height5
 
     - name: plot4
-      title: 'Item Characteristic Curve(ICC)'
-      type: Image
+      title: 'Expected Score Curves'
+      type: Array
       visible: (plot4)
-      renderFun: .plot4
-      requiresData: true
       clearWith:
         - vars
-        - num
-        - width4
-        - height4
-     
+      items: (vars)  
+      template:
+        title: 'Item $key'
+        type: Image
+        width: 500
+        height: 500
+        renderFun: .plot4
+
     - name: plot6
       title: 'Item category for PCM' 
-      type: Image
+      type: Array
       visible: (plot6)
-      renderFun: .plot6
-      requiresData: true
       clearWith:
         - vars
-        - num1
-        - width6
-        - height6
+        - obs
+      items: (vars)  
+      template:
+        title: 'Item $key'
+        type: Image
+        width: 500
+        height: 400
+        renderFun: .plot6
 
     - name: inplot
       title: 'Item Infit Plot'
