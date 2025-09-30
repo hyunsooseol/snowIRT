@@ -11,7 +11,11 @@ type: R
 description: >-
   This module includes dichotomous, polytomous, and many facet model based on
   Rasch measurement model. This module also provides variouse types of DIF,
-  Generalizability theory, and Distractor analysis. 
+  Generalizability theory, and Distractor analysis.
+  
+  Please submit feedback, bug reports, and feature requests via the links
+  provided <a href = "https://github.com/hyunsooseol/snowIRT/issues" target="_blank">
+  here</a>.
 analyses:
   - title: Dichotomous Model
     name: dichotomous
