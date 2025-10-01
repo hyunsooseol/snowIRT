@@ -22,9 +22,8 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             '<div style="text-align:justify;">',
             '<ul>',
             '<li>Enter the correct answer separated by commas, but there must be no spaces between commas.</li>',
-            '<li>To resolve error messages like <b>breaks are not unique</b>, we need to add more questions and respondents.</li>',
+            '<li>The distractor analysis uses a fixed 3-group structure(33%-34%-33%) to ensure stable and reliable results.</li>',
             '<li>By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</li>',
-            '<li><b>Missing values handling:</b> Set missing values to 0 or "WRONG" in jamovi data view to prevent scoring errors.</li>',
             '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
             '</ul></div></div>'
           )
@@ -58,47 +57,36 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       },
       
       .run = function() {
-        if (length(self$options$vars) < 2)
-          return()
+        if (length(self$options$vars) < 2) return()
         
-        # 결측값 확인 및 경고 메시지
+        # missing values warning---
+        
         data <- self$data
         has_missing <- any(is.na(data))
         
         if (has_missing) {
-          # 사용자에게 경고 메시지 표시
+         
           self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
             title = "⚠️ Missing Values Detected",
             content = paste(
-              '<div style="border: 2px solid #ffebcc; border-radius: 15px; padding: 15px; background-color: #fff3e0; margin-top: 10px;">',
-              '<div style="text-align:justify;">',
-              '<h4 style="color: #e65100;">Action Required:</h4>',
-              '<p><strong>Missing values detected in your data!</strong></p>',
-              '<p>To ensure proper scoring, please:</p>',
-              '<ol>',
-              '<li>Go to jamovi Data view</li>',
-              '<li>Select cells with missing values</li>',
-              '<li>Replace them with <b>0</b> or <b>WRONG</b> (for incorrect answers)</li>',
+              '<div style="border: 2px solid #ff9800; border-radius: 10px; padding: 12px; background-color: #fff3e0;">',
+              '<p><strong>🔍 Missing responses found - Please verify:</strong></p>',
+              '<ol style="text-align: left; margin: 10px 0; padding-left: 20px;">',
+              '<li><strong>Check original answer sheets first</strong><br>',
+              '<span style="font-size: 0.9em; color: #666;">Enter the actual response if student answered</span></li>',
+              '<li><strong>If truly blank or invalid response</strong><br>',
+              '<span style="font-size: 0.9em; color: #666;">Enter <b>0</b> for incorrect scoring</span></li>',
               '</ol>',
-              '<p><strong>Why this matters:</strong> Missing values cannot be properly scored and may cause analysis errors.</p>',
-              '</div></div>',
-              '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
-              '<div style="text-align:justify;">',
-              '<h4>General Instructions:</h4>',
-              '<ul>',
-              '<li>Enter the correct answer separated by commas, but there must be no spaces between commas.</li>',
-              '<li>To resolve error messages like <b>breaks are not unique</b>, we need to add more questions and respondents.</li>',
-              '<li>By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</li>',
-              '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
-              '</ul></div></div>'
+              '<p style="margin-top: 10px; font-size: 0.9em; color: #d84315;">',
+              '<strong>⚠️ Analysis cannot proceed until all cells are filled</strong></p>',
+              '</div>'
             )
           ))
           
-          # 결측값이 있으면 분석을 중단하고 사용자에게 안내
           return()
         }
         
-        # 결측값이 없는 경우에만 분석 진행
+
         key <- self$options$key
         key1 <- strsplit(self$options$key, ',')[[1]]
         
@@ -368,15 +356,16 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       },
       
       .computeRES = function(data, key1) {
-        group1 <- self$options$group1
+        #group1 <- self$options$group1
         
         dicho <- CTT::score(data, key1, output.scored = TRUE)
         private$.cache$dicho <- dicho
         
         private$.cache$counts <- CTT::distractor.analysis(data, key1)
         private$.cache$prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
-        private$.cache$ts <- CTT::distractorAnalysis(data, key1, nGroups = group1)
         private$.cache$res <- CTT::distractorAnalysis(data, key1)
+        
+        private$.cache$ts <- CTT::distractorAnalysis(data, key1, defineGroups = c(0.33, 0.34, 0.33))
       }
     )
   )

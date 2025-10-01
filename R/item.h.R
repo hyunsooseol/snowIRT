@@ -11,7 +11,6 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             num = 1,
             num1 = 1,
             group = 3,
-            group1 = 3,
             count = TRUE,
             prop = FALSE,
             sum = FALSE,
@@ -64,11 +63,6 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 group,
                 default=3,
                 min=2)
-            private$..group1 <- jmvcore::OptionInteger$new(
-                "group1",
-                group1,
-                default=3,
-                min=3)
             private$..count <- jmvcore::OptionBool$new(
                 "count",
                 count,
@@ -160,7 +154,6 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..num)
             self$.addOption(private$..num1)
             self$.addOption(private$..group)
-            self$.addOption(private$..group1)
             self$.addOption(private$..count)
             self$.addOption(private$..prop)
             self$.addOption(private$..sum)
@@ -189,7 +182,6 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         num = function() private$..num$value,
         num1 = function() private$..num1$value,
         group = function() private$..group$value,
-        group1 = function() private$..group1$value,
         count = function() private$..count$value,
         prop = function() private$..prop$value,
         sum = function() private$..sum$value,
@@ -217,7 +209,6 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..num = NA,
         ..num1 = NA,
         ..group = NA,
-        ..group1 = NA,
         ..count = NA,
         ..prop = NA,
         ..sum = NA,
@@ -412,8 +403,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     title="Item $key",
                     clearWith=list(
                         "vars",
-                        "key",
-                        "group1"),
+                        "key"),
                     columns=list(
                         list(
                             `name`="name", 
@@ -523,7 +513,6 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param num .
 #' @param num1 .
 #' @param group .
-#' @param group1 .
 #' @param count .
 #' @param prop .
 #' @param sum .
@@ -574,7 +563,6 @@ item <- function(
     num = 1,
     num1 = 1,
     group = 3,
-    group1 = 3,
     count = TRUE,
     prop = FALSE,
     sum = FALSE,
@@ -612,7 +600,6 @@ item <- function(
         num = num,
         num1 = num1,
         group = group,
-        group1 = group1,
         count = count,
         prop = prop,
         sum = sum,

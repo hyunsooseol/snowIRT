@@ -11,7 +11,6 @@ item(
   num = 1,
   num1 = 1,
   group = 3,
-  group1 = 3,
   count = TRUE,
   prop = FALSE,
   sum = FALSE,
@@ -45,8 +44,6 @@ item(
 \item{num1}{.}
 
 \item{group}{.}
-
-\item{group1}{.}
 
 \item{count}{.}
 
