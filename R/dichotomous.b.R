@@ -474,36 +474,42 @@ adjustment; Ho= the data fit the Rasch model."
       .plot4 = function(image, ...) {
         
         if (!self$options$plot4)
-           return(FALSE)
-
-        tamobj <- private$.cache$tamobj
-        
-        if (is.null(tamobj)) {
           return(FALSE)
-        }
+        
+        tamobj <- private$.cache$tamobj
+        if (is.null(tamobj))
+          return(FALSE)
         
         all_items <- self$options$vars
         n_items <- length(all_items)
         
-        current_item <- as.numeric(gsub("\\D", "", image$key))
+        # 🔴 핵심 수정 부분
+        current_item <- match(image$key, all_items)
         
-        if (is.na(current_item) || current_item > n_items) {
+        if (is.na(current_item) || current_item > n_items)
           return(FALSE)
-        }
         
         tryCatch({
-          plot_result <- plot(tamobj, 
-                              items = current_item, 
-                              type = "expected", 
-                              export = FALSE,
-                              package = "graphics")  # using graphics 
-          
+          plot(
+            tamobj,
+            items  = current_item,
+            type   = "expected",
+            export = FALSE,
+            package = "graphics"
+          )
           return(TRUE)
         }, error = function(e) {
-          cat(paste("Error plotting item", current_item, ":", e$message, "\n"))
+          cat(
+            paste(
+              "Error plotting item", image$key,
+              "(index:", current_item, "):",
+              e$message, "\n"
+            )
+          )
           return(FALSE)
         })
       },
+      
       
 
       .inPlot = function(image, ggtheme, theme, ...) {
