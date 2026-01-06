@@ -28,23 +28,6 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         ))
         if (self$options$clr)
           self$results$clr$setNote("Note", "'Overall' indicates test of homogeneity.")
-        if (isTRUE(self$options$plot)) {
-          width <- self$options$width
-          height <- self$options$height
-          self$results$plot$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$plot1)) {
-          width <- self$options$width1
-          height <- self$options$height1
-          self$results$plot1$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$plot2)) {
-          width <- self$options$width2
-          height <- self$options$height2
-          self$results$plot2$setSize(width, height)
-        }
       },
       #########################################################
       

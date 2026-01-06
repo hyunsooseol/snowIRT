@@ -316,9 +316,7 @@ items:
         - dep
         - id
         - facet
-        - width1
-        - height1
- 
+
     - name: plot2
       title: 'Task plot'
       type:  Image
@@ -329,9 +327,7 @@ items:
         - dep
         - id
         - facet
-        - width2
-        - height2
- 
+
     - name: plot3
       title: 'Interaction: Rater X Task'
       type:  Image
@@ -342,8 +338,6 @@ items:
         - dep
         - id
         - facet
-        - width3
-        - height3
         - angle
 
     - name:  plot7
@@ -356,8 +350,6 @@ items:
         - dep
         - id
         - facet
-        - width7
-        - height7
         - angle1
 
     - name:  plot8
@@ -370,9 +362,7 @@ items:
         - dep
         - id
         - facet
-        - width8
-        - height8
- 
+
     - name: plot4
       title: 'Wright Map'
       type:  Image
@@ -383,8 +373,6 @@ items:
         - dep
         - id
         - facet
-        - width4
-        - height4   
 
     - name: plot5
       title: 'Expected Scores Curve'
@@ -398,8 +386,6 @@ items:
         - id
         - facet
         - num
-        - width5
-        - height5
 
     - name: plot6
       title: 'Item Response Curve'
@@ -413,8 +399,6 @@ items:
         - id
         - facet
         - num1
-        - width6
-        - height6
 
 
 ...

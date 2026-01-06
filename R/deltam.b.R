@@ -37,19 +37,7 @@ deltamClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (self$options$fixed)
           self$results$fixed$setNote("Note", "Detection threshold: 1.5")
         
-        # Configure plot sizes conditionally
-        if (isTRUE(self$options$plot)) {
-          width <- self$options$width
-          height <- self$options$height
-          self$results$plot$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$plot1)) {
-          width <- self$options$width1
-          height <- self$options$height1
-          self$results$plot1$setSize(width, height)
-        }
-        
+
         # Early completion if insufficient variables
         if (length(self$options$vars) <= 1)
           self$setStatus('complete')

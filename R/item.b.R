@@ -33,27 +33,6 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             "Note",
             "ULI:Upper-Lower Index based on 3 groups, RIT:Item-Total correlation, RIR: Item-Rest correlation. Missing values should be recoded as 0 or incorrect answer in jamovi."
           )
-        if (isTRUE(self$options$plot)) {
-          width <- self$options$width
-          height <- self$options$height
-          self$results$plot$setSize(width, height)
-        }
-        if (isTRUE(self$options$plot1)) {
-          width <- self$options$width1
-          height <- self$options$height1
-          self$results$plot1$setSize(width, height)
-        }
-        if (isTRUE(self$options$plot2)) {
-          width <- self$options$width2
-          height <- self$options$height2
-          self$results$plot2$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$plot3)) {
-          width <- self$options$width3
-          height <- self$options$height3
-          self$results$plot3$setSize(width, height)
-        }
       },
       
       .run = function() {

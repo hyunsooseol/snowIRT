@@ -52,8 +52,6 @@ items:
       clearWith:
         - vars
         - group
-        - width
-        - height
 
     - name: normal
       title: 'Perpendicular distances(after the last iteration)'
@@ -87,8 +85,7 @@ items:
       clearWith:
         - vars
         - group
-        - width1
-        - height1
+
 ...
 
 

@@ -21,33 +21,17 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             pca = FALSE,
             local = FALSE,
             plot1 = FALSE,
-            width1 = 500,
-            height1 = 500,
             plot2 = FALSE,
-            width2 = 500,
-            height2 = 500,
             plot3 = FALSE,
-            width3 = 500,
-            height3 = 500,
             angle = 0,
             plot4 = FALSE,
-            width4 = 500,
-            height4 = 500,
             plot5 = FALSE,
             num = 1,
-            width5 = 500,
-            height5 = 500,
             plot6 = FALSE,
             num1 = 1,
-            width6 = 500,
-            height6 = 500,
             plot7 = FALSE,
-            width7 = 500,
-            height7 = 500,
             angle1 = 0,
-            plot8 = FALSE,
-            width8 = 500,
-            height8 = 500, ...) {
+            plot8 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -124,38 +108,14 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot1",
                 plot1,
                 default=FALSE)
-            private$..width1 <- jmvcore::OptionInteger$new(
-                "width1",
-                width1,
-                default=500)
-            private$..height1 <- jmvcore::OptionInteger$new(
-                "height1",
-                height1,
-                default=500)
             private$..plot2 <- jmvcore::OptionBool$new(
                 "plot2",
                 plot2,
                 default=FALSE)
-            private$..width2 <- jmvcore::OptionInteger$new(
-                "width2",
-                width2,
-                default=500)
-            private$..height2 <- jmvcore::OptionInteger$new(
-                "height2",
-                height2,
-                default=500)
             private$..plot3 <- jmvcore::OptionBool$new(
                 "plot3",
                 plot3,
                 default=FALSE)
-            private$..width3 <- jmvcore::OptionInteger$new(
-                "width3",
-                width3,
-                default=500)
-            private$..height3 <- jmvcore::OptionInteger$new(
-                "height3",
-                height3,
-                default=500)
             private$..angle <- jmvcore::OptionNumber$new(
                 "angle",
                 angle,
@@ -166,14 +126,6 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot4",
                 plot4,
                 default=FALSE)
-            private$..width4 <- jmvcore::OptionInteger$new(
-                "width4",
-                width4,
-                default=500)
-            private$..height4 <- jmvcore::OptionInteger$new(
-                "height4",
-                height4,
-                default=500)
             private$..plot5 <- jmvcore::OptionBool$new(
                 "plot5",
                 plot5,
@@ -183,14 +135,6 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 num,
                 default=1,
                 min=1)
-            private$..width5 <- jmvcore::OptionInteger$new(
-                "width5",
-                width5,
-                default=500)
-            private$..height5 <- jmvcore::OptionInteger$new(
-                "height5",
-                height5,
-                default=500)
             private$..plot6 <- jmvcore::OptionBool$new(
                 "plot6",
                 plot6,
@@ -200,26 +144,10 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 num1,
                 default=1,
                 min=1)
-            private$..width6 <- jmvcore::OptionInteger$new(
-                "width6",
-                width6,
-                default=500)
-            private$..height6 <- jmvcore::OptionInteger$new(
-                "height6",
-                height6,
-                default=500)
             private$..plot7 <- jmvcore::OptionBool$new(
                 "plot7",
                 plot7,
                 default=FALSE)
-            private$..width7 <- jmvcore::OptionInteger$new(
-                "width7",
-                width7,
-                default=500)
-            private$..height7 <- jmvcore::OptionInteger$new(
-                "height7",
-                height7,
-                default=500)
             private$..angle1 <- jmvcore::OptionNumber$new(
                 "angle1",
                 angle1,
@@ -230,14 +158,6 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot8",
                 plot8,
                 default=FALSE)
-            private$..width8 <- jmvcore::OptionInteger$new(
-                "width8",
-                width8,
-                default=500)
-            private$..height8 <- jmvcore::OptionInteger$new(
-                "height8",
-                height8,
-                default=500)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
@@ -254,33 +174,17 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..pca)
             self$.addOption(private$..local)
             self$.addOption(private$..plot1)
-            self$.addOption(private$..width1)
-            self$.addOption(private$..height1)
             self$.addOption(private$..plot2)
-            self$.addOption(private$..width2)
-            self$.addOption(private$..height2)
             self$.addOption(private$..plot3)
-            self$.addOption(private$..width3)
-            self$.addOption(private$..height3)
             self$.addOption(private$..angle)
             self$.addOption(private$..plot4)
-            self$.addOption(private$..width4)
-            self$.addOption(private$..height4)
             self$.addOption(private$..plot5)
             self$.addOption(private$..num)
-            self$.addOption(private$..width5)
-            self$.addOption(private$..height5)
             self$.addOption(private$..plot6)
             self$.addOption(private$..num1)
-            self$.addOption(private$..width6)
-            self$.addOption(private$..height6)
             self$.addOption(private$..plot7)
-            self$.addOption(private$..width7)
-            self$.addOption(private$..height7)
             self$.addOption(private$..angle1)
             self$.addOption(private$..plot8)
-            self$.addOption(private$..width8)
-            self$.addOption(private$..height8)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -298,33 +202,17 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pca = function() private$..pca$value,
         local = function() private$..local$value,
         plot1 = function() private$..plot1$value,
-        width1 = function() private$..width1$value,
-        height1 = function() private$..height1$value,
         plot2 = function() private$..plot2$value,
-        width2 = function() private$..width2$value,
-        height2 = function() private$..height2$value,
         plot3 = function() private$..plot3$value,
-        width3 = function() private$..width3$value,
-        height3 = function() private$..height3$value,
         angle = function() private$..angle$value,
         plot4 = function() private$..plot4$value,
-        width4 = function() private$..width4$value,
-        height4 = function() private$..height4$value,
         plot5 = function() private$..plot5$value,
         num = function() private$..num$value,
-        width5 = function() private$..width5$value,
-        height5 = function() private$..height5$value,
         plot6 = function() private$..plot6$value,
         num1 = function() private$..num1$value,
-        width6 = function() private$..width6$value,
-        height6 = function() private$..height6$value,
         plot7 = function() private$..plot7$value,
-        width7 = function() private$..width7$value,
-        height7 = function() private$..height7$value,
         angle1 = function() private$..angle1$value,
-        plot8 = function() private$..plot8$value,
-        width8 = function() private$..width8$value,
-        height8 = function() private$..height8$value),
+        plot8 = function() private$..plot8$value),
     private = list(
         ..dep = NA,
         ..id = NA,
@@ -341,33 +229,17 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..pca = NA,
         ..local = NA,
         ..plot1 = NA,
-        ..width1 = NA,
-        ..height1 = NA,
         ..plot2 = NA,
-        ..width2 = NA,
-        ..height2 = NA,
         ..plot3 = NA,
-        ..width3 = NA,
-        ..height3 = NA,
         ..angle = NA,
         ..plot4 = NA,
-        ..width4 = NA,
-        ..height4 = NA,
         ..plot5 = NA,
         ..num = NA,
-        ..width5 = NA,
-        ..height5 = NA,
         ..plot6 = NA,
         ..num1 = NA,
-        ..width6 = NA,
-        ..height6 = NA,
         ..plot7 = NA,
-        ..width7 = NA,
-        ..height7 = NA,
         ..angle1 = NA,
-        ..plot8 = NA,
-        ..width8 = NA,
-        ..height8 = NA)
+        ..plot8 = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -723,9 +595,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet",
-                    "width1",
-                    "height1")))
+                    "facet")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot2",
@@ -736,9 +606,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet",
-                    "width2",
-                    "height2")))
+                    "facet")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
@@ -750,8 +618,6 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "width3",
-                    "height3",
                     "angle")))
             self$add(jmvcore::Image$new(
                 options=options,
@@ -764,8 +630,6 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "width7",
-                    "height7",
                     "angle1")))
             self$add(jmvcore::Image$new(
                 options=options,
@@ -777,9 +641,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet",
-                    "width8",
-                    "height8")))
+                    "facet")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot4",
@@ -790,9 +652,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet",
-                    "width4",
-                    "height4")))
+                    "facet")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot5",
@@ -805,9 +665,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "num",
-                    "width5",
-                    "height5")))
+                    "num")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot6",
@@ -820,9 +678,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "num1",
-                    "width6",
-                    "height6")))}))
+                    "num1")))}))
 
 facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "facetBase",
@@ -864,33 +720,17 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param pca .
 #' @param local .
 #' @param plot1 .
-#' @param width1 .
-#' @param height1 .
 #' @param plot2 .
-#' @param width2 .
-#' @param height2 .
 #' @param plot3 .
-#' @param width3 .
-#' @param height3 .
 #' @param angle .
 #' @param plot4 .
-#' @param width4 .
-#' @param height4 .
 #' @param plot5 .
 #' @param num .
-#' @param width5 .
-#' @param height5 .
 #' @param plot6 .
 #' @param num1 .
-#' @param width6 .
-#' @param height6 .
 #' @param plot7 .
-#' @param width7 .
-#' @param height7 .
 #' @param angle1 .
 #' @param plot8 .
-#' @param width8 .
-#' @param height8 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -940,33 +780,17 @@ facet <- function(
     pca = FALSE,
     local = FALSE,
     plot1 = FALSE,
-    width1 = 500,
-    height1 = 500,
     plot2 = FALSE,
-    width2 = 500,
-    height2 = 500,
     plot3 = FALSE,
-    width3 = 500,
-    height3 = 500,
     angle = 0,
     plot4 = FALSE,
-    width4 = 500,
-    height4 = 500,
     plot5 = FALSE,
     num = 1,
-    width5 = 500,
-    height5 = 500,
     plot6 = FALSE,
     num1 = 1,
-    width6 = 500,
-    height6 = 500,
     plot7 = FALSE,
-    width7 = 500,
-    height7 = 500,
     angle1 = 0,
-    plot8 = FALSE,
-    width8 = 500,
-    height8 = 500) {
+    plot8 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -1000,33 +824,17 @@ facet <- function(
         pca = pca,
         local = local,
         plot1 = plot1,
-        width1 = width1,
-        height1 = height1,
         plot2 = plot2,
-        width2 = width2,
-        height2 = height2,
         plot3 = plot3,
-        width3 = width3,
-        height3 = height3,
         angle = angle,
         plot4 = plot4,
-        width4 = width4,
-        height4 = height4,
         plot5 = plot5,
         num = num,
-        width5 = width5,
-        height5 = height5,
         plot6 = plot6,
         num1 = num1,
-        width6 = width6,
-        height6 = height6,
         plot7 = plot7,
-        width7 = width7,
-        height7 = height7,
         angle1 = angle1,
-        plot8 = plot8,
-        width8 = width8,
-        height8 = height8)
+        plot8 = plot8)
 
     analysis <- facetClass$new(
         options = options,

@@ -263,9 +263,7 @@ items:
       refs: ShinyItemAnalysis
       clearWith:
         - vars
-        - width
-        - height
-      
+
     - name: piplot
       title: 'Person-item map for PCM '
       type: Image
@@ -274,8 +272,6 @@ items:
       refs: eRm
       clearWith:
         - vars
-        - width5
-        - height5
 
     - name: plot4
       title: 'Item Characteristic Curve'
@@ -287,8 +283,6 @@ items:
       template:
         title: 'Item $key'
         type: Image
-        width: 500
-        height: 500
         renderFun: .plot4
 
     - name: plot6
@@ -302,8 +296,6 @@ items:
       template:
         title: 'Item $key'
         type: Image
-        width: 500
-        height: 400
         renderFun: .plot6
 
     - name: inplot
@@ -314,8 +306,6 @@ items:
       clearWith:
         - vars
         - angle
-        - width7
-        - height7
 
     - name: outplot
       title: 'Item Outfit Plot'
@@ -325,8 +315,6 @@ items:
       clearWith:
         - vars
         - angle
-        - width7
-        - height7
 
     - name: total
       title: Total
@@ -389,8 +377,6 @@ items:
       refs: snowIRT 
       clearWith:
             - vars
-            - width2
-            - height2
 
     - name:  plot3
       title: 'Person Fit Plot'
@@ -401,6 +387,4 @@ items:
       refs: snowIRT 
       clearWith:
             - vars
-            - width3
-            - plot3
 ...

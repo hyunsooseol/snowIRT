@@ -92,45 +92,15 @@ options:
       type: Bool
       default: false
 
-    - name: width1
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height1
-      type: Integer
-      title: "X"
-      default: 500      
-
     - name: plot2
       title: 'Task'
       type: Bool
       default: false
 
-    - name: width2
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height2
-      type: Integer
-      title: "X"
-      default: 500      
-
     - name: plot3
       title: 'Rater X Task'
       type: Bool
       default: false
-
-    - name: width3
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height3
-      type: Integer
-      title: "X"
-      default: 500      
 
     - name: angle
       title: Angle of x-axis labels
@@ -144,16 +114,6 @@ options:
       type: Bool
       default: false      
 
-    - name: width4
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height4
-      type: Integer
-      title: "X"
-      default: 500   
-
     - name: plot5
       title: 'Expected scores curve'
       type: Bool
@@ -164,16 +124,6 @@ options:
       default: 1
       type: Integer
       min: 1
-
-    - name: width5
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height5
-      type: Integer
-      title: "X"
-      default: 500   
 
     - name: plot6
       title: 'Item response curve'
@@ -186,30 +136,12 @@ options:
       type: Integer
       min: 1
 
-    - name: width6
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height6
-      type: Integer
-      title: "X"
-      default: 500       
 
     - name: plot7
       title: 'Interaction fit'
       type: Bool
       default: false      
 
-    - name: width7
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height7
-      type: Integer
-      title: "X"
-      default: 500      
 
     - name: angle1
       title: Angle of x-axis labels
@@ -223,14 +155,5 @@ options:
       type: Bool
       default: false      
 
-    - name: width8
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height8
-      type: Integer
-      title: "X"
-      default: 500   
 
 ...

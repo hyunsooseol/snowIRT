@@ -86,8 +86,6 @@ items:
         - vars
         - group
         - padjust
-        - width1
-        - height1
 
     - name: plot1
       title: 'Mantel-Haenszel plot'
@@ -99,8 +97,6 @@ items:
         - vars
         - group
         - padjust1
-        - width3
-        - height3
 
     - name: gmh
       title:  '` Generalized Mantel-Haenszel method - ${padjust2}`'
@@ -140,8 +136,6 @@ items:
         - vars
         - group
         - padjust2
-        - width4
-        - height4
 
     - name: plot3
       title: 'Item Characteristic Curve plot for DIF'
@@ -153,8 +147,6 @@ items:
         - vars
         - group
         - padjust
-        - width2
-        - height2
         - num
 
 ...

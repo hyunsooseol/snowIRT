@@ -38,22 +38,7 @@ difClass <- if (requireNamespace('jmvcore'))
           )
         }
         
-        # 한 번의 반복문으로 모든 플롯 크기 설정
-        plots <- list(
-          list(name = "zplot", width = "width1", height = "height1"),
-          list(name = "plot3", width = "width2", height = "height2"),
-          list(name = "plot1", width = "width3", height = "height3"),
-          list(name = "plot2", width = "width4", height = "height4")
-        )
-        for (plot in plots) {
-          if (isTRUE(self$options[[plot$name]])) {
-            self$results[[plot$name]]$setSize(
-              self$options[[plot$width]], 
-              self$options[[plot$height]]
-            )
-          }
-        }
-        
+
         if (length(self$options$vars) <= 1)
           self$setStatus('complete')
       },

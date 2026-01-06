@@ -121,9 +121,7 @@ items:
         - group
         - model 
         - num
-        - width
-        - height
-        
+
     - name: plot1
       title: DIF using total scores
       type:  Image
@@ -135,8 +133,6 @@ items:
         - group
         - model 
         - num 
-        - width1
-        - height1
 
     - name: plot2
       title: DIF using class intervals
@@ -150,6 +146,4 @@ items:
         - model 
         - num 
         - ci
-        - width2
-        - height2
 ...

@@ -24,15 +24,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             plot2 = FALSE,
             st = FALSE,
             plot3 = FALSE,
-            width = 500,
-            height = 500,
-            plot4 = FALSE,
-            width1 = 500,
-            height1 = 500,
-            width3 = 500,
-            height3 = 500,
-            width2 = 500,
-            height2 = 500, ...) {
+            plot4 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -129,42 +121,10 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "plot3",
                 plot3,
                 default=FALSE)
-            private$..width <- jmvcore::OptionInteger$new(
-                "width",
-                width,
-                default=500)
-            private$..height <- jmvcore::OptionInteger$new(
-                "height",
-                height,
-                default=500)
             private$..plot4 <- jmvcore::OptionBool$new(
                 "plot4",
                 plot4,
                 default=FALSE)
-            private$..width1 <- jmvcore::OptionInteger$new(
-                "width1",
-                width1,
-                default=500)
-            private$..height1 <- jmvcore::OptionInteger$new(
-                "height1",
-                height1,
-                default=500)
-            private$..width3 <- jmvcore::OptionInteger$new(
-                "width3",
-                width3,
-                default=500)
-            private$..height3 <- jmvcore::OptionInteger$new(
-                "height3",
-                height3,
-                default=500)
-            private$..width2 <- jmvcore::OptionInteger$new(
-                "width2",
-                width2,
-                default=500)
-            private$..height2 <- jmvcore::OptionInteger$new(
-                "height2",
-                height2,
-                default=500)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -190,15 +150,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..plot2)
             self$.addOption(private$..st)
             self$.addOption(private$..plot3)
-            self$.addOption(private$..width)
-            self$.addOption(private$..height)
             self$.addOption(private$..plot4)
-            self$.addOption(private$..width1)
-            self$.addOption(private$..height1)
-            self$.addOption(private$..width3)
-            self$.addOption(private$..height3)
-            self$.addOption(private$..width2)
-            self$.addOption(private$..height2)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -225,15 +177,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         plot2 = function() private$..plot2$value,
         st = function() private$..st$value,
         plot3 = function() private$..plot3$value,
-        width = function() private$..width$value,
-        height = function() private$..height$value,
-        plot4 = function() private$..plot4$value,
-        width1 = function() private$..width1$value,
-        height1 = function() private$..height1$value,
-        width3 = function() private$..width3$value,
-        height3 = function() private$..height3$value,
-        width2 = function() private$..width2$value,
-        height2 = function() private$..height2$value),
+        plot4 = function() private$..plot4$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -259,15 +203,7 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..plot2 = NA,
         ..st = NA,
         ..plot3 = NA,
-        ..width = NA,
-        ..height = NA,
-        ..plot4 = NA,
-        ..width1 = NA,
-        ..height1 = NA,
-        ..width3 = NA,
-        ..height3 = NA,
-        ..width2 = NA,
-        ..height2 = NA)
+        ..plot4 = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -475,9 +411,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 renderFun=".plot",
                 visible="(wrightmap)",
                 clearWith=list(
-                    "vars",
-                    "width",
-                    "height"),
+                    "vars"),
                 refs="ShinyItemAnalysis"))
             self$add(jmvcore::Array$new(
                 options=options,
@@ -490,8 +424,6 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 template=jmvcore::Image$new(
                     options=options,
                     title="Item $key",
-                    width=500,
-                    height=500,
                     renderFun=".plot4")))
             self$add(jmvcore::Image$new(
                 options=options,
@@ -501,9 +433,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 renderFun=".inPlot",
                 clearWith=list(
                     "vars",
-                    "angle",
-                    "width1",
-                    "height1")))
+                    "angle")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="outplot",
@@ -512,9 +442,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 renderFun=".outPlot",
                 clearWith=list(
                     "vars",
-                    "angle",
-                    "width1",
-                    "height1")))
+                    "angle")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="total",
@@ -570,9 +498,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 renderFun=".plot3",
                 refs="snowIRT",
                 clearWith=list(
-                    "vars",
-                    "width3",
-                    "height3")))
+                    "vars")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot2",
@@ -582,9 +508,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 renderFun=".plot2",
                 refs="snowIRT",
                 clearWith=list(
-                    "vars",
-                    "width2",
-                    "height2")))}))
+                    "vars")))}))
 
 dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "dichotomousBase",
@@ -630,15 +554,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot2 .
 #' @param st .
 #' @param plot3 .
-#' @param width .
-#' @param height .
 #' @param plot4 .
-#' @param width1 .
-#' @param height1 .
-#' @param width3 .
-#' @param height3 .
-#' @param width2 .
-#' @param height2 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -688,15 +604,7 @@ dichotomous <- function(
     plot2 = FALSE,
     st = FALSE,
     plot3 = FALSE,
-    width = 500,
-    height = 500,
-    plot4 = FALSE,
-    width1 = 500,
-    height1 = 500,
-    width3 = 500,
-    height3 = 500,
-    width2 = 500,
-    height2 = 500) {
+    plot4 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dichotomous requires jmvcore to be installed (restart may be required)")
@@ -727,15 +635,7 @@ dichotomous <- function(
         plot2 = plot2,
         st = st,
         plot3 = plot3,
-        width = width,
-        height = height,
-        plot4 = plot4,
-        width1 = width1,
-        height1 = height1,
-        width3 = width3,
-        height3 = height3,
-        width2 = width2,
-        height2 = height2)
+        plot4 = plot4)
 
     analysis <- dichotomousClass$new(
         options = options,

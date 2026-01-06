@@ -12,11 +12,7 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             plot = FALSE,
             normal = FALSE,
             puri = NULL,
-            plot1 = FALSE,
-            width = 500,
-            height = 500,
-            width1 = 500,
-            height1 = 500, ...) {
+            plot1 = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -62,22 +58,6 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot1",
                 plot1,
                 default=FALSE)
-            private$..width <- jmvcore::OptionInteger$new(
-                "width",
-                width,
-                default=500)
-            private$..height <- jmvcore::OptionInteger$new(
-                "height",
-                height,
-                default=500)
-            private$..width1 <- jmvcore::OptionInteger$new(
-                "width1",
-                width1,
-                default=500)
-            private$..height1 <- jmvcore::OptionInteger$new(
-                "height1",
-                height1,
-                default=500)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
@@ -86,10 +66,6 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..normal)
             self$.addOption(private$..puri)
             self$.addOption(private$..plot1)
-            self$.addOption(private$..width)
-            self$.addOption(private$..height)
-            self$.addOption(private$..width1)
-            self$.addOption(private$..height1)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -98,11 +74,7 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot = function() private$..plot$value,
         normal = function() private$..normal$value,
         puri = function() private$..puri$value,
-        plot1 = function() private$..plot1$value,
-        width = function() private$..width$value,
-        height = function() private$..height$value,
-        width1 = function() private$..width1$value,
-        height1 = function() private$..height1$value),
+        plot1 = function() private$..plot1$value),
     private = list(
         ..vars = NA,
         ..group = NA,
@@ -110,11 +82,7 @@ deltamOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..plot = NA,
         ..normal = NA,
         ..puri = NA,
-        ..plot1 = NA,
-        ..width = NA,
-        ..height = NA,
-        ..width1 = NA,
-        ..height1 = NA)
+        ..plot1 = NA)
 )
 
 deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -185,9 +153,7 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".plot",
                 clearWith=list(
                     "vars",
-                    "group",
-                    "width",
-                    "height")))
+                    "group")))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="normal",
@@ -220,9 +186,7 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".plot1",
                 clearWith=list(
                     "vars",
-                    "group",
-                    "width1",
-                    "height1")))}))
+                    "group")))}))
 
 deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "deltamBase",
@@ -256,10 +220,6 @@ deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param normal .
 #' @param puri .
 #' @param plot1 .
-#' @param width .
-#' @param height .
-#' @param width1 .
-#' @param height1 .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -287,11 +247,7 @@ deltam <- function(
     plot = FALSE,
     normal = FALSE,
     puri,
-    plot1 = FALSE,
-    width = 500,
-    height = 500,
-    width1 = 500,
-    height1 = 500) {
+    plot1 = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("deltam requires jmvcore to be installed (restart may be required)")
@@ -312,11 +268,7 @@ deltam <- function(
         plot = plot,
         normal = normal,
         puri = puri,
-        plot1 = plot1,
-        width = width,
-        height = height,
-        width1 = width1,
-        height1 = height1)
+        plot1 = plot1)
 
     analysis <- deltamClass$new(
         options = options,

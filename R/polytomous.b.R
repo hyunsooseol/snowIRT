@@ -55,53 +55,6 @@ adjustment; Ho= the data fit the Rasch model."
             "Note",
             "The Thurstonian threshold for a score category is defined as the ability at which the probability of achieving that score or higher reaches 0.50."
           )
-        if (isTRUE(self$options$wplot)) {
-          width <- self$options$width
-          height <- self$options$height
-          self$results$wplot$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$piplot)) {
-          width <- self$options$width5
-          height <- self$options$height5
-          self$results$piplot$setSize(width, height)
-        }
-        
-        # if (isTRUE(self$options$plot4)) {
-        #   width <- self$options$width4
-        #   height <- self$options$height4
-        #   self$results$plot4$setSize(width, height)
-        # }
-        # 
-        # if (isTRUE(self$options$plot6)) {
-        #   width <- self$options$width6
-        #   height <- self$options$height6
-        #   self$results$plot6$setSize(width, height)
-        # }
-
-        if (isTRUE(self$options$inplot)) {
-          width <- self$options$width7
-          height <- self$options$height7
-          self$results$inplot$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$outplot)) {
-          width <- self$options$width7
-          height <- self$options$height7
-          self$results$outplot$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$plot3)) {
-          width <- self$options$width3
-          height <- self$options$height3
-          self$results$plot3$setSize(width, height)
-        }
-        
-        if (isTRUE(self$options$plot2)) {
-          width <- self$options$width2
-          height <- self$options$height2
-          self$results$plot2$setSize(width, height)
-        }
       },
       
       .run = function() {

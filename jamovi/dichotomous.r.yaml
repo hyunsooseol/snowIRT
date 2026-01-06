@@ -153,8 +153,6 @@ items:
       visible: (wrightmap)
       clearWith:
         - vars
-        - width
-        - height
       refs: ShinyItemAnalysis      
 
     - name: plot4
@@ -167,8 +165,6 @@ items:
       template:
         title: 'Item $key'
         type: Image
-        width: 500
-        height: 500
         renderFun: .plot4
 
     - name: inplot
@@ -179,8 +175,6 @@ items:
       clearWith:
         - vars
         - angle 
-        - width1
-        - height1
 
     - name: outplot
       title: 'Item Outfit Plot'
@@ -190,8 +184,6 @@ items:
       clearWith:
         - vars
         - angle
-        - width1
-        - height1
 
     - name: total
       title: Total
@@ -248,8 +240,6 @@ items:
       refs: snowIRT 
       clearWith:
             - vars
-            - width3
-            - height3
 
     - name:  plot2
       title: 'Histogram of Total Score'
@@ -260,6 +250,5 @@ items:
       refs: snowIRT 
       clearWith:
             - vars
-            - width2
-            - height2
+
 ...

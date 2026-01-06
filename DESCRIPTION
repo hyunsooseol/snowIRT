@@ -1,8 +1,8 @@
 Package: snowIRT
 Type: Package
 Title: Item Response Theory for jamovi
-Version: 5.1.7
-Date: 2025-10-18
+Version: 5.1.8
+Date: 2026-01-06
 Author: Hyunsoo Seol
 Maintainer: Hyunsoo Seol <snow@cau.ac.kr>
 Description: This module includes dichotomous, polytomous, and many facet model based on Rasch measurement model. This module also provides variouse types of DIF and Distractor analysis. 

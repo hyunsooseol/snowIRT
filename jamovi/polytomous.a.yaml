@@ -166,26 +166,6 @@ options:
       type: Bool
       default: false  
 
-    - name: width
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height
-      type: Integer
-      title: "X"
-      default: 500
-
-    - name: width5
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height5
-      type: Integer
-      title: "X"
-      default: 500
-
     - name: plot4
       title: 'Item Characteristic Curve'
       type: Bool
@@ -206,33 +186,4 @@ options:
           name: 'FALSE'
       default: 'TRUE'
 
-    - name: width7
-      type: Integer
-      title: "Width"
-      default: 500
-      
-    - name: height7
-      type: Integer
-      title: "Height"
-      default: 500
-
-    - name: width3
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height3
-      type: Integer
-      title: "X"
-      default: 500
-
-    - name: width2
-      type: Integer
-      title: "Size: "
-      default: 500
-      
-    - name: height2
-      type: Integer
-      title: "X"
-      default: 500
 ...

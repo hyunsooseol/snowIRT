@@ -19,14 +19,6 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             fn = "2,3,4",
             plot2 = FALSE,
             padjust2 = "BH",
-            width1 = 500,
-            height1 = 500,
-            width2 = 500,
-            height2 = 500,
-            width3 = 500,
-            height3 = 500,
-            width4 = 500,
-            height4 = 500,
             num = 1, ...) {
 
             super$initialize(
@@ -121,38 +113,6 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "BY",
                     "fdr"),
                 default="BH")
-            private$..width1 <- jmvcore::OptionInteger$new(
-                "width1",
-                width1,
-                default=500)
-            private$..height1 <- jmvcore::OptionInteger$new(
-                "height1",
-                height1,
-                default=500)
-            private$..width2 <- jmvcore::OptionInteger$new(
-                "width2",
-                width2,
-                default=500)
-            private$..height2 <- jmvcore::OptionInteger$new(
-                "height2",
-                height2,
-                default=500)
-            private$..width3 <- jmvcore::OptionInteger$new(
-                "width3",
-                width3,
-                default=500)
-            private$..height3 <- jmvcore::OptionInteger$new(
-                "height3",
-                height3,
-                default=500)
-            private$..width4 <- jmvcore::OptionInteger$new(
-                "width4",
-                width4,
-                default=500)
-            private$..height4 <- jmvcore::OptionInteger$new(
-                "height4",
-                height4,
-                default=500)
             private$..num <- jmvcore::OptionInteger$new(
                 "num",
                 num,
@@ -172,14 +132,6 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..fn)
             self$.addOption(private$..plot2)
             self$.addOption(private$..padjust2)
-            self$.addOption(private$..width1)
-            self$.addOption(private$..height1)
-            self$.addOption(private$..width2)
-            self$.addOption(private$..height2)
-            self$.addOption(private$..width3)
-            self$.addOption(private$..height3)
-            self$.addOption(private$..width4)
-            self$.addOption(private$..height4)
             self$.addOption(private$..num)
         }),
     active = list(
@@ -196,14 +148,6 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         fn = function() private$..fn$value,
         plot2 = function() private$..plot2$value,
         padjust2 = function() private$..padjust2$value,
-        width1 = function() private$..width1$value,
-        height1 = function() private$..height1$value,
-        width2 = function() private$..width2$value,
-        height2 = function() private$..height2$value,
-        width3 = function() private$..width3$value,
-        height3 = function() private$..height3$value,
-        width4 = function() private$..width4$value,
-        height4 = function() private$..height4$value,
         num = function() private$..num$value),
     private = list(
         ..vars = NA,
@@ -219,14 +163,6 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..fn = NA,
         ..plot2 = NA,
         ..padjust2 = NA,
-        ..width1 = NA,
-        ..height1 = NA,
-        ..width2 = NA,
-        ..height2 = NA,
-        ..width3 = NA,
-        ..height3 = NA,
-        ..width4 = NA,
-        ..height4 = NA,
         ..num = NA)
 )
 
@@ -333,9 +269,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust",
-                    "width1",
-                    "height1")))
+                    "padjust")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
@@ -346,9 +280,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust1",
-                    "width3",
-                    "height3")))
+                    "padjust1")))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="gmh",
@@ -387,9 +319,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust2",
-                    "width4",
-                    "height4")))
+                    "padjust2")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
@@ -401,8 +331,6 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "vars",
                     "group",
                     "padjust",
-                    "width2",
-                    "height2",
                     "num")))}))
 
 difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -443,14 +371,6 @@ difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param fn .
 #' @param plot2 .
 #' @param padjust2 .
-#' @param width1 .
-#' @param height1 .
-#' @param width2 .
-#' @param height2 .
-#' @param width3 .
-#' @param height3 .
-#' @param width4 .
-#' @param height4 .
 #' @param num .
 #' @return A results object containing:
 #' \tabular{llllll}{
@@ -487,14 +407,6 @@ dif <- function(
     fn = "2,3,4",
     plot2 = FALSE,
     padjust2 = "BH",
-    width1 = 500,
-    height1 = 500,
-    width2 = 500,
-    height2 = 500,
-    width3 = 500,
-    height3 = 500,
-    width4 = 500,
-    height4 = 500,
     num = 1) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
@@ -523,14 +435,6 @@ dif <- function(
         fn = fn,
         plot2 = plot2,
         padjust2 = padjust2,
-        width1 = width1,
-        height1 = height1,
-        width2 = width2,
-        height2 = height2,
-        width3 = width3,
-        height3 = height3,
-        width4 = width4,
-        height4 = height4,
         num = num)
 
     analysis <- difClass$new(

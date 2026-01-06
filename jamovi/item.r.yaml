@@ -158,8 +158,6 @@ items:
       clearWith:
             - vars
             - key
-            - width2
-            - height2
 
     - name:  plot
       title: 'Distractor plot'
@@ -173,8 +171,6 @@ items:
             - num 
             - group
             - key
-            - width
-            - height
 
     - name:  plot1
       title: 'Discrimination plot'
@@ -187,8 +183,6 @@ items:
             - disi
             - angle
             - key
-            - width1
-            - height1
 
     - name: total
       title: Total
@@ -217,7 +211,6 @@ items:
             - vars
             - num1
             - key
-            - width3
-            - height3
+
 
 ...
