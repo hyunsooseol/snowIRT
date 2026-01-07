@@ -28,7 +28,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             '<li>The variables should be named <b>subject</b>,<b>rater</b> and <b>task</b> respectively. Any other variable name will result in an error message.</b></li>',
             '<li>In the Facet variable box, you must put the variable <b>rater</b> first.</li>',
             '<li>You can currently only put <b>two variables</b> in the Facet variable box.</li>',
-            '<li>Empty PCA or Local Dependency tables indicate insufficient variance in residuals or high missing values in the data.</li>',
+            '<li>Empty PCA or Local Dependency tables may occur when the residual matrix is sparse (e.g., unbalanced designs where not all students are rated by all rater × task combinations), when residual variance is near-zero, or when non-finite residuals are produced.</li>',
             '<li>We recommend using <a href="https://www.winsteps.com" target = "_blank">Facet software</a> for analyzing various experimental designs.</li>',
             '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
             '</ul></div></div>'
