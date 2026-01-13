@@ -25,7 +25,7 @@ dichotomousClass <- if (requireNamespace('jmvcore'))
             '<div style="text-align:justify;">',
             '<ul>',
             '<li>Each variable must be <b>coded as 0 or 1 with the type of numeric-continuous</b> in jamovi.</li>',
-            '<li>Use variable names with exactly one trailing number (e.g., i1, item2, age1); names without digits or with multiple numbers may not plot.</li>',
+            '<li>Item plots are matched by variable name. Make sure each item name is unique and included in the selected variables.</li>',
             '<li>The rationale of snowIRT module is described in the <a href="https://bookdown.org/dkatz/Rasch_Biome/" target = "_blank">documentation</a>.</li>',
             '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
             '</ul></div></div>'

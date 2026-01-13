@@ -25,7 +25,7 @@ polytomousClass <- if (requireNamespace('jmvcore'))
             '<div style="text-align:justify;">',
             '<ul>',
             '<li>Note that Polytomous model needs the bottom category to be coded as <b>0</b>.</li>',
-            '<li>Use variable names with exactly one trailing number (e.g., i1, item2, age1); names without digits or with multiple numbers may not plot.</li>',
+            '<li>Item plots are matched by variable name. Make sure each item name is unique and included in the selected variables.</li>',
             '<li>The <b>eRm</b> R package was used for the person-item map for PCM.</li>',
             '<li>The rationale of snowIRT module is described in the <a href="https://bookdown.org/dkatz/Rasch_Biome/" target = "_blank">documentation</a>.</li>',
             '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
@@ -800,7 +800,8 @@ adjustment; Ho= the data fit the Rasch model."
         all_items <- self$options$vars
         n_items <- length(all_items)
         
-        current_item <- as.numeric(gsub("\\D", "", image$key))
+        current_item <- match(image$key, all_items) #fixed
+        
         
         if (is.na(current_item) || current_item > n_items) {
           return(FALSE)
