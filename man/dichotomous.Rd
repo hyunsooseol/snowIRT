@@ -24,15 +24,7 @@ dichotomous(
   plot2 = FALSE,
   st = FALSE,
   plot3 = FALSE,
-  width = 500,
-  height = 500,
-  plot4 = FALSE,
-  width1 = 500,
-  height1 = 500,
-  width3 = 500,
-  height3 = 500,
-  width2 = 500,
-  height2 = 500
+  plot4 = FALSE
 )
 }
 \arguments{
@@ -75,23 +67,7 @@ where 0 degrees represents completely horizontal labels.}
 
 \item{plot3}{.}
 
-\item{width}{.}
-
-\item{height}{.}
-
 \item{plot4}{.}
-
-\item{width1}{.}
-
-\item{height1}{.}
-
-\item{width3}{.}
-
-\item{height3}{.}
-
-\item{width2}{.}
-
-\item{height2}{.}
 }
 \value{
 A results object containing:

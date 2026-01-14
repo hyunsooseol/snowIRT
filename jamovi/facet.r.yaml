@@ -90,7 +90,7 @@ items:
           type: number          
 
     - name: raw
-      title:  'Interaction: raw score'
+      title:  'Rater X Task: raw score'
       type: Table
       visible: (raw)
       clearWith:
@@ -118,7 +118,7 @@ items:
           type: number
  
     - name: inter
-      title:  'Interaction: Measure'
+      title:  'Rater X Task: Measure'
       type: Table
       visible: (inter)
       clearWith:
@@ -150,7 +150,7 @@ items:
           type: number   
  
     - name: ifit
-      title:  'Interaction fit: Rater X Task'
+      title:  'Rater X Task: Interaction fit'
       type: Table
       visible: (ifit)
       clearWith:
@@ -184,6 +184,105 @@ items:
         - name: marker
           title: 'Diagnosis'
           type: 'text'
+
+    - name: driftm
+      title: 'Rater drift: Severity'
+      type: Table
+      visible: (driftm)
+      refs: tam
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
+  
+      columns:
+        - name: rater
+          title: Rater
+          type: text
+  
+        - name: time
+          title: Time
+          type: text
+  
+        - name: est
+          title: Severity
+          type: number
+  
+
+    - name: driftfit
+      title: 'Rater drift: Fit'
+      type: Table
+      visible: (driftfit)
+      refs: tam
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
+  
+      columns:
+        - name: rater
+          title: Rater
+          type: text
+  
+        - name: time
+          title: Time
+          type: text
+  
+        - name: infit
+          title: Infit
+          type: number
+  
+        - name: outfit
+          title: Outfit
+          type: number
+  
+        - name: n
+          title: N
+          type: integer
+  
+    - name: driftsum
+      title: 'Rater × Time Drift Summary'
+      type: Table
+      visible: (tes)
+      columns:
+        - name: rater
+          title: Rater
+          type: text
+    
+        - name: tmin
+          title: Min time
+          type: text
+    
+        - name: tmax
+          title: Max time
+          type: text
+    
+        - name: range
+          title: Range
+          type: number
+    
+        - name: maxdelta
+          title: Max |Δ|
+          type: number
+    
+        - name: flag
+          title: Flag
+          type: text
+  
+
+    - name:  plot9
+      title: 'Trajectory plot'
+      type:  Image
+      visible: (plot9)
+      renderFun: .plot9
+      refs: snowIRT 
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
 
     - name: pm
       title:  'Person measure'

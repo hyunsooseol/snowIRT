@@ -32,6 +32,36 @@ options:
       permitted:
         - factor
  
+    - name: time
+      title: 'Time'
+      type: Variable
+      suggested:
+        - continuous
+        - nominal
+      permitted:
+        - numeric
+        - factor
+ 
+    - name: tes
+      title: 'Drift summary'
+      type: Bool
+      default: false
+
+    - name: plot9
+      title: 'Trajectory plot'
+      type: Bool
+      default: false     
+
+    - name: driftm
+      title: 'Severity'
+      type: Bool
+      default: false
+
+    - name: driftfit
+      title: 'Fit'
+      type: Bool
+      default: false
+
     - name: rm
       title: 'Rater'
       type: Bool
@@ -154,6 +184,5 @@ options:
       title: 'Person fit'
       type: Bool
       default: false      
-
 
 ...

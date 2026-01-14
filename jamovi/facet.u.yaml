@@ -26,6 +26,13 @@ children:
             name: facet
             isTarget: true
             maxItemCount: 2
+      - type: TargetLayoutBox
+        label: Time(Optional)
+        children:
+          - type: VariablesListBox
+            name: time
+            isTarget: true
+            maxItemCount: 1
   - type: CollapseBox
     label: Facet Analysis
     margin: normal
@@ -51,7 +58,7 @@ children:
                   - type: CheckBox
                     name: sm
               - type: Label
-                label: Interaction(Rater X Task)
+                label: Rater X Task
                 children:
                   - type: CheckBox
                     name: raw
@@ -59,6 +66,17 @@ children:
                     name: inter
                   - type: CheckBox
                     name: ifit
+              - type: Label
+                label: Rater X Time(Drift analysis)
+                children:
+                  - type: CheckBox
+                    name: driftm
+                  - type: CheckBox
+                    name: driftfit
+                  - type: CheckBox
+                    name: tes
+                  - type: CheckBox
+                    name: plot9
       - type: LayoutBox
         stretchFactor: 1
         margin: large

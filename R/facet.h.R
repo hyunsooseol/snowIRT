@@ -9,6 +9,11 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             dep = NULL,
             id = NULL,
             facet = NULL,
+            time = NULL,
+            tes = FALSE,
+            plot9 = FALSE,
+            driftm = FALSE,
+            driftfit = FALSE,
             rm = FALSE,
             im = FALSE,
             inter = FALSE,
@@ -60,6 +65,31 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "nominal"),
                 permitted=list(
                     "factor"))
+            private$..time <- jmvcore::OptionVariable$new(
+                "time",
+                time,
+                suggested=list(
+                    "continuous",
+                    "nominal"),
+                permitted=list(
+                    "numeric",
+                    "factor"))
+            private$..tes <- jmvcore::OptionBool$new(
+                "tes",
+                tes,
+                default=FALSE)
+            private$..plot9 <- jmvcore::OptionBool$new(
+                "plot9",
+                plot9,
+                default=FALSE)
+            private$..driftm <- jmvcore::OptionBool$new(
+                "driftm",
+                driftm,
+                default=FALSE)
+            private$..driftfit <- jmvcore::OptionBool$new(
+                "driftfit",
+                driftfit,
+                default=FALSE)
             private$..rm <- jmvcore::OptionBool$new(
                 "rm",
                 rm,
@@ -162,6 +192,11 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
             self$.addOption(private$..facet)
+            self$.addOption(private$..time)
+            self$.addOption(private$..tes)
+            self$.addOption(private$..plot9)
+            self$.addOption(private$..driftm)
+            self$.addOption(private$..driftfit)
             self$.addOption(private$..rm)
             self$.addOption(private$..im)
             self$.addOption(private$..inter)
@@ -190,6 +225,11 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         dep = function() private$..dep$value,
         id = function() private$..id$value,
         facet = function() private$..facet$value,
+        time = function() private$..time$value,
+        tes = function() private$..tes$value,
+        plot9 = function() private$..plot9$value,
+        driftm = function() private$..driftm$value,
+        driftfit = function() private$..driftfit$value,
         rm = function() private$..rm$value,
         im = function() private$..im$value,
         inter = function() private$..inter$value,
@@ -217,6 +257,11 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..dep = NA,
         ..id = NA,
         ..facet = NA,
+        ..time = NA,
+        ..tes = NA,
+        ..plot9 = NA,
+        ..driftm = NA,
+        ..driftfit = NA,
         ..rm = NA,
         ..im = NA,
         ..inter = NA,
@@ -254,6 +299,10 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         raw = function() private$.items[["raw"]],
         inter = function() private$.items[["inter"]],
         ifit = function() private$.items[["ifit"]],
+        driftm = function() private$.items[["driftm"]],
+        driftfit = function() private$.items[["driftfit"]],
+        driftsum = function() private$.items[["driftsum"]],
+        plot9 = function() private$.items[["plot9"]],
         pm = function() private$.items[["pm"]],
         pfit = function() private$.items[["pfit"]],
         resid = function() private$.items[["resid"]],
@@ -359,7 +408,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="raw",
-                title="Interaction: raw score",
+                title="Rater X Task: raw score",
                 visible="(raw)",
                 clearWith=list(
                     "dep",
@@ -387,7 +436,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="inter",
-                title="Interaction: Measure",
+                title="Rater X Task: Measure",
                 visible="(inter)",
                 clearWith=list(
                     "dep",
@@ -419,7 +468,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="ifit",
-                title="Interaction fit: Rater X Task",
+                title="Rater X Task: Interaction fit",
                 visible="(ifit)",
                 clearWith=list(
                     "dep",
@@ -452,6 +501,104 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="marker", 
                         `title`="Diagnosis", 
                         `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="driftm",
+                title="Rater drift: Severity",
+                visible="(driftm)",
+                refs="tam",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time"),
+                columns=list(
+                    list(
+                        `name`="rater", 
+                        `title`="Rater", 
+                        `type`="text"),
+                    list(
+                        `name`="time", 
+                        `title`="Time", 
+                        `type`="text"),
+                    list(
+                        `name`="est", 
+                        `title`="Severity", 
+                        `type`="number"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="driftfit",
+                title="Rater drift: Fit",
+                visible="(driftfit)",
+                refs="tam",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time"),
+                columns=list(
+                    list(
+                        `name`="rater", 
+                        `title`="Rater", 
+                        `type`="text"),
+                    list(
+                        `name`="time", 
+                        `title`="Time", 
+                        `type`="text"),
+                    list(
+                        `name`="infit", 
+                        `title`="Infit", 
+                        `type`="number"),
+                    list(
+                        `name`="outfit", 
+                        `title`="Outfit", 
+                        `type`="number"),
+                    list(
+                        `name`="n", 
+                        `title`="N", 
+                        `type`="integer"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="driftsum",
+                title="Rater \u00D7 Time Drift Summary",
+                visible="(tes)",
+                columns=list(
+                    list(
+                        `name`="rater", 
+                        `title`="Rater", 
+                        `type`="text"),
+                    list(
+                        `name`="tmin", 
+                        `title`="Min time", 
+                        `type`="text"),
+                    list(
+                        `name`="tmax", 
+                        `title`="Max time", 
+                        `type`="text"),
+                    list(
+                        `name`="range", 
+                        `title`="Range", 
+                        `type`="number"),
+                    list(
+                        `name`="maxdelta", 
+                        `title`="Max |\u0394|", 
+                        `type`="number"),
+                    list(
+                        `name`="flag", 
+                        `title`="Flag", 
+                        `type`="text"))))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot9",
+                title="Trajectory plot",
+                visible="(plot9)",
+                renderFun=".plot9",
+                refs="snowIRT",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time")))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pm",
@@ -708,6 +855,11 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param dep .
 #' @param id .
 #' @param facet .
+#' @param time .
+#' @param tes .
+#' @param plot9 .
+#' @param driftm .
+#' @param driftfit .
 #' @param rm .
 #' @param im .
 #' @param inter .
@@ -741,6 +893,10 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$raw} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$driftm} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$driftfit} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$driftsum} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$plot9} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$resid} \tab \tab \tab \tab \tab a table \cr
@@ -768,6 +924,11 @@ facet <- function(
     dep,
     id,
     facet,
+    time,
+    tes = FALSE,
+    plot9 = FALSE,
+    driftm = FALSE,
+    driftfit = FALSE,
     rm = FALSE,
     im = FALSE,
     inter = FALSE,
@@ -798,12 +959,14 @@ facet <- function(
     if ( ! missing(dep)) dep <- jmvcore::resolveQuo(jmvcore::enquo(dep))
     if ( ! missing(id)) id <- jmvcore::resolveQuo(jmvcore::enquo(id))
     if ( ! missing(facet)) facet <- jmvcore::resolveQuo(jmvcore::enquo(facet))
+    if ( ! missing(time)) time <- jmvcore::resolveQuo(jmvcore::enquo(time))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
             `if`( ! missing(dep), dep, NULL),
             `if`( ! missing(id), id, NULL),
-            `if`( ! missing(facet), facet, NULL))
+            `if`( ! missing(facet), facet, NULL),
+            `if`( ! missing(time), time, NULL))
 
     for (v in id) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
     for (v in facet) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
@@ -812,6 +975,11 @@ facet <- function(
         dep = dep,
         id = id,
         facet = facet,
+        time = time,
+        tes = tes,
+        plot9 = plot9,
+        driftm = driftm,
+        driftfit = driftfit,
         rm = rm,
         im = im,
         inter = inter,

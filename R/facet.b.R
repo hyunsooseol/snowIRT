@@ -1,5 +1,5 @@
 # This file is a generated template, your changes will not be overwritten
-#FACET ANALYSIS
+# FACET ANALYSIS
 #' @import ggplot2
 
 facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
@@ -8,7 +8,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
     inherit = facetBase,
     private = list(
       .allCache = NULL,
-      .residualCache = NULL, 
+      .residualCache = NULL,
       .htmlwidget = NULL,
       
       .init = function() {
@@ -44,9 +44,17 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         if (self$options$local)
           self$results$local$setNote("Note",
-                                      "|Loading| > 0.3 indicates potential local dependency; > 0.5 indicates strong dependency requiring attention.")
+                                     "|Loading| > 0.3 indicates potential local dependency; > 0.5 indicates strong dependency requiring attention.")
         
-      },
+      
+        if (self$options$tes)
+          self$results$driftsum$setNote(
+            "Note",
+            "⚠ indicates a practically meaningful rater drift (|Δ| ≥ 0.5 logits)."
+          )
+        
+        
+        },
       .run = function() {
         
         #---------------------------------------------
@@ -55,9 +63,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             is.null(self$options$facet))
           return()
         
-        if (is.null(private$.allCache)) {
-          private$.allCache <- private$.computeRES()
-        }
+        # Always recompute to ensure changes in Time/drift options are reflected
+        private$.allCache <- private$.computeRES()
         res <- private$.allCache
         
         # Facet estimates--------------------------
@@ -71,7 +78,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # rater measure----------
         rm <- subset(res1, res1$facet == "rater")
         
-        #interaction(Raw score)-----------------
+        # interaction(Raw score)-----------------
         
         if (isTRUE(self$options$raw)) {
           para <- res$item$item
@@ -151,19 +158,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             table$addRow(rowKey = items[i], values = row)
           }
           
-          # table <- self$results$im
-          #
-          # im <- as.data.frame(im)
-          # dif <- as.vector(im[[3]])
-          # se <- as.vector(im[[4]])
-          #
-          # items <- as.vector(im[[1]])
-          # for (i in seq_along(items)) {
-          #   row <- list()
-          #   row[["measure"]] <- dif[i]
-          #   row[["se"]] <- se[i]
-          #   table$addRow(rowKey = items[i], values = row)
-          # }
         }
         # Item bar plot----------
         if (isTRUE(self$options$plot2)) {
@@ -187,18 +181,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             table$addRow(rowKey = items[i], values = row)
           }
           
-          # table <- self$results$rm
-          #
-          # rm <- as.data.frame(rm)
-          # dif <- as.vector(rm[[3]])
-          # se <- as.vector(rm[[4]])
-          # items <- as.vector(rm[[1]])
-          # for (i in seq_along(items)) {
-          #   row <- list()
-          #   row[["measure"]] <- dif[i]
-          #   row[["se"]] <- se[i]
-          #   table$addRow(rowKey = items[i], values = row)
-          # }
         }
         
         # Rater bar plot----------
@@ -247,6 +229,286 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             table$addRow(rowKey = items[i], values = row)
           }
         }
+        
+
+        # =========================================================
+        # Rater × Time (Drift)
+        # =========================================================
+        if (!is.null(self$options$time)) {
+          
+          # (A) Drift - Measure (rater:time)
+          if (isTRUE(self$options$driftm)) {
+            
+            drift <- subset(res1, res1$facet %in% c("rater:time", "time:rater"))
+            
+            if (nrow(drift) > 0) {
+              
+              drift <- drift |> tidyr::separate(parameter, c("rater", "time"),
+                                                sep = ":", remove = FALSE)
+              
+              drift$time <- gsub("^time", "", drift$time)
+              
+              drift_out <- data.frame(
+                rater = drift$rater,
+                time  = drift$time,
+                est   = drift$xsi,
+                se    = drift$se.xsi
+              )
+              
+              table <- self$results$driftm
+              for (i in seq_len(nrow(drift_out))) {
+                table$addRow(
+                  rowKey = i,
+                  values = list(
+                    rater = drift_out$rater[i],
+                    time  = drift_out$time[i],
+                    est   = drift_out$est[i],
+                    se    = drift_out$se[i]
+                  )
+                )
+              }
+            }
+          }
+        
+          # (B) Drift - Fit (weighted aggregation by observed counts)
+          if (isTRUE(self$options$driftfit)) {
+            
+            ifit_rt <- tryCatch({
+              
+              # --- item-level fit from TAM
+              ff <- TAM::msq.itemfit(res)
+              df <- as.data.frame(ff$itemfit)
+              if (!all(c("item", "Outfit", "Infit") %in% names(df)))
+                return(NULL)
+              
+              df <- dplyr::select(df, c("item", "Outfit", "Infit"))
+              
+              # =========================================================
+              # Robust token extraction from item labels
+              # =========================================================
+              extract_tok <- function(x, prefix) {
+                x <- as.character(x)
+                m <- regexpr(paste0(prefix, "[^:\\-\\._\\s]+"), x, perl = TRUE)
+                ifelse(m > 0, regmatches(x, m), NA_character_)
+              }
+              
+              df$rater_tok <- extract_tok(df$item, "rater")
+              df$time_tok  <- extract_tok(df$item, "time")
+              df$task_tok  <- extract_tok(df$item, "task")
+              
+              # Fallback for task token
+              if (any(is.na(df$task_tok))) {
+                get_fallback_task <- function(s) {
+                  toks <- regmatches(s, gregexpr("[A-Za-z]+[^:\\-\\._\\s]*", s, perl = TRUE))[[1]]
+                  toks <- toks[!grepl("^rater", toks)]
+                  toks <- toks[!grepl("^time", toks)]
+                  toks <- toks[!grepl("^step", toks)]
+                  if (length(toks) == 0) return(NA_character_)
+                  toks[1]
+                }
+                idx_na <- which(is.na(df$task_tok))
+                df$task_tok[idx_na] <- vapply(df$item[idx_na], get_fallback_task, character(1))
+              }
+              
+              # =========================================================
+              # Build true N from raw data
+              # =========================================================
+              dep    <- self$options$dep
+              id     <- self$options$id
+              facets <- self$options$facet
+              timev  <- self$options$time
+              
+              needed_cols <- unique(c(dep, id, facets, timev))
+              dat <- stats::na.omit(self$data[, needed_cols, drop = FALSE])
+              
+              rater_var <- facets[[1]]
+              task_var  <- facets[[2]]
+              
+              mk_tok <- function(prefix, x) {
+                x <- as.character(x)
+                ifelse(startsWith(x, prefix), x, paste0(prefix, x))
+              }
+              
+              dat$rater_tok <- mk_tok("rater", dat[[rater_var]])
+              dat$time_tok  <- mk_tok("time",  dat[[timev]])
+              dat$task_tok  <- mk_tok("task",  dat[[task_var]])
+              
+              # Count per rater × time × task
+              n_by_cell <- dat |>
+                dplyr::group_by(rater_tok, time_tok, task_tok) |>
+                dplyr::summarise(n = dplyr::n(), .groups = "drop")
+              
+              # Total N per rater × time
+              n_by_rt <- dat |>
+                dplyr::group_by(rater_tok, time_tok) |>
+                dplyr::summarise(n_total = dplyr::n(), .groups = "drop")
+              
+              # =========================================================
+              # Merge counts onto itemfit rows
+              # =========================================================
+              parts <- dplyr::left_join(
+                df,
+                n_by_cell,
+                by = c("rater_tok", "time_tok", "task_tok")
+              )
+              parts$n[is.na(parts$n)] <- 0L
+              
+              # =========================================================
+              # Aggregate to rater × time (weighted)
+              # =========================================================
+              agg <- parts |>
+                dplyr::filter(!is.na(rater_tok), !is.na(time_tok)) |>
+                dplyr::group_by(rater_tok, time_tok) |>
+                dplyr::summarise(
+                  infit  = if (sum(n) > 0) stats::weighted.mean(Infit,  w = n, na.rm = TRUE) else mean(Infit,  na.rm = TRUE),
+                  outfit = if (sum(n) > 0) stats::weighted.mean(Outfit, w = n, na.rm = TRUE) else mean(Outfit, na.rm = TRUE),
+                  n_fit  = sum(n),
+                  .groups = "drop"
+                ) |>
+                dplyr::left_join(n_by_rt, by = c("rater_tok", "time_tok"))
+              
+              # Use raw observed N for display
+              agg$n <- agg$n_total
+              
+              # Clean labels
+              agg$rater <- agg$rater_tok
+              agg$time  <- gsub("^time", "", agg$time_tok)
+              
+              agg <- dplyr::select(agg, rater, time, infit, outfit, n)
+              agg
+              
+            }, error = function(e) NULL)
+            
+            if (!is.null(ifit_rt) && nrow(ifit_rt) > 0) {
+              table <- self$results$driftfit
+              for (i in seq_len(nrow(ifit_rt))) {
+                table$addRow(
+                  rowKey = i,
+                  values = list(
+                    rater  = ifit_rt$rater[i],
+                    time   = ifit_rt$time[i],
+                    infit  = ifit_rt$infit[i],
+                    outfit = ifit_rt$outfit[i],
+                    n      = ifit_rt$n[i]
+                  )
+                )
+              }
+            }
+          }
+          
+          # (C) Drift Summary (대안 1)  : tes 체크박스 재활용
+          if (isTRUE(self$options$tes)) {
+            
+            drift <- subset(res1, res1$facet %in% c("rater:time", "time:rater"))
+            
+            if (nrow(drift) > 0) {
+              
+              drift <- drift |> tidyr::separate(parameter, c("rater", "time"),
+                                                sep = ":", remove = FALSE)
+              
+              drift$time_raw <- gsub("^time", "", drift$time)
+              
+              # ---- 시간 정렬: 숫자로 변환 가능하면 numeric, 아니면 factor 순서
+              suppressWarnings(tnum <- as.numeric(as.character(drift$time_raw)))
+              if (all(is.finite(tnum))) {
+                drift$time_ord <- tnum
+              } else {
+                drift$time_ord <- as.numeric(factor(drift$time_raw, levels = unique(drift$time_raw)))
+              }
+              
+              # rater별로 요약 계산
+              by_rater <- split(drift, drift$rater)
+              
+              out <- lapply(names(by_rater), function(rt) {
+                d <- by_rater[[rt]]
+                d <- d[order(d$time_ord), , drop = FALSE]
+                
+                sev <- d$xsi
+                times <- as.character(d$time_raw)
+                
+                rng <- if (length(sev) >= 2) max(sev, na.rm = TRUE) - min(sev, na.rm = TRUE) else NA_real_
+                
+                # 인접 시점 Δ
+                max_abs_delta <- if (length(sev) >= 2) {
+                  max(abs(diff(sev)), na.rm = TRUE)
+                } else {
+                  NA_real_
+                }
+                
+                # 실무적 플래그 기준 (원하면 0.3/0.5를 옵션화 가능)
+                flag <- if (!is.na(max_abs_delta) && max_abs_delta >= 0.5) "⚠" else ""
+                
+                data.frame(
+                  rater    = rt,
+                  tmin     = times[1],
+                  tmax     = times[length(times)],
+                  range    = rng,
+                  maxdelta = max_abs_delta,
+                  flag     = flag,
+                  stringsAsFactors = FALSE
+                )
+              })
+              
+              out <- do.call(rbind, out)
+              
+              table <- self$results$driftsum
+              for (i in seq_len(nrow(out))) {
+                table$addRow(
+                  rowKey = i,
+                  values = list(
+                    rater    = out$rater[i],
+                    tmin     = out$tmin[i],
+                    tmax     = out$tmax[i],
+                    range    = out$range[i],
+                    maxdelta = out$maxdelta[i],
+                    flag     = out$flag[i]
+                  )
+                )
+              }
+            }
+          }
+        
+          # (d) Drift plot (Rater × Time severity over time)
+          if (isTRUE(self$options$plot9)) {
+            
+            drift <- subset(res1, res1$facet %in% c("rater:time", "time:rater"))
+            
+            if (nrow(drift) > 0) {
+              
+              drift <- drift |>
+                tidyr::separate(parameter, c("rater", "time"), sep = ":", remove = FALSE)
+              
+              drift$time <- gsub("^time", "", drift$time)
+              
+              drift_plot <- data.frame(
+                Rater    = as.character(drift$rater),
+                Time     = as.character(drift$time),
+                Severity = drift$xsi,
+                SE       = drift$se.xsi,
+                stringsAsFactors = FALSE
+              )
+              
+              # --- Force x-axis to integer scale (preferred for drift interpretation)
+              suppressWarnings(tnum <- as.numeric(drift_plot$Time))
+              if (all(!is.na(tnum))) {
+                drift_plot$TimeNum <- as.integer(tnum)
+              } else {
+                # fallback: keep original appearance order but map to integers
+                drift_plot$TimeNum <- as.integer(factor(drift_plot$Time, levels = unique(drift_plot$Time)))
+              }
+              
+              # sort for stable line drawing
+              drift_plot <- drift_plot[order(drift_plot$Rater, drift_plot$TimeNum), , drop = FALSE]
+              
+              image <- self$results$plot9
+              image$setState(drift_plot)
+            }
+          }
+          
+          
+          }
+
+
         # Interaction fit table------------
         # fit is shown for the rater*item combinations
         
@@ -254,14 +516,14 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         ifit <- as.data.frame(ifit$itemfit)
         ifit <- dplyr::select(ifit, c("item", "Outfit", "Infit"))
         
-        # THe order !!!(rater * item), otherwise table will be empty!!!
+        # The order (rater * item) is important, otherwise the table will be empty
         ifit$item <-  gsub("-rater", "rater", ifit$item)
         ifit$item <-  gsub("task", "", ifit$item)
         ifit <- ifit |> tidyr::separate(item, c("rater", "task"), "-")
         
         ifit <- data.frame(ifit)
         
-        # Display '*' when both infit and outfit values exceed 1.5
+        # Display 'X' when both infit and outfit values exceed 1.5
         ifit$marker <- ifelse(ifit$Outfit > 1.5 &
                                 ifit$Infit > 1.5, 'X', '')
         
@@ -282,18 +544,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               names(stat_indices))
             table$addRow(rowKey = name, values = row)
           }
-          # table <- self$results$ifit
-          #
-          # names <- dimnames(ifit)[[1]]
-          # for (name in names) {
-          #   row <- list()
-          #   row[["rater"]]   <-  ifit[name, 1]
-          #   row[["task"]]   <-  ifit[name, 2]
-          #   row[["outfit"]] <-  ifit[name, 3]
-          #   row[["infit"]] <-  ifit[name, 4]
-          #   row[["marker"]] <-  ifit[name, 5]
-          #   table$addRow(rowKey = name, values = row)
-          # }
         }
         
         if (isTRUE(self$options$plot7)) {
@@ -336,7 +586,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         names(pfit) <- c("outfit", "infit")
         
-        # Display '*' when both infit and outfit values exceed 1.5
+        # Display 'X' when both infit and outfit values exceed 1.5
         pfit$marker <- ifelse(pfit$outfit > 1.5 &
                                 pfit$infit > 1.5, 'X', '')
         
@@ -355,15 +605,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             table$addRow(rowKey = name, values = row)
           }
         }
-        # Person fit plot------------------
-        # Person ability----------
-        # persons <- TAM::tam.wle(res)
-        #
-        # per <-data.frame(persons$pid, persons$PersonScores,
-        #                  persons$theta, persons$error,
-        #                  persons$WLE.rel)
         
-    # Residual analysis (show all cases with |residual| > 2.0)
+        # Residual analysis (show all cases with |residual| > 2.0)
         if (isTRUE(self$options$resid)) {
           
           residuals_result <- private$.computeResiduals()
@@ -379,7 +622,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             residual_values <- abs(stand_resid[large_residuals])
             sorted_indices <- order(residual_values, decreasing = TRUE)
             
-            # Show ALL cases (no limit)
+            # Show all cases (no limit)
             n_show <- nrow(large_residuals)
             
             for (i in 1:n_show) {
@@ -410,7 +653,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        # Principal Component Analysis of Residuals (무한값 처리 추가)
+        # Principal Component Analysis of Residuals (handling non-finite values)
         if (isTRUE(self$options$pca)) {
           residuals_result <- private$.computeResiduals()
           stand_resid <- residuals_result$stand_residuals
@@ -453,7 +696,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-        # Local Dependency Detection (무한값 처리 추가)
+        # Local Dependency Detection (handling non-finite values)
         if (isTRUE(self$options$local)) {
           residuals_result <- private$.computeResiduals()
           stand_resid <- residuals_result$stand_residuals
@@ -516,8 +759,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             }
           }
         }
-        
-        
         
         if (isTRUE(self$options$plot8)) {
           pfit <- TAM::tam.personfit(res)
@@ -650,199 +891,251 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         TRUE
       },
       
-      
       # interaction fit plot--------------
-    .plot7 = function(image, ggtheme, theme, ...) {
-      if (is.null(image$state))
-        return(FALSE)
+      .plot7 = function(image, ggtheme, theme, ...) {
+        if (is.null(image$state))
+          return(FALSE)
+        
+        ifit <- image$state
+        
+        plot7 <- ggplot2::ggplot(ifit, aes(x = Index, y = Value, shape = Fit, color = Fit)) +
+          geom_point(
+            size = 2.5,
+            stroke = 1,
+            alpha = 0.75
+          ) +
+          ggplot2::scale_shape_manual(
+            values = c("Infit" = 16, "Outfit" = 17),
+            name = "Fit"
+          ) +
+          ggplot2::scale_color_manual(
+            values = c("Infit" = '#2980b9', "Outfit" = '#e74c3c'),
+            name = "Fit"
+          ) +
+          ggplot2::geom_hline(
+            yintercept = 1.5,
+            linetype = "solid",
+            color = '#95a5a6',
+            linewidth = 0.8,
+            alpha = 0.8
+          ) +
+          ggplot2::geom_hline(
+            yintercept = 0.5,
+            linetype = "solid",
+            color = '#95a5a6',
+            linewidth = 0.8,
+            alpha = 0.8
+          ) +
+          labs(
+            title = "",
+            x = "Rater × Task",
+            y = "Values"
+          ) +
+          theme_minimal() +
+          theme(
+            panel.background = element_rect(fill = "#fafafa", color = NA),
+            plot.background = element_rect(fill = "white", color = NA),
+            panel.grid.major.y = element_line(color = "#e8e8e8", linewidth = 0.4),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(
+              hjust = 0.5,
+              size = 15,
+              face = "bold",
+              color = "#2c3e50",
+              margin = margin(b = 15)
+            ),
+            axis.title = element_text(size = 11, color = "#34495e"),
+            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
+            axis.text.x = element_text(margin = margin(t = 6)),
+            axis.text.y = element_text(margin = margin(r = 6)),
+            legend.position = "right",
+            legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
+            legend.text = element_text(size = 10, color = "#7f8c8d"),
+            legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
+            legend.key = element_rect(fill = "transparent"),
+            legend.margin = margin(10, 10, 10, 10),
+            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            plot.margin = margin(15, 15, 15, 15)
+          )
+        
+        plot7 <- plot7 + ggtheme
+        
+        if (self$options$angle1 > 0) {
+          plot7 <- plot7 + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle1, hjust = 1))
+        }
+        print(plot7)
+        TRUE
+      },
       
-      ifit <- image$state
+      .plot8 = function(image, ggtheme, theme, ...) {
+        if (is.null(image$state))
+          return(FALSE)
+        
+        pf <- image$state
+        
+        plot8 <- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit, color = Fit)) +
+          geom_point(
+            size = 2.8,
+            stroke = 1.2,
+            alpha = 0.8
+          ) +
+          ggplot2::scale_shape_manual(
+            values = c(16, 17),
+            name = "Fit"
+          ) +
+          ggplot2::scale_color_manual(
+            values = c('#2980b9', '#e74c3c'),
+            name = "Fit"
+          ) +
+          ggplot2::geom_hline(
+            yintercept = 1.5,
+            linetype = "solid",
+            color = '#95a5a6',
+            linewidth = 0.8,
+            alpha = 0.8
+          ) +
+          ggplot2::geom_hline(
+            yintercept = 0.5,
+            linetype = "solid",
+            color = '#95a5a6',
+            linewidth = 0.8,
+            alpha = 0.8
+          ) +
+          ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
+          ggtitle("") +
+          labs(
+            x = "Measure",
+            y = "Value"
+          ) +
+          theme_minimal() +
+          theme(
+            panel.background = element_rect(fill = "#fafafa", color = NA),
+            plot.background = element_rect(fill = "white", color = NA),
+            panel.grid.major = element_line(color = "#f0f0f0", linewidth = 0.3),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(
+              hjust = 0.5,
+              size = 15,
+              face = "bold",
+              color = "#2c3e50",
+              margin = margin(b = 15)
+            ),
+            axis.title = element_text(size = 11, color = "#34495e"),
+            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
+            legend.position = "right",
+            legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
+            legend.text = element_text(size = 10, color = "#7f8c8d"),
+            legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
+            legend.key = element_rect(fill = "transparent"),
+            legend.margin = margin(10, 10, 10, 10),
+            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            plot.margin = margin(15, 15, 15, 15)
+          )
+        
+        plot8 <- plot8 + ggtheme
+        print(plot8)
+        TRUE
+      },
       
-      plot7 <- ggplot2::ggplot(ifit, aes(x = Index, y = Value, shape = Fit, color = Fit)) +
-        # Modern point styling with refined shapes
-        geom_point(
-          size = 2.5,
-          stroke = 1,
-          alpha = 0.75
+      
+      .plot9 = function(image, ggtheme, theme, ...) {
+        if (is.null(image$state))
+          return(FALSE)
+        
+        df <- image$state
+        
+        # ---- Defensive checks
+        if (!all(c("Rater", "TimeNum", "Severity") %in% names(df)))
+          return(FALSE)
+        if (nrow(df) == 0)
+          return(FALSE)
+        
+        # Ensure correct types
+        df$Rater   <- as.factor(df$Rater)
+        df$TimeNum <- suppressWarnings(as.integer(df$TimeNum))
+        if (all(is.na(df$TimeNum)))
+          return(FALSE)
+        
+        # ---- Minimal drift plot (no error bars)
+        p <- ggplot2::ggplot(
+          df,
+          ggplot2::aes(x = TimeNum, y = Severity, group = Rater, color = Rater)
         ) +
-        # Elegant shape and color mapping
-        ggplot2::scale_shape_manual(
-          values = c("Infit" = 16, "Outfit" = 17),  # Circle and triangle
-          name = "Fit"
-        ) +
-        ggplot2::scale_color_manual(
-          values = c("Infit" = '#2980b9', "Outfit" = '#e74c3c'),
-          name = "Fit"
-        ) +
-        # Clean boundary lines
-        ggplot2::geom_hline(
-          yintercept = 1.5,
-          linetype = "solid",
-          color = '#95a5a6',
-          linewidth = 0.8,
-          alpha = 0.8
-        ) +
-        ggplot2::geom_hline(
-          yintercept = 0.5,
-          linetype = "solid",
-          color = '#95a5a6',
-          linewidth = 0.8,
-          alpha = 0.8
-        ) +
-        labs(
-          title = "",
-          x = "Rater × Task",
-          y = "Values"
-        ) +
-        theme_minimal() +
-        theme(
-          # Background settings
-          panel.background = element_rect(fill = "#fafafa", color = NA),
-          plot.background = element_rect(fill = "white", color = NA),
-          
-          # Grid line settings
-          panel.grid.major.y = element_line(color = "#e8e8e8", linewidth = 0.4),
-          panel.grid.major.x = element_blank(),
-          panel.grid.minor = element_blank(),
-          
-          # Title and axis label styling
-          plot.title = element_text(
-            hjust = 0.5,
-            size = 15,
-            face = "bold",
-            color = "#2c3e50",
-            margin = margin(b = 15)
-          ),
-          axis.title = element_text(size = 11, color = "#34495e"),
-          axis.text = element_text(size = 9.5, color = "#7f8c8d"),
-          axis.text.x = element_text(margin = margin(t = 6)),
-          axis.text.y = element_text(margin = margin(r = 6)),
-          
-          # Legend styling
-          legend.position = "right",
-          legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
-          legend.text = element_text(size = 10, color = "#7f8c8d"),
-          legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
-          legend.key = element_rect(fill = "transparent"),
-          legend.margin = margin(10, 10, 10, 10),
-          
-          # Border settings
-          panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
-          
-          # Margin adjustments
-          plot.margin = margin(15, 15, 15, 15)
+          ggplot2::geom_line(linewidth = 1.1) +
+          ggplot2::geom_point(size = 2.6) +
+          ggplot2::theme_bw() +
+          ggplot2::labs(
+            x = "Time",
+            y = "Severity (logit)",
+            title = ""
+          )
+        
+        # Integer ticks on x-axis
+        rng <- range(df$TimeNum, na.rm = TRUE)
+        p <- p + ggplot2::scale_x_continuous(
+          breaks = seq.int(from = rng[1], to = rng[2], by = 1)
         )
+        
+        p <- p + ggtheme
+        print(p)
+        TRUE
+      },
       
-      plot7 <- plot7 + ggtheme
       
-      if (self$options$angle1 > 0) {
-        plot7 <- plot7 + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle1, hjust = 1))
-      }
-      print(plot7)
-      TRUE
-    },
-    
-    .plot8 = function(image, ggtheme, theme, ...) {
-      if (is.null(image$state))
-        return(FALSE)
-      
-      pf <- image$state
-      
-      plot8 <- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit, color = Fit)) +
-        # Modern point styling with refined shapes
-        geom_point(
-          size = 2.8,
-          stroke = 1.2,
-          alpha = 0.8
-        ) +
-        # Elegant shape and color mapping
-        ggplot2::scale_shape_manual(
-          values = c(16, 17),  # Circle and triangle instead of + and X
-          name = "Fit"
-        ) +
-        ggplot2::scale_color_manual(
-          values = c('#2980b9', '#e74c3c'),  # Blue and red
-          name = "Fit"
-        ) +
-        # Clean boundary lines
-        ggplot2::geom_hline(
-          yintercept = 1.5,
-          linetype = "solid",
-          color = '#95a5a6',
-          linewidth = 0.8,
-          alpha = 0.8
-        ) +
-        ggplot2::geom_hline(
-          yintercept = 0.5,
-          linetype = "solid",
-          color = '#95a5a6',
-          linewidth = 0.8,
-          alpha = 0.8
-        ) +
-        ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
-        ggtitle("") +
-        labs(
-          x = "Measure",
-          y = "Value"
-        ) +
-        theme_minimal() +
-        theme(
-          # Background settings
-          panel.background = element_rect(fill = "#fafafa", color = NA),
-          plot.background = element_rect(fill = "white", color = NA),
-          
-          # Grid line settings
-          panel.grid.major = element_line(color = "#f0f0f0", linewidth = 0.3),
-          panel.grid.minor = element_blank(),
-          
-          # Title and axis label styling
-          plot.title = element_text(
-            hjust = 0.5,
-            size = 15,
-            face = "bold",
-            color = "#2c3e50",
-            margin = margin(b = 15)
-          ),
-          axis.title = element_text(size = 11, color = "#34495e"),
-          axis.text = element_text(size = 9.5, color = "#7f8c8d"),
-          
-          # Legend styling
-          legend.position = "right",
-          legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
-          legend.text = element_text(size = 10, color = "#7f8c8d"),
-          legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
-          legend.key = element_rect(fill = "transparent"),
-          legend.margin = margin(10, 10, 10, 10),
-          
-          # Border settings
-          panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
-          
-          # Margin adjustments
-          plot.margin = margin(15, 15, 15, 15)
-        )
-      
-      plot8 <- plot8 + ggtheme
-      print(plot8)
-      TRUE
-    },
-    
-
       # Optimized computation function
       .computeRES = function() {
-        dep <- self$options$dep
-        id <- self$options$id
+        dep    <- self$options$dep
+        id     <- self$options$id
         facets <- self$options$facet
+        timev  <- self$options$time
+        
+        # Basic checks
+        if (is.null(dep) || is.null(id) || is.null(facets))
+          return(NULL)
         
         # Extract only needed columns to reduce memory usage
-        needed_cols <- unique(c(dep, id, facets))
+        needed_cols <- unique(c(dep, id, facets, timev))
         data <- stats::na.omit(self$data[, needed_cols, drop = FALSE])
         
-        # Create formula more efficiently
-        facets_formula <- paste0(facets, collapse = '*')
-        formula <- stats::as.formula(paste0('~ step+', facets_formula))
+        # Facet data: existing facets + optional time facet
+        if (!is.null(timev)) {
+          facet_vars <- unique(c(facets, timev))
+        } else {
+          facet_vars <- facets
+        }
         
-        # Extract facet data once
-        facet_data <- data[, facets, drop = FALSE]
+        # Ensure all facet variables are treated as categorical facets
+        for (v in facet_vars) {
+          data[[v]] <- as.factor(data[[v]])
+        } 
+        
+        facet_data <- data[, facet_vars, drop = FALSE]
+        
+        # Build formulaA:
+        # - Without time: ~ step + rater*task
+        # - With time:    ~ step + (rater*task) + (rater*time)
+        if (length(facets) >= 2) {
+          rater_var <- facets[[1]]  # rater must be first (per instructions)
+          task_var  <- facets[[2]]
+        } else {
+          rater_var <- facets[[1]]
+          task_var  <- NULL
+        }
+        
+        if (!is.null(timev) && !is.null(task_var)) {
+          formula <- stats::as.formula(
+            paste0("~ step + ", rater_var, "*", task_var, " + ", rater_var, "*", timev)
+          )
+        } else if (!is.null(task_var)) {
+          formula <- stats::as.formula(
+            paste0("~ step + ", rater_var, "*", task_var)
+          )
+        } else {
+          formula <- stats::as.formula(
+            paste0("~ step + ", rater_var)
+          )
+        }
         
         # Run main computation
         res <- TAM::tam.mml.mfr(
@@ -851,27 +1144,30 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           pid = data[[id]],
           formulaA = formula
         )
+        
         # Clean up to free memory
         rm(data, facet_data)
         gc(verbose = FALSE)
         return(res)
       },
       
-    .computeResiduals = function() {
-      if (is.null(private$.allCache)) {
-        stop("Model result not available. Run analysis first.")
+      .computeResiduals = function() {
+        if (is.null(private$.allCache)) {
+          stop("Model result not available. Run analysis first.")
+        }
+        
+        if (is.null(private$.residualCache)) {
+          res <- private$.allCache
+          private$.residualCache <- TAM::IRT.residuals(res)
+        }
+        
+        return(private$.residualCache)
       }
       
-      if (is.null(private$.residualCache)) {
-        res <- private$.allCache
-        private$.residualCache <- TAM::IRT.residuals(res)
-      }
-      
-      return(private$.residualCache)
-    }
-  
-     )
+    )
   )
+
+
 
 # Example------------------------------
 # Wide to long for dataset using reshape packate

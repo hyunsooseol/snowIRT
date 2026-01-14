@@ -21,15 +21,7 @@ item(
   plot1 = FALSE,
   disi,
   plot2 = FALSE,
-  plot3 = FALSE,
-  width2 = 500,
-  height2 = 500,
-  width = 500,
-  height = 500,
-  width1 = 500,
-  height1 = 500,
-  width3 = 500,
-  height3 = 500
+  plot3 = FALSE
 )
 }
 \arguments{
@@ -66,22 +58,6 @@ item(
 \item{plot2}{.}
 
 \item{plot3}{.}
-
-\item{width2}{.}
-
-\item{height2}{.}
-
-\item{width}{.}
-
-\item{height}{.}
-
-\item{width1}{.}
-
-\item{height1}{.}
-
-\item{width3}{.}
-
-\item{height3}{.}
 }
 \value{
 A results object containing:

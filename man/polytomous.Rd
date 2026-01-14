@@ -30,19 +30,9 @@ polytomous(
   st = FALSE,
   plot2 = FALSE,
   plot3 = FALSE,
-  width = 500,
-  height = 500,
-  width5 = 500,
-  height5 = 500,
   plot4 = FALSE,
   plot6 = FALSE,
-  obs = "TRUE",
-  width7 = 500,
-  height7 = 500,
-  width3 = 500,
-  height3 = 500,
-  width2 = 500,
-  height2 = 500
+  obs = "TRUE"
 )
 }
 \arguments{
@@ -97,31 +87,11 @@ where 0 degrees represents completely horizontal labels.}
 
 \item{plot3}{.}
 
-\item{width}{.}
-
-\item{height}{.}
-
-\item{width5}{.}
-
-\item{height5}{.}
-
 \item{plot4}{.}
 
 \item{plot6}{.}
 
 \item{obs}{.}
-
-\item{width7}{.}
-
-\item{height7}{.}
-
-\item{width3}{.}
-
-\item{height3}{.}
-
-\item{width2}{.}
-
-\item{height2}{.}
 }
 \value{
 A results object containing:

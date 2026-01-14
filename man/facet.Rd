@@ -9,6 +9,11 @@ facet(
   dep,
   id,
   facet,
+  time,
+  tes = FALSE,
+  plot9 = FALSE,
+  driftm = FALSE,
+  driftfit = FALSE,
   rm = FALSE,
   im = FALSE,
   inter = FALSE,
@@ -21,33 +26,17 @@ facet(
   pca = FALSE,
   local = FALSE,
   plot1 = FALSE,
-  width1 = 500,
-  height1 = 500,
   plot2 = FALSE,
-  width2 = 500,
-  height2 = 500,
   plot3 = FALSE,
-  width3 = 500,
-  height3 = 500,
   angle = 0,
   plot4 = FALSE,
-  width4 = 500,
-  height4 = 500,
   plot5 = FALSE,
   num = 1,
-  width5 = 500,
-  height5 = 500,
   plot6 = FALSE,
   num1 = 1,
-  width6 = 500,
-  height6 = 500,
   plot7 = FALSE,
-  width7 = 500,
-  height7 = 500,
   angle1 = 0,
-  plot8 = FALSE,
-  width8 = 500,
-  height8 = 500
+  plot8 = FALSE
 )
 }
 \arguments{
@@ -58,6 +47,16 @@ facet(
 \item{id}{.}
 
 \item{facet}{.}
+
+\item{time}{.}
+
+\item{tes}{.}
+
+\item{plot9}{.}
+
+\item{driftm}{.}
+
+\item{driftfit}{.}
 
 \item{rm}{.}
 
@@ -83,59 +82,27 @@ facet(
 
 \item{plot1}{.}
 
-\item{width1}{.}
-
-\item{height1}{.}
-
 \item{plot2}{.}
 
-\item{width2}{.}
-
-\item{height2}{.}
-
 \item{plot3}{.}
-
-\item{width3}{.}
-
-\item{height3}{.}
 
 \item{angle}{.}
 
 \item{plot4}{.}
 
-\item{width4}{.}
-
-\item{height4}{.}
-
 \item{plot5}{.}
 
 \item{num}{.}
-
-\item{width5}{.}
-
-\item{height5}{.}
 
 \item{plot6}{.}
 
 \item{num1}{.}
 
-\item{width6}{.}
-
-\item{height6}{.}
-
 \item{plot7}{.}
-
-\item{width7}{.}
-
-\item{height7}{.}
 
 \item{angle1}{.}
 
 \item{plot8}{.}
-
-\item{width8}{.}
-
-\item{height8}{.}
 }
 \value{
 A results object containing:
@@ -148,6 +115,10 @@ A results object containing:
   \code{results$raw} \tab \tab \tab \tab \tab a table \cr
   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
+  \code{results$driftm} \tab \tab \tab \tab \tab a table \cr
+  \code{results$driftfit} \tab \tab \tab \tab \tab a table \cr
+  \code{results$driftsum} \tab \tab \tab \tab \tab a table \cr
+  \code{results$plot9} \tab \tab \tab \tab \tab an image \cr
   \code{results$pm} \tab \tab \tab \tab \tab a table \cr
   \code{results$pfit} \tab \tab \tab \tab \tab a table \cr
   \code{results$resid} \tab \tab \tab \tab \tab a table \cr
