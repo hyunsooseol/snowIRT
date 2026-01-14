@@ -28,6 +28,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             '<li>The variables should be named <b>subject</b>,<b>rater</b> and <b>task</b> respectively. Any other variable name will result in an error message.</b></li>',
             '<li>In the Facet variable box, you must put the variable <b>rater</b> first.</li>',
             '<li>You can currently only put <b>two variables</b> in the Facet variable box.</li>',
+            '<li><b>Do not put the Time variable in the Facet box.</b> Specify Time only in the <b>Time</b> option to estimate rater × time drift.</li>',
             '<li>Empty PCA or Local Dependency tables may occur when the residual matrix is sparse (e.g., unbalanced designs where not all students are rated by all rater × task combinations), when residual variance is near-zero, or when non-finite residuals are produced.</li>',
             '<li>We recommend using <a href="https://www.winsteps.com" target = "_blank">Facet software</a> for analyzing various experimental designs.</li>',
             '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
@@ -270,112 +271,67 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             }
           }
         
-          # (B) Drift - Fit (weighted aggregation by observed counts)
+          # (B) Drift - Fit (rater × time)
           if (isTRUE(self$options$driftfit)) {
             
             ifit_rt <- tryCatch({
               
-              # --- item-level fit from TAM
+              # ---- 1. item-level fit from TAM
               ff <- TAM::msq.itemfit(res)
               df <- as.data.frame(ff$itemfit)
+              
               if (!all(c("item", "Outfit", "Infit") %in% names(df)))
                 return(NULL)
               
-              df <- dplyr::select(df, c("item", "Outfit", "Infit"))
-              
-              # =========================================================
-              # Robust token extraction from item labels
-              # =========================================================
-              extract_tok <- function(x, prefix) {
-                x <- as.character(x)
-                m <- regexpr(paste0(prefix, "[^:\\-\\._\\s]+"), x, perl = TRUE)
+              # ---- 2. parse rater and time from item labels
+              # item labels look like: rater1-time t1-task k3 (or similar)
+              extract <- function(x, key) {
+                m <- regexpr(paste0(key, "[^:\\-\\._\\s]+"), x, perl = TRUE)
                 ifelse(m > 0, regmatches(x, m), NA_character_)
               }
               
-              df$rater_tok <- extract_tok(df$item, "rater")
-              df$time_tok  <- extract_tok(df$item, "time")
-              df$task_tok  <- extract_tok(df$item, "task")
+              df$rater <- extract(df$item, "rater")
+              df$time  <- extract(df$item, "time")
+              df$time  <- gsub("^time", "", df$time)   # -> t1, t2, ...
               
-              # Fallback for task token
-              if (any(is.na(df$task_tok))) {
-                get_fallback_task <- function(s) {
-                  toks <- regmatches(s, gregexpr("[A-Za-z]+[^:\\-\\._\\s]*", s, perl = TRUE))[[1]]
-                  toks <- toks[!grepl("^rater", toks)]
-                  toks <- toks[!grepl("^time", toks)]
-                  toks <- toks[!grepl("^step", toks)]
-                  if (length(toks) == 0) return(NA_character_)
-                  toks[1]
-                }
-                idx_na <- which(is.na(df$task_tok))
-                df$task_tok[idx_na] <- vapply(df$item[idx_na], get_fallback_task, character(1))
-              }
+              # ---- 3. Aggregate to rater × time
+              agg_fit <- df |>
+                dplyr::filter(!is.na(rater), !is.na(time)) |>
+                dplyr::group_by(rater, time) |>
+                dplyr::summarise(
+                  infit  = mean(Infit,  na.rm = TRUE),
+                  outfit = mean(Outfit, na.rm = TRUE),
+                  .groups = "drop"
+                )
               
-              # =========================================================
-              # Build true N from raw data
-              # =========================================================
+              # ---- 4. True N from raw data
               dep    <- self$options$dep
               id     <- self$options$id
               facets <- self$options$facet
               timev  <- self$options$time
               
-              needed_cols <- unique(c(dep, id, facets, timev))
-              dat <- stats::na.omit(self$data[, needed_cols, drop = FALSE])
+              dat0 <- stats::na.omit(self$data[, c(dep, id, facets, timev), drop = FALSE])
               
               rater_var <- facets[[1]]
-              task_var  <- facets[[2]]
               
-              mk_tok <- function(prefix, x) {
-                x <- as.character(x)
-                ifelse(startsWith(x, prefix), x, paste0(prefix, x))
-              }
+              # rater 라벨을 itemfit과 같은 형태로 강제: "rater1", "rater2", ...
+              dat0$rater_norm <- as.character(dat0[[rater_var]])
+              dat0$rater_norm <- ifelse(grepl("^rater", dat0$rater_norm),
+                                        dat0$rater_norm,
+                                        paste0("rater", dat0$rater_norm))
               
-              dat$rater_tok <- mk_tok("rater", dat[[rater_var]])
-              dat$time_tok  <- mk_tok("time",  dat[[timev]])
-              dat$task_tok  <- mk_tok("task",  dat[[task_var]])
+              # time 라벨: 이미 t로 시작하면 유지, 아니면 t를 붙임  (tt1 방지)
+              tt <- as.character(dat0[[timev]])
+              tt <- ifelse(grepl("^t", tt), tt, paste0("t", tt))
+              dat0$time_norm <- tt
               
-              # Count per rater × time × task
-              n_by_cell <- dat |>
-                dplyr::group_by(rater_tok, time_tok, task_tok) |>
+              n_by_rt <- dat0 |>
+                dplyr::group_by(rater = rater_norm, time = time_norm) |>
                 dplyr::summarise(n = dplyr::n(), .groups = "drop")
               
-              # Total N per rater × time
-              n_by_rt <- dat |>
-                dplyr::group_by(rater_tok, time_tok) |>
-                dplyr::summarise(n_total = dplyr::n(), .groups = "drop")
+              out <- dplyr::left_join(agg_fit, n_by_rt, by = c("rater", "time"))              
               
-              # =========================================================
-              # Merge counts onto itemfit rows
-              # =========================================================
-              parts <- dplyr::left_join(
-                df,
-                n_by_cell,
-                by = c("rater_tok", "time_tok", "task_tok")
-              )
-              parts$n[is.na(parts$n)] <- 0L
-              
-              # =========================================================
-              # Aggregate to rater × time (weighted)
-              # =========================================================
-              agg <- parts |>
-                dplyr::filter(!is.na(rater_tok), !is.na(time_tok)) |>
-                dplyr::group_by(rater_tok, time_tok) |>
-                dplyr::summarise(
-                  infit  = if (sum(n) > 0) stats::weighted.mean(Infit,  w = n, na.rm = TRUE) else mean(Infit,  na.rm = TRUE),
-                  outfit = if (sum(n) > 0) stats::weighted.mean(Outfit, w = n, na.rm = TRUE) else mean(Outfit, na.rm = TRUE),
-                  n_fit  = sum(n),
-                  .groups = "drop"
-                ) |>
-                dplyr::left_join(n_by_rt, by = c("rater_tok", "time_tok"))
-              
-              # Use raw observed N for display
-              agg$n <- agg$n_total
-              
-              # Clean labels
-              agg$rater <- agg$rater_tok
-              agg$time  <- gsub("^time", "", agg$time_tok)
-              
-              agg <- dplyr::select(agg, rater, time, infit, outfit, n)
-              agg
+              out
               
             }, error = function(e) NULL)
             
@@ -395,6 +351,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               }
             }
           }
+          
           
           # (C) Drift Summary (대안 1)  : tes 체크박스 재활용
           if (isTRUE(self$options$tes)) {
@@ -860,37 +817,78 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         print(plot4)
         TRUE
       },
+
       # Expected score curves-------------------
-      
       .plot5 = function(image, ...) {
-        num <- self$options$num
+        
         if (!self$options$plot5)
           return(FALSE)
-        res <- private$.allCache
         
-        plot5 <- plot(res,
-                      items = num,
-                      type = "expected",
-                      export = FALSE)
-        print(plot5)
-        TRUE
+        res <- private$.allCache
+        if (is.null(res)) {
+          graphics::plot.new()
+          graphics::text(0.5, 0.5, "Model is not available.", cex = 1.0)
+          return(TRUE)
+        }
+        
+        num <- suppressWarnings(as.integer(self$options$num))
+        if (is.na(num) || num < 1) {
+          graphics::plot.new()
+          graphics::text(0.5, 0.5, "Select a valid item index.", cex = 1.0)
+          return(TRUE)
+        }
+        
+        tryCatch({
+          p <- plot(res, items = num, type = "expected", export = FALSE)
+          if (!is.null(p))
+            print(p)
+          TRUE
+        }, error = function(e) {
+          graphics::plot.new()
+          graphics::text(0.5, 0.5, paste("Plot error:\n", e$message), cex = 0.9)
+          TRUE
+        })
       },
       
-      # Item response curve-------------------
       
+      
+     
+      # Item response curve-------------------
       .plot6 = function(image, ...) {
-        num1 <- self$options$num1
+        
         if (!self$options$plot6)
           return(FALSE)
+        
         res <- private$.allCache
-        plot6 <- plot(res,
-                      items = num1,
-                      type = "items",
-                      export = FALSE)
-        print(plot6)
-        TRUE
+        if (is.null(res)) {
+          graphics::plot.new()
+          graphics::text(0.5, 0.5, "Model is not available.", cex = 1.0)
+          return(TRUE)
+        }
+        
+        num1 <- suppressWarnings(as.integer(self$options$num1))
+        if (is.na(num1) || num1 < 1) {
+          graphics::plot.new()
+          graphics::text(0.5, 0.5, "Select a valid item index.", cex = 1.0)
+          return(TRUE)
+        }
+        
+        tryCatch({
+          p <- plot(res, items = num1, type = "items", export = FALSE)
+          
+          # plot() may return an object (lattice). If so, print it.
+          if (!is.null(p))
+            print(p)
+          
+          TRUE
+        }, error = function(e) {
+          graphics::plot.new()
+          graphics::text(0.5, 0.5, paste("Plot error:\n", e$message), cex = 0.9)
+          TRUE
+        })
       },
       
+
       # interaction fit plot--------------
       .plot7 = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
@@ -1090,66 +1088,79 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         facets <- self$options$facet
         timev  <- self$options$time
         
-        # Basic checks
         if (is.null(dep) || is.null(id) || is.null(facets))
           return(NULL)
         
-        # Extract only needed columns to reduce memory usage
-        needed_cols <- unique(c(dep, id, facets, timev))
-        data <- stats::na.omit(self$data[, needed_cols, drop = FALSE])
+        # jamovi options → character vector
+        facets_vec <- unlist(facets)
+        facets_vec <- as.character(facets_vec)
+        facets_vec <- facets_vec[!is.na(facets_vec) & nzchar(facets_vec)]
         
-        # Facet data: existing facets + optional time facet
-        if (!is.null(timev)) {
-          facet_vars <- unique(c(facets, timev))
-        } else {
-          facet_vars <- facets
+        # ---- Pull only needed columns (original time column included if selected)
+        needed_cols <- unique(c(dep, id, facets_vec, timev))
+        dat <- stats::na.omit(self$data[, needed_cols, drop = FALSE])
+        
+        # ---- Ensure facets are factors
+        for (v in unique(c(facets_vec, timev))) {
+          if (!is.null(v) && nzchar(v))
+            dat[[v]] <- as.factor(dat[[v]])
         }
         
-        # Ensure all facet variables are treated as categorical facets
-        for (v in facet_vars) {
-          data[[v]] <- as.factor(data[[v]])
-        } 
-        
-        facet_data <- data[, facet_vars, drop = FALSE]
-        
-        # Build formulaA:
-        # - Without time: ~ step + rater*task
-        # - With time:    ~ step + (rater*task) + (rater*time)
-        if (length(facets) >= 2) {
-          rater_var <- facets[[1]]  # rater must be first (per instructions)
-          task_var  <- facets[[2]]
-        } else {
-          rater_var <- facets[[1]]
-          task_var  <- NULL
+        # ---------------------------------------------------------
+        # IMPORTANT: keep variable name 'timev' (do NOT create .time_fac),
+        # but recode its LEVELS safely as "t1", "t2", ...
+        # This prevents TAM duplicate row.names while preserving facet labels rater:time
+        # ---------------------------------------------------------
+        if (!is.null(timev) && nzchar(timev)) {
+          dat[[timev]] <- as.factor(paste0("t", as.character(dat[[timev]])))
         }
         
-        if (!is.null(timev) && !is.null(task_var)) {
-          formula <- stats::as.formula(
-            paste0("~ step + ", rater_var, "*", task_var, " + ", rater_var, "*", timev)
-          )
-        } else if (!is.null(task_var)) {
-          formula <- stats::as.formula(
-            paste0("~ step + ", rater_var, "*", task_var)
-          )
+        # ---- Identify rater/task
+        rater_var <- facets_vec[1]
+        task_var  <- if (length(facets_vec) >= 2) facets_vec[2] else NULL
+        
+        # ---- Build facet_data (use original facets + optional timev)
+        facet_vars <- facets_vec
+        if (!is.null(timev) && nzchar(timev))
+          facet_vars <- unique(c(facet_vars, timev))
+        facet_data <- dat[, facet_vars, drop = FALSE]
+        
+        # ---- Build formulaA terms (avoid duplicates)
+        terms <- c("step")
+        
+        # rater * task (only if task exists and task is NOT timev)
+        if (!is.null(task_var) && nzchar(task_var)) {
+          if (is.null(timev) || !identical(task_var, timev)) {
+            terms <- c(terms, paste0(rater_var, "*", task_var))
+          } else {
+            # task_var == timev 인 경우: facet 두 번째에 time을 넣은 상황이므로 task 항은 생략
+            terms <- c(terms, rater_var)
+          }
         } else {
-          formula <- stats::as.formula(
-            paste0("~ step + ", rater_var)
-          )
+          terms <- c(terms, rater_var)
         }
         
-        # Run main computation
+        # rater * time (use original timev name)
+        if (!is.null(timev) && nzchar(timev)) {
+          terms <- c(terms, paste0(rater_var, "*", timev))
+        }
+        
+        terms <- unique(terms)
+        formula <- stats::as.formula(paste0("~ ", paste(terms, collapse = " + ")))
+        
+        # ---- Fit model
         res <- TAM::tam.mml.mfr(
-          resp = data[[dep]],
-          facets = facet_data,
-          pid = data[[id]],
+          resp     = dat[[dep]],
+          facets   = facet_data,
+          pid      = dat[[id]],
           formulaA = formula
         )
         
-        # Clean up to free memory
-        rm(data, facet_data)
+        rm(dat, facet_data)
         gc(verbose = FALSE)
-        return(res)
+        res
       },
+      
       
       .computeResiduals = function() {
         if (is.null(private$.allCache)) {
