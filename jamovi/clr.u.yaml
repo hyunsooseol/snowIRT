@@ -44,7 +44,7 @@ children:
                 optionName: model
                 optionPart: PCM
           - type: Label
-            label: Statistics
+            label: 'Tables'
             children:
               - type: CheckBox
                 name: clr

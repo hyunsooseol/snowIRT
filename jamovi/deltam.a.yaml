@@ -41,7 +41,7 @@ options:
       default: TRUE
     
     - name: plot
-      title: Fixed DIF  
+      title: Fixed  
       type: Bool
       default: FALSE
 
@@ -62,7 +62,7 @@ options:
           name:  IPP3
 
     - name: plot1
-      title: Normal DIF  
+      title: Normal   
       type: Bool
       default: FALSE
 

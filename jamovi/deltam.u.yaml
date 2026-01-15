@@ -32,19 +32,16 @@ children:
         stretchFactor: 1
         children:
           - type: Label
-            label: Fixed method
+            label: 'Methods'
             children:
-              - type: CheckBox
-                name: fixed
-          - type: Label
-            label: Normal method
-            children:
-              - type: CheckBox
-                name: normal
-                children:
-                  - type: ComboBox
-                    name: puri
-                    enable: (normal)
+                  - type: CheckBox
+                    name: fixed
+                  - type: CheckBox
+                    name: normal
+                    children:
+                      - type: ComboBox
+                        name: puri
+                        enable: (normal)
       - type: LayoutBox
         margin: large
         cell:
@@ -53,7 +50,7 @@ children:
         stretchFactor: 1
         children:
           - type: Label
-            label: 'Plots'
+            label: 'DIF plots'
             children:
               - type: CheckBox
                 name: plot 

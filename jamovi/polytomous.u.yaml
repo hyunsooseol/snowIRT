@@ -113,7 +113,7 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: 'Fit'
+            label: 'Fit plots'
             children:
               - type: CheckBox
                 name: inplot

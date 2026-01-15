@@ -75,7 +75,7 @@ options:
           title: High 
 
     - name: dif
-      title: Partial Gamma coefficients for DIF
+      title: Partial gamma coefficients for DIF
       type: Bool
       default: FALSE 
 

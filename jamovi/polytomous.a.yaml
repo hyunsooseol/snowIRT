@@ -102,12 +102,12 @@ options:
       type: Output
 
     - name: inplot
-      title: Infit plot 
+      title: 'Infit  '
       type: Bool
       default: false
       
     - name: outplot
-      title: Outfit plot
+      title: 'Outfit' 
       type: Bool
       default: false
 
