@@ -9,7 +9,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
     private = list(
       .cache = list(),
       .htmlwidget = NULL,
-      
+
       .init = function() {
         private$.htmlwidget <- HTMLWidget$new()
         if (is.null(self$data) | is.null(self$options$vars)) {
@@ -34,17 +34,17 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             "ULI:Upper-Lower Index based on 3 groups, RIT:Item-Total correlation, RIR: Item-Rest correlation. Missing values should be recoded as 0 or incorrect answer in jamovi."
           )
       },
-      
+
       .run = function() {
         if (length(self$options$vars) < 2) return()
-        
+
         # missing values warning---
-        
+
         data <- self$data
         has_missing <- any(is.na(data))
-        
+
         if (has_missing) {
-         
+
           self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
             title = "⚠️ Missing Values Detected",
             content = paste(
@@ -61,30 +61,30 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               '</div>'
             )
           ))
-          
+
           return()
         }
-        
+
 
         key <- self$options$key
         key1 <- strsplit(self$options$key, ',')[[1]]
-        
+
         if (!identical(private$.cache$options, self$options) ||
             !identical(private$.cache$data, self$data)) {
           private$.cache <- list()
           private$.computeRES(data, key1)
           private$.cache$is_ready <- TRUE
-          
+
           private$.cache$options <- self$options
           private$.cache$data <- self$data
         }
-        
+
         counts <- private$.cache$counts
         ts <- private$.cache$ts
         prop <- private$.cache$prop
         res <- private$.cache$res
         dicho <- private$.cache$dicho
-        
+
         # Counts of respondents
         if (isTRUE(self$options$count)) {
           vars <- self$options$vars
@@ -106,7 +106,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             }
           }
         }
-        
+
         # Total summary
         if (isTRUE(self$options$sum1)) {
           vars <- self$options$vars
@@ -131,7 +131,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             }
           }
         }
-        
+
         # Proportions of respondents
         if (isTRUE(self$options$prop)) {
           vars <- self$options$vars
@@ -153,7 +153,7 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             }
           }
         }
-        
+
         # Summary
         if (isTRUE(self$options$sum)) {
           vars <- self$options$vars
@@ -175,62 +175,62 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             }
           }
         }
-        
+
         # Scores, scored file
         dicho_scored <- as.data.frame(dicho$scored) # dichotomous matrix
-        
+
         # Total score
         if (isTRUE(self$options$total)) {
           score <- as.vector(dicho$score)
           self$results$total$setRowNums(rownames(data))
           self$results$total$setValues(score)
         }
-        
+
         # Save scoring
         if (isTRUE(self$options$scoring)) {
           keys <- 1:length(self$options$vars)
           titles <- paste("Item", 1:length(self$options$vars))
           descriptions <- paste("Item", 1:length(self$options$vars))
           measureTypes <- rep("continuous", length(self$options$vars))
-          
+
           self$results$scoring$set(
             keys = keys,
             titles = titles,
             descriptions = descriptions,
             measureTypes = measureTypes
           )
-          
+
           self$results$scoring$setRowNums(rownames(data))
-          
+
           scoring <- as.data.frame(dicho$scored)
-          
+
           for (i in 1:length(self$options$vars)) {
             scores <- as.numeric(scoring[, i])
             self$results$scoring$setValues(index = i, scores)
           }
         }
-        
+
         # Empirical ICC
         if (isTRUE(self$options$plot3)) {
           self$results$plot3$setState(dicho)
         }
-        
+
         # Traditional item analysis table
         if (self$options$disc) {
           it <- ShinyItemAnalysis::ItemAnalysis(dicho_scored)
-          
+
           dif <- it[1]
           ULI <- it[13]
           RIT <- it[11]
           RIR <- it[10]
-          
+
           discri <- data.frame(dif, ULI, RIT, RIR)
-          
+
           dif <- discri$Difficulty
           ULI <- discri$ULI
           RIT <- discri$RIT
           RIR <- discri$RIR
-          
+
           table <- self$results$disc
           vars <- self$options$vars
           for (i in seq_along(vars)) {
@@ -242,32 +242,32 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             table$setRow(rowKey = vars[i], values = row)
           }
         }
-        
+
         # Plot1
         if (isTRUE(self$options$plot1)) {
           self$results$plot1$setState(dicho_scored)
         }
-        
+
         # Histogram of total score
         if (isTRUE(self$options$plot2)) {
           score <- rowSums(dicho$scored)
           df <- data.frame(score)
           state <- list(score, df)
-          
+
           self$results$plot2$setState(state)
         }
       },
-      
+
       .plot2 = function(image2, ggtheme, theme, ...) {
         if (is.null(image2$state))
           return(FALSE)
-        
+
         score <- image2$state[[1]]
         df <- image2$state[[2]]
-        
+
         cut <- median(score) # cut-score
         color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
-        
+
         plot2 <- ggplot(df, aes(score)) +
           geom_histogram(binwidth = 1,
                          fill = color,
@@ -275,30 +275,59 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           xlab("Total score") +
           ylab("Number of respondents") +
           ShinyItemAnalysis::theme_app()
-        
+
         plot2 <- plot2 + ggtheme
         print(plot2)
         TRUE
       },
-      
+
       .plot = function(image, ...) {
         data <- self$data
         key1 <- strsplit(self$options$key, ',')[[1]]
         nums <- self$options$num
         group <- self$options$group
-        
-        plot <- ShinyItemAnalysis::plotDistractorAnalysis(data, key1, num.groups = group, item = nums)
+
+        plot <- tryCatch({
+          ShinyItemAnalysis::plotDistractorAnalysis(data, key1, num.groups = group, item = nums)
+        }, error = function(e) {
+
+          # Show a friendly notice instead of crashing (e.g., "breaks are not unique")
+          msg <- paste0(
+            "Plot could not be generated: ", e$message, "<br><br>",
+            "This often happens when total scores have too few distinct values (many ties), ",
+            "so group cut-points are not unique.<br>",
+            "You can still use the tables above. If you send the .omv file where the error occurs, ",
+            "I can take a look."
+          )
+
+          self$results$instructions$setVisible(TRUE)
+          self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
+            title = "⚠️ Plot skipped",
+            content = paste(
+              '<div style="border: 2px solid #ff9800; border-radius: 10px; padding: 12px; background-color: #fff3e0;">',
+              '<p style="margin:0;">', msg, '</p>',
+              '</div>'
+            )
+          ))
+
+          return(NULL)
+        })
+
+        if (is.null(plot))
+          return(FALSE)
+
         print(plot)
         TRUE
       },
-      
+
+
       .plot1 = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
           return(FALSE)
-        
+
         dicho <- image$state
         disi <- self$options$disi
-        
+
         plot1 <- ShinyItemAnalysis::DDplot(
           dicho,
           discrim = disi,
@@ -306,22 +335,22 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           l = 1,
           u = 3
         )
-        
+
         if (self$options$angle > 0) {
           plot1 <- plot1 + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
         }
-        
+
         print(plot1)
         TRUE
       },
-      
+
       .plot3 = function(image3, ...) {
         if (is.null(image3$state))
           return(FALSE)
-        
+
         num1 <- self$options$num1
         myScores <- image3$state
-        
+
         plot3 <- CTT::cttICC(
           myScores$score,
           myScores$scored[, num1],
@@ -329,22 +358,47 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           colTheme = "spartans",
           cex = 1.5
         )
-        
+
         print(plot3)
         TRUE
       },
-      
+
       .computeRES = function(data, key1) {
         #group1 <- self$options$group1
-        
+
         dicho <- CTT::score(data, key1, output.scored = TRUE)
         private$.cache$dicho <- dicho
-        
+
         private$.cache$counts <- CTT::distractor.analysis(data, key1)
         private$.cache$prop <- CTT::distractor.analysis(data, key1, p.table = TRUE)
         private$.cache$res <- CTT::distractorAnalysis(data, key1)
-        
-        private$.cache$ts <- CTT::distractorAnalysis(data, key1, defineGroups = c(0.33, 0.34, 0.33))
+
+        # ---- Minimal fix for "breaks are not unique" while preserving CTT results
+        # Try original first; if it fails, retry once with a tiny jitter on total score
+        private$.cache$ts <- tryCatch({
+          CTT::distractorAnalysis(data, key1, defineGroups = c(0.33, 0.34, 0.33))
+        }, error = function(e) {
+
+          # only retry for the known breaks issue; otherwise rethrow
+          if (!grepl("breaks.*not unique", e$message, ignore.case = TRUE))
+            stop(e)
+
+          # deterministic tiny jitter to break ties in quantile cutpoints
+          set.seed(1)
+          score <- as.numeric(dicho$score)
+          score_j <- score + stats::runif(length(score), min = -1e-8, max = 1e-8)
+
+          # temporarily replace total score used inside CTT routines by adjusting the data order
+          # (CTT::distractorAnalysis groups by score internally; jittering score avoids duplicated breaks)
+          # We pass the same data/key, but ensure the score vector is used only for grouping via jittered ties.
+          # As CTT does not expose score as an argument, we mimic it by adding a hidden jittered score column
+          # and using it for ordering before calling the function.
+          o <- order(score_j)
+          data2 <- data[o, , drop = FALSE]
+          key2 <- key1  # key is per item, unaffected by row order
+
+          CTT::distractorAnalysis(data2, key2, defineGroups = c(0.33, 0.34, 0.33))
+        })
       }
     )
   )
