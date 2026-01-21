@@ -429,16 +429,21 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         score <- image2$state[[1]]
         df <- image2$state[[2]]
         
-        cut <- median(score) # cut-score
-        color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
+        cut <- median(score)
         
-        plot2 <- ggplot(df, aes(score)) +
-          geom_histogram(binwidth = 1,
-                         fill = color,
-                         col = "black") +
+        # 각 점수값에 대한 색상 지정
+        df$color_group <- ifelse(df$score < cut, "Below Median",
+                                 ifelse(df$score == cut, "Median", "Above Median"))
+        
+        plot2 <- ggplot(df, aes(x = score, fill = color_group)) +
+          geom_histogram(binwidth = 1, col = "black") +
+          scale_fill_manual(values = c("Below Median" = "red", 
+                                       "Median" = "gray", 
+                                       "Above Median" = "blue")) +
           xlab("Total score") +
           ylab("Number of respondents") +
-          ShinyItemAnalysis::theme_app()
+          ShinyItemAnalysis::theme_app() +
+          theme(legend.position = "none")
         
         plot2 <- plot2 + ggtheme
         print(plot2)
