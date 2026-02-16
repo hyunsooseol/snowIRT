@@ -1,10 +1,8 @@
 # snowIRT
-This package provides distractor analysis, item and person statistics, Model fit, Differential Item Functioning, Wright Map, Expected Score Curve, and Item Characteristic Curves for DIF using the Rasch measurement model.
+This module includes dichotomous, polytomous, and many facet model based on Rasch measurement model. This module also provides variouse types of DIF,
+Generalizability theory, and Distractor analysis.
+<img width="225" height="356" alt="image" src="https://github.com/user-attachments/assets/568d850d-e6f0-4e39-813b-07597490cea8" />
 
-* These anlalyses are described in the book;
-https://bookdown.org/dkatz/Rasch_Biome/
-
-snowIRT module can be installed and used in R as a standard R packages.
 # Installation
 At the moment, snowIRT is not in CRAN yet, so you need to install it via devtools
 
