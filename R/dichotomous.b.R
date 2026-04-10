@@ -110,7 +110,8 @@ adjustment; Ho= the data fit the Rasch model."
         reliability <- person$WLE.rel
         
         # person statistics
-        total <- person$PersonScores
+        score <- apply(data, 1, sum)
+        total <- score
         pmeasure <- person$theta
         pse <- person$error
         
@@ -125,9 +126,6 @@ adjustment; Ho= the data fit the Rasch model."
         
         # q3 matrix----------
         mat <- model$Q3.matr
-        
-        # total score calculation
-        score <- apply(data, 1, sum)
         
         # summary of total score
         to <- psych::describe(score)
@@ -204,13 +202,12 @@ adjustment; Ho= the data fit the Rasch model."
           self$results$pse$setRowNums(rownames(data))
           self$results$pse$setValues(pse)
         }
-        # person infit---------
+        
+        # person fit---------
         pfit <- TAM::tam.personfit(tamobj)
         pinfit <- pfit$infitPerson
-        
-        # person outfit---------
-        pfit <- TAM::tam.personfit(tamobj)
         poutfit <- pfit$outfitPerson
+        
         
         # Residual----------
         res <- TAM::IRT.residuals(tamobj)
@@ -375,51 +372,44 @@ adjustment; Ho= the data fit the Rasch model."
       },
       # Populate q3 matrix table-----
       .populateMatrixTable = function(results) {
-        # get variables---------------------------------
-        
         matrix <- self$results$mf$get('mat')
         vars <- self$options$get('vars')
         nVars <- length(vars)
         
-        # add columns--------
-        
+        # add columns
         for (i in seq_along(vars)) {
           var <- vars[[i]]
-          
           matrix$addColumn(
             name = paste0(var),
             title = var,
             type = 'number',
             format = 'zto'
           )
-          # empty cells above and put "-" in the main diagonal
-          for (i in seq_along(vars)) {
-            var <- vars[[i]]
-            values <- list()
-            for (j in seq(i, nVars)) {
-              v <- vars[[j]]
-              values[[paste0(v)]]  <- ''
-            }
-            values[[paste0(var)]]  <- '\u2014'
-            matrix$setRow(rowKey = var, values)
-          }
-          data <- self$data
-          for (v in vars)
-            data[[v]] <- jmvcore::toNumeric(data[[v]])
-          #compute again------
-          mat <- results$mat
-          # populate result----------------------------------------
-          for (i in 2:nVars) {
-            for (j in seq_len(i - 1)) {
-              values <- list()
-              
-              values[[paste0(vars[[j]])]] <- mat[i, j]
-              
-              matrix$setRow(rowNo = i, values)
-            }
-          }
         }
         
+        # initialize rows: upper triangle blank, diagonal em dash
+        for (i in seq_along(vars)) {
+          var <- vars[[i]]
+          values <- list()
+          
+          for (j in seq_len(nVars)) {
+            v <- vars[[j]]
+            values[[paste0(v)]] <- if (j < i) NA else ''
+          }
+          
+          values[[paste0(var)]] <- '\u2014'
+          matrix$setRow(rowKey = var, values = values)
+        }
+        
+        # populate lower triangle
+        mat <- results$mat
+        for (i in 2:nVars) {
+          values <- list()
+          for (j in seq_len(i - 1)) {
+            values[[paste0(vars[[j]])]] <- mat[i, j]
+          }
+          matrix$setRow(rowNo = i, values = values)
+        }
       },
       
       # populate item table==============================================

@@ -136,7 +136,8 @@ adjustment; Ho= the data fit the Rasch model."
         
         if (isTRUE(self$options$tau)) {
           tau <- tamobj$item_irt
-          
+          txt <- paste(capture.output(print(tau, row.names = FALSE)), collapse = "\n")
+          self$results$text$setContent(txt)
           # rsmod <- psychotools::rsmodel(as.matrix(data))
           #
           # ## extract threshold parameters with sum zero restriction
@@ -149,7 +150,7 @@ adjustment; Ho= the data fit the Rasch model."
           # tau<- data.frame(df)
           #
           #
-          self$results$text$setContent(tau)
+          #self$results$text$setContent(tau)
           
         }
         
@@ -171,7 +172,8 @@ adjustment; Ho= the data fit the Rasch model."
         reliability <- person$WLE.rel
         
         # person statistics------------------
-        total <- person$PersonScores
+        score <- apply(data, 1, sum)
+        total <- score
         personmeasure <- person$theta
         pse <- person$error
         
@@ -227,7 +229,7 @@ adjustment; Ho= the data fit the Rasch model."
         p <- lr$p
         
         # total score calculation
-        score <- apply(data, 1, sum)
+        #score <- apply(data, 1, sum)
         
         # summary of total score
         to <- psych::describe(score)
@@ -256,14 +258,12 @@ adjustment; Ho= the data fit the Rasch model."
         
         # self$results$text1$setContent(st)
         
-        # person infit---------
+        # person fit---------
         pfit <- TAM::tam.personfit(tamobj)
         pinfit <- pfit$infitPerson
-        
-        # person outfit---------
-        pfit <- TAM::tam.personfit(tamobj)
         poutfit <- pfit$outfitPerson
         
+         
         # Residual----------
         
         res <- TAM::IRT.residuals(tamobj)
@@ -606,50 +606,48 @@ adjustment; Ho= the data fit the Rasch model."
       # Populate q3 matrix table-----
       
       .populateMatrixTable = function(results) {
-        # get variables---------------------------------
-        
         matrix <- self$results$mf$get('mat')
         vars <- self$options$get('vars')
         nVars <- length(vars)
-        # add columns--------
+        
+        # add columns
         for (i in seq_along(vars)) {
           var <- vars[[i]]
-          
           matrix$addColumn(
             name = paste0(var),
             title = var,
             type = 'number',
             format = 'zto'
           )
-          for (i in seq_along(vars)) {
-            var <- vars[[i]]
-            values <- list()
-            for (j in seq(i, nVars)) {
-              v <- vars[[j]]
-              values[[paste0(v)]]  <- ''
-            }
-            values[[paste0(var)]]  <- '\u2014'
-            matrix$setRow(rowKey = var, values)
-            
-          }
-          data <- self$data
-          #data<- private$.cleanData
-          for (v in vars)
-            data[[v]] <- jmvcore::toNumeric(data[[v]])
-          #compute again------
-          mat <- results$mat
-          # populate result----------------------------------------
-          for (i in 2:nVars) {
-            for (j in seq_len(i - 1)) {
-              values <- list()
-              values[[paste0(vars[[j]])]] <- mat[i, j]
-              
-              matrix$setRow(rowNo = i, values)
-            }
-          }
         }
         
+        # initialize rows: lower triangle will be filled later,
+        # upper triangle blank, diagonal em dash
+        for (i in seq_along(vars)) {
+          var <- vars[[i]]
+          values <- list()
+          
+          for (j in seq_len(nVars)) {
+            v <- vars[[j]]
+            values[[paste0(v)]] <- if (j < i) NA else ''
+          }
+          
+          values[[paste0(var)]] <- '\u2014'
+          matrix$setRow(rowKey = var, values = values)
+        }
+        
+        # populate lower triangle
+        mat <- results$mat
+        for (i in 2:nVars) {
+          values <- list()
+          for (j in seq_len(i - 1)) {
+            values[[paste0(vars[[j]])]] <- mat[i, j]
+          }
+          matrix$setRow(rowNo = i, values = values)
+        }
       },
+      
+      
       #  populate Delta-tau parameterization------------
       
       .populateThresholdsTable = function(results) {
