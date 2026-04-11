@@ -67,9 +67,14 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # reset residual cache when model is recomputed
         private$.residualCache <- NULL
         
-        # Always recompute to ensure changes in Time/drift options are reflected
-        private$.allCache <- private$.computeRES()
+        if (is.null(private$.allCache)) {
+          private$.allCache <- private$.computeRES()
+        }
         res <- private$.allCache
+        
+        # # Always recompute to ensure changes in Time/drift options are reflected
+        # private$.allCache <- private$.computeRES()
+        # res <- private$.allCache
         
         # Facet estimates--------------------------
         
