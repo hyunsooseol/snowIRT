@@ -19,22 +19,33 @@ children:
             name: vars
             isTarget: true
   - type: LayoutBox
-    margin: large
-    stretchFactor: 1
+    margin: none
+    style: inline
+    children:
+      - type: ActionButton
+        name: run
+  - type: CollapseBox
+    label: 'Correct answers'
+    margin: normal
+    collapsed: true
     children:
       - type: LayoutBox
         margin: large
-        cell:
-          column: 0
-          row: 0
         stretchFactor: 1
         children:
-          - name: key
-            type: TextBox
-            format: string
-            stretchFactor: 2
+          - type: LayoutBox
+            margin: large
+            cell:
+              column: 0
+              row: 0
+            stretchFactor: 1
+            children:
+              - name: key
+                type: TextBox
+                format: string
+                stretchFactor: 2
   - type: CollapseBox
-    label: 'Analysis'
+    label: Analysis
     margin: normal
     collapsed: true
     children:
@@ -43,7 +54,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Outputs'
+            label: Tables
             fitToGrid: true
             cell:
               column: 0
@@ -63,22 +74,22 @@ children:
         cell:
           column: 1
           row: 0
-        children: 
+        children:
           - type: Label
-            label: 'Save'
-            children:      
+            label: Save
+            children:
               - type: Output
                 name: total
               - type: Output
                 name: scoring
           - type: Label
-            label: 'Distractor Analysis'
+            label: Distractor Analysis
             fitToGrid: true
             children:
               - type: CheckBox
                 name: sum1
   - type: CollapseBox
-    label: 'Plots'
+    label: Plots
     margin: normal
     collapsed: true
     children:

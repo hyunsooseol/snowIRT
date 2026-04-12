@@ -7,6 +7,7 @@
 item(
   data,
   vars,
+  run,
   key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
   num = 1,
   num1 = 1,
@@ -28,6 +29,8 @@ item(
 \item{data}{The data as a data frame.}
 
 \item{vars}{.}
+
+\item{run}{.}
 
 \item{key}{.}
 

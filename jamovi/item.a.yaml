@@ -20,8 +20,12 @@ options:
       permitted:
          - factor
 
+    - name: run
+      type: Action
+      title: Run
+
     - name: key
-      title: Correct answers
+      title: 'Answers'
       type: String
       default: 'D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B'
 

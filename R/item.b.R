@@ -36,6 +36,10 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       },
       
       .run = function() {
+        
+        if (!isTRUE(self$options$run))
+          return()
+        
         if (length(self$options$vars) < 2) return()
         
         # missing values warning---

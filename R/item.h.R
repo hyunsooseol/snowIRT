@@ -7,6 +7,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
+            run = NULL,
             key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
             num = 1,
             num1 = 1,
@@ -36,6 +37,9 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "nominal"),
                 permitted=list(
                     "factor"))
+            private$..run <- jmvcore::OptionAction$new(
+                "run",
+                run)
             private$..key <- jmvcore::OptionString$new(
                 "key",
                 key,
@@ -110,6 +114,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 default=FALSE)
 
             self$.addOption(private$..vars)
+            self$.addOption(private$..run)
             self$.addOption(private$..key)
             self$.addOption(private$..num)
             self$.addOption(private$..num1)
@@ -130,6 +135,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         }),
     active = list(
         vars = function() private$..vars$value,
+        run = function() private$..run$value,
         key = function() private$..key$value,
         num = function() private$..num$value,
         num1 = function() private$..num1$value,
@@ -149,6 +155,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot3 = function() private$..plot3$value),
     private = list(
         ..vars = NA,
+        ..run = NA,
         ..key = NA,
         ..num = NA,
         ..num1 = NA,
@@ -437,6 +444,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' 
 #' @param data The data as a data frame.
 #' @param vars .
+#' @param run .
 #' @param key .
 #' @param num .
 #' @param num1 .
@@ -479,6 +487,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 item <- function(
     data,
     vars,
+    run,
     key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
     num = 1,
     num1 = 1,
@@ -508,6 +517,7 @@ item <- function(
 
     options <- itemOptions$new(
         vars = vars,
+        run = run,
         key = key,
         num = num,
         num1 = num1,
