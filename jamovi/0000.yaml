@@ -152,6 +152,6 @@ datasets:
     tags:
       - MCQ
 usesNative: true
-minApp: 1.8.0
+minApp: 2.7.12
 
 ...
