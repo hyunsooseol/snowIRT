@@ -72,6 +72,10 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         res <- private$.allCache
         
+        ifit_res <- TAM::msq.itemfit(res)
+        pfit_res <- TAM::tam.personfit(res)
+        
+        
         # # Always recompute to ensure changes in Time/drift options are reflected
         # private$.allCache <- private$.computeRES()
         # res <- private$.allCache
@@ -285,8 +289,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             ifit_rt <- tryCatch({
               
               # ---- 1. item-level fit from TAM
-              ff <- TAM::msq.itemfit(res)
-              df <- as.data.frame(ff$itemfit)
+              # ff <- TAM::msq.itemfit(res)
+              # df <- as.data.frame(ff$itemfit)
+              df <- as.data.frame(ifit_res$itemfit)
               
               if (!all(c("item", "Outfit", "Infit") %in% names(df)))
                 return(NULL)
@@ -477,8 +482,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Interaction fit table------------
         # fit is shown for the rater*item combinations
         
-        ifit <- TAM::msq.itemfit(res)
-        ifit <- as.data.frame(ifit$itemfit)
+        # ifit <- TAM::msq.itemfit(res)
+        # ifit <- as.data.frame(ifit$itemfit)
+        ifit <- as.data.frame(ifit_res$itemfit)
         ifit <- dplyr::select(ifit, c("item", "Outfit", "Infit"))
         
         # The order (rater * item) is important, otherwise the table will be empty
@@ -512,10 +518,13 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         if (isTRUE(self$options$plot7)) {
-          ifit <- TAM::msq.itemfit(res)
-          ifit <- as.data.frame(ifit$itemfit)
+          # ifit <- TAM::msq.itemfit(res)
+          # ifit <- as.data.frame(ifit$itemfit)
+          # ifit <- dplyr::select(ifit, c("item", "Outfit", "Infit"))
+          ifit <- as.data.frame(ifit_res$itemfit)
           ifit <- dplyr::select(ifit, c("item", "Outfit", "Infit"))
           
+                    
           Index <- dimnames(ifit)[[1]]
           ifit$Index <- Index
           
@@ -546,11 +555,14 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         # Person fit table-----------
         
-        pfit <- TAM::tam.personfit(res)
-        pfit <- data.frame(pfit$outfitPerson, pfit$infitPerson)
+        # pfit <- TAM::tam.personfit(res)
+        # pfit <- data.frame(pfit$outfitPerson, pfit$infitPerson)
+        # 
+        # names(pfit) <- c("outfit", "infit")
+        pfit <- data.frame(pfit_res$outfitPerson, pfit_res$infitPerson)
         
         names(pfit) <- c("outfit", "infit")
-        
+                
         # Display 'X' when both infit and outfit values exceed 1.5
         pfit$marker <- ifelse(pfit$outfit > 1.5 &
                                 pfit$infit > 1.5, 'X', '')
@@ -726,10 +738,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         if (isTRUE(self$options$plot8)) {
-          pfit <- TAM::tam.personfit(res)
-          pfit <- data.frame(pfit$outfitPerson, pfit$infitPerson)
+          pfit <- data.frame(pfit_res$outfitPerson, pfit_res$infitPerson)
           names(pfit) <- c("outfit", "infit")
-          pfit$Measure <- per$persons.theta
+          pfit$Measure <- per[[3]]
           pf <- reshape2::melt(
             pfit,
             id.vars = 'Measure',
@@ -739,7 +750,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           image <- self$results$plot8
           image$setState(pf)
         }
-      },
+      
+        },
       #----------------------------------------------------
       .plot1 = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
