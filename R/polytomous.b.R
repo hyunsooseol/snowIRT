@@ -96,115 +96,71 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateModelTable(results)
           private$.populateLrTable(results)
           
-          #prepare plot-----
-          #private$.prepareIccPlot(data)
-          
-          # prepare Expected score curve plot---------
-          #private$.prepareEscPlot(data)
-          
           # prepare person-item map
           private$.preparepiPlot(data)
           
           # prepare item fit plot-------
-          private$.prepareInfitPlot(data)
-          private$.prepareOutfitPlot(data)
+          private$.prepareInfitPlot(results)
+          private$.prepareOutfitPlot(results)
           
-          # prepare rating scale category plot=========
-          #  private$.prepareRatingPlot(data)
           # Summary of total score-----
           private$.populateToTable(results)
           
           #Standard score---------
           private$.populateStTable(results)
           
+          # tau table
+          private$.populateRatingScaleTable(results)
         }
-        
       },
       
       
       # compute results=====================================================
       
       .compute = function(data) {
-        ##################################################################
-        #set.seed(1234)
-        
-        # estimate the Rasch model with MML using function 'tam.mml'-----
-        #tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-        ###########################################################
-        #tamobj <- private$.computeTamobj()
         tamobj <- private$.cache$tamobj
         
-        if (isTRUE(self$options$tau)) {
-          tau <- tamobj$item_irt
-          txt <- paste(capture.output(print(tau, row.names = FALSE)), collapse = "\n")
-          self$results$text$setContent(txt)
-          # rsmod <- psychotools::rsmodel(as.matrix(data))
-          #
-          # ## extract threshold parameters with sum zero restriction
-          # thr <- psychotools::threshpar(rsmod)
-          #
-          # # convering data frame-------
-          #
-          # df <- purrr::map_df(thr, dplyr::bind_rows)
-          #
-          # tau<- data.frame(df)
-          #
-          #
-          #self$results$text$setContent(tau)
-          
-        }
+        # if (isTRUE(self$options$tau)) {
+        #   tau <- tamobj$item_irt
+        #   txt <- paste(capture.output(print(tau, row.names = FALSE)), collapse = "\n")
+        #   self$results$text$setContent(txt)
+        # }
+        
+        item_irt <- tamobj$item_irt
         
         
-        # estimate item difficulty measure---------------
         imeasure <- tamobj$xsi[, 1]
-        
-        #imeasure <- tamobj$item_irt[[3]]
-        # estimate standard error of the item parameter-----
-        #ise <- tamobj$se.AXsi[,2]
         ise <- tamobj$xsi[, 2]
         
         # computing infit and outfit statistics---------------------
-        infit <- TAM::tam.fit(tamobj)$itemfit$Infit
-        outfit <- TAM::tam.fit(tamobj)$itemfit$Outfit
+        fit <- TAM::tam.fit(tamobj)
+        infit <- fit$itemfit$Infit
+        outfit <- fit$itemfit$Outfit
         
-        # computing person separation reliability-------
         person <- TAM::tam.wle(tamobj)
         reliability <- person$WLE.rel
         
-        # person statistics------------------
         score <- apply(data, 1, sum)
         total <- score
         personmeasure <- person$theta
         pse <- person$error
         
-        #computing an effect size of model fit(MADaQ3)-------
-        # assess model fit
         res <- TAM::tam.modelfit(tamobj)
         modelfit <- res$stat.MADaQ3$MADaQ3
-        
-        # pvalue--------
         modelfitp <- res$stat.MADaQ3$p
-        
-        # q3 matrix----------
         mat <- res$Q3.matr
         
-        # Partial credit model using MML estimation---
         mod_pcm <- TAM::tam(resp = as.matrix(data))
         
-        #  Calculation of Thurstonian thresholds----
         thresh <- TAM::tam.threshold(mod_pcm)
         nc <- ncol(thresh)
         
-        # tampartial = TAM::tam.mml(resp = as.matrix(data))
-        # Delta parameter-------------------
         pmeasure <- mod_pcm$item_irt$beta
         
-        # delta-tau parameterization--------
         delta <- mod_pcm$item_irt
         tau <- delta[, c(-1, -2, -3)]
         nc1 <- ncol(tau)
         
-        ########## model comparison-----------
         RSM <- tamobj
         PCM <- mod_pcm
         
@@ -219,7 +175,6 @@ adjustment; Ho= the data fit the Rasch model."
         npars <- comp$IC$Npars
         obs <- comp$IC$Nobs
         
-        #####################
         lr <- comp$LRtest
         
         model1 <- lr$Model1
@@ -228,17 +183,10 @@ adjustment; Ho= the data fit the Rasch model."
         df <- lr$df
         p <- lr$p
         
-        # total score calculation
-        #score <- apply(data, 1, sum)
-        
-        # summary of total score
         to <- psych::describe(score)
         to$kurtosis <- to$kurtosis + 3
         
-        # Histogram of total score-------
-        
-        # colors by cut-score
-        cut <- median(score) # cut-score
+        cut <- median(score)
         color <- c(rep("red", cut - min(score)), "gray", rep("blue", max(score) - cut))
         df2 <- data.frame(score)
         
@@ -246,61 +194,44 @@ adjustment; Ho= the data fit the Rasch model."
         image2 <- self$results$plot2
         image2$setState(state)
         
-        # Standard score----------
-        
-        tosc <- sort(unique(score))          # Levels of total score
-        perc <- stats::ecdf(score)(tosc)     # Percentiles
-        zsco <- sort(unique(scale(score)))   # Z-score
-        tsco <- 50 + 10 * zsco               # T-score
+        tosc <- sort(unique(score))
+        perc <- stats::ecdf(score)(tosc)
+        zsco <- sort(unique(scale(score)))
+        tsco <- 50 + 10 * zsco
         
         st <- cbind(tosc, perc, zsco, tsco)
         st <- as.data.frame(st)
         
-        # self$results$text1$setContent(st)
-        
-        # person fit---------
         pfit <- TAM::tam.personfit(tamobj)
         pinfit <- pfit$infitPerson
         poutfit <- pfit$outfitPerson
         
-         
-        # Residual----------
-        
         res <- TAM::IRT.residuals(tamobj)
         resid <- res$stand_residuals
-        
-        #### Person Statistics###########################
-        
-        # Person tables------------
         
         if (isTRUE(self$options$total)) {
           self$results$total$setRowNums(rownames(data))
           self$results$total$setValues(total)
-          
         }
         
         if (isTRUE(self$options$personmeasure)) {
           self$results$personmeasure$setRowNums(rownames(data))
           self$results$personmeasure$setValues(personmeasure)
-          
         }
         
         if (isTRUE(self$options$pse)) {
           self$results$pse$setRowNums(rownames(data))
           self$results$pse$setValues(pse)
-          
         }
         
         if (isTRUE(self$options$pinfit)) {
           self$results$pinfit$setRowNums(rownames(data))
           self$results$pinfit$setValues(pinfit)
-          
         }
         
         if (isTRUE(self$options$poutfit)) {
           self$results$poutfit$setRowNums(rownames(data))
           self$results$poutfit$setValues(poutfit)
-          
         }
         
         if (isTRUE(self$options$resid)) {
@@ -323,7 +254,6 @@ adjustment; Ho= the data fit the Rasch model."
           }
         }
         
-        # Wrightmap plot--------------
         if (isTRUE(self$options$wplot)) {
           vars <- self$options$vars
           image <- self$results$wplot
@@ -332,7 +262,6 @@ adjustment; Ho= the data fit the Rasch model."
           image$setState(state)
         }
         
-        # Person fit plot3----------------------
         Measure <- personmeasure
         Infit <- pinfit
         Outfit <- poutfit
@@ -346,17 +275,10 @@ adjustment; Ho= the data fit the Rasch model."
         image <- self$results$plot3
         image$setState(pf)
         
-        # ICC Plot -------
-        
-        # image4 <- self$results$plot4
-        # image4$setState(tamobj)
-        
-        # 'Item category for PCM' Plot -------
-        
-        # image6 <- self$results$plot6
-        # image6$setState(tamobj)
         results <-
           list(
+            'fit' = fit,
+            'item_irt' = item_irt,
             'imeasure' = imeasure,
             'ise' = ise,
             'infit' = infit,
@@ -407,6 +329,7 @@ adjustment; Ho= the data fit the Rasch model."
           table$addRow(rowKey = name, values = row)
         }
       },
+      
       # Summary of total score---------
       .populateToTable = function(results) {
         table <- self$results$ss$to
@@ -451,6 +374,40 @@ adjustment; Ho= the data fit the Rasch model."
         #
         # table$setRow(rowNo = 1, values = row)
       },
+      
+      # tau table---
+      .populateRatingScaleTable = function(results) {
+        table <- self$results$tau
+        d <- as.data.frame(results$item_irt)
+        
+        # tau 열 찾기
+        tau_cols <- grep("^tau", names(d), value = TRUE)
+        
+        # 동적 tau 열 추가
+        if (length(tau_cols) > 0) {
+          for (col in tau_cols) {
+            table$addColumn(
+              name = col,
+              title = col,
+              type = 'number'
+            )
+          }
+        }
+        
+        for (i in seq_len(nrow(d))) {
+          row <- list()
+          row[['item']]  <- rownames(d)[i]
+        #  row[['alpha']] <- d$alpha[i]
+          row[['beta']]  <- d$beta[i]
+          
+          for (col in tau_cols) {
+            row[[col]] <- d[[col]][i]
+          }
+          
+          table$addRow(rowKey = row[['item']], values = row)
+        }
+      },
+      
       
       
       # Init. tables ------------------------------------
@@ -823,22 +780,16 @@ adjustment; Ho= the data fit the Rasch model."
   
       # infit plot---------------
       
-      .prepareInfitPlot = function(data) {
-        # estimate the Rasch model with MML using function 'tam.mml'-----
-        # set.seed(1234)
-        # tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-        tamobj <- private$.cache$tamobj
+      .prepareInfitPlot = function(results) {
+        item <- self$options$vars
+        infit <- results$infit
         
-        item <- tamobj$item$item
-        nitems <- length(item)
-        fit <- TAM::tam.fit(tamobj)
-        # computing infit statistics---------------------
-        Infit <- fit$itemfit$Infit
-        infit <- NA
-        for (i in 1:nitems) {
-          infit[i] <- fit$itemfit$Infit[i]
-        }
-        infit1 <- data.frame(item, infit)
+        n <- min(length(item), length(infit))
+        infit1 <- data.frame(
+          item  = item[seq_len(n)],
+          infit = infit[seq_len(n)]
+        )
+        
         image <- self$results$inplot
         image$setState(infit1)
       },
@@ -915,21 +866,16 @@ adjustment; Ho= the data fit the Rasch model."
         TRUE
       },
       
-      .prepareOutfitPlot = function(data) {
-        # estimate the Rasch model with MML using function 'tam.mml'-----
-        # set.seed(1234)
-        # tamobj = TAM::tam.mml(resp = as.matrix(data), irtmodel = "RSM")
-        tamobj <- private$.cache$tamobj
-        item <- tamobj$item$item
-        nitems <- length(item)
-        fit <- TAM::tam.fit(tamobj)
-        # computing outfit statistics---------------------
-        Infit <- fit$itemfit$Outfit
-        outfit <- NA
-        for (i in 1:nitems) {
-          outfit[i] <- fit$itemfit$Outfit[i]
-        }
-        outfit1 <- data.frame(item, outfit)
+      .prepareOutfitPlot = function(results) {
+        item <- self$options$vars
+        outfit <- results$outfit
+        
+        n <- min(length(item), length(outfit))
+        outfit1 <- data.frame(
+          item   = item[seq_len(n)],
+          outfit = outfit[seq_len(n)]
+        )
+        
         image <- self$results$outplot
         image$setState(outfit1)
       },
@@ -1068,7 +1014,7 @@ adjustment; Ho= the data fit the Rasch model."
             alpha = 0.8
           ) +
           ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
-          ggtitle("Person Fit Plot") +
+          ggtitle("") +
           labs(
             x = "Measure",
             y = "Value"

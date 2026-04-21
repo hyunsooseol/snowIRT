@@ -293,10 +293,10 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pse = function() private$.items[["pse"]],
         pinfit = function() private$.items[["pinfit"]],
         poutfit = function() private$.items[["poutfit"]],
-        text = function() private$.items[["text"]],
         resid = function() private$.items[["resid"]],
         plot2 = function() private$.items[["plot2"]],
-        plot3 = function() private$.items[["plot3"]]),
+        plot3 = function() private$.items[["plot3"]],
+        tau = function() private$.items[["tau"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -702,12 +702,6 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 measureType="continuous",
                 clearWith=list(
                     "vars")))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="text",
-                title="Rating Scale Deltas/thresholds",
-                clearWith=list(
-                    "vars")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="resid",
@@ -733,7 +727,24 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".plot3",
                 refs="snowIRT",
                 clearWith=list(
-                    "vars")))}))
+                    "vars")))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="tau",
+                title="Rating Scale Deltas/thresholds",
+                visible="(tau)",
+                clearWith=list(
+                    "vars",
+                    "tau"),
+                columns=list(
+                    list(
+                        `name`="item", 
+                        `title`="Item", 
+                        `type`="text"),
+                    list(
+                        `name`="beta", 
+                        `title`="beta", 
+                        `type`="number"))))}))
 
 polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "polytomousBase",
@@ -811,11 +822,17 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$pse} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$pinfit} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$poutfit} \tab \tab \tab \tab \tab an output \cr
-#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$resid} \tab \tab \tab \tab \tab an output \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot3} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$tau} \tab \tab \tab \tab \tab a table \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$tau$asDF}
+#'
+#' \code{as.data.frame(results$tau)}
 #'
 #' @export
 polytomous <- function(

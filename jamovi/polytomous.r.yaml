@@ -356,11 +356,11 @@ items:
       clearWith:
         - vars      
 
-    - name:  text
-      title: Rating Scale Deltas/thresholds
-      type:  Preformatted
-      clearWith:
-        - vars  
+    # - name:  text
+    #   title: Rating Scale Deltas/thresholds
+    #   type:  Preformatted
+    #   clearWith:
+    #     - vars  
         
     - name: resid
       title: Standardized residuals for PCA
@@ -387,4 +387,21 @@ items:
       refs: snowIRT 
       clearWith:
             - vars
+
+    - name: tau
+      title: Rating Scale Deltas/thresholds
+      type: Table
+      visible: (tau)
+      clearWith:
+        - vars
+        - tau
+      columns:
+        - name: item
+          title: Item
+          type: text
+        - name: beta
+          title: beta
+          type: number
+
+
 ...
