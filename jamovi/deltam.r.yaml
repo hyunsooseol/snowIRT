@@ -85,6 +85,7 @@ items:
       clearWith:
         - vars
         - group
+        - puri
 
 ...
 

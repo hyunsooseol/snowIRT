@@ -4,6 +4,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
     inherit = clrBase,
     private = list(
       .allCache = NULL,
+      .resiCache = NULL,
       .htmlwidget = NULL,
       
       .init = function() {
@@ -90,66 +91,24 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Standardized residuals----------------
         
         items <- self$options$vars
-        model <- self$options$model
-        score <- self$options$score
-        if (model == "RM") {
-          rm.mod <- eRm::RM(X = data[, -1])
-          rm <- iarm::item_obsexp(rm.mod)
-          if (score == "low") {
-            sc <- rm[[1]]
-          }
-          if (score == "high") {
-            sc <- rm[[2]]
-          }
-          obs <- as.numeric(sc[, 1])
-          exp <- as.numeric(sc[, 2])
-          std <- as.numeric(sc[, 3])
-          sig <- as.character(sc[, 4])
-          low <- data.frame(obs, exp, std, sig)
-          
-          # Creating low score table-------------
-          if (isTRUE(self$options$resi)) {
-            table <- self$results$resi
-            for (i in seq_along(items)) {
-              row <- list()
-              row[["obs"]] <- low[i, 1]
-              row[["exp"]] <- low[i, 2]
-              row[["std"]] <- low[i, 3]
-              row[["sig"]] <- low[i, 4]
-              table$setRow(rowKey = items[i], values = row)
-            }
-          }
-        }
-        if (model == "PCM") {
-          pc.mod <- eRm::PCM(X = data[, -1])
-          pc <- iarm::item_obsexp(pc.mod)
-          if (score == "low") {
-            sc <- pc[[1]]
-          }
-          if (score == "high") {
-            sc <- pc[[2]]
-          }
-          obs <- as.numeric(sc[, 1])
-          exp <- as.numeric(sc[, 2])
-          std <- as.numeric(sc[, 3])
-          sig <- as.character(sc[, 4])
-          
-          pc <- data.frame(obs, exp, std, sig)
-          
-          # Creating low score table-------------
-          if (isTRUE(self$options$resi)) {
-            table <- self$results$resi
-            for (i in seq_along(items)) {
-              row <- list()
-              row[["obs"]] <- pc[i, 1]
-              row[["exp"]] <- pc[i, 2]
-              row[["std"]] <- pc[i, 3]
-              row[["sig"]] <- pc[i, 4]
-              table$setRow(rowKey = items[i], values = row)
-            }
-          }
-        }
         
+        if (isTRUE(self$options$resi)) {
+          if (is.null(private$.resiCache)) {
+            private$.resiCache <- private$.computeResi()
+          }
+          
+          resi <- private$.resiCache
+          table <- self$results$resi
+          
+          for (i in seq_along(items)) {
+            row <- list()
+            row[["obs"]] <- resi[i, "obs"]
+            row[["exp"]] <- resi[i, "exp"]
+            row[["std"]] <- resi[i, "std"]
+            row[["sig"]] <- resi[i, "sig"]
+            table$setRow(rowKey = items[i], values = row)
+          }
+        }
         # # Partial Gamma to detect Differential Item Functioning (DIF)------
         #
         # gam <- iarm::partgam_DIF(dat.items = data[, -1], dat.exo = data[[groupVarName]])
@@ -278,6 +237,45 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         res <- list(dif = dif, gam = gam)
         return(res)
+      },
+      .computeResi = function() {
+        data <- self$data
+        groupVarName <- self$options$group
+        vars <- self$options$vars
+        varNames <- c(groupVarName, vars)
+        model <- self$options$model
+        score <- self$options$score
+        
+        if (is.null(groupVarName))
+          return(NULL)
+        
+        data <- jmvcore::select(self$data, varNames)
+        
+        for (var in vars)
+          data[[var]] <- jmvcore::toNumeric(data[[var]])
+        
+        data <- data[!is.na(data[[groupVarName]]), ]
+        
+        if (model == "RM") {
+          mod <- eRm::RM(X = data[, -1])
+          obsexp <- iarm::item_obsexp(mod)
+        } else {
+          mod <- eRm::PCM(X = data[, -1])
+          obsexp <- iarm::item_obsexp(mod)
+        }
+        
+        if (score == "low") {
+          sc <- obsexp[[1]]
+        } else {
+          sc <- obsexp[[2]]
+        }
+        
+        data.frame(
+          obs = as.numeric(sc[, 1]),
+          exp = as.numeric(sc[, 2]),
+          std = as.numeric(sc[, 3]),
+          sig = as.character(sc[, 4])
+        )
       }
     )
   )

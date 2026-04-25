@@ -186,7 +186,8 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".plot1",
                 clearWith=list(
                     "vars",
-                    "group")))}))
+                    "group",
+                    "puri")))}))
 
 deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "deltamBase",

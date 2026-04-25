@@ -195,12 +195,18 @@ difClass <- if (requireNamespace('jmvcore'))
       .runMH = function(data, groupVarName) {
         # 캐시 키 생성
         cacheKey <- paste0("mh_", paste(self$options$vars, collapse = "_"))
+        # cacheKey <- paste0(
+        #   "mh_",
+        #   self$options$group, "_",
+        #   self$options$padjust1, "_",
+        #   paste(self$options$vars, collapse = "_")
+        # )
         
         if (is.null(private$.state[[cacheKey]])) {
           mh <- difR::difMH(data,
                             groupVarName,
                             focal.name = 1,
-                            p.adjust.method = self$options$padjust)
+                            p.adjust.method = self$options$padjust1)
           
           # 필요한 결과만 캐싱
           private$.state[[cacheKey]] <- list(
