@@ -1145,28 +1145,38 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           facet_vars <- unique(c(facet_vars, timev))
         facet_data <- dat[, facet_vars, drop = FALSE]
         
-        # ---- Build formulaA terms (avoid duplicates)
-        terms <- c("step")
+        step_term  <- jmvcore::composeTerm("step")
+        rater_term <- jmvcore::composeTerm(rater_var)
         
-        # rater * task (only if task exists and task is NOT timev)
-        if (!is.null(task_var) && nzchar(task_var)) {
+        task_term <- NULL
+        if (!is.null(task_var) && nzchar(task_var))
+          task_term <- jmvcore::composeTerm(task_var)
+        
+        time_term <- NULL
+        if (!is.null(timev) && nzchar(timev))
+          time_term <- jmvcore::composeTerm(timev)
+        
+        terms <- c(step_term)
+        
+        if (!is.null(task_term)) {
           if (is.null(timev) || !identical(task_var, timev)) {
-            terms <- c(terms, paste0(rater_var, "*", task_var))
+            terms <- c(terms, paste0(rater_term, "*", task_term))
           } else {
-            # task_var == timev 인 경우: facet 두 번째에 time을 넣은 상황이므로 task 항은 생략
-            terms <- c(terms, rater_var)
+            terms <- c(terms, rater_term)
           }
         } else {
-          terms <- c(terms, rater_var)
+          terms <- c(terms, rater_term)
         }
         
-        # rater * time (use original timev name)
-        if (!is.null(timev) && nzchar(timev)) {
-          terms <- c(terms, paste0(rater_var, "*", timev))
+        if (!is.null(time_term)) {
+          terms <- c(terms, paste0(rater_term, "*", time_term))
         }
         
         terms <- unique(terms)
         formula <- stats::as.formula(paste0("~ ", paste(terms, collapse = " + ")))
+        
+        jmvcore::validateSafeFormula(formula)
+        
         
         # ---- Fit model
         res <- TAM::tam.mml.mfr(
