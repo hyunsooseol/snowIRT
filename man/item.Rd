@@ -7,7 +7,7 @@
 item(
   data,
   vars,
-  run,
+  run = FALSE,
   key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
   num = 1,
   num1 = 1,

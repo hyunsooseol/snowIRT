@@ -7,7 +7,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
-            run = NULL,
+            run = FALSE,
             key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
             num = 1,
             num1 = 1,
@@ -487,7 +487,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 item <- function(
     data,
     vars,
-    run,
+    run = FALSE,
     key = "D,C,A,D,D,A,D,B,D,A,A,D,C,C,B,C,D,A,A,B",
     num = 1,
     num1 = 1,

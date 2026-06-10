@@ -175,14 +175,26 @@ adjustment; Ho= the data fit the Rasch model."
         image2$setState(state)
         
         # Standard score----------
+        tosc <- sort(unique(score))
+        perc <- stats::ecdf(score)(tosc)
         
-        tosc <- sort(unique(score))          # Levels of total score
-        perc <- stats::ecdf(score)(tosc)     # Percentiles
-        zsco <- sort(unique(scale(score)))   # Z-score
-        tsco <- 50 + 10 * zsco               # T-score
+        score_mean <- mean(score, na.rm = TRUE)
+        score_sd <- stats::sd(score, na.rm = TRUE)
         
-        #st <- cbind(tosc, perc, zsco, tsco)
-        st <- as.data.frame(cbind(tosc, perc, zsco, tsco))
+        if (is.na(score_sd) || score_sd == 0) {
+          zsco <- rep(NA_real_, length(tosc))
+        } else {
+          zsco <- (tosc - score_mean) / score_sd
+        }
+        
+        tsco <- 50 + 10 * zsco
+        
+        st <- data.frame(
+          tosc = tosc,
+          perc = perc,
+          zsco = zsco,
+          tsco = tsco
+        )
         
         #### Person Statistics###########################
         
@@ -763,7 +775,39 @@ adjustment; Ho= the data fit the Rasch model."
         
         attr(data, 'row.names') <- seq_len(length(data[[1]]))
         attr(data, 'class') <- 'data.frame'
+        
+        # Check whether all observed responses are coded as 0 or 1
+        invalid_items <- vapply(data, function(x) {
+          values <- unique(x[!is.na(x)])
+          
+          length(values) > 0 &&
+            !all(values %in% c(0, 1))
+        }, logical(1))
+        
+        if (any(invalid_items)) {
+          stop(
+            paste0(
+              "All items must be coded as 0 or 1. Invalid item(s): ",
+              paste(names(data)[invalid_items], collapse = ", ")
+            )
+          )
+        }
+        
         data <- jmvcore::naOmit(data)
+        
+        # Each item must contain both 0 and 1
+        constant_items <- vapply(data, function(x) {
+          length(unique(x)) < 2
+        }, logical(1))
+        
+        if (any(constant_items)) {
+          stop(
+            paste0(
+              "Each item must contain both 0 and 1. Constant item(s): ",
+              paste(names(data)[constant_items], collapse = ", ")
+            )
+          )
+        }
         
         return(data)
       },
