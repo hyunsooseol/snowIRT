@@ -10,7 +10,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             group = NULL,
             model = "RM",
             num = 1,
-            ci = 3,
+            ci = 2,
             clr = TRUE,
             resi = FALSE,
             score = NULL,
@@ -54,7 +54,7 @@ clrOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..ci <- jmvcore::OptionInteger$new(
                 "ci",
                 ci,
-                default=3,
+                default=2,
                 min=2)
             private$..clr <- jmvcore::OptionBool$new(
                 "clr",
@@ -352,7 +352,7 @@ clr <- function(
     group,
     model = "RM",
     num = 1,
-    ci = 3,
+    ci = 2,
     clr = TRUE,
     resi = FALSE,
     score,

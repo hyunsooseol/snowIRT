@@ -1,10 +1,9 @@
+
 clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
   R6::R6Class(
     "clrClass",
     inherit = clrBase,
     private = list(
-      .allCache = NULL,
-      .resiCache = NULL,
       .htmlwidget = NULL,
       
       .init = function() {
@@ -30,6 +29,8 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (self$options$clr)
           self$results$clr$setNote("Note", "'Overall' indicates test of homogeneity.")
       },
+      
+      
       #########################################################
       
       .run = function() {
@@ -47,15 +48,12 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         for (var in vars)
           data[[var]] <- jmvcore::toNumeric(data[[var]])
         
-        # exclude rows with missings in the grouping variable
+        # exclude rows with missings in the grouping variable or items
         
-        data <- data[!is.na(data[[groupVarName]]), ]
+        data <- data[stats::complete.cases(data),, drop = FALSE ]
         
-        if (is.null(private$.allCache)) {
-          private$.allCache <- private$.computeRES()
-        }
+        all <- private$.computeRES()
         
-        all <- private$.allCache
         # #############################################################
         #
         # dif <- iarm::clr_tests(
@@ -93,11 +91,8 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         items <- self$options$vars
         
         if (isTRUE(self$options$resi)) {
-          if (is.null(private$.resiCache)) {
-            private$.resiCache <- private$.computeResi()
-          }
+          resi <- private$.computeResi()
           
-          resi <- private$.resiCache
           table <- self$results$resi
           
           for (i in seq_along(items)) {
@@ -156,9 +151,29 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         data <- image$state
         num <- self$options$num
-        plot <-  iarm::ICCplot(data = data,
-                               itemnumber = num,
-                               method = "score")
+        itemName <- colnames(data)[num]
+        
+        plot <- iarm::ICCplot(
+          data = data,
+          itemnumber = num,
+          method = "score",
+          itemdescrip = paste0("Item ", num, " (", itemName, ")"),
+          pallete = "Dark2",
+          xaxistitle = "Theta",
+          yaxistitle = "Item Score"
+        )
+        
+        plot <- plot +
+          ggplot2::labs(
+            title = paste0("Item Characteristic Curve: Item ", num, " (", itemName, ")")
+          ) +
+          ggplot2::theme(
+            plot.title = ggplot2::element_text(face = "bold", colour = "black"),
+            axis.title = ggplot2::element_text(colour = "black"),
+            axis.text = ggplot2::element_text(colour = "black"),
+            legend.text = ggplot2::element_text(colour = "black")
+          )
+        
         print(plot)
         TRUE
       },
@@ -171,42 +186,108 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         data <- image1$state[[1]]
         group <- image1$state[[2]]
-        plot1 <-  iarm::ICCplot(
+        itemName <- colnames(data)[num]
+        groupLabels <- levels(as.factor(group))
+        
+        plot1 <- iarm::ICCplot(
           data = data,
           itemnumber = num,
           method = "score",
           icclabel = "yes",
           dif = "yes",
           difvar = group,
-          difstats = "no"
+          diflabels = groupLabels,
+          difstats = "no",
+          itemdescrip = paste0("Item ", num, " (", itemName, ")"),
+          xaxistitle = "Theta",
+          yaxistitle = "Item Score"
         )
+        
+        plot1 <- plot1 +
+          ggplot2::labs(
+            title = paste0("DIF using total scores: Item ", num, " (", itemName, ")")
+          ) +
+          ggplot2::theme(
+            plot.title = ggplot2::element_text(face = "bold", colour = "black"),
+            axis.title = ggplot2::element_text(colour = "black"),
+            axis.text = ggplot2::element_text(colour = "black"),
+            legend.text = ggplot2::element_text(colour = "black")
+          )
+        
         print(plot1)
         TRUE
-        
       },
       
       .plot2 = function(image2, ggtheme, theme, ...) {
         if (is.null(image2$state))
           return(FALSE)
+        
         num <- self$options$num
         ci <- self$options$ci
         
         data <- image2$state[[1]]
         group <- image2$state[[2]]
-        plot2 <-  iarm::ICCplot(
-          data = data,
-          itemnumber = num,
-          method = "cut",
-          cinumber = ci,
-          icclabel = "yes",
-          dif = "yes",
-          difvar = group,
-          difstats = "no"
-        )
+        itemName <- colnames(data)[num]
+        groupLabels <- levels(as.factor(group))
+        
+        plot2 <- tryCatch({
+          iarm::ICCplot(
+            data = data,
+            itemnumber = num,
+            method = "cut",
+            cinumber = ci,
+            icclabel = "yes",
+            dif = "yes",
+            difvar = group,
+            diflabels = groupLabels,
+            difstats = "no",
+            itemdescrip = paste0("Item ", num, " (", itemName, ")"),
+            xaxistitle = "Theta",
+            yaxistitle = "Item Score"
+          )
+        }, error = function(e) {
+          NULL
+        })
+        
+        if (is.null(plot2)) {
+          graphics::plot.new()
+          graphics::text(
+            x = 0.5,
+            y = 0.62,
+            labels = "Class interval plot could not be produced.",
+            cex = 1.1
+          )
+          graphics::text(
+            x = 0.5,
+            y = 0.48,
+            labels = "There are not enough subjects for this number of class intervals.",
+            cex = 0.85
+          )
+          graphics::text(
+            x = 0.5,
+            y = 0.36,
+            labels = paste0("Try a smaller CI number. Current CI number: ", ci),
+            cex = 0.85
+          )
+          return(TRUE)
+        }
+        
+        plot2 <- plot2 +
+          ggplot2::labs(
+            title = paste0("DIF using class intervals: Item ", num, " (", itemName, ")")
+          ) +
+          ggplot2::theme(
+            plot.title = ggplot2::element_text(face = "bold", colour = "black"),
+            axis.title = ggplot2::element_text(colour = "black"),
+            axis.text = ggplot2::element_text(colour = "black"),
+            legend.text = ggplot2::element_text(colour = "black")
+          )
+        
         print(plot2)
         TRUE
       },
       
+      #------------------------
       .computeRES = function() {
         data <- self$data
         groupVarName <- self$options$group
@@ -222,9 +303,9 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         for (var in vars)
           data[[var]] <- jmvcore::toNumeric(data[[var]])
         
-        # exclude rows with missings in the grouping variable
+        # exclude rows with missings in the grouping variable or items
         
-        data <- data[!is.na(data[[groupVarName]]), ]
+        data <- data[stats::complete.cases(data), , drop = FALSE]
         
         dif <- iarm::clr_tests(
           dat.items = data[, -1],
@@ -254,7 +335,7 @@ clrClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         for (var in vars)
           data[[var]] <- jmvcore::toNumeric(data[[var]])
         
-        data <- data[!is.na(data[[groupVarName]]), ]
+        data <- data[stats::complete.cases(data),, drop = FALSE ]
         
         if (model == "RM") {
           mod <- eRm::RM(X = data[, -1])

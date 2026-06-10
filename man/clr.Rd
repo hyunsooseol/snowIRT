@@ -10,7 +10,7 @@ clr(
   group,
   model = "RM",
   num = 1,
-  ci = 3,
+  ci = 2,
   clr = TRUE,
   resi = FALSE,
   score,

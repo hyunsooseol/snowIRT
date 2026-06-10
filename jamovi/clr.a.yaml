@@ -51,7 +51,7 @@ options:
 
     - name: ci
       title: CI number
-      default: 3
+      default: 2
       type: Integer
       min: 2
 
