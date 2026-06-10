@@ -1,6 +1,5 @@
 # This file is a generated template, your changes will not be overwritten
 # FACET ANALYSIS
-#' @import ggplot2
 
 facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
   R6::R6Class(
@@ -58,19 +57,37 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         },
       .run = function() {
         
-        #---------------------------------------------
         if (is.null(self$options$dep) ||
             is.null(self$options$id) ||
             is.null(self$options$facet))
           return()
         
-        # reset residual cache when model is recomputed
+        facets <- unlist(self$options$facet)
+        facets <- facets[
+          !is.na(facets) &
+            nzchar(as.character(facets))
+        ]
+        
+        if (length(facets) != 2) {
+          stop(
+            paste0(
+              "Exactly two facet variables are required: ",
+              "rater first and task second."
+            )
+          )
+        }
+        
         private$.residualCache <- NULL
         
         if (is.null(private$.allCache)) {
           private$.allCache <- private$.computeRES()
         }
+        
         res <- private$.allCache
+        
+        if (is.null(res))
+          return()
+        
         
         ifit_res <- TAM::msq.itemfit(res)
         pfit_res <- TAM::tam.personfit(res)
@@ -738,15 +755,27 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         if (isTRUE(self$options$plot8)) {
-          pfit <- data.frame(pfit_res$outfitPerson, pfit_res$infitPerson)
-          names(pfit) <- c("outfit", "infit")
-          pfit$Measure <- per[[3]]
+          
+          pfit <- data.frame(
+            outfit  = pfit_res$outfitPerson,
+            infit   = pfit_res$infitPerson,
+            Measure = per[[3]]
+          )
+          
           pf <- reshape2::melt(
             pfit,
-            id.vars = 'Measure',
+            id.vars = "Measure",
             variable.name = "Fit",
-            value.name = 'Value'
+            value.name = "Value"
           )
+          
+          pf <- pf[
+            is.finite(pf$Measure) &
+              is.finite(pf$Value),
+            ,
+            drop = FALSE
+          ]
+          
           image <- self$results$plot8
           image$setState(pf)
         }
@@ -762,16 +791,20 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         fill <- theme$fill[2]
         color <- theme$color[1]
         
-        plot1 <- ggplot(data = rm, aes(x = Rater, y = Value)) +
-          
-          geom_bar(
-            stat = "identity",
-            # position="dodge",
+        plot1 <- ggplot2::ggplot(
+          data = rm,
+          ggplot2::aes(x = Rater, y = Value)
+        ) +
+          ggplot2::geom_col(
             width = 0.7,
             fill = fill,
             color = color
-          ) +  theme_bw() + coord_flip()
-        plot1 + ggtheme
+          ) +
+          ggplot2::theme_bw() +
+          ggplot2::coord_flip()
+        
+        plot1 <- plot1 + ggtheme
+        
         print(plot1)
         TRUE
       },
@@ -785,15 +818,20 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         fill <- theme$fill[2]
         color <- theme$color[1]
         
-        plot2 <- ggplot(data = im, aes(x = Task, y = Value)) +
-          geom_bar(
-            stat = "identity",
-            #position="dodge",
+        plot2 <- ggplot2::ggplot(
+          data = im,
+          ggplot2::aes(x = Task, y = Value)
+        ) +
+          ggplot2::geom_col(
             width = 0.7,
             fill = fill,
             color = color
-          ) +  theme_bw() + coord_flip()
-        plot2 + ggtheme
+          ) +
+          ggplot2::theme_bw() +
+          ggplot2::coord_flip()
+        
+        plot2 <- plot2 + ggtheme
+        
         print(plot2)
         TRUE
       },
@@ -804,13 +842,31 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         inter <- image$state
         
-        plot3 <- ggplot(inter, aes(x = Task, y = Measure, group = Rater)) +
-          geom_line(size = 1.2, aes(color = Rater)) +
-          geom_point(size = 3, aes(color = Rater)) +  theme_bw()
+        plot3 <- ggplot2::ggplot(
+          inter,
+          ggplot2::aes(
+            x = Task,
+            y = Measure,
+            group = Rater,
+            color = Rater
+          )
+        ) +
+          ggplot2::geom_line(linewidth = 1.2) +
+          ggplot2::geom_point(size = 3) +
+          ggplot2::theme_bw()
+        
         if (self$options$angle > 0) {
-          plot3 <- plot3 + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
+          plot3 <- plot3 +
+            ggplot2::theme(
+              axis.text.x = ggplot2::element_text(
+                angle = self$options$angle,
+                hjust = 1
+              )
+            )
         }
-        plot3 + ggtheme
+        
+        plot3 <- plot3 + ggtheme
+        
         print(plot3)
         TRUE
       },
@@ -916,142 +972,278 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         ifit <- image$state
         
-        plot7 <- ggplot2::ggplot(ifit, aes(x = Index, y = Value, shape = Fit, color = Fit)) +
-          geom_point(
+        plot7 <- ggplot2::ggplot(
+          ifit,
+          ggplot2::aes(
+            x = Index,
+            y = Value,
+            shape = Fit,
+            color = Fit
+          )
+        ) +
+          ggplot2::geom_point(
             size = 2.5,
             stroke = 1,
             alpha = 0.75
           ) +
           ggplot2::scale_shape_manual(
-            values = c("Infit" = 16, "Outfit" = 17),
+            values = c(
+              "Infit" = 16,
+              "Outfit" = 17
+            ),
             name = "Fit"
           ) +
           ggplot2::scale_color_manual(
-            values = c("Infit" = '#2980b9', "Outfit" = '#e74c3c'),
+            values = c(
+              "Infit" = "#2980b9",
+              "Outfit" = "#e74c3c"
+            ),
             name = "Fit"
           ) +
           ggplot2::geom_hline(
             yintercept = 1.5,
             linetype = "solid",
-            color = '#95a5a6',
+            color = "#95a5a6",
             linewidth = 0.8,
             alpha = 0.8
           ) +
           ggplot2::geom_hline(
             yintercept = 0.5,
             linetype = "solid",
-            color = '#95a5a6',
+            color = "#95a5a6",
             linewidth = 0.8,
             alpha = 0.8
           ) +
-          labs(
+          ggplot2::labs(
             title = "",
             x = "Rater × Task",
             y = "Values"
           ) +
-          theme_minimal() +
-          theme(
-            panel.background = element_rect(fill = "#fafafa", color = NA),
-            plot.background = element_rect(fill = "white", color = NA),
-            panel.grid.major.y = element_line(color = "#e8e8e8", linewidth = 0.4),
-            panel.grid.major.x = element_blank(),
-            panel.grid.minor = element_blank(),
-            plot.title = element_text(
+          ggplot2::theme_minimal() +
+          ggplot2::theme(
+            panel.background = ggplot2::element_rect(
+              fill = "#fafafa",
+              color = NA
+            ),
+            plot.background = ggplot2::element_rect(
+              fill = "white",
+              color = NA
+            ),
+            panel.grid.major.y = ggplot2::element_line(
+              color = "#e8e8e8",
+              linewidth = 0.4
+            ),
+            panel.grid.major.x = ggplot2::element_blank(),
+            panel.grid.minor = ggplot2::element_blank(),
+            
+            plot.title = ggplot2::element_text(
               hjust = 0.5,
               size = 15,
               face = "bold",
               color = "#2c3e50",
-              margin = margin(b = 15)
+              margin = ggplot2::margin(b = 15)
             ),
-            axis.title = element_text(size = 11, color = "#34495e"),
-            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
-            axis.text.x = element_text(margin = margin(t = 6)),
-            axis.text.y = element_text(margin = margin(r = 6)),
+            axis.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e"
+            ),
+            axis.text = ggplot2::element_text(
+              size = 9.5,
+              color = "#7f8c8d"
+            ),
+            axis.text.x = ggplot2::element_text(
+              margin = ggplot2::margin(t = 6)
+            ),
+            axis.text.y = ggplot2::element_text(
+              margin = ggplot2::margin(r = 6)
+            ),
+            
             legend.position = "right",
-            legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
-            legend.text = element_text(size = 10, color = "#7f8c8d"),
-            legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
-            legend.key = element_rect(fill = "transparent"),
-            legend.margin = margin(10, 10, 10, 10),
-            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
-            plot.margin = margin(15, 15, 15, 15)
+            legend.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e",
+              face = "bold"
+            ),
+            legend.text = ggplot2::element_text(
+              size = 10,
+              color = "#7f8c8d"
+            ),
+            legend.background = ggplot2::element_rect(
+              fill = "white",
+              color = "#ecf0f1",
+              linewidth = 0.3
+            ),
+            legend.key = ggplot2::element_rect(
+              fill = "transparent"
+            ),
+            legend.margin = ggplot2::margin(
+              10, 10, 10, 10
+            ),
+            
+            panel.border = ggplot2::element_rect(
+              color = "#bdc3c7",
+              fill = NA,
+              linewidth = 0.4
+            ),
+            plot.margin = ggplot2::margin(
+              15, 15, 15, 15
+            )
           )
+        
+        if (self$options$angle1 > 0) {
+          plot7 <- plot7 +
+            ggplot2::theme(
+              axis.text.x = ggplot2::element_text(
+                angle = self$options$angle1,
+                hjust = 1
+              )
+            )
+        }
         
         plot7 <- plot7 + ggtheme
         
-        if (self$options$angle1 > 0) {
-          plot7 <- plot7 + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle1, hjust = 1))
-        }
         print(plot7)
         TRUE
       },
       
       .plot8 = function(image, ggtheme, theme, ...) {
+        
         if (is.null(image$state))
           return(FALSE)
         
         pf <- image$state
         
-        plot8 <- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit, color = Fit)) +
-          geom_point(
-            size = 2.8,
-            stroke = 1.2,
-            alpha = 0.8
+        required_cols <- c("Measure", "Value", "Fit")
+        
+        if (!all(required_cols %in% names(pf)))
+          return(FALSE)
+        
+        if (nrow(pf) == 0)
+          return(FALSE)
+        
+        pf$Measure <- suppressWarnings(as.numeric(pf$Measure))
+        pf$Value <- suppressWarnings(as.numeric(pf$Value))
+        pf$Fit <- as.factor(pf$Fit)
+        
+        pf <- pf[
+          is.finite(pf$Measure) &
+            is.finite(pf$Value) &
+            !is.na(pf$Fit),
+          ,
+          drop = FALSE
+        ]
+        
+        if (nrow(pf) == 0)
+          return(FALSE)
+        
+        plot8 <- ggplot2::ggplot(
+          pf,
+          ggplot2::aes(
+            x = Measure,
+            y = Value,
+            shape = Fit,
+            color = Fit
+          )
+        ) +
+          ggplot2::geom_point(
+            position = ggplot2::position_jitter(
+              width = 0.01,
+              height = 0.005,
+              seed = 1234
+            ),
+            size = 2.0,
+            stroke = 0.5,
+            alpha = 0.65
           ) +
           ggplot2::scale_shape_manual(
-            values = c(16, 17),
+            values = c(
+              "outfit" = 16,
+              "infit" = 17
+            ),
             name = "Fit"
           ) +
           ggplot2::scale_color_manual(
-            values = c('#2980b9', '#e74c3c'),
+            values = c(
+              "outfit" = "#e74c3c",
+              "infit" = "#2980b9"
+            ),
             name = "Fit"
           ) +
           ggplot2::geom_hline(
             yintercept = 1.5,
             linetype = "solid",
-            color = '#95a5a6',
-            linewidth = 0.8,
+            color = "#95a5a6",
+            linewidth = 0.7,
             alpha = 0.8
           ) +
           ggplot2::geom_hline(
             yintercept = 0.5,
             linetype = "solid",
-            color = '#95a5a6',
-            linewidth = 0.8,
+            color = "#95a5a6",
+            linewidth = 0.7,
             alpha = 0.8
           ) +
-          ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
-          ggtitle("") +
-          labs(
+          ggplot2::labs(
+            title = "",
             x = "Measure",
             y = "Value"
           ) +
-          theme_minimal() +
-          theme(
-            panel.background = element_rect(fill = "#fafafa", color = NA),
-            plot.background = element_rect(fill = "white", color = NA),
-            panel.grid.major = element_line(color = "#f0f0f0", linewidth = 0.3),
-            panel.grid.minor = element_blank(),
-            plot.title = element_text(
-              hjust = 0.5,
-              size = 15,
-              face = "bold",
-              color = "#2c3e50",
-              margin = margin(b = 15)
+          ggplot2::theme_minimal() +
+          ggplot2::theme(
+            panel.background = ggplot2::element_rect(
+              fill = "#fafafa",
+              color = NA
             ),
-            axis.title = element_text(size = 11, color = "#34495e"),
-            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
+            plot.background = ggplot2::element_rect(
+              fill = "white",
+              color = NA
+            ),
+            panel.grid.major = ggplot2::element_line(
+              color = "#f0f0f0",
+              linewidth = 0.3
+            ),
+            panel.grid.minor = ggplot2::element_blank(),
+            
+            axis.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e"
+            ),
+            axis.text = ggplot2::element_text(
+              size = 9.5,
+              color = "#7f8c8d"
+            ),
+            
             legend.position = "right",
-            legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
-            legend.text = element_text(size = 10, color = "#7f8c8d"),
-            legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
-            legend.key = element_rect(fill = "transparent"),
-            legend.margin = margin(10, 10, 10, 10),
-            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
-            plot.margin = margin(15, 15, 15, 15)
+            legend.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e",
+              face = "bold"
+            ),
+            legend.text = ggplot2::element_text(
+              size = 10,
+              color = "#7f8c8d"
+            ),
+            legend.background = ggplot2::element_rect(
+              fill = "white",
+              color = NA
+            ),
+            legend.key = ggplot2::element_rect(
+              fill = "transparent",
+              color = NA
+            ),
+            
+            panel.border = ggplot2::element_rect(
+              color = "#bdc3c7",
+              fill = NA,
+              linewidth = 0.4
+            ),
+            plot.margin = ggplot2::margin(
+              15, 15, 15, 15
+            )
           )
         
         plot8 <- plot8 + ggtheme
+        
         print(plot8)
         TRUE
       },
@@ -1063,25 +1255,54 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         df <- image$state
         
-        # ---- Defensive checks
+        # Required columns
         if (!all(c("Rater", "TimeNum", "Severity") %in% names(df)))
           return(FALSE)
+        
         if (nrow(df) == 0)
           return(FALSE)
         
         # Ensure correct types
-        df$Rater   <- as.factor(df$Rater)
+        df$Rater <- as.factor(df$Rater)
         df$TimeNum <- suppressWarnings(as.integer(df$TimeNum))
-        if (all(is.na(df$TimeNum)))
+        df$Severity <- suppressWarnings(as.numeric(df$Severity))
+        
+        # Remove rows with invalid plotting values
+        valid_rows <- (
+          !is.na(df$Rater) &
+            is.finite(df$TimeNum) &
+            is.finite(df$Severity)
+        )
+        
+        df <- df[valid_rows, , drop = FALSE]
+        
+        if (nrow(df) == 0)
           return(FALSE)
         
-        # ---- Minimal drift plot (no error bars)
+        # Stable ordering for line drawing
+        df <- df[
+          order(df$Rater, df$TimeNum),
+          ,
+          drop = FALSE
+        ]
+        
         p <- ggplot2::ggplot(
           df,
-          ggplot2::aes(x = TimeNum, y = Severity, group = Rater, color = Rater)
+          ggplot2::aes(
+            x = TimeNum,
+            y = Severity,
+            group = Rater,
+            color = Rater
+          )
         ) +
-          ggplot2::geom_line(linewidth = 1.1) +
-          ggplot2::geom_point(size = 2.6) +
+          ggplot2::geom_line(
+            linewidth = 1.1,
+            na.rm = TRUE
+          ) +
+          ggplot2::geom_point(
+            size = 2.6,
+            na.rm = TRUE
+          ) +
           ggplot2::theme_bw() +
           ggplot2::labs(
             x = "Time",
@@ -1089,13 +1310,22 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             title = ""
           )
         
-        # Integer ticks on x-axis
+        # Integer ticks on the x-axis
         rng <- range(df$TimeNum, na.rm = TRUE)
-        p <- p + ggplot2::scale_x_continuous(
-          breaks = seq.int(from = rng[1], to = rng[2], by = 1)
-        )
+        
+        if (all(is.finite(rng))) {
+          p <- p +
+            ggplot2::scale_x_continuous(
+              breaks = seq.int(
+                from = rng[1],
+                to = rng[2],
+                by = 1
+              )
+            )
+        }
         
         p <- p + ggtheme
+        
         print(p)
         TRUE
       },
@@ -1132,7 +1362,16 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # This prevents TAM duplicate row.names while preserving facet labels rater:time
         # ---------------------------------------------------------
         if (!is.null(timev) && nzchar(timev)) {
-          dat[[timev]] <- as.factor(paste0("t", as.character(dat[[timev]])))
+          
+          tt <- as.character(dat[[timev]])
+          
+          tt <- ifelse(
+            grepl("^t", tt),
+            tt,
+            paste0("t", tt)
+          )
+          
+          dat[[timev]] <- as.factor(tt)
         }
         
         # ---- Identify rater/task
