@@ -47,7 +47,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: Tables
+            label: 'Table'
             fitToGrid: true
             cell:
               column: 0
@@ -59,8 +59,9 @@ children:
                   - type: ComboBox
                     name: padjust
                     enable: (method)
-              - type: CheckBox
-                name: puri
+                  - type: CheckBox
+                    name: puri
+                    enable: (method)
 
 
 

@@ -92,7 +92,7 @@ options:
     - name: method
       title: DIF 
       type: Bool
-      default: TRUE
+      default: FALSE
 
     - name: puri
       title: Item purification

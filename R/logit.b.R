@@ -51,7 +51,8 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         if (is.null(groupVarName))
           return()
-        data <- dplyr::select(self$data, varNames)
+        #data <- dplyr::select(self$data, varNames)
+        data <- self$data[, varNames, drop = FALSE]
         
         for (var in vars)
           data[[var]] <- jmvcore::toNumeric(data[[var]])
@@ -71,7 +72,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             type = self$options$type,
             match = self$options$match,
             purify = TRUE,
-            p.adjust.method = self$options$padjust,
+            p.adjust.method = self$options$padjust
           )
           
         } else{

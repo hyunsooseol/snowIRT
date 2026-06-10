@@ -12,7 +12,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             type = "both",
             match = "zscore",
             padjust = "BH",
-            method = TRUE,
+            method = FALSE,
             puri = FALSE, ...) {
 
             super$initialize(
@@ -74,7 +74,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..method <- jmvcore::OptionBool$new(
                 "method",
                 method,
-                default=TRUE)
+                default=FALSE)
             private$..puri <- jmvcore::OptionBool$new(
                 "puri",
                 puri,
@@ -215,7 +215,7 @@ logit <- function(
     type = "both",
     match = "zscore",
     padjust = "BH",
-    method = TRUE,
+    method = FALSE,
     puri = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
