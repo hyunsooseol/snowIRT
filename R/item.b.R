@@ -1,6 +1,5 @@
 
 # ITEM ANALYSIS
-#' @import ggplot2
 
 itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
   R6::R6Class(
@@ -439,15 +438,15 @@ itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         df$color_group <- ifelse(df$score < cut, "Below Median",
                                  ifelse(df$score == cut, "Median", "Above Median"))
         
-        plot2 <- ggplot(df, aes(x = score, fill = color_group)) +
-          geom_histogram(binwidth = 1, col = "black") +
-          scale_fill_manual(values = c("Below Median" = "red", 
-                                       "Median" = "gray", 
-                                       "Above Median" = "blue")) +
-          xlab("Total score") +
-          ylab("Number of respondents") +
+        plot2 <- ggplot2::ggplot(df, ggplot2::aes(x = score, fill = color_group)) +
+          ggplot2::geom_histogram(binwidth = 1, col = "black") +
+          ggplot2::scale_fill_manual(values = c("Below Median" = "red", 
+                                                "Median" = "gray", 
+                                                "Above Median" = "blue")) +
+          ggplot2::xlab("Total score") +
+          ggplot2::ylab("Number of respondents") +
           ShinyItemAnalysis::theme_app() +
-          theme(legend.position = "none")
+          ggplot2::theme(legend.position = "none")
         
         plot2 <- plot2 + ggtheme
         print(plot2)

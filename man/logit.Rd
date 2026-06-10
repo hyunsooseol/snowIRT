@@ -12,7 +12,7 @@ logit(
   type = "both",
   match = "zscore",
   padjust = "BH",
-  method = TRUE,
+  method = FALSE,
   puri = FALSE
 )
 }
