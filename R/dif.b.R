@@ -5,18 +5,16 @@ difClass <- if (requireNamespace('jmvcore'))
     inherit = difBase,
     private = list(
       .htmlwidget = NULL,
-      .state = list(), # 계산 결과 캐싱
       
       .init = function() {
         private$.htmlwidget <- HTMLWidget$new()
-        private$.state <- list() # 상태 초기화
         
-        # 데이터 유효성 검사
+        # Check data and variable availability
         if (is.null(self$data) | is.null(self$options$vars)) {
           self$results$instructions$setVisible(visible = TRUE)
         }
         
-        # 안내 내용 설정
+        # Set instruction content
         self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
           title = "Instructions",
           content = paste(
@@ -30,7 +28,7 @@ difClass <- if (requireNamespace('jmvcore'))
           )
         ))
         
-        # 노트 설정 - 조건 검사 최적화
+        # Set table notes
         if (self$options$raju) {
           self$results$raju$setNote(
             "Note",
@@ -38,75 +36,58 @@ difClass <- if (requireNamespace('jmvcore'))
           )
         }
         
-
         if (length(self$options$vars) <= 1)
           self$setStatus('complete')
       },
       
       .run = function() {
-        # 기본 데이터 준비
+        # Prepare basic data
         groupVarName <- self$options$group
         vars <- self$options$vars
         
         if (is.null(groupVarName))
           return()
         
-        # 필요한 변수만 선택하여 메모리 사용 최적화
+        # Select only required variables
         data <- self$data[, c(groupVarName, vars), drop = FALSE]
         
-        # 데이터 전처리 - 벡터화 접근
+        # Convert item variables to numeric
         data[vars] <- lapply(data[vars], jmvcore::toNumeric)
         
-        # 결측치 제거 및 그룹 수준 확인 - 벡터화 접근
+        # Remove missing values in the grouping variable
         data <- data[!is.na(data[[groupVarName]]), , drop = FALSE]
         groupLevels <- base::levels(data[[groupVarName]])
         
-        # 다중 그룹 분석 (GMH 방법)
+        # Run GMH for more than two groups
         if (length(groupLevels) > 2) {
           private$.runGMH(data, groupVarName)
         } else {
-          # 이항 그룹 분석 (Raju 및 MH 방법)
+          # Run binary group DIF analyses
           private$.runBinaryGroup(data, groupVarName)
         }
         
-        # 사용하지 않는 큰 객체 정리
+        # Clean up memory
         gc(verbose = FALSE)
       },
       
-      # 다중 그룹 분석 함수
       .runGMH = function(data, groupVarName) {
         if (isTRUE(self$options$gmh | self$options$plot2)) {
-          # 캐시된 결과가 있는지 확인
-          cacheKey <- paste0("gmh_", paste(self$options$vars, collapse = "_"))
+          fn <- as.numeric(strsplit(self$options$fn, ',')[[1]])
           
-          if (is.null(private$.state[[cacheKey]])) {
-            fn <- as.numeric(strsplit(self$options$fn, ',')[[1]])
-            
-            # difGMH 함수 호출 전에 필요한 변수만 유지
-            gmh <- difR::difGMH(data,
-                                groupVarName,
-                                focal.names = fn,
-                                p.adjust.method = self$options$padjust2)
-            
-            # 필요한 결과만 캐싱
-            private$.state[[cacheKey]] <- list(
-              GMH = gmh$GMH,
-              p.value = gmh$p.value,
-              adjusted.p = gmh$adjusted.p,
-              plotData = gmh # 플롯 생성에 필요
-            )
-          }
+          # Run GMH DIF analysis
+          gmh <- difR::difGMH(data,
+                              groupVarName,
+                              focal.names = fn,
+                              p.adjust.method = self$options$padjust2)
           
-          # GMH 결과 테이블 생성 - 캐시 사용
+          # Update GMH result table
           table <- self$results$gmh
           items <- self$options$vars
-          cachedData <- private$.state[[cacheKey]]
           
-          gmhstat <- as.vector(cachedData$GMH)
-          p <- as.vector(cachedData$p.value)
-          padjust <- as.vector(cachedData$adjusted.p)
+          gmhstat <- as.vector(gmh$GMH)
+          p <- as.vector(gmh$p.value)
+          padjust <- as.vector(gmh$adjusted.p)
           
-          # 각 행을 개별적으로 설정 (setRows 대신 setRow 사용)
           for (i in seq_along(items)) {
             table$setRow(rowKey = items[i], values = list(
               gmhstat = gmhstat[i],
@@ -115,132 +96,108 @@ difClass <- if (requireNamespace('jmvcore'))
             ))
           }
           
-          # GMH 플롯 설정
-          self$results$plot2$setState(cachedData$plotData)
+          # Set GMH plot state
+          self$results$plot2$setState(gmh)
         }
       },
       
-      # 이항 그룹 분석 함수
       .runBinaryGroup = function(data, groupVarName) {
-        # 캐시 키 생성
-        cacheKey <- paste0("binary_", paste(self$options$vars, collapse = "_"))
+        # Split data by group
+        groupData <- split(data, data[[groupVarName]])
         
-        if (is.null(private$.state[[cacheKey]])) {
-          # 데이터 분할 최적화 - 전체 분할 후 처리
-          groupData <- split(data, data[[groupVarName]])
-          
-          # 참조 그룹 및 관심 그룹 데이터 준비
-          ref.data <- groupData[["0"]][, -1, drop = FALSE]  # groupVarName 제외
-          focal.data <- groupData[["1"]][, -1, drop = FALSE]  # groupVarName 제외
-          
-          # TAM 모델 적합 - 병렬 계산 가능하면 병렬로 처리
-          tam.ref <- TAM::tam.mml(resp = ref.data)
-          tam.focal <- TAM::tam.mml(resp = focal.data)
-          
-          ref1 <- tam.ref$xsi
-          focal1 <- tam.focal$xsi
-          
-          # 각 그룹의 항목 매개변수 계산
-          item.1PL <- rbind(ref1, focal1)
-          
-          # Raju 방법 적용
-          res1 <- difR::difRaju(
-            irtParam = item.1PL,
-            focal.name = 1,
-            p.adjust.method = self$options$padjust,
-            same.scale = FALSE
-          )
-          
-          # ETS delta scale 계산
-          pars <- res1$itemParInit
-          J <- nrow(pars) / 2
-          mR <- pars[1:J, 1]
-          mF <- difR::itemRescale(pars[1:J, ], pars[(J + 1):(2 * J), ])[, 1]
-          
-          rr1 <- mF - mR
-          rr2 <- -2.35 * rr1
-          
-          symb1 <- symnum(abs(rr2), c(0, 1, 1.5, Inf), symbols = c("A", "B", "C"))
-          
-          # 계산 결과 캐싱
-          private$.state[[cacheKey]] <- list(
-            zstat = as.vector(res1$RajuZ),
-            p = as.vector(res1$p.value),
-            padjust = as.vector(res1$adjusted.p),
-            delta = as.vector(rr2),
-            es = as.vector(symb1),
-            itempar = res1$itemParInit,
-            rajuData = res1  # 플롯용
-          )
-          
-          # 메모리 정리
-          rm(tam.ref, tam.focal, res1, groupData)
-          gc(verbose = FALSE)
-        }
+        # Prepare reference and focal group data
+        ref.data <- groupData[["0"]][, -1, drop = FALSE]
+        focal.data <- groupData[["1"]][, -1, drop = FALSE]
         
-        # MH 방법 실행
+        # Fit TAM models
+        tam.ref <- TAM::tam.mml(resp = ref.data)
+        tam.focal <- TAM::tam.mml(resp = focal.data)
+        
+        ref1 <- tam.ref$xsi
+        focal1 <- tam.focal$xsi
+        
+        # Combine item parameters from both groups
+        item.1PL <- rbind(ref1, focal1)
+        
+        # Run Raju DIF method
+        res1 <- difR::difRaju(
+          irtParam = item.1PL,
+          focal.name = 1,
+          p.adjust.method = self$options$padjust,
+          same.scale = FALSE
+        )
+        
+        # Calculate ETS delta scale
+        pars <- res1$itemParInit
+        J <- nrow(pars) / 2
+        mR <- pars[1:J, 1]
+        mF <- difR::itemRescale(pars[1:J, ], pars[(J + 1):(2 * J), ])[, 1]
+        
+        rr1 <- mF - mR
+        rr2 <- -2.35 * rr1
+        
+        symb1 <- symnum(abs(rr2), c(0, 1, 1.5, Inf), symbols = c("A", "B", "C"))
+        
+        # Store current Raju results for table update
+        rajuResults <- list(
+          zstat = as.vector(res1$RajuZ),
+          p = as.vector(res1$p.value),
+          padjust = as.vector(res1$adjusted.p),
+          delta = as.vector(rr2),
+          es = as.vector(symb1),
+          itempar = res1$itemParInit,
+          rajuData = res1
+        )
+        
+        # Run MH method if requested
         if (isTRUE(self$options$mh | self$options$plot1)) {
           private$.runMH(data, groupVarName)
         }
         
-        # Raju 결과 테이블 업데이트
-        private$.updateRajuTable(private$.state[[cacheKey]])
+        # Update Raju result table
+        private$.updateRajuTable(rajuResults)
         
-        # 시각화 상태 설정
-        self$results$zplot$setState(private$.state[[cacheKey]]$rajuData)
-        self$results$plot3$setState(private$.state[[cacheKey]]$itempar)
+        # Set plot states
+        self$results$zplot$setState(rajuResults$rajuData)
+        self$results$plot3$setState(rajuResults$itempar)
+        
+        # Clean up large objects
+        rm(tam.ref, tam.focal, res1, groupData)
+        gc(verbose = FALSE)
       },
       
-      # MH 분석 실행 및 결과 처리
       .runMH = function(data, groupVarName) {
-        # 캐시 키 생성
-        cacheKey <- paste0("mh_", paste(self$options$vars, collapse = "_"))
-        # cacheKey <- paste0(
-        #   "mh_",
-        #   self$options$group, "_",
-        #   self$options$padjust1, "_",
-        #   paste(self$options$vars, collapse = "_")
-        # )
+        # Run MH DIF method
+        mh <- difR::difMH(data,
+                          groupVarName,
+                          focal.name = 1,
+                          p.adjust.method = self$options$padjust1)
         
-        if (is.null(private$.state[[cacheKey]])) {
-          mh <- difR::difMH(data,
-                            groupVarName,
-                            focal.name = 1,
-                            p.adjust.method = self$options$padjust1)
-          
-          # 필요한 결과만 캐싱
-          private$.state[[cacheKey]] <- list(
-            mhstat = as.vector(mh$MH),
-            p = as.vector(mh$p.value),
-            padjust = as.vector(mh$adjusted.p),
-            plotData = mh  # 플롯용
-          )
-        }
-        
-        # 결과 테이블 업데이트
+        # Update MH result table
         table <- self$results$mh
         items <- self$options$vars
-        cachedData <- private$.state[[cacheKey]]
         
-        # 각 행을 개별적으로 설정 (setRows 대신 setRow 사용)
+        mhstat <- as.vector(mh$MH)
+        p <- as.vector(mh$p.value)
+        padjust <- as.vector(mh$adjusted.p)
+        
         for (i in seq_along(items)) {
           table$setRow(rowKey = items[i], values = list(
-            mhstat = cachedData$mhstat[i],
-            p = cachedData$p[i],
-            padjust = cachedData$padjust[i]
+            mhstat = mhstat[i],
+            p = p[i],
+            padjust = padjust[i]
           ))
         }
         
-        # MH 플롯 상태 설정
-        self$results$plot1$setState(cachedData$plotData)
+        # Set MH plot state
+        self$results$plot1$setState(mh)
       },
       
-      # Raju 결과 테이블 업데이트
       .updateRajuTable = function(results) {
         table <- self$results$raju
         items <- self$options$vars
         
-        # 각 행을 개별적으로 설정 (setRows 대신 setRow 사용)
+        # Update each row individually
         for (i in seq_along(items)) {
           table$setRow(rowKey = items[i], values = list(
             zstat = results$zstat[i],
@@ -252,12 +209,11 @@ difClass <- if (requireNamespace('jmvcore'))
         }
       },
       
-      # 플롯 렌더링 함수들 - 레이지 로딩 적용
       .plot = function(image, ...) {
         if (is.null(image$state))
           return(FALSE)
         
-        # 필요할 때만 플롯 생성
+        # Generate plot only when displayed
         plot <- plot(image$state)
         print(plot)
         TRUE
@@ -267,7 +223,7 @@ difClass <- if (requireNamespace('jmvcore'))
         if (is.null(image$state))
           return()
         
-        # 필요할 때만 플롯 생성
+        # Generate plot only when displayed
         num <- self$options$num
         plot3 <- ShinyItemAnalysis::plotDIFirt(parameters = image$state,
                                                item = num,
@@ -280,7 +236,7 @@ difClass <- if (requireNamespace('jmvcore'))
         if (is.null(image1$state))
           return(FALSE)
         
-        # 필요할 때만 플롯 생성
+        # Generate plot only when displayed
         plot1 <- plot(image1$state)
         print(plot1)
         TRUE
@@ -290,7 +246,7 @@ difClass <- if (requireNamespace('jmvcore'))
         if (is.null(image2$state))
           return(FALSE)
         
-        # 필요할 때만 플롯 생성
+        # Generate plot only when displayed
         plot2 <- plot(image2$state)
         print(plot2)
         TRUE
