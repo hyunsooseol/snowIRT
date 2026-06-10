@@ -1,11 +1,10 @@
+
 deltamClass <- if (requireNamespace('jmvcore', quietly = TRUE))
   R6::R6Class(
     "deltamClass",
     inherit = deltamBase,
     private = list(
       .htmlwidget = NULL,
-      .cachedData = NULL,       # Cache for processed data
-      .cachedGroupLevels = NULL, # Cache for group levels
       
       .init = function() {
         # Create widget once during initialization
@@ -37,18 +36,14 @@ deltamClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (self$options$fixed)
           self$results$fixed$setNote("Note", "Detection threshold: 1.5")
         
-
+        
         # Early completion if insufficient variables
         if (length(self$options$vars) <= 1)
           self$setStatus('complete')
       },
       
-      # Process data only once and store for reuse
+      # Process data
       .prepareData = function() {
-        # Return cached data if available
-        if (!is.null(private$.cachedData))
-          return(list(data = private$.cachedData, groupLevels = private$.cachedGroupLevels))
-        
         # Check if we have sufficient variables
         if (length(self$options$vars) < 1)
           return(NULL)
@@ -78,10 +73,6 @@ deltamClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           jmvcore::reject("Grouping variable '{a}' must have exactly 2 levels",
                           code = "grouping_var_must_have_2_levels",
                           a = groupVarName)
-        
-        # Cache the processed data
-        private$.cachedData <- data
-        private$.cachedGroupLevels <- groupLevels
         
         return(list(data = data, groupLevels = groupLevels))
       },
