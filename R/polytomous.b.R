@@ -1,4 +1,3 @@
-#' @import ggplot2
 
 polytomousClass <- if (requireNamespace('jmvcore'))
   R6::R6Class(
@@ -257,8 +256,15 @@ adjustment; Ho= the data fit the Rasch model."
         if (isTRUE(self$options$wplot)) {
           vars <- self$options$vars
           image <- self$results$wplot
-          imeasure <- tamobj$item_irt[[3]]
-          state <- list(personmeasure, imeasure, vars)
+          
+          wright_imeasure <- tamobj$item_irt[[3]]
+          
+          state <- list(
+            personmeasure,
+            wright_imeasure,
+            vars
+          )
+          
           image$setState(state)
         }
         
@@ -800,9 +806,11 @@ adjustment; Ho= the data fit the Rasch model."
         
         infit1 <- image$state
         
-        plot <- ggplot(infit1, aes(x = item, y = infit)) +
-          # Refined circular point style
-          geom_point(
+        plot <- ggplot2::ggplot(
+          infit1,
+          ggplot2::aes(x = item, y = infit)
+        ) +
+          ggplot2::geom_point(
             shape = 21,
             color = '#2c3e50',
             fill = '#3498db',
@@ -810,58 +818,82 @@ adjustment; Ho= the data fit the Rasch model."
             stroke = 1.1,
             alpha = 0.85
           ) +
-          # Clean boundary lines
-          geom_hline(
+          ggplot2::geom_hline(
             yintercept = 1.5,
             linetype = "solid",
             color = '#e74c3c',
             linewidth = 1,
             alpha = 0.7
           ) +
-          geom_hline(
+          ggplot2::geom_hline(
             yintercept = 0.5,
             linetype = "solid",
             color = '#e74c3c',
             linewidth = 1,
             alpha = 0.7
           ) +
-          ggtitle("") +
-          theme_minimal() +
-          theme(
-            # Background settings
-            panel.background = element_rect(fill = "#fafafa", color = NA),
-            plot.background = element_rect(fill = "white", color = NA),
+          ggplot2::ggtitle("") +
+          ggplot2::theme_minimal() +
+          ggplot2::theme(
+            panel.background = ggplot2::element_rect(
+              fill = "#fafafa",
+              color = NA
+            ),
+            plot.background = ggplot2::element_rect(
+              fill = "white",
+              color = NA
+            ),
             
-            # Grid line settings
-            panel.grid.major.y = element_line(color = "#e8e8e8", linewidth = 0.4),
-            panel.grid.minor = element_blank(),
-            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = ggplot2::element_line(
+              color = "#e8e8e8",
+              linewidth = 0.4
+            ),
+            panel.grid.minor = ggplot2::element_blank(),
+            panel.grid.major.x = ggplot2::element_blank(),
             
-            # Title and axis label styling
-            plot.title = element_text(
+            plot.title = ggplot2::element_text(
               hjust = 0.5,
               size = 15,
               face = "bold",
               color = "#2c3e50",
-              margin = margin(b = 15)
+              margin = ggplot2::margin(b = 15)
             ),
-            axis.title = element_text(size = 11, color = "#34495e"),
-            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
-            axis.text.x = element_text(margin = margin(t = 6)),
-            axis.text.y = element_text(margin = margin(r = 6)),
+            axis.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e"
+            ),
+            axis.text = ggplot2::element_text(
+              size = 9.5,
+              color = "#7f8c8d"
+            ),
+            axis.text.x = ggplot2::element_text(
+              margin = ggplot2::margin(t = 6)
+            ),
+            axis.text.y = ggplot2::element_text(
+              margin = ggplot2::margin(r = 6)
+            ),
             
-            # Border settings
-            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            panel.border = ggplot2::element_rect(
+              color = "#bdc3c7",
+              fill = NA,
+              linewidth = 0.4
+            ),
             
-            # Margin adjustments
-            plot.margin = margin(15, 15, 15, 15)
+            plot.margin = ggplot2::margin(15, 15, 15, 15)
           )
         
         plot <- plot + ggtheme
         
         if (self$options$angle > 0) {
-          plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
+          plot <- plot +
+            ggplot2::theme(
+              axis.text.x = ggplot2::element_text(
+                angle = self$options$angle,
+                hjust = 1
+              )
+            )
         }
+        
         print(plot)
         TRUE
       },
@@ -886,9 +918,11 @@ adjustment; Ho= the data fit the Rasch model."
         
         outfit1 <- image$state
         
-        plot <- ggplot(outfit1, aes(x = item, y = outfit)) +
-          # Refined circular point style
-          geom_point(
+        plot <- ggplot2::ggplot(
+          outfit1,
+          ggplot2::aes(x = item, y = outfit)
+        ) +
+          ggplot2::geom_point(
             shape = 21,
             color = '#2c3e50',
             fill = '#3498db',
@@ -896,58 +930,82 @@ adjustment; Ho= the data fit the Rasch model."
             stroke = 1.1,
             alpha = 0.85
           ) +
-          # Clean boundary lines
-          geom_hline(
+          ggplot2::geom_hline(
             yintercept = 1.5,
             linetype = "solid",
             color = '#e74c3c',
             linewidth = 1,
             alpha = 0.7
           ) +
-          geom_hline(
+          ggplot2::geom_hline(
             yintercept = 0.5,
             linetype = "solid",
             color = '#e74c3c',
             linewidth = 1,
             alpha = 0.7
           ) +
-          ggtitle("") +
-          theme_minimal() +
-          theme(
-            # Background settings
-            panel.background = element_rect(fill = "#fafafa", color = NA),
-            plot.background = element_rect(fill = "white", color = NA),
+          ggplot2::ggtitle("") +
+          ggplot2::theme_minimal() +
+          ggplot2::theme(
+            panel.background = ggplot2::element_rect(
+              fill = "#fafafa",
+              color = NA
+            ),
+            plot.background = ggplot2::element_rect(
+              fill = "white",
+              color = NA
+            ),
             
-            # Grid line settings
-            panel.grid.major.y = element_line(color = "#e8e8e8", linewidth = 0.4),
-            panel.grid.minor = element_blank(),
-            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = ggplot2::element_line(
+              color = "#e8e8e8",
+              linewidth = 0.4
+            ),
+            panel.grid.minor = ggplot2::element_blank(),
+            panel.grid.major.x = ggplot2::element_blank(),
             
-            # Title and axis label styling
-            plot.title = element_text(
+            plot.title = ggplot2::element_text(
               hjust = 0.5,
               size = 15,
               face = "bold",
               color = "#2c3e50",
-              margin = margin(b = 15)
+              margin = ggplot2::margin(b = 15)
             ),
-            axis.title = element_text(size = 11, color = "#34495e"),
-            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
-            axis.text.x = element_text(margin = margin(t = 6)),
-            axis.text.y = element_text(margin = margin(r = 6)),
+            axis.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e"
+            ),
+            axis.text = ggplot2::element_text(
+              size = 9.5,
+              color = "#7f8c8d"
+            ),
+            axis.text.x = ggplot2::element_text(
+              margin = ggplot2::margin(t = 6)
+            ),
+            axis.text.y = ggplot2::element_text(
+              margin = ggplot2::margin(r = 6)
+            ),
             
-            # Border settings
-            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            panel.border = ggplot2::element_rect(
+              color = "#bdc3c7",
+              fill = NA,
+              linewidth = 0.4
+            ),
             
-            # Margin adjustments
-            plot.margin = margin(15, 15, 15, 15)
+            plot.margin = ggplot2::margin(15, 15, 15, 15)
           )
         
         plot <- plot + ggtheme
         
         if (self$options$angle > 0) {
-          plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
+          plot <- plot +
+            ggplot2::theme(
+              axis.text.x = ggplot2::element_text(
+                angle = self$options$angle,
+                hjust = 1
+              )
+            )
         }
+        
         print(plot)
         TRUE
       },
@@ -961,15 +1019,21 @@ adjustment; Ho= the data fit the Rasch model."
         score <- image2$state[[2]]
         color <- image2$state[[3]]
         
-        plot2 <- ggplot(df2, aes(score)) +
-          geom_histogram(binwidth = 1,
-                         fill = color,
-                         col = "black") +
-          xlab("Total score") +
-          ylab("Number of respondents") +
+        plot2 <- ggplot2::ggplot(
+          df2,
+          ggplot2::aes(x = score)
+        ) +
+          ggplot2::geom_histogram(
+            binwidth = 1,
+            fill = color,
+            colour = "black"
+          ) +
+          ggplot2::xlab("Total score") +
+          ggplot2::ylab("Number of respondents") +
           ShinyItemAnalysis::theme_app()
         
         plot2 <- plot2 + ggtheme
+        
         print(plot2)
         TRUE
       },
@@ -982,23 +1046,34 @@ adjustment; Ho= the data fit the Rasch model."
         
         pf <- image$state
         
-        plot3 <- ggplot2::ggplot(pf, aes(x = Measure, y = Value, shape = Fit, color = Fit)) +
-          # Modern point styling with refined shapes
-          geom_point(
+        plot3 <- ggplot2::ggplot(
+          pf,
+          ggplot2::aes(
+            x = Measure,
+            y = Value,
+            shape = Fit,
+            color = Fit
+          )
+        ) +
+          ggplot2::geom_point(
             size = 2.5,
             stroke = 1,
             alpha = 0.75
           ) +
-          # Elegant shape and color mapping
           ggplot2::scale_shape_manual(
-            values = c("Infit" = 16, "Outfit" = 17),  # Circle and triangle
+            values = c(
+              "Infit" = 16,
+              "Outfit" = 17
+            ),
             name = "Fit"
           ) +
           ggplot2::scale_color_manual(
-            values = c("Infit" = '#2980b9', "Outfit" = '#e74c3c'),
+            values = c(
+              "Infit" = '#2980b9',
+              "Outfit" = '#e74c3c'
+            ),
             name = "Fit"
           ) +
-          # Clean boundary lines
           ggplot2::geom_hline(
             yintercept = 1.5,
             linetype = "solid",
@@ -1013,49 +1088,83 @@ adjustment; Ho= the data fit the Rasch model."
             linewidth = 0.8,
             alpha = 0.8
           ) +
-          ggplot2::coord_cartesian(xlim = c(-4, 4), ylim = c(0, 3)) +
-          ggtitle("") +
-          labs(
+          ggplot2::coord_cartesian(
+            xlim = c(-4, 4),
+            ylim = c(0, 3)
+          ) +
+          ggplot2::ggtitle("") +
+          ggplot2::labs(
             x = "Measure",
             y = "Value"
           ) +
-          theme_minimal() +
-          theme(
-            # Background settings
-            panel.background = element_rect(fill = "#fafafa", color = NA),
-            plot.background = element_rect(fill = "white", color = NA),
+          ggplot2::theme_minimal() +
+          ggplot2::theme(
+            panel.background = ggplot2::element_rect(
+              fill = "#fafafa",
+              color = NA
+            ),
+            plot.background = ggplot2::element_rect(
+              fill = "white",
+              color = NA
+            ),
             
-            # Grid line settings
-            panel.grid.major = element_line(color = "#f0f0f0", linewidth = 0.3),
-            panel.grid.minor = element_blank(),
+            panel.grid.major = ggplot2::element_line(
+              color = "#f0f0f0",
+              linewidth = 0.3
+            ),
+            panel.grid.minor = ggplot2::element_blank(),
             
-            # Title and axis label styling
-            plot.title = element_text(
+            plot.title = ggplot2::element_text(
               hjust = 0.5,
               size = 15,
               face = "bold",
               color = "#2c3e50",
-              margin = margin(b = 15)
+              margin = ggplot2::margin(b = 15)
             ),
-            axis.title = element_text(size = 11, color = "#34495e"),
-            axis.text = element_text(size = 9.5, color = "#7f8c8d"),
+            axis.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e"
+            ),
+            axis.text = ggplot2::element_text(
+              size = 9.5,
+              color = "#7f8c8d"
+            ),
             
-            # Legend styling
             legend.position = "right",
-            legend.title = element_text(size = 11, color = "#34495e", face = "bold"),
-            legend.text = element_text(size = 10, color = "#7f8c8d"),
-            legend.background = element_rect(fill = "white", color = "#ecf0f1", linewidth = 0.3),
-            legend.key = element_rect(fill = "transparent"),
-            legend.margin = margin(10, 10, 10, 10),
+            legend.title = ggplot2::element_text(
+              size = 11,
+              color = "#34495e",
+              face = "bold"
+            ),
+            legend.text = ggplot2::element_text(
+              size = 10,
+              color = "#7f8c8d"
+            ),
+            legend.background = ggplot2::element_rect(
+              fill = "white",
+              color = "#ecf0f1",
+              linewidth = 0.3
+            ),
+            legend.key = ggplot2::element_rect(
+              fill = "transparent"
+            ),
+            legend.margin = ggplot2::margin(
+              10, 10, 10, 10
+            ),
             
-            # Border settings
-            panel.border = element_rect(color = "#bdc3c7", fill = NA, linewidth = 0.4),
+            panel.border = ggplot2::element_rect(
+              color = "#bdc3c7",
+              fill = NA,
+              linewidth = 0.4
+            ),
             
-            # Margin adjustments
-            plot.margin = margin(15, 15, 15, 15)
+            plot.margin = ggplot2::margin(
+              15, 15, 15, 15
+            )
           )
         
         plot3 <- plot3 + ggtheme
+        
         print(plot3)
         TRUE
       },
