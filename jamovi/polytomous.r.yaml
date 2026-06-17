@@ -258,6 +258,8 @@ items:
     - name: wplot
       title: 'Wright Map'
       type: Image
+      width: 600
+      height: 450      
       visible: (wplot)
       renderFun: .wplot
       refs: ShinyItemAnalysis
@@ -267,6 +269,8 @@ items:
     - name: piplot
       title: 'Person-item map for PCM '
       type: Image
+      width: 600
+      height: 450      
       visible: (piplot)
       renderFun: .piPlot
       refs: eRm
@@ -283,6 +287,8 @@ items:
       template:
         title: 'Item $key'
         type: Image
+        width: 600
+        height: 450        
         renderFun: .plot4
 
     - name: plot6
@@ -296,11 +302,15 @@ items:
       template:
         title: 'Item $key'
         type: Image
+        width: 600
+        height: 450        
         renderFun: .plot6
 
     - name: inplot
       title: 'Item Infit Plot'
       type: Image
+      width: 600
+      height: 450      
       visible: (inplot)
       renderFun: .inPlot
       clearWith:
@@ -310,6 +320,8 @@ items:
     - name: outplot
       title: 'Item Outfit Plot'
       type: Image
+      width: 600
+      height: 450      
       visible: (outplot)
       renderFun: .outPlot
       clearWith:
@@ -371,6 +383,8 @@ items:
     - name:  plot2
       title: 'Histogram of Total Score'
       type:  Image
+      width: 600
+      height: 450      
       requiresData: true
       visible: (plot2)
       renderFun: .plot2
@@ -381,6 +395,8 @@ items:
     - name:  plot3
       title: 'Person Fit Plot'
       type:  Image
+      width: 600
+      height: 450      
       requiresData: true
       visible: (plot3)
       renderFun: .plot3

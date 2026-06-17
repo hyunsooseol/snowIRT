@@ -79,6 +79,8 @@ items:
     - name: zplot
       title: 'Z statistic plot'
       type: Image
+      width: 600
+      height: 450      
       renderFun: .plot
       visible: (zplot)
       refs: difR
@@ -90,6 +92,8 @@ items:
     - name: plot1
       title: 'Mantel-Haenszel plot'
       type: Image
+      width: 600
+      height: 450      
       renderFun: .plot1
       visible: (plot1)
       refs: difR
@@ -129,6 +133,8 @@ items:
     - name: plot2
       title: 'Generalized Mantel-Haenszel plot'
       type: Image
+      width: 600
+      height: 450      
       renderFun: .plot2
       visible: (plot2)
       refs: difR
@@ -140,6 +146,8 @@ items:
     - name: plot3
       title: 'Item Characteristic Curve plot for DIF'
       type: Image
+      width: 600
+      height: 450      
       renderFun: .plot3
       visible: (plot3)
       refs: difR

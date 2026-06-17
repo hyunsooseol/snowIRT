@@ -149,6 +149,8 @@ items:
     - name: plot
       title: 'Wright Map'
       type: Image
+      width: 600
+      height: 450      
       renderFun: .plot
       visible: (wrightmap)
       clearWith:
@@ -165,11 +167,15 @@ items:
       template:
         title: 'Item $key'
         type: Image
+        width: 600
+        height: 450        
         renderFun: .plot4
 
     - name: inplot
       title: 'Item Infit Plot'
       type: Image
+      width: 600
+      height: 450      
       visible: (inplot)
       renderFun: .inPlot
       clearWith:
@@ -179,6 +185,8 @@ items:
     - name: outplot
       title: 'Item Outfit Plot'
       type: Image
+      width: 600
+      height: 450      
       visible: (outplot)
       renderFun: .outPlot
       clearWith:
@@ -234,6 +242,8 @@ items:
     - name:  plot3
       title: 'Person Fit Plot'
       type:  Image
+      width: 600
+      height: 450      
       requiresData: true
       visible: (plot3)
       renderFun: .plot3
@@ -244,6 +254,8 @@ items:
     - name:  plot2
       title: 'Histogram of Total Score'
       type:  Image
+      width: 600
+      height: 450      
       requiresData: true
       visible: (plot2)
       renderFun: .plot2

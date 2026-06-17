@@ -47,6 +47,8 @@ items:
     - name:  plot
       title: Fixed DIF 
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot)
       renderFun: .plot
       clearWith:
@@ -80,6 +82,8 @@ items:
     - name:  plot1
       title: Normal DIF 
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot1)
       renderFun: .plot1
       clearWith:

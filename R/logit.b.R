@@ -51,15 +51,27 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         if (is.null(groupVarName))
           return()
-        #data <- dplyr::select(self$data, varNames)
+        
+        # data <- dplyr::select(self$data, varNames)
         data <- self$data[, varNames, drop = FALSE]
         
         for (var in vars)
           data[[var]] <- jmvcore::toNumeric(data[[var]])
+        
         # exclude rows with missings in the grouping variable
-        data <- data[!is.na(data[[groupVarName]]), ]
+        data <- data[!is.na(data[[groupVarName]]), , drop = FALSE]
         
+        # Validate grouping variable
+        groupLevels <- unique(data[[groupVarName]])
+        groupLevels <- groupLevels[!is.na(groupLevels)]
         
+        if (length(groupLevels) != 2) {
+          jmvcore::reject(
+            "The grouping variable must have exactly 2 levels for logistic DIF analysis."
+          )
+        }
+        
+        # 이하 기존 코드 계속
         # analysis--------
         
         if (isTRUE(self$options$puri))
@@ -83,7 +95,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             model = self$options$model,
             type = self$options$type,
             match = self$options$match,
-            p.adjust.method = self$options$padjust,
+            p.adjust.method = self$options$padjust
           )
         }
         chi <- fit$Sval

@@ -151,6 +151,8 @@ items:
     - name:  plot2
       title: 'Histogram of total score'
       type:  Image
+      width: 600
+      height: 450      
       requiresData: true
       visible: (plot2)
       renderFun: .plot2
@@ -162,6 +164,8 @@ items:
     - name:  plot
       title: 'Distractor plot'
       type:  Image
+      width: 600
+      height: 450      
       requiresData: true
       visible: (plot)
       renderFun: .plot
@@ -175,6 +179,8 @@ items:
     - name:  plot1
       title: 'Discrimination plot'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot1)
       renderFun: .plot1
       refs: ShinyItemAnalysis
@@ -203,6 +209,8 @@ items:
     - name:  plot3
       title: '`Empirical Item Characteristic Curve: Item ${num1}`'      
       type:  Image
+      width: 600
+      height: 450      
       requiresData: true
       visible: (plot3)
       renderFun: .plot3

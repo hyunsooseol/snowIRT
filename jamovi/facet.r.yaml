@@ -275,6 +275,8 @@ items:
     - name:  plot9
       title: 'Trajectory plot'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot9)
       renderFun: .plot9
       refs: snowIRT 
@@ -408,6 +410,8 @@ items:
     - name: plot1
       title: 'Rater plot'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot1)
       renderFun: .plot1
       refs: snowIRT
@@ -419,6 +423,8 @@ items:
     - name: plot2
       title: 'Task plot'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot2)
       renderFun: .plot2
       refs: snowIRT
@@ -430,6 +436,8 @@ items:
     - name: plot3
       title: 'Interaction: Rater X Task'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot3)
       renderFun: .plot3
       refs: snowIRT
@@ -442,6 +450,8 @@ items:
     - name:  plot7
       title: 'Interaction Fit: Rater X Task'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot7)
       renderFun: .plot7
       refs: snowIRT 
@@ -454,6 +464,8 @@ items:
     - name:  plot8
       title: 'Person Fit'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot8)
       renderFun: .plot8
       refs: snowIRT 
@@ -465,6 +477,8 @@ items:
     - name: plot4
       title: 'Wright Map'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot4)
       renderFun: .plot4
       refs: snowIRT
@@ -476,6 +490,8 @@ items:
     - name: plot5
       title: 'Expected Scores Curve'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot5)
       renderFun: .plot5
       refs: snowIRT
@@ -489,6 +505,8 @@ items:
     - name: plot6
       title: 'Item Response Curve'
       type:  Image
+      width: 600
+      height: 450      
       visible: (plot6)
       renderFun: .plot6
       refs: snowIRT

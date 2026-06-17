@@ -56,7 +56,16 @@ difClass <- if (requireNamespace('jmvcore'))
         
         # Remove missing values in the grouping variable
         data <- data[!is.na(data[[groupVarName]]), , drop = FALSE]
-        groupLevels <- base::levels(data[[groupVarName]])
+        
+        # Validate grouping variable
+        groupLevels <- unique(data[[groupVarName]])
+        groupLevels <- groupLevels[!is.na(groupLevels)]
+        
+        if (length(groupLevels) < 2) {
+          jmvcore::reject(
+            "The grouping variable must have at least 2 levels."
+          )
+        }
         
         # Run GMH for more than two groups
         if (length(groupLevels) > 2) {

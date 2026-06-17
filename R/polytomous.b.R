@@ -663,15 +663,6 @@ adjustment; Ho= the data fit the Rasch model."
           table$setRow(rowNo = i, values = row)
         }
       },
-      #####################################################
-      .populatePerOutputs = function(results) {
-        perc <- results$perc
-        if (self$options$per
-            && self$results$per$isNotFilled()) {
-          self$results$per$setValues(perc)
-          self$results$per$setRowNums(rownames(data))
-        }
-      },
       
       #### Plot functions ###########################
       
