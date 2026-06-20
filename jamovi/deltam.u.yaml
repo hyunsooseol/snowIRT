@@ -20,6 +20,7 @@ children:
             name: group
             isTarget: true
             maxItemCount: 1
+            ghostText: Required
   - type: LayoutBox
     margin: large
     stretchFactor: 1

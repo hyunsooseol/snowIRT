@@ -20,7 +20,7 @@ deltamClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
           '<div style="text-align:justify;">',
           '<ul>',
-          '<li>Each variable should be coded as 0 or 1 with the <b>Grouping variable</b>in jamovi.</li>',
+          '<li>Each variable should be coded as 0 or 1 with the <b>Grouping variable</b> in jamovi.</li>',
           '<li>The focal group should be coded as 1.</li>',
           '<li>The Angoff delta method is described in the <a href="https://ppw.kuleuven.be/okp/_pdf/Magis2011ADMRI.pdf"  target = "_blank">paper</a>.</li>',
           '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
