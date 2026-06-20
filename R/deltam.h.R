@@ -93,10 +93,12 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         fixed = function() private$.items[["fixed"]],
         text = function() private$.items[["text"]],
         plot = function() private$.items[["plot"]],
+        plotNote = function() private$.items[["plotNote"]],
         normal = function() private$.items[["normal"]],
         text1 = function() private$.items[["text1"]],
         text2 = function() private$.items[["text2"]],
-        plot1 = function() private$.items[["plot1"]]),
+        plot1 = function() private$.items[["plot1"]],
+        plot1Note = function() private$.items[["plot1Note"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -156,6 +158,10 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group")))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="plotNote",
+                title=""))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="normal",
@@ -191,7 +197,11 @@ deltamResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "puri")))}))
+                    "puri")))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="plot1Note",
+                title=""))}))
 
 deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "deltamBase",
@@ -231,10 +241,12 @@ deltamBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$fixed} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plotNote} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$normal} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$text1} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$text2} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plot1Note} \tab \tab \tab \tab \tab a preformatted \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

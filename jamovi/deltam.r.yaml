@@ -55,6 +55,10 @@ items:
         - vars
         - group
 
+    - name: plotNote
+      title: ""
+      type: Preformatted
+
     - name: normal
       title: 'Perpendicular distances(after the last iteration)'
       type: Table
@@ -90,6 +94,10 @@ items:
         - vars
         - group
         - puri
+
+    - name: plot1Note
+      title: ""
+      type: Preformatted
 
 ...
 
