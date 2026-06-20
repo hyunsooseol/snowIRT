@@ -21,6 +21,7 @@ children:
             name: group
             maxItemCount: 1
             isTarget: true
+            ghostText: Required
   - type: LayoutBox
     margin: large
     style: inline
