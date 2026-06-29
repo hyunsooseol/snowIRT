@@ -47,6 +47,13 @@ children:
                 name: pmeasure
               - type: CheckBox
                 name: thurs
+          - type: Label
+            label: Category diagnostics
+            children:
+              - type: CheckBox
+                name: catStats
+              - type: CheckBox
+                name: thresholdOrder
       - type: LayoutBox
         stretchFactor: 1
         margin: large

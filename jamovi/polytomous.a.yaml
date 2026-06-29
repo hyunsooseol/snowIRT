@@ -186,4 +186,13 @@ options:
           name: 'FALSE'
       default: 'TRUE'
 
+    - name: catStats
+      title: 'Category statistics'
+      type: Bool
+      default: false
+
+    - name: thresholdOrder
+      title: Threshold ordering
+      type: Bool
+      default: false
 ...

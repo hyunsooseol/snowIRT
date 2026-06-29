@@ -32,7 +32,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             plot3 = FALSE,
             plot4 = FALSE,
             plot6 = FALSE,
-            obs = "TRUE", ...) {
+            obs = "TRUE",
+            catStats = FALSE,
+            thresholdOrder = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -168,6 +170,14 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "TRUE",
                     "FALSE"),
                 default="TRUE")
+            private$..catStats <- jmvcore::OptionBool$new(
+                "catStats",
+                catStats,
+                default=FALSE)
+            private$..thresholdOrder <- jmvcore::OptionBool$new(
+                "thresholdOrder",
+                thresholdOrder,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..imeasure)
@@ -202,6 +212,8 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..plot4)
             self$.addOption(private$..plot6)
             self$.addOption(private$..obs)
+            self$.addOption(private$..catStats)
+            self$.addOption(private$..thresholdOrder)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -236,7 +248,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot3 = function() private$..plot3$value,
         plot4 = function() private$..plot4$value,
         plot6 = function() private$..plot6$value,
-        obs = function() private$..obs$value),
+        obs = function() private$..obs$value,
+        catStats = function() private$..catStats$value,
+        thresholdOrder = function() private$..thresholdOrder$value),
     private = list(
         ..vars = NA,
         ..imeasure = NA,
@@ -270,7 +284,9 @@ polytomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..plot3 = NA,
         ..plot4 = NA,
         ..plot6 = NA,
-        ..obs = NA)
+        ..obs = NA,
+        ..catStats = NA,
+        ..thresholdOrder = NA)
 )
 
 polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -315,7 +331,9 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 active = list(
                     items = function() private$.items[["items"]],
                     thresh = function() private$.items[["thresh"]],
-                    thurs = function() private$.items[["thurs"]]),
+                    thurs = function() private$.items[["thurs"]],
+                    categoryStats = function() private$.items[["categoryStats"]],
+                    thresholdOrdering = function() private$.items[["thresholdOrdering"]]),
                 private = list(),
                 public=list(
                     initialize=function(options) {
@@ -357,7 +375,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="thresh",
-                            title="Delta-tau paramaterization of the partial credit model",
+                            title="Delta-tau parameterization of the partial credit model",
                             rows="(vars)",
                             visible="(thresh)",
                             clearWith=list(
@@ -387,7 +405,62 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                     `name`="name", 
                                     `title`="", 
                                     `type`="number", 
-                                    `content`="($key)"))))}))$new(options=options))
+                                    `content`="($key)"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="categoryStats",
+                            title="Item category statistics",
+                            visible="(catStats)",
+                            clearWith=list(
+                                "vars"),
+                            refs="TAM",
+                            columns=list(
+                                list(
+                                    `name`="item", 
+                                    `title`="Item", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="category", 
+                                    `title`="Category", 
+                                    `type`="text"),
+                                list(
+                                    `name`="frequency", 
+                                    `title`="Frequency", 
+                                    `type`="integer"),
+                                list(
+                                    `name`="percent", 
+                                    `title`="Percent (%)", 
+                                    `type`="number", 
+                                    `format`="zto"),
+                                list(
+                                    `name`="meanMeasure", 
+                                    `title`="Mean Measure", 
+                                    `type`="number", 
+                                    `format`="zto"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="thresholdOrdering",
+                            title="Threshold ordering diagnostics",
+                            rows="(vars)",
+                            visible="(thresholdOrder)",
+                            clearWith=list(
+                                "vars"),
+                            refs="TAM",
+                            columns=list(
+                                list(
+                                    `name`="item", 
+                                    `title`="Item", 
+                                    `type`="text", 
+                                    `content`="($key)"),
+                                list(
+                                    `name`="ordering", 
+                                    `title`="Ordering", 
+                                    `type`="text"),
+                                list(
+                                    `name`="details", 
+                                    `title`="Details", 
+                                    `type`="text"))))}))$new(options=options))
             self$add(R6::R6Class(
                 inherit = jmvcore::Group,
                 active = list(
@@ -399,7 +472,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         super$initialize(
                             options=options,
                             name="mf",
-                            title="Model Fit")
+                            title="Model fit")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="scale",
@@ -430,7 +503,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="mat",
-                            title="Q3 Correlation Matrix",
+                            title="Q3 correlation matrix",
                             rows="(vars)",
                             visible="(mat)",
                             clearWith=list(
@@ -454,7 +527,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         super$initialize(
                             options=options,
                             name="mcc",
-                            title="Model Comparison")
+                            title="Model comparison")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="model",
@@ -525,6 +598,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                 list(
                                     `name`="p", 
                                     `title`="p", 
+                                    `type`="number", 
                                     `format`="zto,pvalue"))))}))$new(options=options))
             self$add(R6::R6Class(
                 inherit = jmvcore::Group,
@@ -537,7 +611,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         super$initialize(
                             options=options,
                             name="ss",
-                            title="Standard Scores")
+                            title="Standard scores")
                         self$add(jmvcore::Table$new(
                             options=options,
                             name="st",
@@ -615,7 +689,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="piplot",
-                title="Person-item map for PCM ",
+                title="Person-item map for PCM",
                 width=600,
                 height=450,
                 visible="(piplot)",
@@ -750,8 +824,7 @@ polytomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Rating Scale Deltas/thresholds",
                 visible="(tau)",
                 clearWith=list(
-                    "vars",
-                    "tau"),
+                    "vars"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -815,12 +888,16 @@ polytomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot4 .
 #' @param plot6 .
 #' @param obs .
+#' @param catStats .
+#' @param thresholdOrder .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$ia$items} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ia$thresh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ia$thurs} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ia$categoryStats} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ia$thresholdOrdering} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mcc$model} \tab \tab \tab \tab \tab a table \cr
@@ -879,7 +956,9 @@ polytomous <- function(
     plot3 = FALSE,
     plot4 = FALSE,
     plot6 = FALSE,
-    obs = "TRUE") {
+    obs = "TRUE",
+    catStats = FALSE,
+    thresholdOrder = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("polytomous requires jmvcore to be installed (restart may be required)")
@@ -918,7 +997,9 @@ polytomous <- function(
         plot3 = plot3,
         plot4 = plot4,
         plot6 = plot6,
-        obs = obs)
+        obs = obs,
+        catStats = catStats,
+        thresholdOrder = thresholdOrder)
 
     analysis <- polytomousClass$new(
         options = options,

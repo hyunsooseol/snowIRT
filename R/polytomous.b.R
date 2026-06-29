@@ -54,7 +54,34 @@ adjustment; Ho= the data fit the Rasch model."
             "Note",
             "The Thurstonian threshold for a score category is defined as the ability at which the probability of achieving that score or higher reaches 0.50."
           )
-      },
+      
+        if (isTRUE(self$options$catStats)) {
+          self$results$ia$categoryStats$setNote(
+            "Note",
+            paste(
+              "Frequency and percent are calculated from the observed responses",
+              "in the complete-case analysis sample.",
+              "Mean Measure is based on WLE person measures estimated",
+              "from the rating scale model."
+            )
+          )
+        }
+        
+        if (isTRUE(self$options$thresholdOrder)) {
+          self$results$ia$thresholdOrdering$setNote(
+            "Note",
+            paste(
+              "Threshold ordering is evaluated using Thurstone thresholds",
+              "estimated from the partial credit model.",
+              "Ordered indicates monotonically increasing thresholds.",
+              "Disordered indicates that at least one threshold is equal to",
+              "or lower than the preceding threshold."
+            )
+          )
+        }
+        
+        
+        },
       
       .run = function() {
         # Ready--------
@@ -70,6 +97,12 @@ adjustment; Ho= the data fit the Rasch model."
           
           if (is.null(private$.cache$tamobj))
             private$.cache$tamobj <- private$.computeTamobj()
+          
+          if (is.null(private$.cache$pcmobj))
+            private$.cache$pcmobj <- TAM::tam(
+              resp = as.matrix(data)
+            )
+          
           if (is.null(private$.cache$results))
             private$.cache$results <- private$.compute(data)
           
@@ -82,11 +115,17 @@ adjustment; Ho= the data fit the Rasch model."
           # populate item table----
           private$.populateItemsTable(results)
           
+          # populate category statistics----
+          private$.populateCategoryStatsTable(results)
+          
           # Populate q3 matrix table-----
           private$.populateMatrixTable(results)
           
           # populate thurstonian thresholds
           private$.populateThurstoneTable(results)
+          
+          # populate threshold ordering diagnostics
+          private$.populateThresholdOrderingTable(results)
           
           # delta-tau parameter--------
           private$.populateThresholdsTable(results)
@@ -144,15 +183,171 @@ adjustment; Ho= the data fit the Rasch model."
         personmeasure <- person$theta
         pse <- person$error
         
+        # Category statistics -----------------------------------------
+        categoryStats <- NULL
+        
+        if (isTRUE(self$options$catStats)) {
+          
+          itemNames <- names(data)
+          categoryRows <- list()
+          rowIndex <- 0L
+          
+          for (itemName in itemNames) {
+            
+            itemValues <- data[[itemName]]
+            categories <- sort(unique(itemValues[!is.na(itemValues)]))
+            validN <- sum(!is.na(itemValues))
+            
+            if (length(categories) == 0L || validN == 0L)
+              next
+            
+            for (categoryValue in categories) {
+              
+              rowIndex <- rowIndex + 1L
+              
+              categoryIndex <-
+                !is.na(itemValues) &
+                itemValues == categoryValue
+              
+              frequency <- sum(categoryIndex)
+              
+              measureIndex <-
+                categoryIndex &
+                is.finite(personmeasure)
+              
+              meanMeasure <- if (any(measureIndex)) {
+                mean(personmeasure[measureIndex])
+              } else {
+                NA_real_
+              }
+              
+              categoryRows[[rowIndex]] <- data.frame(
+                item = itemName,
+                category = as.character(categoryValue),
+                frequency = as.integer(frequency),
+                percent = 100 * frequency / validN,
+                meanMeasure = meanMeasure,
+                stringsAsFactors = FALSE
+              )
+            }
+          }
+          
+          if (length(categoryRows) > 0L) {
+            categoryStats <- do.call(rbind, categoryRows)
+            rownames(categoryStats) <- NULL
+          } else {
+            categoryStats <- data.frame(
+              item = character(0),
+              category = character(0),
+              frequency = integer(0),
+              percent = numeric(0),
+              meanMeasure = numeric(0),
+              stringsAsFactors = FALSE
+            )
+          }
+        }
+        
+        
         res <- TAM::tam.modelfit(tamobj)
         modelfit <- res$stat.MADaQ3$MADaQ3
         modelfitp <- res$stat.MADaQ3$p
         mat <- res$Q3.matr
         
-        mod_pcm <- TAM::tam(resp = as.matrix(data))
+        mod_pcm <- private$.cache$pcmobj
         
         thresh <- TAM::tam.threshold(mod_pcm)
         nc <- ncol(thresh)
+        
+        # Threshold ordering diagnostics ------------------------------
+        thresholdOrdering <- NULL
+        
+        if (isTRUE(self$options$thresholdOrder)) {
+          
+          thresholdMatrix <- as.matrix(thresh)
+          itemNames <- self$options$vars
+          
+          nItems <- min(
+            length(itemNames),
+            nrow(thresholdMatrix)
+          )
+          
+          thresholdOrdering <- data.frame(
+            item = itemNames[seq_len(nItems)],
+            ordering = rep(NA_character_, nItems),
+            details = rep(NA_character_, nItems),
+            stringsAsFactors = FALSE
+          )
+          
+          for (i in seq_len(nItems)) {
+            
+            thresholdValues <- suppressWarnings(
+              as.numeric(thresholdMatrix[i, ])
+            )
+            
+            # NA, Inf 및 -Inf 제외
+            thresholdValues <-
+              thresholdValues[is.finite(thresholdValues)]
+            
+            if (length(thresholdValues) < 2L) {
+              
+              thresholdOrdering$ordering[i] <- "Not evaluated"
+              thresholdOrdering$details[i] <-
+                "Fewer than two finite thresholds"
+              
+              next
+            }
+            
+            differences <- diff(thresholdValues)
+            problemSteps <- which(differences <= 0)
+            
+            if (length(problemSteps) == 0L) {
+              
+              thresholdOrdering$ordering[i] <- "Ordered"
+              
+              formattedValues <- formatC(
+                thresholdValues,
+                format = "f",
+                digits = 3
+              )
+              
+              thresholdOrdering$details[i] <- paste(
+                formattedValues,
+                collapse = " < "
+              )
+              
+            } else {
+              
+              thresholdOrdering$ordering[i] <- "Disordered"
+              
+              problemText <- vapply(
+                problemSteps,
+                FUN.VALUE = character(1),
+                FUN = function(step) {
+                  
+                  leftValue <- thresholdValues[step]
+                  rightValue <- thresholdValues[step + 1L]
+                  
+                  paste0(
+                    "T", step,
+                    " (",
+                    formatC(leftValue, format = "f", digits = 3),
+                    ") >= T", step + 1L,
+                    " (",
+                    formatC(rightValue, format = "f", digits = 3),
+                    ")"
+                  )
+                }
+              )
+              
+              thresholdOrdering$details[i] <- paste(
+                problemText,
+                collapse = "; "
+              )
+            }
+          }
+        }
+        
+        
         
         pmeasure <- mod_pcm$item_irt$beta
         
@@ -289,6 +484,8 @@ adjustment; Ho= the data fit the Rasch model."
             'ise' = ise,
             'infit' = infit,
             'outfit' = outfit,
+            'categoryStats' = categoryStats,
+            'thresholdOrdering' = thresholdOrdering,
             'reliability' = reliability,
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
@@ -566,6 +763,52 @@ adjustment; Ho= the data fit the Rasch model."
       },
       
       
+      # Populate category statistics table --------------------------
+      
+      .populateCategoryStatsTable = function(results) {
+        
+        if (!isTRUE(self$options$catStats))
+          return()
+        
+        table <- self$results$ia$categoryStats
+        categoryStats <- results$categoryStats
+        
+        if (is.null(categoryStats) ||
+            !is.data.frame(categoryStats) ||
+            nrow(categoryStats) == 0L) {
+          return()
+        }
+        
+        requiredColumns <- c(
+          "item",
+          "category",
+          "frequency",
+          "percent",
+          "meanMeasure"
+        )
+        
+        if (!all(requiredColumns %in% names(categoryStats)))
+          return()
+        
+        for (i in seq_len(nrow(categoryStats))) {
+          
+          row <- list(
+            item = as.character(categoryStats$item[i]),
+            category = as.character(categoryStats$category[i]),
+            frequency = as.integer(categoryStats$frequency[i]),
+            percent = as.numeric(categoryStats$percent[i]),
+            meanMeasure = as.numeric(categoryStats$meanMeasure[i])
+          )
+          
+          table$addRow(
+            rowKey = paste0("category_", i),
+            values = row
+          )
+        }
+      },
+      
+      
+      
       # Populate q3 matrix table-----
       
       .populateMatrixTable = function(results) {
@@ -664,6 +907,51 @@ adjustment; Ho= the data fit the Rasch model."
         }
       },
       
+      # Populate threshold ordering diagnostics ---------------------
+      
+      .populateThresholdOrderingTable = function(results) {
+        
+        if (!isTRUE(self$options$thresholdOrder))
+          return()
+        
+        table <- self$results$ia$thresholdOrdering
+        orderingData <- results$thresholdOrdering
+        
+        if (is.null(orderingData) ||
+            !is.data.frame(orderingData) ||
+            nrow(orderingData) == 0L) {
+          return()
+        }
+        
+        requiredColumns <- c(
+          "item",
+          "ordering",
+          "details"
+        )
+        
+        if (!all(requiredColumns %in% names(orderingData)))
+          return()
+        
+        for (i in seq_len(nrow(orderingData))) {
+          
+          itemName <- as.character(orderingData$item[i])
+          
+          row <- list(
+            ordering = as.character(orderingData$ordering[i]),
+            details = as.character(orderingData$details[i])
+          )
+          
+          table$setRow(
+            rowKey = itemName,
+            values = row
+          )
+        }
+      },
+      
+      
+      
+      
+      
       #### Plot functions ###########################
       
       # wright map plot--------------
@@ -740,37 +1028,52 @@ adjustment; Ho= the data fit the Rasch model."
       
       
       .plot6 = function(image, ...) {
-        if (!self$options$plot6)
+        
+        if (!isTRUE(self$options$plot6))
           return(FALSE)
         
-        tamobj <- private$.cache$tamobj
+        pcmobj <- private$.cache$pcmobj
         
-        if (is.null(tamobj)) {
+        if (is.null(pcmobj))
           return(FALSE)
-        }
         
-        all_items <- self$options$vars
-        n_items <- length(all_items)
+        allItems <- self$options$vars
+        currentItem <- match(image$key, allItems)
         
-        current_item <- match(image$key, all_items) #fixed
-        
-        
-        if (is.na(current_item) || current_item > n_items) {
+        if (is.na(currentItem) ||
+            currentItem < 1L ||
+            currentItem > length(allItems)) {
           return(FALSE)
         }
         
         tryCatch({
-          plot_result <- plot(tamobj, 
-                              items = current_item, 
-                              type = "items", 
-                              export = FALSE,
-                              package = "graphics",
-                              observed=self$options$obs)  
           
-          return(TRUE)
+          plot(
+            pcmobj,
+            items = currentItem,
+            type = "items",
+            export = FALSE,
+            package = "graphics",
+            observed = self$options$obs
+          )
+          
+          TRUE
+          
         }, error = function(e) {
-          cat(paste("Error plotting item", current_item, ":", e$message, "\n"))
-          return(FALSE)
+          
+          cat(
+            paste0(
+              "Error plotting item ",
+              image$key,
+              " (index: ",
+              currentItem,
+              "): ",
+              conditionMessage(e),
+              "\n"
+            )
+          )
+          
+          FALSE
         })
       },
       

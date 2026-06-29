@@ -32,7 +32,9 @@ polytomous(
   plot3 = FALSE,
   plot4 = FALSE,
   plot6 = FALSE,
-  obs = "TRUE"
+  obs = "TRUE",
+  catStats = FALSE,
+  thresholdOrder = FALSE
 )
 }
 \arguments{
@@ -92,6 +94,10 @@ where 0 degrees represents completely horizontal labels.}
 \item{plot6}{.}
 
 \item{obs}{.}
+
+\item{catStats}{.}
+
+\item{thresholdOrder}{.}
 }
 \value{
 A results object containing:
@@ -100,6 +106,8 @@ A results object containing:
   \code{results$ia$items} \tab \tab \tab \tab \tab a table \cr
   \code{results$ia$thresh} \tab \tab \tab \tab \tab a table \cr
   \code{results$ia$thurs} \tab \tab \tab \tab \tab a table \cr
+  \code{results$ia$categoryStats} \tab \tab \tab \tab \tab a table \cr
+  \code{results$ia$thresholdOrdering} \tab \tab \tab \tab \tab a table \cr
   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
   \code{results$mcc$model} \tab \tab \tab \tab \tab a table \cr
