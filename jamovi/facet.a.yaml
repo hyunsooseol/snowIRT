@@ -185,4 +185,22 @@ options:
       type: Bool
       default: false      
 
+    - name: catStats
+      title: Category statistics
+      type: Bool
+      default: false
+      description:
+          R: >
+            Produces category frequencies, percentages, and mean WLE
+            person measures for each response category.
+
+    - name: stepOrder
+      title: Step ordering diagnostics
+      type: Bool
+      default: false
+      description:
+          R: >
+            Evaluates whether successive rating scale step estimates
+            increase monotonically.
+
 ...

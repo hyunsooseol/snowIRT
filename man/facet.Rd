@@ -36,7 +36,9 @@ facet(
   num1 = 1,
   plot7 = FALSE,
   angle1 = 0,
-  plot8 = FALSE
+  plot8 = FALSE,
+  catStats = FALSE,
+  stepOrder = FALSE
 )
 }
 \arguments{
@@ -103,6 +105,12 @@ facet(
 \item{angle1}{.}
 
 \item{plot8}{.}
+
+\item{catStats}{Produces category frequencies, percentages, and mean WLE
+person measures for each response category.}
+
+\item{stepOrder}{Evaluates whether successive rating scale step estimates
+increase monotonically.}
 }
 \value{
 A results object containing:
@@ -112,6 +120,8 @@ A results object containing:
   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
   \code{results$im} \tab \tab \tab \tab \tab a table \cr
   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
+  \code{results$categoryStats} \tab \tab \tab \tab \tab a table \cr
+  \code{results$stepOrdering} \tab \tab \tab \tab \tab a table \cr
   \code{results$raw} \tab \tab \tab \tab \tab a table \cr
   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr

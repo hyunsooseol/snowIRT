@@ -1,285 +1,360 @@
 ---
-name:  facet
+name: facet
 title: Many Facet Rasch Model
-jrs:   '1.1'
+jrs: '1.1'
 refs: snowIRT
+
 items:
     - name: instructions
       title: Instructions
       type: Html
-      visible: True
+      visible: true
 
-    # - name:  text1
+    # - name: text1
     #   title: ''
-    #   type:  Preformatted
+    #   type: Preformatted
 
-    - name:  text
-      title: 'WLE Reliability'
-      type:  Preformatted
+    - name: text
+      title: WLE Reliability
+      type: Preformatted
+      clearWith:
+         - dep
+         - id
+         - facet
+         - time      
 
     - name: rm
-      title: 'Rater measure'
+      title: Rater measure
       type: Table
       visible: (rm)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+
       columns:
         - name: name
           title: ''
-          type: 'text'
+          type: text
           content: ($key)
 
         - name: measure
           title: Measure
           type: number
-          
+
         - name: se
           title: SE
-          type: number        
+          type: number
 
     - name: im
-      title:  'Task measure'
+      title: Task measure
       type: Table
       visible: (im)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+
       columns:
         - name: name
           title: ''
-          type: 'text'
+          type: text
           content: ($key)
 
         - name: measure
           title: Measure
           type: number
-          
+
         - name: se
           title: SE
           type: number
 
     - name: sm
-      title:  'Step measure'
+      title: Step measure
       type: Table
       visible: (sm)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+
       columns:
         - name: name
           title: ''
-          type: 'text'
+          type: text
           content: ($key)
 
         - name: measure
           title: Measure
           type: number
-          
+
         - name: se
           title: SE
-          type: number          
+          type: number
+
+    - name: categoryStats
+      title: Rating scale category statistics
+      type: Table
+      visible: (catStats)
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
+      refs: TAM
+
+      columns:
+        - name: category
+          title: Category
+          type: text
+
+        - name: frequency
+          title: Frequency
+          type: integer
+
+        - name: percent
+          title: Percent (%)
+          type: number
+          format: zto
+
+        - name: meanMeasure
+          title: Mean Measure
+          type: number
+          format: zto
+
+    - name: stepOrdering
+      title: Step ordering diagnostics
+      type: Table
+      visible: (stepOrder)
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
+      refs: TAM
+
+      columns:
+        - name: step
+          title: Step
+          type: text
+
+        - name: estimate
+          title: Estimate
+          type: number
+          format: zto
+
+        - name: difference
+          title: Difference
+          type: number
+          format: zto
+
+        - name: ordering
+          title: Ordering
+          type: text
 
     - name: raw
-      title:  'Rater X Task: raw score'
+      title: 'Rater X Task: raw score'
       type: Table
       visible: (raw)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+
       columns:
         - name: name
           title: ''
-          type: 'text'
+          type: text
           content: ($key)
 
         - name: rater
-          title: 'Rater'
-          type: 'text'
-          
+          title: Rater
+          type: text
+
         - name: task
-          title: 'Task'
-          type: 'text'
- 
+          title: Task
+          type: text
+
         - name: score
-          title: 'Score'
+          title: Score
           type: number
- 
+
     - name: inter
-      title:  'Rater X Task: Measure'
+      title: 'Rater X Task: Measure'
       type: Table
       visible: (inter)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+
       columns:
         - name: name
           title: ''
-          type: 'text'
+          type: text
           content: ($key)
 
         - name: rater
-          title: 'Rater'
-          type: 'text'
-          
+          title: Rater
+          type: text
+
         - name: task
-          title: 'Task'
-          type: 'text'
- 
+          title: Task
+          type: text
+
         - name: measure
           title: Measure
           type: number
-          
+
         - name: se
           title: SE
-          type: number   
- 
+          type: number
+
     - name: ifit
-      title:  'Rater X Task: Interaction fit'
+      title: 'Rater X Task: Interaction fit'
       type: Table
       visible: (ifit)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+    
       columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
-
+        - name: plotno
+          title: Plot No.
+          type: integer
+    
         - name: rater
-          title: 'Rater'
-          type: 'text'
-
+          title: Rater
+          type: text
+    
         - name: task
-          title: 'Task'
-          type: 'text'
-
+          title: Task
+          type: text
+    
         - name: outfit
-          title: 'Outfit'
+          title: Outfit
           type: number
-          
+    
         - name: infit
-          title: 'Infit'
-          type: number     
-
+          title: Infit
+          type: number
+    
         - name: marker
-          title: 'Diagnosis'
-          type: 'text'
+          title: Diagnosis
+          type: text
 
     - name: driftm
       title: 'Rater drift: Severity'
       type: Table
       visible: (driftm)
-      refs: tam
+      refs: TAM
       clearWith:
         - dep
         - id
         - facet
         - time
-  
+
       columns:
         - name: rater
           title: Rater
           type: text
-  
+
         - name: time
           title: Time
           type: text
-  
+
         - name: est
           title: Severity
           type: number
-  
 
     - name: driftfit
       title: 'Rater drift: Fit'
       type: Table
       visible: (driftfit)
-      refs: tam
+      refs: TAM
       clearWith:
         - dep
         - id
         - facet
         - time
-  
+
       columns:
         - name: rater
           title: Rater
           type: text
-  
+
         - name: time
           title: Time
           type: text
-  
+
         - name: infit
           title: Infit
           type: number
-  
+
         - name: outfit
           title: Outfit
           type: number
-  
+
         - name: n
           title: N
           type: integer
-  
+
     - name: driftsum
-      title: 'Rater × Time Drift Summary'
+      title: Rater × Time Drift Summary
       type: Table
       visible: (tes)
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
+
       columns:
         - name: rater
           title: Rater
           type: text
-    
+
         - name: tmin
           title: Min time
           type: text
-    
+
         - name: tmax
           title: Max time
           type: text
-    
+
         - name: range
           title: Range
           type: number
-    
+
         - name: maxdelta
           title: Max |Δ|
           type: number
-    
+
         - name: flag
           title: Flag
           type: text
-  
 
-    - name:  plot9
-      title: 'Trajectory plot'
-      type:  Image
+    - name: plot9
+      title: Trajectory plot
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot9)
       renderFun: .plot9
-      refs: snowIRT 
+      refs: snowIRT
       clearWith:
         - dep
         - id
@@ -287,81 +362,87 @@ items:
         - time
 
     - name: pm
-      title:  'Person measure'
+      title: Person measure
       type: Table
       visible: (pm)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+
       columns:
         - name: name
           title: ''
-          type: 'text'
+          type: text
           content: ($key)
 
         - name: ps
-          title: 'Score'
+          title: Score
           type: integer
-          
+
         - name: pt
-          title: 'Theta'
-          type: number         
+          title: Theta
+          type: number
 
         - name: pe
-          title: 'SE'
-          type: number  
+          title: SE
+          type: number
 
     - name: pfit
-      title:  'Person fit'
+      title: Person fit
       type: Table
       visible: (pfit)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
-        
+
       columns:
         - name: name
           title: ''
-          type: 'text'
+          type: text
           content: ($key)
 
         - name: outfit
-          title: 'Outfit'
+          title: Outfit
           type: number
-          
+
         - name: infit
-          title: 'Infit'
-          format: number     
+          title: Infit
+          type: number
 
         - name: marker
-          title: 'Diagnosis'
-          type: 'text'
+          title: Diagnosis
+          type: text
 
     - name: resid
-      title: 'Residual Analysis(|z| > 2.0)'
+      title: Residual Analysis (|z| > 2.0)
       type: Table
       visible: (resid)
       clearWith:
         - dep
         - id
         - facet
+        - time
       refs: TAM
 
       columns:
         - name: case
           title: Case
           type: text
+
         - name: item
           title: Item
           type: text
+
         - name: residual
           title: Residual
           type: number
+
         - name: interpretation
           title: Interpretation
           type: text
@@ -370,17 +451,26 @@ items:
       title: Principal Component Analysis of Residuals
       type: Table
       visible: (pca)
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
       refs: TAM
+
       columns:
         - name: component
           title: Component
           type: text
+
         - name: eigenvalue
           title: Eigenvalue
           type: number
+
         - name: variance_explained
           title: Variance Explained (%)
           type: number
+
         - name: cumulative_variance
           title: Cumulative Variance (%)
           type: number
@@ -389,29 +479,39 @@ items:
       title: Local Dependency Detection
       type: Table
       visible: (local)
+      clearWith:
+        - dep
+        - id
+        - facet
+        - time
       refs: TAM
+
       columns:
         - name: item1
           title: Item 1
           type: text
+
         - name: item2
           title: Item 2
           type: text
+
         - name: loading1
           title: Loading 1
           type: number
+
         - name: loading2
           title: Loading 2
           type: number
+
         - name: dependency_strength
           title: Dependency Strength
-          type: text 
+          type: text
 
     - name: plot1
-      title: 'Rater plot'
-      type:  Image
+      title: Rater plot
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot1)
       renderFun: .plot1
       refs: snowIRT
@@ -419,12 +519,13 @@ items:
         - dep
         - id
         - facet
+        - time
 
     - name: plot2
-      title: 'Task plot'
-      type:  Image
+      title: Task plot
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot2)
       renderFun: .plot2
       refs: snowIRT
@@ -432,12 +533,13 @@ items:
         - dep
         - id
         - facet
+        - time
 
     - name: plot3
       title: 'Interaction: Rater X Task'
-      type:  Image
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot3)
       renderFun: .plot3
       refs: snowIRT
@@ -446,39 +548,42 @@ items:
         - id
         - facet
         - angle
+        - time
 
-    - name:  plot7
+    - name: plot7
       title: 'Interaction Fit: Rater X Task'
-      type:  Image
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot7)
       renderFun: .plot7
-      refs: snowIRT 
+      refs: snowIRT
       clearWith:
         - dep
         - id
         - facet
         - angle1
+        - time
 
-    - name:  plot8
-      title: 'Person Fit'
-      type:  Image
+    - name: plot8
+      title: Person Fit
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot8)
       renderFun: .plot8
-      refs: snowIRT 
+      refs: snowIRT
       clearWith:
         - dep
         - id
         - facet
+        - time
 
     - name: plot4
-      title: 'Wright Map'
-      type:  Image
+      title: Wright Map
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot4)
       renderFun: .plot4
       refs: snowIRT
@@ -486,12 +591,13 @@ items:
         - dep
         - id
         - facet
+        - time
 
     - name: plot5
-      title: 'Expected Scores Curve'
-      type:  Image
+      title: Expected Scores Curve
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot5)
       renderFun: .plot5
       refs: snowIRT
@@ -501,12 +607,13 @@ items:
         - id
         - facet
         - num
+        - time
 
     - name: plot6
-      title: 'Item Response Curve'
-      type:  Image
+      title: Item Response Curve
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot6)
       renderFun: .plot6
       refs: snowIRT
@@ -516,6 +623,6 @@ items:
         - id
         - facet
         - num1
-
+        - time
 
 ...

@@ -1,4 +1,4 @@
-# This file is a generated template, your changes will not be overwritten
+
 # FACET ANALYSIS
 
 facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
@@ -11,50 +11,95 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       .htmlwidget = NULL,
       
       .init = function() {
+        
         private$.htmlwidget <- HTMLWidget$new()
         
-        if (is.null(self$data) | is.null(self$options$facet)) {
+        if (is.null(self$data) || is.null(self$options$facet)) {
           self$results$instructions$setVisible(visible = TRUE)
-          
         }
-        self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
-          title = "Instructions",
-          content = paste(
-            '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
-            '<div style="text-align:justify;">',
-            '<ul>',
-            '<li>If your data format is in wide, you need to convert it to <b>long format</b> in order to run analysis.</li>',
-            '<li>The variables should be named <b>subject</b>,<b>rater</b> and <b>task</b> respectively. Any other variable name will result in an error message.</b></li>',
-            '<li>In the Facet variable box, you must put the variable <b>rater</b> first.</li>',
-            '<li>You can currently only put <b>two variables</b> in the Facet variable box.</li>',
-            '<li><b>Do not put the Time variable in the Facet box.</b> Specify Time only in the <b>Time</b> option to estimate rater × time drift.</li>',
-            '<li>Empty PCA or Local Dependency tables may occur when the residual matrix is sparse (e.g., unbalanced designs where not all students are rated by all rater × task combinations), when residual variance is near-zero, or when non-finite residuals are produced.</li>',
-            '<li>We recommend using <a href="https://www.winsteps.com" target = "_blank">Facet software</a> for analyzing various experimental designs.</li>',
-            '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
-            '</ul></div></div>'
+        
+        self$results$instructions$setContent(
+          private$.htmlwidget$generate_accordion(
+            title = "Instructions",
+            content = paste(
+              '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
+              '<div style="text-align:justify;">',
+              '<ul>',
+              '<li>If your data format is in wide, you need to convert it to <b>long format</b> in order to run analysis.</li>',
+              '<li>The variables should be named <b>subject</b>, <b>rater</b>, and <b>task</b>, respectively. Any other variable name will result in an error message.</li>',
+              '<li>In the Facet variable box, you must put the variable <b>rater</b> first.</li>',
+              '<li>You can currently only put <b>two variables</b> in the Facet variable box.</li>',
+              '<li><b>Do not put the Time variable in the Facet box.</b> Specify Time only in the <b>Time</b> option to estimate rater × time drift.</li>',
+              '<li>To inspect a specific rater × task combination, enter its <b>Plot No.</b> from the Interaction Fit table in the Expected Scores Curve or Item Response Curve option.</li>',
+              '<li>Empty PCA or Local Dependency tables may occur when the residual matrix is sparse (e.g., unbalanced designs where not all students are rated by all rater × task combinations), when residual variance is near-zero, or when non-finite residuals are produced.</li>',
+              '<li>We recommend using <a href="https://www.winsteps.com" target="_blank">Facet software</a> for analyzing various experimental designs.</li>',
+              '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+              '</ul></div></div>'
+            )
           )
-        ))
+        )
         
-        if (self$options$ifit)
-          self$results$ifit$setNote("Note",
-                                    "Display 'X' when both Infit and Outfit values exceed 1.5.")
-        if (self$options$pfit)
-          self$results$pfit$setNote("Note",
-                                    "Display 'X' when both Infit and Outfit values exceed 1.5.")
+        if (isTRUE(self$options$ifit)) {
+          self$results$ifit$setNote(
+            "Note",
+            "Display 'X' when both Infit and Outfit values exceed 1.5."
+          )
+        }
         
-        if (self$options$local)
-          self$results$local$setNote("Note",
-                                     "|Loading| > 0.3 indicates potential local dependency; > 0.5 indicates strong dependency requiring attention.")
+        if (isTRUE(self$options$pfit)) {
+          self$results$pfit$setNote(
+            "Note",
+            "Display 'X' when both Infit and Outfit values exceed 1.5."
+          )
+        }
         
-      
-        if (self$options$tes)
+        if (isTRUE(self$options$local)) {
+          self$results$local$setNote(
+            "Note",
+            "|Loading| > 0.3 indicates potential local dependency; > 0.5 indicates strong dependency requiring attention."
+          )
+        }
+        
+        if (isTRUE(self$options$tes)) {
           self$results$driftsum$setNote(
             "Note",
             "⚠ indicates a practically meaningful rater drift (|Δ| ≥ 0.5 logits)."
           )
+        }
         
+        if (isTRUE(self$options$catStats)) {
+          self$results$categoryStats$setNote(
+            "Note",
+            paste(
+              "Frequency and percent are calculated from the observed ratings",
+              "in the complete-case analysis sample.",
+              "Mean Measure is based on WLE person measures estimated",
+              "from the many-facet Rasch model."
+            )
+          )
+        }
         
-        },
+        if (isTRUE(self$options$stepOrder)) {
+          self$results$stepOrdering$setNote(
+            "Note",
+            paste(
+              "Step ordering is evaluated from the common rating-scale",
+              "step estimates of the many-facet Rasch model.",
+              "Ordered indicates that an estimate is greater than the",
+              "preceding step estimate; Disordered indicates that it is",
+              "equal to or lower than the preceding estimate.",
+              "The first step estimate may represent a boundary parameter",
+              "and can be extreme, particularly when the lowest category",
+              "is used infrequently. It should therefore be interpreted",
+              "with caution."
+            )
+          )
+        }
+        
+      },
+      
+      
+      
       .run = function() {
         
         if (is.null(self$options$dep) ||
@@ -78,10 +123,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         private$.residualCache <- NULL
-        
-        if (is.null(private$.allCache)) {
-          private$.allCache <- private$.computeRES()
-        }
+        private$.allCache <- private$.computeRES()
         
         res <- private$.allCache
         
@@ -147,6 +189,68 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                           persons$theta,
                           persons$error,
                           persons$WLE.rel)
+        
+        
+        
+        # Rating scale category statistics --------------------------
+        if (isTRUE(self$options$catStats)) {
+          
+          dep <- self$options$dep
+          id <- self$options$id
+          facetsForStats <- unlist(self$options$facet)
+          timeForStats <- self$options$time
+          
+          neededForStats <- unique(
+            c(dep, id, facetsForStats, timeForStats)
+          )
+          
+          categoryData <- stats::na.omit(
+            self$data[, neededForStats, drop = FALSE]
+          )
+          
+          responseValues <- suppressWarnings(
+            as.numeric(jmvcore::toNumeric(categoryData[[dep]]))
+          )
+          
+          personIds <- as.character(persons$pid)
+          observationIds <- as.character(categoryData[[id]])
+          thetaIndex <- match(observationIds, personIds)
+          observationTheta <- persons$theta[thetaIndex]
+          
+          validResponse <- is.finite(responseValues)
+          categories <- sort(unique(responseValues[validResponse]))
+          
+          table <- self$results$categoryStats
+          
+          if (length(categories) > 0L) {
+            for (i in seq_along(categories)) {
+              
+              categoryValue <- categories[i]
+              categoryIndex <- validResponse &
+                responseValues == categoryValue
+              
+              frequency <- sum(categoryIndex)
+              validTheta <- categoryIndex &
+                is.finite(observationTheta)
+              
+              meanMeasure <- if (any(validTheta)) {
+                mean(observationTheta[validTheta])
+              } else {
+                NA_real_
+              }
+              
+              table$addRow(
+                rowKey = paste0("category_", i),
+                values = list(
+                  category = as.character(categoryValue),
+                  frequency = as.integer(frequency),
+                  percent = 100 * frequency / sum(validResponse),
+                  meanMeasure = meanMeasure
+                )
+              )
+            }
+          }
+        }
         
         # WLE Reliability-------
         pw <- as.vector(per[[5]])[1]
@@ -260,7 +364,69 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
         }
         
-
+        
+        
+        
+        # Step ordering diagnostics --------------------------------
+        if (isTRUE(self$options$stepOrder)) {
+          
+          stepData <- as.data.frame(sm)
+          
+          if (nrow(stepData) > 0L &&
+              all(c("parameter", "xsi") %in% names(stepData))) {
+            
+            stepLabels <- as.character(stepData$parameter)
+            stepEstimates <- suppressWarnings(
+              as.numeric(stepData$xsi)
+            )
+            
+            stepNumbers <- suppressWarnings(
+              as.numeric(
+                sub(".*?(-?[0-9]+(?:\\.[0-9]+)?)$", "\\1", stepLabels)
+              )
+            )
+            
+            if (all(is.finite(stepNumbers))) {
+              stepOrderIndex <- order(stepNumbers)
+            } else {
+              stepOrderIndex <- seq_along(stepLabels)
+            }
+            
+            stepLabels <- stepLabels[stepOrderIndex]
+            stepEstimates <- stepEstimates[stepOrderIndex]
+            
+            differences <- c(NA_real_, diff(stepEstimates))
+            
+            ordering <- rep("Not evaluated", length(stepEstimates))
+            
+            if (length(stepEstimates) > 0L)
+              ordering[1] <- "Reference"
+            
+            if (length(stepEstimates) > 1L) {
+              ordering[-1] <- ifelse(
+                is.finite(differences[-1]) & differences[-1] > 0,
+                "Ordered",
+                "Disordered"
+              )
+            }
+            
+            table <- self$results$stepOrdering
+            
+            for (i in seq_along(stepLabels)) {
+              table$addRow(
+                rowKey = paste0("step_", i),
+                values = list(
+                  step = gsub("^step", "Step ", stepLabels[i]),
+                  estimate = stepEstimates[i],
+                  difference = differences[i],
+                  ordering = ordering[i]
+                )
+              )
+            }
+          }
+        }
+        
+        
         # =========================================================
         # Rater × Time (Drift)
         # =========================================================
@@ -299,7 +465,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               }
             }
           }
-        
+          
           # (B) Drift - Fit (rater × time)
           if (isTRUE(self$options$driftfit)) {
             
@@ -454,7 +620,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               }
             }
           }
-        
+          
           # (d) Drift plot (Rater × Time severity over time)
           if (isTRUE(self$options$plot9)) {
             
@@ -493,44 +659,71 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           }
           
           
-          }
-
-
+        }
+        
+        
         # Interaction fit table------------
         # fit is shown for the rater*item combinations
         
         # ifit <- TAM::msq.itemfit(res)
         # ifit <- as.data.frame(ifit$itemfit)
-        ifit <- as.data.frame(ifit_res$itemfit)
-        ifit <- dplyr::select(ifit, c("item", "Outfit", "Infit"))
+
+        # Interaction fit table------------
+        # The original TAM item order must be preserved because it corresponds
+        # to the item number used by Expected Scores Curve and Item Response Curve.
         
-        # The order (rater * item) is important, otherwise the table will be empty
-        ifit$item <-  gsub("-rater", "rater", ifit$item)
-        ifit$item <-  gsub("task", "", ifit$item)
-        ifit <- ifit |> tidyr::separate(item, c("rater", "task"), "-")
+        ifit <- as.data.frame(ifit_res$itemfit)
+        
+        ifit <- dplyr::select(
+          ifit,
+          c("item", "Outfit", "Infit")
+        )
+        
+        # Preserve the original TAM item index
+        ifit$plotno <- seq_len(nrow(ifit))
+        
+        # Clean item labels
+        ifit$item <- gsub("-rater", "rater", ifit$item)
+        ifit$item <- gsub("task", "", ifit$item)
+        
+        # Separate rater and the remaining task/item label
+        ifit <- ifit |>
+          tidyr::separate(
+            item,
+            into = c("rater", "task"),
+            sep = "-",
+            extra = "merge",
+            fill = "right"
+          )
         
         ifit <- data.frame(ifit)
         
-        # Display 'X' when both infit and outfit values exceed 1.5
-        ifit$marker <- ifelse(ifit$Outfit > 1.5 &
-                                ifit$Infit > 1.5, 'X', '')
-        
+        # Display 'X' when both Infit and Outfit exceed 1.5
+        ifit$marker <- ifelse(
+          ifit$Outfit > 1.5 &
+            ifit$Infit > 1.5,
+          "X",
+          ""
+        )
+  
         # Item fit table------------
         if (isTRUE(self$options$ifit)) {
+          
           table <- self$results$ifit
-          row_names <- rownames(ifit)
-          stat_indices <- c(
-            rater = 1,
-            task = 2,
-            outfit = 3,
-            infit = 4,
-            marker = 5
-          )
-          for (name in row_names) {
-            row <- setNames(lapply(stat_indices, function(idx)
-              ifit[name, idx]),
-              names(stat_indices))
-            table$addRow(rowKey = name, values = row)
+          
+          for (i in seq_len(nrow(ifit))) {
+            
+            table$addRow(
+              rowKey = i,
+              values = list(
+                plotno = ifit$plotno[i],
+                rater  = ifit$rater[i],
+                task   = ifit$task[i],
+                outfit = ifit$Outfit[i],
+                infit  = ifit$Infit[i],
+                marker = ifit$marker[i]
+              )
+            )
           }
         }
         
@@ -541,7 +734,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           ifit <- as.data.frame(ifit_res$itemfit)
           ifit <- dplyr::select(ifit, c("item", "Outfit", "Infit"))
           
-                    
+          
           Index <- dimnames(ifit)[[1]]
           ifit$Index <- Index
           
@@ -579,7 +772,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         pfit <- data.frame(pfit_res$outfitPerson, pfit_res$infitPerson)
         
         names(pfit) <- c("outfit", "infit")
-                
+        
         # Display 'X' when both infit and outfit values exceed 1.5
         pfit$marker <- ifelse(pfit$outfit > 1.5 &
                                 pfit$infit > 1.5, 'X', '')
@@ -779,8 +972,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           image <- self$results$plot8
           image$setState(pf)
         }
-      
-        },
+        
+      },
       #----------------------------------------------------
       .plot1 = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
@@ -854,7 +1047,9 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           ggplot2::geom_line(linewidth = 1.2) +
           ggplot2::geom_point(size = 3) +
           ggplot2::theme_bw()
-        
+       
+        plot3 <- plot3 + ggtheme
+         
         if (self$options$angle > 0) {
           plot3 <- plot3 +
             ggplot2::theme(
@@ -864,9 +1059,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               )
             )
         }
-        
-        plot3 <- plot3 + ggtheme
-        
+       
         print(plot3)
         TRUE
       },
@@ -893,7 +1086,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         print(plot4)
         TRUE
       },
-
+      
       # Expected score curves-------------------
       .plot5 = function(image, ...) {
         
@@ -928,7 +1121,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       
       
       
-     
+      
       # Item response curve-------------------
       .plot6 = function(image, ...) {
         
@@ -964,7 +1157,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         })
       },
       
-
+      
       # interaction fit plot--------------
       .plot7 = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
@@ -1090,6 +1283,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             )
           )
         
+        plot7 <- plot7 + ggtheme
+        
         if (self$options$angle1 > 0) {
           plot7 <- plot7 +
             ggplot2::theme(
@@ -1099,8 +1294,6 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               )
             )
         }
-        
-        plot7 <- plot7 + ggtheme
         
         print(plot7)
         TRUE
@@ -1446,6 +1639,8 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       
     )
   )
+
+
 
 
 

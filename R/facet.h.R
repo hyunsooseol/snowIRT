@@ -36,7 +36,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             num1 = 1,
             plot7 = FALSE,
             angle1 = 0,
-            plot8 = FALSE, ...) {
+            plot8 = FALSE,
+            catStats = FALSE,
+            stepOrder = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -188,6 +190,14 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plot8",
                 plot8,
                 default=FALSE)
+            private$..catStats <- jmvcore::OptionBool$new(
+                "catStats",
+                catStats,
+                default=FALSE)
+            private$..stepOrder <- jmvcore::OptionBool$new(
+                "stepOrder",
+                stepOrder,
+                default=FALSE)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..id)
@@ -220,6 +230,8 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..plot7)
             self$.addOption(private$..angle1)
             self$.addOption(private$..plot8)
+            self$.addOption(private$..catStats)
+            self$.addOption(private$..stepOrder)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -252,7 +264,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         num1 = function() private$..num1$value,
         plot7 = function() private$..plot7$value,
         angle1 = function() private$..angle1$value,
-        plot8 = function() private$..plot8$value),
+        plot8 = function() private$..plot8$value,
+        catStats = function() private$..catStats$value,
+        stepOrder = function() private$..stepOrder$value),
     private = list(
         ..dep = NA,
         ..id = NA,
@@ -284,7 +298,9 @@ facetOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..num1 = NA,
         ..plot7 = NA,
         ..angle1 = NA,
-        ..plot8 = NA)
+        ..plot8 = NA,
+        ..catStats = NA,
+        ..stepOrder = NA)
 )
 
 facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -296,6 +312,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         rm = function() private$.items[["rm"]],
         im = function() private$.items[["im"]],
         sm = function() private$.items[["sm"]],
+        categoryStats = function() private$.items[["categoryStats"]],
+        stepOrdering = function() private$.items[["stepOrdering"]],
         raw = function() private$.items[["raw"]],
         inter = function() private$.items[["inter"]],
         ifit = function() private$.items[["ifit"]],
@@ -332,7 +350,12 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="text",
-                title="WLE Reliability"))
+                title="WLE Reliability",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time")))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="rm",
@@ -341,7 +364,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -365,7 +389,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -389,7 +414,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -407,13 +433,74 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
+                name="categoryStats",
+                title="Rating scale category statistics",
+                visible="(catStats)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="category", 
+                        `title`="Category", 
+                        `type`="text"),
+                    list(
+                        `name`="frequency", 
+                        `title`="Frequency", 
+                        `type`="integer"),
+                    list(
+                        `name`="percent", 
+                        `title`="Percent (%)", 
+                        `type`="number", 
+                        `format`="zto"),
+                    list(
+                        `name`="meanMeasure", 
+                        `title`="Mean Measure", 
+                        `type`="number", 
+                        `format`="zto"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="stepOrdering",
+                title="Step ordering diagnostics",
+                visible="(stepOrder)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time"),
+                refs="TAM",
+                columns=list(
+                    list(
+                        `name`="step", 
+                        `title`="Step", 
+                        `type`="text"),
+                    list(
+                        `name`="estimate", 
+                        `title`="Estimate", 
+                        `type`="number", 
+                        `format`="zto"),
+                    list(
+                        `name`="difference", 
+                        `title`="Difference", 
+                        `type`="number", 
+                        `format`="zto"),
+                    list(
+                        `name`="ordering", 
+                        `title`="Ordering", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
                 name="raw",
                 title="Rater X Task: raw score",
                 visible="(raw)",
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -441,7 +528,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -473,14 +561,14 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
-                        `name`="name", 
-                        `title`="", 
-                        `type`="text", 
-                        `content`="($key)"),
+                        `name`="plotno", 
+                        `title`="Plot No.", 
+                        `type`="integer"),
                     list(
                         `name`="rater", 
                         `title`="Rater", 
@@ -506,7 +594,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="driftm",
                 title="Rater drift: Severity",
                 visible="(driftm)",
-                refs="tam",
+                refs="TAM",
                 clearWith=list(
                     "dep",
                     "id",
@@ -530,7 +618,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="driftfit",
                 title="Rater drift: Fit",
                 visible="(driftfit)",
-                refs="tam",
+                refs="TAM",
                 clearWith=list(
                     "dep",
                     "id",
@@ -562,6 +650,11 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="driftsum",
                 title="Rater \u00D7 Time Drift Summary",
                 visible="(tes)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time"),
                 columns=list(
                     list(
                         `name`="rater", 
@@ -609,7 +702,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -637,7 +731,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -652,7 +747,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="infit", 
                         `title`="Infit", 
-                        `format`="number"),
+                        `type`="number"),
                     list(
                         `name`="marker", 
                         `title`="Diagnosis", 
@@ -660,12 +755,13 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="resid",
-                title="Residual Analysis(|z| > 2.0)",
+                title="Residual Analysis (|z| > 2.0)",
                 visible="(resid)",
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet"),
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -689,6 +785,11 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="pca",
                 title="Principal Component Analysis of Residuals",
                 visible="(pca)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -712,6 +813,11 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="local",
                 title="Local Dependency Detection",
                 visible="(local)",
+                clearWith=list(
+                    "dep",
+                    "id",
+                    "facet",
+                    "time"),
                 refs="TAM",
                 columns=list(
                     list(
@@ -746,7 +852,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet")))
+                    "facet",
+                    "time")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot2",
@@ -759,7 +866,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet")))
+                    "facet",
+                    "time")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
@@ -773,7 +881,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "angle")))
+                    "angle",
+                    "time")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot7",
@@ -787,7 +896,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "angle1")))
+                    "angle1",
+                    "time")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot8",
@@ -800,7 +910,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet")))
+                    "facet",
+                    "time")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot4",
@@ -813,7 +924,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "id",
-                    "facet")))
+                    "facet",
+                    "time")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot5",
@@ -828,7 +940,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "num")))
+                    "num",
+                    "time")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot6",
@@ -843,7 +956,8 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "id",
                     "facet",
-                    "num1")))}))
+                    "num1",
+                    "time")))}))
 
 facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "facetBase",
@@ -901,6 +1015,10 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot7 .
 #' @param angle1 .
 #' @param plot8 .
+#' @param catStats Produces category frequencies, percentages, and mean WLE
+#'   person measures for each response category.
+#' @param stepOrder Evaluates whether successive rating scale step estimates
+#'   increase monotonically.
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -908,6 +1026,8 @@ facetBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$rm} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$im} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sm} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$categoryStats} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$stepOrdering} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$raw} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$inter} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ifit} \tab \tab \tab \tab \tab a table \cr
@@ -969,7 +1089,9 @@ facet <- function(
     num1 = 1,
     plot7 = FALSE,
     angle1 = 0,
-    plot8 = FALSE) {
+    plot8 = FALSE,
+    catStats = FALSE,
+    stepOrder = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("facet requires jmvcore to be installed (restart may be required)")
@@ -1020,7 +1142,9 @@ facet <- function(
         num1 = num1,
         plot7 = plot7,
         angle1 = angle1,
-        plot8 = plot8)
+        plot8 = plot8,
+        catStats = catStats,
+        stepOrder = stepOrder)
 
     analysis <- facetClass$new(
         options = options,
