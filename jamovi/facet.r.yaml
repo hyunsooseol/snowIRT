@@ -129,7 +129,7 @@ items:
           format: zto
 
     - name: stepOrdering
-      title: Step ordering diagnostics
+      title: Step ordering
       type: Table
       visible: (stepOrder)
       clearWith:
@@ -313,7 +313,7 @@ items:
           type: integer
 
     - name: driftsum
-      title: Rater × Time Drift Summary
+      title: 'Rater × Time Drift Summary'
       type: Table
       visible: (tes)
       clearWith:
@@ -420,7 +420,7 @@ items:
           type: text
 
     - name: resid
-      title: Residual Analysis (|z| > 2.0)
+      title: Residual Analysis
       type: Table
       visible: (resid)
       clearWith:
@@ -442,10 +442,6 @@ items:
         - name: residual
           title: Residual
           type: number
-
-        - name: interpretation
-          title: Interpretation
-          type: text
 
     - name: pca
       title: Principal Component Analysis of Residuals

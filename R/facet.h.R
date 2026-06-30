@@ -464,7 +464,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="stepOrdering",
-                title="Step ordering diagnostics",
+                title="Step ordering",
                 visible="(stepOrder)",
                 clearWith=list(
                     "dep",
@@ -755,7 +755,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="resid",
-                title="Residual Analysis (|z| > 2.0)",
+                title="Residual Analysis",
                 visible="(resid)",
                 clearWith=list(
                     "dep",
@@ -775,11 +775,7 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="residual", 
                         `title`="Residual", 
-                        `type`="number"),
-                    list(
-                        `name`="interpretation", 
-                        `title`="Interpretation", 
-                        `type`="text"))))
+                        `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pca",

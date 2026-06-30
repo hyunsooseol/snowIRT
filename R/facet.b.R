@@ -25,15 +25,14 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
               '<div style="text-align:justify;">',
               '<ul>',
-              '<li>If your data format is in wide, you need to convert it to <b>long format</b> in order to run analysis.</li>',
-              '<li>The variables should be named <b>subject</b>, <b>rater</b>, and <b>task</b>, respectively. Any other variable name will result in an error message.</li>',
-              '<li>In the Facet variable box, you must put the variable <b>rater</b> first.</li>',
-              '<li>You can currently only put <b>two variables</b> in the Facet variable box.</li>',
-              '<li><b>Do not put the Time variable in the Facet box.</b> Specify Time only in the <b>Time</b> option to estimate rater × time drift.</li>',
-              '<li>To inspect a specific rater × task combination, enter its <b>Plot No.</b> from the Interaction Fit table in the Expected Scores Curve or Item Response Curve option.</li>',
-              '<li>Empty PCA or Local Dependency tables may occur when the residual matrix is sparse (e.g., unbalanced designs where not all students are rated by all rater × task combinations), when residual variance is near-zero, or when non-finite residuals are produced.</li>',
-              '<li>We recommend using <a href="https://www.winsteps.com" target="_blank">Facet software</a> for analyzing various experimental designs.</li>',
-              '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+              '<li>If your data are in wide format, convert them to <b>long format</b> before running the analysis.</li>',
+              '<li>Assign the person identifier to <b>Subject</b>, and place the <b>rater</b> and <b>task</b> variables in the Facets box in that order.</li>',
+              '<li>The Facets box currently accepts exactly <b>two variables</b>.</li>',
+              '<li><b>Do not place the Time variable in the Facets box.</b> Specify it only in the <b>Time</b> option to estimate rater × time drift.</li>',
+              '<li>Use the <b>Plot No.</b> in the Interaction Fit table to display the corresponding Expected Scores Curve or Item Response Curve.</li>',
+              '<li>Empty PCA or Local Dependency tables may occur when the residual matrix is sparse, residual variance is near zero, or non-finite residuals are produced.</li>',
+              '<li>We recommend using <a href="https://www.winsteps.com" target="_blank">Facets software</a> for more complex experimental designs.</li>',
+              '<li>Feature requests and bug reports can be submitted through <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
               '</ul></div></div>'
             )
           )
@@ -93,6 +92,13 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               "is used infrequently. It should therefore be interpreted",
               "with caution."
             )
+          )
+        }
+        
+        if (isTRUE(self$options$resid)) {
+          self$results$resid$setNote(
+            "Note",
+            "Positive = observed > expected; negative = observed < expected. Only standardized residuals with |z| > 2.0 are displayed."
           )
         }
         
@@ -827,15 +833,19 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                 paste0("Item_", col_idx)
               }
               
-              interpretation <- if (residual_val > 0) "Overfit" else "Underfit"
+              #interpretation <- if (residual_val > 0) "Overfit" else "Underfit"
+              direction <- if (residual_val > 0) "+" else "−"
+              
               
               # Add row to table
-              table$addRow(rowKey = i, values = list(
-                case = case_name,
-                item = item_name,
-                residual = residual_val,
-                interpretation = interpretation
-              ))
+              table$addRow(
+                rowKey = i,
+                values = list(
+                  case = case_name,
+                  item = item_name,
+                  residual = residual_val
+                 )
+              )
             }
           }
         }
@@ -1607,7 +1617,7 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         terms <- unique(terms)
         formula <- stats::as.formula(paste0("~ ", paste(terms, collapse = " + ")))
         
-        jmvcore::validateSafeFormula(formula)
+        #jmvcore::validateSafeFormula(formula)
         
         
         # ---- Fit model

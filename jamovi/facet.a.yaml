@@ -195,7 +195,7 @@ options:
             person measures for each response category.
 
     - name: stepOrder
-      title: Step ordering diagnostics
+      title: Step ordering
       type: Bool
       default: false
       description:
