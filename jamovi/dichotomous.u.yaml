@@ -37,6 +37,8 @@ children:
               - type: CheckBox
                 name: ise
               - type: CheckBox
+                name: itemRest
+              - type: CheckBox
                 name: infit
               - type: CheckBox
                 name: outfit
@@ -59,6 +61,9 @@ children:
                 name: modelfitp
               - type: CheckBox
                 name: mat
+              - type: CheckBox
+                name: residualPCA
+                
   - type: CollapseBox
     label: Plots
     margin: normal

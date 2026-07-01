@@ -24,7 +24,9 @@ dichotomous(
   plot2 = FALSE,
   st = FALSE,
   plot3 = FALSE,
-  plot4 = FALSE
+  plot4 = FALSE,
+  itemRest = FALSE,
+  residualPCA = FALSE
 )
 }
 \arguments{
@@ -68,6 +70,10 @@ where 0 degrees represents completely horizontal labels.}
 \item{plot3}{.}
 
 \item{plot4}{.}
+
+\item{itemRest}{.}
+
+\item{residualPCA}{.}
 }
 \value{
 A results object containing:
@@ -78,6 +84,7 @@ A results object containing:
   \code{results$stand$to} \tab \tab \tab \tab \tab a table \cr
   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
+  \code{results$mf$residualPCA} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot4} \tab \tab \tab \tab \tab an array of images \cr
   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr

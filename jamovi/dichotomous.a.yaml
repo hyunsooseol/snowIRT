@@ -141,4 +141,13 @@ options:
       type: Bool
       default: false
 
+    - name: itemRest
+      title: Item-rest correlation
+      type: Bool
+      default: false
+      
+    - name: residualPCA
+      title: Residual PCA
+      type: Bool
+      default: false      
 ...

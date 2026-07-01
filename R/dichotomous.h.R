@@ -24,7 +24,9 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             plot2 = FALSE,
             st = FALSE,
             plot3 = FALSE,
-            plot4 = FALSE, ...) {
+            plot4 = FALSE,
+            itemRest = FALSE,
+            residualPCA = FALSE, ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -125,6 +127,14 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "plot4",
                 plot4,
                 default=FALSE)
+            private$..itemRest <- jmvcore::OptionBool$new(
+                "itemRest",
+                itemRest,
+                default=FALSE)
+            private$..residualPCA <- jmvcore::OptionBool$new(
+                "residualPCA",
+                residualPCA,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..prop)
@@ -151,6 +161,8 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..st)
             self$.addOption(private$..plot3)
             self$.addOption(private$..plot4)
+            self$.addOption(private$..itemRest)
+            self$.addOption(private$..residualPCA)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -177,7 +189,9 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         plot2 = function() private$..plot2$value,
         st = function() private$..st$value,
         plot3 = function() private$..plot3$value,
-        plot4 = function() private$..plot4$value),
+        plot4 = function() private$..plot4$value,
+        itemRest = function() private$..itemRest$value,
+        residualPCA = function() private$..residualPCA$value),
     private = list(
         ..vars = NA,
         ..prop = NA,
@@ -203,7 +217,9 @@ dichotomousOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..plot2 = NA,
         ..st = NA,
         ..plot3 = NA,
-        ..plot4 = NA)
+        ..plot4 = NA,
+        ..itemRest = NA,
+        ..residualPCA = NA)
 )
 
 dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -243,7 +259,7 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 options=options,
                 name="items",
                 title="Item Statistics",
-                visible="(prop || imeasure || ise || infit || outfit)",
+                visible="(prop || imeasure || ise || itemRest || infit || outfit)",
                 rows="(vars)",
                 clearWith=list(
                     "vars"),
@@ -266,6 +282,11 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                         `name`="ise", 
                         `title`="S.E.Measure", 
                         `visible`="(ise)"),
+                    list(
+                        `name`="itemRest", 
+                        `title`="Item-rest correlation", 
+                        `type`="number", 
+                        `visible`="(itemRest)"),
                     list(
                         `name`="infit", 
                         `title`="Infit", 
@@ -353,7 +374,8 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 inherit = jmvcore::Group,
                 active = list(
                     scale = function() private$.items[["scale"]],
-                    mat = function() private$.items[["mat"]]),
+                    mat = function() private$.items[["mat"]],
+                    residualPCA = function() private$.items[["residualPCA"]]),
                 private = list(),
                 public=list(
                     initialize=function(options) {
@@ -403,7 +425,29 @@ dichotomousResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                                     `title`="", 
                                     `type`="text", 
                                     `content`="($key)", 
-                                    `combineBelow`=TRUE))))}))$new(options=options))
+                                    `combineBelow`=TRUE))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="residualPCA",
+                            title="PCA of Standardized Residuals",
+                            visible="(residualPCA)",
+                            clearWith=list(
+                                "vars"),
+                            columns=list(
+                                list(
+                                    `name`="component", 
+                                    `title`="Component", 
+                                    `type`="text"),
+                                list(
+                                    `name`="eigenvalue", 
+                                    `title`="Eigenvalue", 
+                                    `type`="number", 
+                                    `format`="zto"),
+                                list(
+                                    `name`="variance", 
+                                    `title`="Variance (%)", 
+                                    `type`="number", 
+                                    `format`="zto"))))}))$new(options=options))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot",
@@ -567,6 +611,8 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param st .
 #' @param plot3 .
 #' @param plot4 .
+#' @param itemRest .
+#' @param residualPCA .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -575,6 +621,7 @@ dichotomousBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$stand$to} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$scale} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mf$mat} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mf$residualPCA} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot4} \tab \tab \tab \tab \tab an array of images \cr
 #'   \code{results$inplot} \tab \tab \tab \tab \tab an image \cr
@@ -616,7 +663,9 @@ dichotomous <- function(
     plot2 = FALSE,
     st = FALSE,
     plot3 = FALSE,
-    plot4 = FALSE) {
+    plot4 = FALSE,
+    itemRest = FALSE,
+    residualPCA = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("dichotomous requires jmvcore to be installed (restart may be required)")
@@ -647,7 +696,9 @@ dichotomous <- function(
         plot2 = plot2,
         st = st,
         plot3 = plot3,
-        plot4 = plot4)
+        plot4 = plot4,
+        itemRest = itemRest,
+        residualPCA = residualPCA)
 
     analysis <- dichotomousClass$new(
         options = options,

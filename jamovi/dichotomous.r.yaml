@@ -12,7 +12,7 @@ items:
     - name: items
       title: Item Statistics
       type: Table
-      visible: (prop || imeasure || ise || infit || outfit)
+      visible: (prop || imeasure || ise || itemRest || infit || outfit)
       rows: (vars)
       clearWith:
         - vars
@@ -35,6 +35,11 @@ items:
         - name: ise
           title: S.E.Measure
           visible: (ise)  
+
+        - name: itemRest
+          title: Item-rest correlation
+          type: number
+          visible: (itemRest)
 
         - name: infit
           title: Infit 
@@ -104,7 +109,7 @@ items:
       type: Group
       items:
         - name: scale
-          title: Model Fit
+          title: 'Model Fit'
           type: Table
           rows: 1
           clearWith:
@@ -145,6 +150,28 @@ items:
               type: text
               content: ($key)
               combineBelow: true
+
+        - name: residualPCA
+          title: PCA of Standardized Residuals
+          type: Table
+          visible: (residualPCA)
+          clearWith:
+            - vars
+
+          columns:
+            - name: component
+              title: Component
+              type: text
+
+            - name: eigenvalue
+              title: Eigenvalue
+              type: number
+              format: zto
+
+            - name: variance
+              title: Variance (%)
+              type: number
+              format: zto
 
     - name: plot
       title: 'Wright Map'

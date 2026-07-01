@@ -43,7 +43,14 @@ adjustment; Ho= the data fit the Rasch model."
             "Note",
             "Infit= Information-weighted mean square statistic; Outfit= Outlier-sensitive means square statistic."
           )
-       },
+      
+        if (self$options$residualPCA)
+          self$results$mf$residualPCA$setNote(
+            "Note",
+            "Only components with eigenvalues greater than 1 are displayed."
+          )
+        
+        },
       
       .run = function() {
         # Ready--------
@@ -68,6 +75,8 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateItemsTable(results)
           # Populate q3 matrix table-----
           private$.populateMatrixTable(results)
+          # Populate residual PCA table-----
+          private$.populateResidualPCATable(results)
           # prepare Expected score curve plot---------
           #private$.prepareEscPlot(data)
           
@@ -95,6 +104,35 @@ adjustment; Ho= the data fit the Rasch model."
         # computing item mean
         prop <- tamobj$item$M
         
+        
+        # computing item-rest correlation----------------
+        itemRest <- vapply(
+          seq_along(data),
+          FUN.VALUE = numeric(1),
+          FUN = function(i) {
+            itemScore <- data[[i]]
+            restScore <- rowSums(data[, -i, drop = FALSE])
+            
+            valid <- stats::complete.cases(itemScore, restScore)
+            
+            if (sum(valid) < 3L)
+              return(NA_real_)
+            
+            itemSD <- stats::sd(itemScore[valid])
+            restSD <- stats::sd(restScore[valid])
+            
+            if (is.na(itemSD) || is.na(restSD) ||
+                itemSD == 0 || restSD == 0)
+              return(NA_real_)
+            
+            stats::cor(
+              itemScore[valid],
+              restScore[valid],
+              method = "pearson"
+            )
+          }
+        )
+        names(itemRest) <- names(data)
         # estimate item difficulty measure---------------
         imeasure <- tamobj$xsi$xsi
         
@@ -224,6 +262,23 @@ adjustment; Ho= the data fit the Rasch model."
         res <- TAM::IRT.residuals(tamobj)
         resid <- res$stand_residuals
         
+        # PCA of standardized residuals-------------------
+        pcaFit <- stats::prcomp(
+          resid,
+          center = TRUE,
+          scale. = FALSE
+        )
+        
+        eigenvalue <- pcaFit$sdev^2
+        variance <- eigenvalue / sum(eigenvalue) * 100
+        keep <- eigenvalue > 1
+        
+        residualPCA <- data.frame(
+          component = paste0("PC", seq_along(eigenvalue))[keep],
+          eigenvalue = eigenvalue[keep],
+          variance = variance[keep],
+          stringsAsFactors = FALSE
+        )
         if (self$options$pinfit == TRUE) {
           self$results$pinfit$setRowNums(rownames(data))
           self$results$pinfit$setValues(pinfit)
@@ -272,6 +327,7 @@ adjustment; Ho= the data fit the Rasch model."
         results <-
           list(
             'prop' = prop,
+            'itemRest' = itemRest,
             'imeasure' = imeasure,
             'ise' = ise,
             'infit' = infit,
@@ -280,6 +336,7 @@ adjustment; Ho= the data fit the Rasch model."
             'modelfit' = modelfit,
             'modelfitp' = modelfitp,
             'mat' = mat,
+            'residualPCA' = residualPCA,
             'to' = to,
             'st' = st,
             'person' = person,
@@ -422,6 +479,27 @@ adjustment; Ho= the data fit the Rasch model."
           matrix$setRow(rowNo = i, values = values)
         }
       },
+      # Populate residual PCA table-----
+      
+      .populateResidualPCATable = function(results) {
+        table <- self$results$mf$residualPCA
+        pca <- results$residualPCA
+        
+        if (is.null(pca) || nrow(pca) == 0)
+          return()
+        
+        for (i in seq_len(nrow(pca))) {
+          table$addRow(
+            rowKey = pca$component[i],
+            values = list(
+              component = pca$component[i],
+              eigenvalue = pca$eigenvalue[i],
+              variance = pca$variance[i]
+            )
+          )
+        }
+      },
+      
       
       # populate item table==============================================
       
@@ -432,6 +510,7 @@ adjustment; Ho= the data fit the Rasch model."
           prop    = results$prop,
           measure = results$imeasure,
           ise     = results$ise,
+          itemRest = results$itemRest,
           infit   = results$infit,
           outfit  = results$outfit
         )
@@ -512,7 +591,7 @@ adjustment; Ho= the data fit the Rasch model."
       },
       
       
-
+      
       .inPlot = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
           return(FALSE)
@@ -586,7 +665,7 @@ adjustment; Ho= the data fit the Rasch model."
         TRUE
       },
       
-            
+      
       .outPlot = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
           return(FALSE)
