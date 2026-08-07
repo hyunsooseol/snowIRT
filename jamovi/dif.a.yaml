@@ -36,7 +36,7 @@ options:
             A string naming the grouping variable from `data`
 
     - name: raju
-      title: 'Raju test'
+      title: 'RajuSA test'
       type: Bool
       default: false
     
@@ -90,7 +90,7 @@ options:
       default: BH
 
     - name: zplot
-      title: Z statistic plot
+      title: 'Raju Z plot'
       type: Bool
       default: false
  

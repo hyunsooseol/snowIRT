@@ -1,160 +1,167 @@
+
 ---
 name:  dif
 title: Raju & Mantel-Haenszel method
 jrs:   '1.1'
 refs: snowIRT
 items:
-    - name: instructions
-      title: Instructions
-      type: Html
-      visible: True
+  - name: instructions
+    title: Instructions
+    type: Html
+    visible: True
 
-    - name:  text
-      title: ''
-      type:  Preformatted
+  - name:  text
+    title: ''
+    type:  Preformatted
 
-    - name: raju
-      title:  '`Raju’s area method - ${padjust}`'
-      type: Table
-      visible: (raju)
-      rows: (vars)
-      clearWith:
-        - vars
-        - group
-        - padjust
-      refs: difR
+  - name: raju
+    title:  '`Raju’s Signed Area method - ${padjust}`'
+    type: Table
+    visible: (raju)
+    rows: (vars)
+    clearWith:
+      - vars
+      - group
+      - padjust
+    refs: difR
+      
+    columns:
+      - name: name
+        title: ''
+        type: 'text'
+        content: ($key)
+
+      - name: zstat
+        title: 'Raju Z'
         
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
+      - name: p
+        title: p
+        format: zto,pvalue
 
-        - name: zstat
-          title: Statistic
-          
-        - name: p
-          title: p
-          format: zto,pvalue
-
-        - name: padjust
-          title: 'Adj.p'
-          format: zto,pvalue
-         
-        - name: delta
-          title: deltaRaju
-          
-        - name: es
-          title: 'Effect size'
-          type: 'text'
-
-    - name: mh
-      title:  '` Mantel-Haenszel method - ${padjust1}`'
-      type: Table
-      visible: (mh)
-      rows: (vars)
-      clearWith:
-        - vars
-        - group
-        - padjust1
-      refs: difR
+      - name: padjust
+        title: 'Adj.p'
+        format: zto,pvalue
+       
+      - name: delta
+        title: 'ETS Delta'
         
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
+      - name: es
+        title: 'ETS Delta category'
+        type: 'text'
 
-        - name: mhstat
-          title: MH Chi-square
-          
-        - name: p
-          title: p
-          format: zto,pvalue
+  - name: mh
+    title:  '` Mantel-Haenszel method - ${padjust1}`'
+    type: Table
+    visible: (mh)
+    rows: (vars)
+    clearWith:
+      - vars
+      - group
+      - padjust1
+    refs: difR
+      
+    columns:
+      - name: name
+        title: ''
+        type: 'text'
+        content: ($key)
 
-        - name: padjust
-          title: 'Adj.p'
-          format: zto,pvalue
-         
-    - name: zplot
-      title: 'Z statistic plot'
-      type: Image
-      width: 600
-      height: 450      
-      renderFun: .plot
-      visible: (zplot)
-      refs: difR
-      clearWith:
-        - vars
-        - group
-        - padjust
-
-    - name: plot1
-      title: 'Mantel-Haenszel plot'
-      type: Image
-      width: 600
-      height: 450      
-      renderFun: .plot1
-      visible: (plot1)
-      refs: difR
-      clearWith:
-        - vars
-        - group
-        - padjust1
-
-    - name: gmh
-      title:  '` Generalized Mantel-Haenszel method - ${padjust2}`'
-      type: Table
-      visible: (gmh)
-      rows: (vars)
-      clearWith:
-        - vars
-        - group
-        - padjust2
-      refs: difR
+      - name: mhstat
+        title: MH Chi-square
         
-      columns:
-        - name: name
-          title: ''
-          type: 'text'
-          content: ($key)
+      - name: p
+        title: p
+        format: zto,pvalue
 
-        - name: gmhstat
-          title: MH Chi-square
-          
-        - name: p
-          title: p
-          format: zto,pvalue
+      - name: padjust
+        title: 'Adj.p'
+        format: zto,pvalue
 
-        - name: padjust
-          title: 'Adj.p'
-          format: zto,pvalue
+      - name: mhDelta
+        title: 'MH Delta'
 
-    - name: plot2
-      title: 'Generalized Mantel-Haenszel plot'
-      type: Image
-      width: 600
-      height: 450      
-      renderFun: .plot2
-      visible: (plot2)
-      refs: difR
-      clearWith:
-        - vars
-        - group
-        - padjust2
+      - name: mhCategory
+        title: 'MH Delta category'
+        type: 'text'
+       
+  - name: zplot
+    title: 'Z statistic plot'
+    type: Image
+    width: 600
+    height: 450      
+    renderFun: .plot
+    visible: (zplot)
+    refs: difR
+    clearWith:
+      - vars
+      - group
+      - padjust
 
-    - name: plot3
-      title: 'Item Characteristic Curve plot for DIF'
-      type: Image
-      width: 600
-      height: 450      
-      renderFun: .plot3
-      visible: (plot3)
-      refs: difR
-      clearWith:
-        - vars
-        - group
-        - padjust
-        - num
+  - name: plot1
+    title: 'Mantel-Haenszel plot'
+    type: Image
+    width: 600
+    height: 450      
+    renderFun: .plot1
+    visible: (plot1)
+    refs: difR
+    clearWith:
+      - vars
+      - group
+      - padjust1
 
+  - name: gmh
+    title:  '` Generalized Mantel-Haenszel method - ${padjust2}`'
+    type: Table
+    visible: (gmh)
+    rows: (vars)
+    clearWith:
+      - vars
+      - group
+      - padjust2
+    refs: difR
+      
+    columns:
+      - name: name
+        title: ''
+        type: 'text'
+        content: ($key)
+
+      - name: gmhstat
+        title: 'GMH Chi-square'
+        
+      - name: p
+        title: p
+        format: zto,pvalue
+
+      - name: padjust
+        title: 'Adj.p'
+        format: zto,pvalue
+
+  - name: plot2
+    title: 'Generalized Mantel-Haenszel plot'
+    type: Image
+    width: 600
+    height: 450      
+    renderFun: .plot2
+    visible: (plot2)
+    refs: difR
+    clearWith:
+      - vars
+      - group
+      - padjust2
+
+  - name: plot3
+    title: 'Item Characteristic Curve plot for DIF'
+    type: Image
+    width: 600
+    height: 450      
+    renderFun: .plot3
+    visible: (plot3)
+    refs: difR
+    clearWith:
+      - vars
+      - group
+      - padjust
+      - num
 ...

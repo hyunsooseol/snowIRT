@@ -25,7 +25,7 @@ children:
     margin: large
     children:
       - type: Label
-        label: 'Raju method'
+        label: 'Raju signed area method'
         fitToGrid: true
         cell:
           column: 0
@@ -54,7 +54,7 @@ children:
         margin: large
         children:
          - type: Label
-           label: 'Mantel-Haenszel(MH) method'
+           label: 'Mantel-Haenszel (MH) method'
            children:
              - type: CheckBox
                name: mh
@@ -65,7 +65,7 @@ children:
              - type: CheckBox
                name: plot1
          - type: Label
-           label: 'Generalized MH method(Group levels>2)'
+           label: 'Generalized MH method (group levels > 2)'
            children:
              - type: CheckBox
                name: gmh

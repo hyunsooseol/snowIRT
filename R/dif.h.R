@@ -199,7 +199,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="raju",
-                title="`Raju\u2019s area method - ${padjust}`",
+                title="`Raju\u2019s Signed Area method - ${padjust}`",
                 visible="(raju)",
                 rows="(vars)",
                 clearWith=list(
@@ -215,7 +215,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="zstat", 
-                        `title`="Statistic"),
+                        `title`="Raju Z"),
                     list(
                         `name`="p", 
                         `title`="p", 
@@ -226,10 +226,10 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `format`="zto,pvalue"),
                     list(
                         `name`="delta", 
-                        `title`="deltaRaju"),
+                        `title`="ETS Delta"),
                     list(
                         `name`="es", 
-                        `title`="Effect size", 
+                        `title`="ETS Delta category", 
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -258,7 +258,14 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="padjust", 
                         `title`="Adj.p", 
-                        `format`="zto,pvalue"))))
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="mhDelta", 
+                        `title`="MH Delta"),
+                    list(
+                        `name`="mhCategory", 
+                        `title`="MH Delta category", 
+                        `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="zplot",
@@ -304,7 +311,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `content`="($key)"),
                     list(
                         `name`="gmhstat", 
-                        `title`="MH Chi-square"),
+                        `title`="GMH Chi-square"),
                     list(
                         `name`="p", 
                         `title`="p", 
