@@ -22,9 +22,10 @@ difClass <- if (requireNamespace('jmvcore'))
               '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
               '<div style="text-align:justify;">',
               '<ul>',
-              '<li>Performs DIF detection using the <b>difR</b> R package.</li>',
+              '<li>Performs DIF analyses using the <b>difR</b> R package.</li>',
               '<li><b>RajuSA</b> refers to Raju&#39;s Signed Area DIF method for two groups.</li>',
-              '<li>For RajuSA and MH methods, code the reference group as <b>0</b> and the focal group as <b>1</b>.</li>',
+              '<li>For two-group RajuSA and MH analyses, select the <b>reference group</b>; the other group is treated as the focal group.</li>',
+              '<li>For more than two groups, use the Generalized Mantel-Haenszel (GMH) method.</li>',
               '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
               '</ul></div></div>'
             )
@@ -108,7 +109,7 @@ difClass <- if (requireNamespace('jmvcore'))
       
       .runGMH = function(data, groupVarName) {
         if (isTRUE(self$options$gmh | self$options$plot2)) {
-          fn <- as.numeric(strsplit(self$options$fn, ',')[[1]])
+          fn <- trimws(strsplit(self$options$fn, ',')[[1]])
           
           # Run GMH DIF analysis
           gmh <- difR::difGMH(
@@ -143,19 +144,50 @@ difClass <- if (requireNamespace('jmvcore'))
       },
       
       .runBinaryGroup = function(data, groupVarName) {
-        # Validate binary group coding
-        binaryLevels <- sort(unique(as.character(data[[groupVarName]])))
-        binaryLevels <- binaryLevels[!is.na(binaryLevels)]
+        # Identify the two group levels
+        groupValues <- as.character(data[[groupVarName]])
+        binaryLevels <- unique(groupValues[!is.na(groupValues)])
         
-        if (!identical(binaryLevels, c("0", "1"))) {
+        if (length(binaryLevels) != 2) {
           jmvcore::reject(
-            paste0(
-              "For RajuSA and Mantel-Haenszel analyses, ",
-              "the grouping variable must be coded as ",
-              "0 = reference group and 1 = focal group."
-            )
+            "RajuSA and Mantel-Haenszel analyses require exactly 2 groups."
           )
         }
+        
+        # Get the selected reference group
+        refLevel <- as.character(self$options$refGroup)
+        
+        if (is.null(refLevel) ||
+            length(refLevel) == 0 ||
+            is.na(refLevel) ||
+            !nzchar(refLevel)) {
+          jmvcore::reject(
+            "Please select a reference group."
+          )
+        }
+        
+        if (!(refLevel %in% binaryLevels)) {
+          jmvcore::reject(
+            "The selected reference group is not a valid level of the grouping variable."
+          )
+        }
+        
+        # The remaining group is the focal group
+        focalLevel <- setdiff(binaryLevels, refLevel)
+        
+        if (length(focalLevel) != 1) {
+          jmvcore::reject(
+            "A valid focal group could not be determined."
+          )
+        }
+        
+        # Internally recode groups:
+        # 0 = reference group, 1 = focal group
+        data[[groupVarName]] <- ifelse(
+          groupValues == refLevel,
+          0,
+          1
+        )
         
         # Split data by group
         groupData <- split(data, data[[groupVarName]])

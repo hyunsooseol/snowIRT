@@ -8,6 +8,7 @@ dif(
   data,
   vars,
   group,
+  refGroup,
   raju = FALSE,
   mh = FALSE,
   padjust = "BH",
@@ -16,7 +17,7 @@ dif(
   plot3 = FALSE,
   plot1 = FALSE,
   gmh = FALSE,
-  fn = "2,3,4",
+  fn = "",
   plot2 = FALSE,
   padjust2 = "BH",
   num = 1
@@ -28,6 +29,8 @@ dif(
 \item{vars}{.}
 
 \item{group}{A string naming the grouping variable from \code{data}}
+
+\item{refGroup}{.}
 
 \item{raju}{.}
 

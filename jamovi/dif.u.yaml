@@ -20,67 +20,84 @@ children:
             name: group
             isTarget: true
             maxItemCount: 1
-  - type: LayoutBox
-    stretchFactor: 1
-    margin: large
+          - type: LevelSelector
+            name: refGroup
+            enable: (raju || mh || zplot || plot1 || plot3)
+
+  - type: CollapseBox
+    label: 'Two-group DIF'
+    margin: normal
+    collapsed: true
     children:
-      - type: Label
-        label: 'Raju signed area method'
-        fitToGrid: true
-        cell:
-          column: 0
-          row: 0
-        children:
-          - type: CheckBox
-            name: raju
-            children:
-              - type: ComboBox
-                name: padjust
-                enable: (raju)
-          - type: CheckBox
-            name: zplot
-          - type: CheckBox
-            name: plot3
-            children:
-              - name: num
-                type: TextBox
-                format: number
-                enable: (plot3)
       - type: LayoutBox
-        cell:
-          column: 1
-          row: 0
-        stretchFactor: 1 
+        stretchFactor: 1
         margin: large
         children:
-         - type: Label
-           label: 'Mantel-Haenszel (MH) method'
-           children:
-             - type: CheckBox
-               name: mh
+          - type: Label
+            label: 'Raju Signed Area method'
+            fitToGrid: true
+            cell:
+              column: 0
+              row: 0
+            children:
+              - type: CheckBox
+                name: raju
+                children:
+                  - type: ComboBox
+                    name: padjust
+                    enable: (raju)
+              - type: CheckBox
+                name: zplot
+              - type: CheckBox
+                name: plot3
+                children:
+                  - name: num
+                    type: TextBox
+                    format: number
+                    enable: (plot3)
+          - type: LayoutBox
+            cell:
+              column: 1
+              row: 0
+            stretchFactor: 1 
+            margin: large
+            children:
+             - type: Label
+               label: 'Mantel-Haenszel (MH) method'
                children:
-                 - type: ComboBox
-                   name: padjust1
-                   enable: (mh)
-             - type: CheckBox
-               name: plot1
-         - type: Label
-           label: 'Generalized MH method (group levels > 2)'
-           children:
+                 - type: CheckBox
+                   name: mh
+                   children:
+                     - type: ComboBox
+                       name: padjust1
+                       enable: (mh)
+                 - type: CheckBox
+                   name: plot1
+  - type: CollapseBox
+    label: 'Generalized MH method (3+ groups)'
+    margin: normal
+    collapsed: true
+    children:
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        children:
+          - type: Label
+            label: ''
+            children:
              - type: CheckBox
                name: gmh
                children:
                  - type: TextBox
                    name: fn
                    format: string
-                   stretchFactor: 2
                    enable: (gmh)
+                   width: largest
                  - type: ComboBox
                    name: padjust2
                    enable: (gmh)
              - type: CheckBox
                name: plot2    
-
 
 
  

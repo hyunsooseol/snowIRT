@@ -23,8 +23,8 @@ items:
       - vars
       - group
       - padjust
-    refs: difR
-      
+      - refGroup
+
     columns:
       - name: name
         title: ''
@@ -58,8 +58,8 @@ items:
       - vars
       - group
       - padjust1
-    refs: difR
-      
+      - refGroup
+
     columns:
       - name: name
         title: ''
@@ -96,6 +96,7 @@ items:
       - vars
       - group
       - padjust
+      - refGroup
 
   - name: plot1
     title: 'Mantel-Haenszel plot'
@@ -109,6 +110,7 @@ items:
       - vars
       - group
       - padjust1
+      - refGroup
 
   - name: gmh
     title:  '` Generalized Mantel-Haenszel method - ${padjust2}`'
@@ -119,6 +121,7 @@ items:
       - vars
       - group
       - padjust2
+      - refGroup
     refs: difR
       
     columns:
@@ -150,6 +153,7 @@ items:
       - vars
       - group
       - padjust2
+      - refGroup
 
   - name: plot3
     title: 'Item Characteristic Curve plot for DIF'
@@ -164,4 +168,5 @@ items:
       - group
       - padjust
       - num
+      - refGroup
 ...

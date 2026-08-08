@@ -7,143 +7,148 @@ version: '1.0.0'
 jas: '1.2'
 
 options:
-    - name: data
-      type: Data
-      description:
-          R: >
-            The data as a data frame.
-            
-    - name: vars
-      title: Variables
-      type: Variables
-      suggested:
-         - continuous
-      permitted:
-        - numeric        
+  - name: data
+    type: Data
+    description:
+      R: >
+        The data as a data frame.
 
-    - name: group
-      title: Grouping Variable
-      type: Variable
-      suggested:
-         - nominal
-      permitted:
-        - factor
-        - numeric
-      description:
-          ui: >
-            The grouping variable.
-          R: >
-            A string naming the grouping variable from `data`
+  - name: vars
+    title: Variables
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric        
 
-    - name: raju
-      title: 'RajuSA test'
-      type: Bool
-      default: false
-    
-    - name: mh
-      title: 'MH test'
-      type: Bool
-      default: false
-      
-    - name: padjust
-      title: Multiple comparison
-      type: List
-      options:
-        - title: none
-          name:  none
-        - title: holm
-          name:  holm
-        - title: hochberg
-          name:  hochberg 
-        - title: hommel
-          name:  hommel
-        - title: bonferroni
-          name:  bonferroni          
-        - title: BH
-          name:  BH       
-        - title: BY
-          name:  BY
-        - title: fdr
-          name:  fdr              
-      default: BH
+  - name: group
+    title: Grouping Variable
+    type: Variable
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    description:
+      ui: >
+        The grouping variable.
+      R: >
+        A string naming the grouping variable from `data`
 
-    - name: padjust1
-      title: Multiple comparison
-      type: List
-      options:
-        - title: none
-          name:  none
-        - title: holm
-          name:  holm
-        - title: hochberg
-          name:  hochberg 
-        - title: hommel
-          name:  hommel
-        - title: bonferroni
-          name:  bonferroni          
-        - title: BH
-          name:  BH       
-        - title: BY
-          name:  BY
-        - title: fdr
-          name:  fdr              
-      default: BH
+  - name: refGroup
+    title: 'Reference group'
+    type: Level
+    variable: (group)
 
-    - name: zplot
-      title: 'Raju Z plot'
-      type: Bool
-      default: false
- 
-    - name: plot3
-      title: 'ICC plot for DIF'
-      type: Bool
-      default: false
-      
-    - name: plot1
-      title: 'MH plot'
-      type: Bool
-      default: false 
+  - name: raju
+    title: 'RajuSA test'
+    type: Bool
+    default: false
 
-    - name: gmh
-      title: 'Generalized MH test'
-      type: Bool
-      default: false
+  - name: mh
+    title: 'MH test'
+    type: Bool
+    default: false
+  
+  - name: padjust
+    title: Multiple comparison
+    type: List
+    options:
+      - title: none
+        name:  none
+      - title: holm
+        name:  holm
+      - title: hochberg
+        name:  hochberg 
+      - title: hommel
+        name:  hommel
+      - title: bonferroni
+        name:  bonferroni          
+      - title: BH
+        name:  BH       
+      - title: BY
+        name:  BY
+      - title: fdr
+        name:  fdr              
+    default: BH
 
-    - name: fn
-      title: 'Focal groups'
-      type: String
-      default: '2,3,4' 
+  - name: padjust1
+    title: Multiple comparison
+    type: List
+    options:
+      - title: none
+        name:  none
+      - title: holm
+        name:  holm
+      - title: hochberg
+        name:  hochberg 
+      - title: hommel
+        name:  hommel
+      - title: bonferroni
+        name:  bonferroni          
+      - title: BH
+        name:  BH       
+      - title: BY
+        name:  BY
+      - title: fdr
+        name:  fdr              
+    default: BH
 
-    - name: plot2
-      title: 'Generalized MH plot'
-      type: Bool
-      default: false 
+  - name: zplot
+    title: 'Raju Z plot'
+    type: Bool
+    default: false
 
-    - name: padjust2
-      title: Multiple comparison
-      type: List
-      options:
-        - title: none
-          name:  none
-        - title: holm
-          name:  holm
-        - title: hochberg
-          name:  hochberg 
-        - title: hommel
-          name:  hommel
-        - title: bonferroni
-          name:  bonferroni          
-        - title: BH
-          name:  BH       
-        - title: BY
-          name:  BY
-        - title: fdr
-          name:  fdr              
-      default: BH
+  - name: plot3
+    title: 'ICC plot for DIF'
+    type: Bool
+    default: false
+  
+  - name: plot1
+    title: 'MH plot'
+    type: Bool
+    default: false 
 
-    - name: num
-      title: Item number
-      default: 1
-      type: Integer
-      min: 1
+  - name: gmh
+    title: 'Generalized MH test'
+    type: Bool
+    default: false
+
+  - name: fn
+    title: 'Focal groups'
+    type: String
+    default: '' 
+
+  - name: plot2
+    title: 'Generalized MH plot'
+    type: Bool
+    default: false 
+
+  - name: padjust2
+    title: Multiple comparison
+    type: List
+    options:
+      - title: none
+        name:  none
+      - title: holm
+        name:  holm
+      - title: hochberg
+        name:  hochberg 
+      - title: hommel
+        name:  hommel
+      - title: bonferroni
+        name:  bonferroni          
+      - title: BH
+        name:  BH       
+      - title: BY
+        name:  BY
+      - title: fdr
+        name:  fdr              
+    default: BH
+
+  - name: num
+    title: Item number
+    default: 1
+    type: Integer
+    min: 1
 ...

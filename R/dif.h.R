@@ -8,6 +8,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         initialize = function(
             vars = NULL,
             group = NULL,
+            refGroup = NULL,
             raju = FALSE,
             mh = FALSE,
             padjust = "BH",
@@ -16,7 +17,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             plot3 = FALSE,
             plot1 = FALSE,
             gmh = FALSE,
-            fn = "2,3,4",
+            fn = "",
             plot2 = FALSE,
             padjust2 = "BH",
             num = 1, ...) {
@@ -38,10 +39,14 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "group",
                 group,
                 suggested=list(
-                    "nominal"),
+                    "nominal",
+                    "ordinal"),
                 permitted=list(
-                    "factor",
-                    "numeric"))
+                    "factor"))
+            private$..refGroup <- jmvcore::OptionLevel$new(
+                "refGroup",
+                refGroup,
+                variable="(group)")
             private$..raju <- jmvcore::OptionBool$new(
                 "raju",
                 raju,
@@ -95,7 +100,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..fn <- jmvcore::OptionString$new(
                 "fn",
                 fn,
-                default="2,3,4")
+                default="")
             private$..plot2 <- jmvcore::OptionBool$new(
                 "plot2",
                 plot2,
@@ -121,6 +126,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
             self$.addOption(private$..vars)
             self$.addOption(private$..group)
+            self$.addOption(private$..refGroup)
             self$.addOption(private$..raju)
             self$.addOption(private$..mh)
             self$.addOption(private$..padjust)
@@ -137,6 +143,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         vars = function() private$..vars$value,
         group = function() private$..group$value,
+        refGroup = function() private$..refGroup$value,
         raju = function() private$..raju$value,
         mh = function() private$..mh$value,
         padjust = function() private$..padjust$value,
@@ -152,6 +159,7 @@ difOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     private = list(
         ..vars = NA,
         ..group = NA,
+        ..refGroup = NA,
         ..raju = NA,
         ..mh = NA,
         ..padjust = NA,
@@ -205,8 +213,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust"),
-                refs="difR",
+                    "padjust",
+                    "refGroup"),
                 columns=list(
                     list(
                         `name`="name", 
@@ -240,8 +248,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust1"),
-                refs="difR",
+                    "padjust1",
+                    "refGroup"),
                 columns=list(
                     list(
                         `name`="name", 
@@ -278,7 +286,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust")))
+                    "padjust",
+                    "refGroup")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot1",
@@ -291,7 +300,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust1")))
+                    "padjust1",
+                    "refGroup")))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="gmh",
@@ -301,7 +311,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust2"),
+                    "padjust2",
+                    "refGroup"),
                 refs="difR",
                 columns=list(
                     list(
@@ -332,7 +343,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "padjust2")))
+                    "padjust2",
+                    "refGroup")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
@@ -346,7 +358,8 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "vars",
                     "group",
                     "padjust",
-                    "num")))}))
+                    "num",
+                    "refGroup")))}))
 
 difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "difBase",
@@ -375,6 +388,7 @@ difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param data The data as a data frame.
 #' @param vars .
 #' @param group A string naming the grouping variable from \code{data}
+#' @param refGroup .
 #' @param raju .
 #' @param mh .
 #' @param padjust .
@@ -411,6 +425,7 @@ dif <- function(
     data,
     vars,
     group,
+    refGroup,
     raju = FALSE,
     mh = FALSE,
     padjust = "BH",
@@ -419,7 +434,7 @@ dif <- function(
     plot3 = FALSE,
     plot1 = FALSE,
     gmh = FALSE,
-    fn = "2,3,4",
+    fn = "",
     plot2 = FALSE,
     padjust2 = "BH",
     num = 1) {
@@ -435,10 +450,12 @@ dif <- function(
             `if`( ! missing(vars), vars, NULL),
             `if`( ! missing(group), group, NULL))
 
+    for (v in group) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
 
     options <- difOptions$new(
         vars = vars,
         group = group,
+        refGroup = refGroup,
         raju = raju,
         mh = mh,
         padjust = padjust,
