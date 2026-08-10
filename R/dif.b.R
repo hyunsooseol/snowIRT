@@ -109,7 +109,39 @@ difClass <- if (requireNamespace('jmvcore'))
       
       .runGMH = function(data, groupVarName) {
         if (isTRUE(self$options$gmh | self$options$plot2)) {
-          fn <- trimws(strsplit(self$options$fn, ',')[[1]])
+          fnText <- self$options$fn
+          
+          if (is.null(fnText) || !nzchar(trimws(fnText))) {
+            jmvcore::reject(
+              "Please enter at least one focal group."
+            )
+          }
+          
+          fn <- trimws(strsplit(fnText, ',', fixed = TRUE)[[1]])
+          fn <- fn[nzchar(fn)]
+          
+          if (length(fn) == 0) {
+            jmvcore::reject(
+              "Please enter at least one focal group."
+            )
+          }
+          
+          groupLevels <- unique(as.character(data[[groupVarName]]))
+          groupLevels <- groupLevels[!is.na(groupLevels)]
+          
+          invalidFocal <- setdiff(fn, groupLevels)
+          
+          if (length(invalidFocal) > 0) {
+            jmvcore::reject(
+              "One or more focal groups are not valid levels of the grouping variable."
+            )
+          }
+          
+          if (length(setdiff(groupLevels, fn)) == 0) {
+            jmvcore::reject(
+              "At least one group must remain as the reference group."
+            )
+          }
           
           # Run GMH DIF analysis
           gmh <- difR::difGMH(
@@ -144,6 +176,20 @@ difClass <- if (requireNamespace('jmvcore'))
       },
       
       .runBinaryGroup = function(data, groupVarName) {
+        runRaju <- isTRUE(
+          self$options$raju |
+            self$options$zplot |
+            self$options$plot3
+        )
+        
+        runMH <- isTRUE(
+          self$options$mh |
+            self$options$plot1
+        )
+        
+        if (!runRaju && !runMH)
+          return()
+        
         # Identify the two group levels
         groupValues <- as.character(data[[groupVarName]])
         binaryLevels <- unique(groupValues[!is.na(groupValues)])
@@ -189,86 +235,88 @@ difClass <- if (requireNamespace('jmvcore'))
           1
         )
         
-        # Split data by group
-        groupData <- split(data, data[[groupVarName]])
-        
-        # Prepare reference and focal group data
-        ref.data <- groupData[["0"]][, -1, drop = FALSE]
-        focal.data <- groupData[["1"]][, -1, drop = FALSE]
-        
-        # Fit TAM models
-        tam.ref <- TAM::tam.mml(resp = ref.data)
-        tam.focal <- TAM::tam.mml(resp = focal.data)
-        
-        ref1 <- tam.ref$xsi
-        focal1 <- tam.focal$xsi
-        
-        # Combine item parameters from both groups
-        item.1PL <- rbind(ref1, focal1)
-        
-        # Run Raju Signed Area DIF method
-        res1 <- difR::difRaju(
-          irtParam = item.1PL,
-          focal.name = 1,
-          p.adjust.method = self$options$padjust,
-          same.scale = FALSE,
-          signed = TRUE
-        )
-        
-        # Calculate ETS delta scale
-        pars <- res1$itemParInit
-        J <- nrow(pars) / 2
-        mR <- pars[1:J, 1]
-        mF <- difR::itemRescale(
-          pars[1:J, ],
-          pars[(J + 1):(2 * J), ]
-        )[, 1]
-        
-        rr1 <- mF - mR
-        rr2 <- -2.35 * rr1
-        
-        symb1 <- symnum(
-          abs(rr2),
-          c(0, 1, 1.5, Inf),
-          symbols = c("A", "B", "C")
-        )
-        
-        # Calculate valid two-sided p-values from Raju Z
-        rajuZ <- as.vector(res1$RajuZ)
-        rajuP <- 2 * stats::pnorm(-abs(rajuZ))
-        
-        # Recalculate adjusted p-values using the corrected p-values
-        rajuPAdjusted <- stats::p.adjust(
-          rajuP,
-          method = self$options$padjust
-        )
-        
-        # Store current Raju results for table update
-        rajuResults <- list(
-          zstat = rajuZ,
-          p = rajuP,
-          padjust = rajuPAdjusted,
-          delta = as.vector(rr2),
-          es = as.vector(symb1),
-          itempar = res1$itemParInit,
-          rajuData = res1
-        )
-        
-        # Run MH method if requested
-        if (isTRUE(self$options$mh | self$options$plot1)) {
-          private$.runMH(data, groupVarName)
+        if (runRaju) {
+          # Split data by group
+          groupData <- split(data, data[[groupVarName]])
+          
+          # Prepare reference and focal group data
+          ref.data <- groupData[["0"]][, -1, drop = FALSE]
+          focal.data <- groupData[["1"]][, -1, drop = FALSE]
+          
+          # Fit TAM models
+          tam.ref <- TAM::tam.mml(resp = ref.data)
+          tam.focal <- TAM::tam.mml(resp = focal.data)
+          
+          ref1 <- tam.ref$xsi
+          focal1 <- tam.focal$xsi
+          
+          # Combine item parameters from both groups
+          item.1PL <- rbind(ref1, focal1)
+          
+          # Run Raju Signed Area DIF method
+          res1 <- difR::difRaju(
+            irtParam = item.1PL,
+            focal.name = 1,
+            p.adjust.method = self$options$padjust,
+            same.scale = FALSE,
+            signed = TRUE
+          )
+          
+          # Calculate ETS delta scale
+          pars <- res1$itemParInit
+          J <- nrow(pars) / 2
+          mR <- pars[1:J, 1]
+          mF <- difR::itemRescale(
+            pars[1:J, ],
+            pars[(J + 1):(2 * J), ]
+          )[, 1]
+          
+          rr1 <- mF - mR
+          rr2 <- -2.35 * rr1
+          
+          symb1 <- symnum(
+            abs(rr2),
+            c(0, 1, 1.5, Inf),
+            symbols = c("A", "B", "C")
+          )
+          
+          # Calculate valid two-sided p-values from Raju Z
+          rajuZ <- as.vector(res1$RajuZ)
+          rajuP <- 2 * stats::pnorm(-abs(rajuZ))
+          
+          # Recalculate adjusted p-values using the corrected p-values
+          rajuPAdjusted <- stats::p.adjust(
+            rajuP,
+            method = self$options$padjust
+          )
+          
+          # Store current Raju results for table update
+          rajuResults <- list(
+            zstat = rajuZ,
+            p = rajuP,
+            padjust = rajuPAdjusted,
+            delta = as.vector(rr2),
+            es = as.vector(symb1),
+            itempar = res1$itemParInit,
+            rajuData = res1
+          )
+          
+          # Update Raju result table
+          private$.updateRajuTable(rajuResults)
+          
+          # Set plot states
+          self$results$zplot$setState(rajuResults$rajuData)
+          self$results$plot3$setState(rajuResults$itempar)
+          
+          # Clean up large objects
+          rm(tam.ref, tam.focal, res1, groupData)
+          gc(verbose = FALSE)
         }
         
-        # Update Raju result table
-        private$.updateRajuTable(rajuResults)
-        
-        # Set plot states
-        self$results$zplot$setState(rajuResults$rajuData)
-        self$results$plot3$setState(rajuResults$itempar)
-        
-        # Clean up large objects
-        rm(tam.ref, tam.focal, res1, groupData)
-        gc(verbose = FALSE)
+        # Run MH method if requested
+        if (runMH) {
+          private$.runMH(data, groupVarName)
+        }
       },
       
       .runMH = function(data, groupVarName) {

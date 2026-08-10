@@ -179,7 +179,6 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        text = function() private$.items[["text"]],
         raju = function() private$.items[["raju"]],
         mh = function() private$.items[["mh"]],
         zplot = function() private$.items[["zplot"]],
@@ -200,16 +199,13 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="instructions",
                 title="Instructions",
                 visible=TRUE))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="text",
-                title=""))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="raju",
                 title="`Raju\u2019s Signed Area method - ${padjust}`",
                 visible="(raju)",
                 rows="(vars)",
+                refs="difR",
                 clearWith=list(
                     "vars",
                     "group",
@@ -245,6 +241,7 @@ difResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="` Mantel-Haenszel method - ${padjust1}`",
                 visible="(mh)",
                 rows="(vars)",
+                refs="difR",
                 clearWith=list(
                     "vars",
                     "group",
@@ -404,7 +401,6 @@ difBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$raju} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$zplot} \tab \tab \tab \tab \tab an image \cr

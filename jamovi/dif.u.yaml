@@ -34,7 +34,7 @@ children:
         margin: large
         children:
           - type: Label
-            label: 'Raju Signed Area method'
+            label: 'Raju Signed Area Method'
             fitToGrid: true
             cell:
               column: 0
@@ -63,7 +63,7 @@ children:
             margin: large
             children:
              - type: Label
-               label: 'Mantel-Haenszel (MH) method'
+               label: 'Mantel-Haenszel (MH) Method'
                children:
                  - type: CheckBox
                    name: mh
@@ -74,7 +74,7 @@ children:
                  - type: CheckBox
                    name: plot1
   - type: CollapseBox
-    label: 'Generalized MH method (3+ groups)'
+    label: 'Generalized MH method (3+ Groups)'
     margin: normal
     collapsed: true
     children:
@@ -91,11 +91,11 @@ children:
                  - type: TextBox
                    name: fn
                    format: string
-                   enable: (gmh)
+                   enable: (gmh || plot2)
                    width: largest
                  - type: ComboBox
                    name: padjust2
-                   enable: (gmh)
+                   enable: (gmh || plot2)
              - type: CheckBox
                name: plot2    
 

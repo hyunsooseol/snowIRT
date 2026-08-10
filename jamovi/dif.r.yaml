@@ -10,15 +10,12 @@ items:
     type: Html
     visible: True
 
-  - name:  text
-    title: ''
-    type:  Preformatted
-
   - name: raju
     title:  '`Raju’s Signed Area method - ${padjust}`'
     type: Table
     visible: (raju)
     rows: (vars)
+    refs: difR
     clearWith:
       - vars
       - group
@@ -54,6 +51,7 @@ items:
     type: Table
     visible: (mh)
     rows: (vars)
+    refs: difR
     clearWith:
       - vars
       - group

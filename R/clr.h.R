@@ -222,8 +222,7 @@ clrResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
-                    "model",
-                    "padjust"),
+                    "model"),
                 refs="iarm",
                 columns=list(
                     list(
