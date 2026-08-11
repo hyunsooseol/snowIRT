@@ -21,6 +21,14 @@ options:
       permitted:
         - numeric        
 
+    - name: anchor
+      title: Anchor items
+      type: Variables
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+
     - name: group
       title: Grouping Variable
       type: Variable
@@ -94,9 +102,27 @@ options:
       type: Bool
       default: FALSE
 
-    - name: puri
-      title: Item purification
+    - name: plot
+      title: DIF plot
       type: Bool
-      default: FALSE      
+      default: false
+      
+    - name: plotItem
+      title: Item
+      type: Integer
+      min: 1
+      default: 1      
+
+    - name: anchorMethod
+      title: 'Matching reference'
+      type: List
+      options:
+        - name: all
+          title: All items
+        - name: purify
+          title: Item purification
+        - name: anchor
+          title: Anchor items
+      default: all
 
 ...

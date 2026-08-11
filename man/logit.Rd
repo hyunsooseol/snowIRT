@@ -7,19 +7,24 @@
 logit(
   data,
   vars,
+  anchor,
   group,
   model = "adjacent",
   type = "both",
   match = "zscore",
   padjust = "BH",
   method = FALSE,
-  puri = FALSE
+  plot = FALSE,
+  plotItem = 1,
+  anchorMethod = "all"
 )
 }
 \arguments{
 \item{data}{The data as a data frame.}
 
 \item{vars}{.}
+
+\item{anchor}{.}
 
 \item{group}{A string naming the grouping variable from \code{data}}
 
@@ -33,13 +38,18 @@ logit(
 
 \item{method}{.}
 
-\item{puri}{.}
+\item{plot}{.}
+
+\item{plotItem}{.}
+
+\item{anchorMethod}{.}
 }
 \value{
 A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$method} \tab \tab \tab \tab \tab a table \cr
+  \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 }
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

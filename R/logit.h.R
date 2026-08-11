@@ -7,13 +7,16 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
+            anchor = NULL,
             group = NULL,
             model = "adjacent",
             type = "both",
             match = "zscore",
             padjust = "BH",
             method = FALSE,
-            puri = FALSE, ...) {
+            plot = FALSE,
+            plotItem = 1,
+            anchorMethod = "all", ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -24,6 +27,13 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..vars <- jmvcore::OptionVariables$new(
                 "vars",
                 vars,
+                suggested=list(
+                    "continuous"),
+                permitted=list(
+                    "numeric"))
+            private$..anchor <- jmvcore::OptionVariables$new(
+                "anchor",
+                anchor,
                 suggested=list(
                     "continuous"),
                 permitted=list(
@@ -75,38 +85,60 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "method",
                 method,
                 default=FALSE)
-            private$..puri <- jmvcore::OptionBool$new(
-                "puri",
-                puri,
+            private$..plot <- jmvcore::OptionBool$new(
+                "plot",
+                plot,
                 default=FALSE)
+            private$..plotItem <- jmvcore::OptionInteger$new(
+                "plotItem",
+                plotItem,
+                min=1,
+                default=1)
+            private$..anchorMethod <- jmvcore::OptionList$new(
+                "anchorMethod",
+                anchorMethod,
+                options=list(
+                    "all",
+                    "purify",
+                    "anchor"),
+                default="all")
 
             self$.addOption(private$..vars)
+            self$.addOption(private$..anchor)
             self$.addOption(private$..group)
             self$.addOption(private$..model)
             self$.addOption(private$..type)
             self$.addOption(private$..match)
             self$.addOption(private$..padjust)
             self$.addOption(private$..method)
-            self$.addOption(private$..puri)
+            self$.addOption(private$..plot)
+            self$.addOption(private$..plotItem)
+            self$.addOption(private$..anchorMethod)
         }),
     active = list(
         vars = function() private$..vars$value,
+        anchor = function() private$..anchor$value,
         group = function() private$..group$value,
         model = function() private$..model$value,
         type = function() private$..type$value,
         match = function() private$..match$value,
         padjust = function() private$..padjust$value,
         method = function() private$..method$value,
-        puri = function() private$..puri$value),
+        plot = function() private$..plot$value,
+        plotItem = function() private$..plotItem$value,
+        anchorMethod = function() private$..anchorMethod$value),
     private = list(
         ..vars = NA,
+        ..anchor = NA,
         ..group = NA,
         ..model = NA,
         ..type = NA,
         ..match = NA,
         ..padjust = NA,
         ..method = NA,
-        ..puri = NA)
+        ..plot = NA,
+        ..plotItem = NA,
+        ..anchorMethod = NA)
 )
 
 logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -114,7 +146,8 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         instructions = function() private$.items[["instructions"]],
-        method = function() private$.items[["method"]]),
+        method = function() private$.items[["method"]],
+        plot = function() private$.items[["plot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -140,7 +173,9 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "model",
                     "type",
                     "match",
-                    "padjust"),
+                    "padjust",
+                    "anchorMethod",
+                    "anchor"),
                 refs="difNLR",
                 columns=list(
                     list(
@@ -159,7 +194,25 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="padj", 
                         `title`="Adj.p", 
-                        `format`="zto,pvalue"))))}))
+                        `format`="zto,pvalue"))))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="plot",
+                title="DIF Plot",
+                width=600,
+                height=450,
+                renderFun=".plot",
+                visible="(plot)",
+                clearWith=list(
+                    "vars",
+                    "group",
+                    "model",
+                    "type",
+                    "match",
+                    "padjust",
+                    "plotItem",
+                    "anchorMethod",
+                    "anchor")))}))
 
 logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "logitBase",
@@ -187,17 +240,21 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' 
 #' @param data The data as a data frame.
 #' @param vars .
+#' @param anchor .
 #' @param group A string naming the grouping variable from \code{data}
 #' @param model .
 #' @param type .
 #' @param match .
 #' @param padjust .
 #' @param method .
-#' @param puri .
+#' @param plot .
+#' @param plotItem .
+#' @param anchorMethod .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$method} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -210,35 +267,43 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 logit <- function(
     data,
     vars,
+    anchor,
     group,
     model = "adjacent",
     type = "both",
     match = "zscore",
     padjust = "BH",
     method = FALSE,
-    puri = FALSE) {
+    plot = FALSE,
+    plotItem = 1,
+    anchorMethod = "all") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logit requires jmvcore to be installed (restart may be required)")
 
     if ( ! missing(vars)) vars <- jmvcore::resolveQuo(jmvcore::enquo(vars))
+    if ( ! missing(anchor)) anchor <- jmvcore::resolveQuo(jmvcore::enquo(anchor))
     if ( ! missing(group)) group <- jmvcore::resolveQuo(jmvcore::enquo(group))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
             `if`( ! missing(vars), vars, NULL),
+            `if`( ! missing(anchor), anchor, NULL),
             `if`( ! missing(group), group, NULL))
 
 
     options <- logitOptions$new(
         vars = vars,
+        anchor = anchor,
         group = group,
         model = model,
         type = type,
         match = match,
         padjust = padjust,
         method = method,
-        puri = puri)
+        plot = plot,
+        plotItem = plotItem,
+        anchorMethod = anchorMethod)
 
     analysis <- logitClass$new(
         options = options,

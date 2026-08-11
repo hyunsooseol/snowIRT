@@ -22,14 +22,21 @@ children:
             maxItemCount: 1
             isTarget: true
             ghostText: Required
-  - type: LayoutBox
-    margin: large
-    style: inline
+      - type: TargetLayoutBox
+        label: Anchor Items
+        children:
+          - type: VariablesListBox
+            name: anchor
+            isTarget: true
+
+  - type: CollapseBox
+    label: 'Model Options'
+    margin: normal
+    collapsed: true
     children:
       - type: Label
         label: ''
         margin: large
-        style: list-inline
         children:
           - type: ComboBox
             name: model
@@ -37,9 +44,9 @@ children:
           - type: ComboBox
             name: type
           - type: ComboBox
-            name: match            
+            name: match
   - type: CollapseBox
-    label: DIF Analysis
+    label: 'Analysis'
     margin: normal
     collapsed: true
     children:
@@ -49,10 +56,6 @@ children:
         children:
           - type: Label
             label: 'Table'
-            fitToGrid: true
-            cell:
-              column: 0
-              row: 0
             children:
               - type: CheckBox
                 name: method
@@ -60,12 +63,27 @@ children:
                   - type: ComboBox
                     name: padjust
                     enable: (method)
-                  - type: CheckBox
-                    name: puri
-                    enable: (method)
+          - type: Label
+            label: 'Matching'
+            children:
+              - type: ComboBox
+                name: anchorMethod
 
-
-
-
- 
- 
+      - type: LayoutBox
+        stretchFactor: 1
+        margin: large
+        cell:
+          column: 1
+          row: 0
+        fitToGrid: true
+        children:
+          - type: Label
+            label: Plot
+            children:
+              - type: CheckBox
+                name: plot
+                children:
+                  - type: TextBox
+                    name: plotItem
+                    format: number
+                    enable: (plot)

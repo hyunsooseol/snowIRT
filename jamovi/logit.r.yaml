@@ -21,6 +21,8 @@ items:
         - type
         - match
         - padjust
+        - anchorMethod
+        - anchor
       refs: difNLR
         
       columns:
@@ -38,4 +40,21 @@ items:
           title: 'Adj.p'
           format: zto,pvalue 
 
+    - name: plot
+      title: DIF Plot
+      type: Image
+      width: 600
+      height: 450
+      renderFun: .plot
+      visible: (plot)
+      clearWith:
+        - vars
+        - group
+        - model
+        - type
+        - match
+        - padjust
+        - plotItem
+        - anchorMethod
+        - anchor
 ...
