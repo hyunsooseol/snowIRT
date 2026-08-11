@@ -125,4 +125,13 @@ options:
           title: Anchor items
       default: all
 
+    - name: plotLayout
+      title: Plot layout
+      type: List
+      options:
+        - name: faceted
+          title: Faceted
+        - name: overlay
+          title: Overlay
+      default: faceted
 ...

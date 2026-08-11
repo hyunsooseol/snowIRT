@@ -16,7 +16,8 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             method = FALSE,
             plot = FALSE,
             plotItem = 1,
-            anchorMethod = "all", ...) {
+            anchorMethod = "all",
+            plotLayout = "faceted", ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -102,6 +103,13 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "purify",
                     "anchor"),
                 default="all")
+            private$..plotLayout <- jmvcore::OptionList$new(
+                "plotLayout",
+                plotLayout,
+                options=list(
+                    "faceted",
+                    "overlay"),
+                default="faceted")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..anchor)
@@ -114,6 +122,7 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..plot)
             self$.addOption(private$..plotItem)
             self$.addOption(private$..anchorMethod)
+            self$.addOption(private$..plotLayout)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -126,7 +135,8 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         method = function() private$..method$value,
         plot = function() private$..plot$value,
         plotItem = function() private$..plotItem$value,
-        anchorMethod = function() private$..anchorMethod$value),
+        anchorMethod = function() private$..anchorMethod$value,
+        plotLayout = function() private$..plotLayout$value),
     private = list(
         ..vars = NA,
         ..anchor = NA,
@@ -138,7 +148,8 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..method = NA,
         ..plot = NA,
         ..plotItem = NA,
-        ..anchorMethod = NA)
+        ..anchorMethod = NA,
+        ..plotLayout = NA)
 )
 
 logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -212,7 +223,8 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "padjust",
                     "plotItem",
                     "anchorMethod",
-                    "anchor")))}))
+                    "anchor",
+                    "plotLayout")))}))
 
 logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "logitBase",
@@ -250,6 +262,7 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plot .
 #' @param plotItem .
 #' @param anchorMethod .
+#' @param plotLayout .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -276,7 +289,8 @@ logit <- function(
     method = FALSE,
     plot = FALSE,
     plotItem = 1,
-    anchorMethod = "all") {
+    anchorMethod = "all",
+    plotLayout = "faceted") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logit requires jmvcore to be installed (restart may be required)")
@@ -303,7 +317,8 @@ logit <- function(
         method = method,
         plot = plot,
         plotItem = plotItem,
-        anchorMethod = anchorMethod)
+        anchorMethod = anchorMethod,
+        plotLayout = plotLayout)
 
     analysis <- logitClass$new(
         options = options,

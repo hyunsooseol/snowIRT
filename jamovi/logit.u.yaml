@@ -78,12 +78,15 @@ children:
         fitToGrid: true
         children:
           - type: Label
-            label: Plot
+            label: 'Plot'
             children:
-              - type: CheckBox
-                name: plot
-                children:
-                  - type: TextBox
-                    name: plotItem
-                    format: number
-                    enable: (plot)
+            - type: CheckBox
+              name: plot
+              children:
+              - type: TextBox
+                name: plotItem
+                format: number
+                enable: (plot)
+              - type: ComboBox
+                name: plotLayout
+                enable: (plot)

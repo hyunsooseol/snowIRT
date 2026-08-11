@@ -16,7 +16,8 @@ logit(
   method = FALSE,
   plot = FALSE,
   plotItem = 1,
-  anchorMethod = "all"
+  anchorMethod = "all",
+  plotLayout = "faceted"
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ logit(
 \item{plotItem}{.}
 
 \item{anchorMethod}{.}
+
+\item{plotLayout}{.}
 }
 \value{
 A results object containing:

@@ -475,13 +475,10 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         #===========================================================
         
         item <- suppressWarnings(
-          as.integer(
-            self$options$plotItem
-          )
+          as.integer(self$options$plotItem)
         )
         
         vars <- self$options$vars
-        
         nItems <- length(vars)
         
         if (
@@ -500,16 +497,14 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Find actual item position in difORD fit
         #
         # Anchor items may occur before DIF items in fit$Data.
-        # Therefore, the numeric plotItem value must not be passed
-        # directly to predict.difORD().
+        # Therefore, plotItem must not be passed directly to
+        # predict.difORD().
         #===========================================================
         
         fitItemNames <- NULL
         
         if (!is.null(fit$Data)) {
-          fitItemNames <- colnames(
-            fit$Data
-          )
+          fitItemNames <- colnames(fit$Data)
         }
         
         if (
@@ -548,10 +543,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           if (ncol(matching) < fitItem)
             return(FALSE)
           
-          itemMatch <- matching[
-            ,
-            fitItem
-          ]
+          itemMatch <- matching[, fitItem]
           
         } else {
           
@@ -559,9 +551,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         itemMatch <- suppressWarnings(
-          as.numeric(
-            itemMatch
-          )
+          as.numeric(itemMatch)
         )
         
         itemMatch <- itemMatch[
@@ -664,17 +654,13 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         predReference <- tryCatch(
-          as.data.frame(
-            predReference
-          ),
+          as.data.frame(predReference),
           error = function(e)
             NULL
         )
         
         predFocal <- tryCatch(
-          as.data.frame(
-            predFocal
-          ),
+          as.data.frame(predFocal),
           error = function(e)
             NULL
         )
@@ -852,7 +838,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (nrow(plotData) < 1)
           return(FALSE)
         
-        # Preserve response category order
+        # Preserve response-category order
         plotData$Category <- factor(
           plotData$Category,
           levels = commonCategories
@@ -893,82 +879,180 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         #===========================================================
-        # Custom snowIRT DIF plot
+        # Plot layout
         #===========================================================
         
-        p <- ggplot2::ggplot(
-          plotData,
-          ggplot2::aes(
-            x = Match,
-            y = Probability,
-            colour = Group,
-            linetype = Group,
-            group = Group
+        plotLayout <- self$options$plotLayout
+        
+        if (
+          is.null(plotLayout) ||
+          length(plotLayout) != 1 ||
+          !plotLayout %in% c(
+            "faceted",
+            "overlay"
           )
-        ) +
+        ) {
+          plotLayout <- "faceted"
+        }
+        
+        #===========================================================
+        # Overlay plot
+        #
+        # Category = colour
+        # Group    = linetype
+        #===========================================================
+        
+        if (identical(plotLayout, "overlay")) {
           
-          ggplot2::geom_line(
-            linewidth = 0.9,
-            na.rm = TRUE
-          ) +
-          
-          ggplot2::facet_wrap(
-            ~ Category,
-            scales = "fixed"
-          ) +
-          
-          ggplot2::scale_y_continuous(
-            limits = c(0, 1),
-            breaks = seq(
-              0,
-              1,
-              by = 0.25
-            ),
-            expand = ggplot2::expansion(
-              mult = c(
-                0.01,
-                0.03
+          p <- ggplot2::ggplot(
+            plotData,
+            ggplot2::aes(
+              x = Match,
+              y = Probability,
+              colour = Category,
+              linetype = Group,
+              group = interaction(
+                Category,
+                Group
               )
             )
           ) +
-          
-          ggplot2::labs(
-            title = paste0(
-              "Item: ",
-              itemName
-            ),
-            x = xLabel,
-            y = "Category probability",
-            colour = "Group",
-            linetype = "Group"
-          ) +
-          
-          ggplot2::theme_minimal(
-            base_size = 11
-          ) +
-          
-          ggplot2::theme(
-            plot.title =
-              ggplot2::element_text(
-                face = "bold",
-                hjust = 0
+            
+            ggplot2::geom_line(
+              linewidth = 0.9,
+              na.rm = TRUE
+            ) +
+            
+            ggplot2::scale_y_continuous(
+              limits = c(0, 1),
+              breaks = seq(
+                0,
+                1,
+                by = 0.25
               ),
-            panel.grid.minor =
-              ggplot2::element_blank(),
-            panel.grid.major.x =
-              ggplot2::element_blank(),
-            strip.text =
-              ggplot2::element_text(
-                face = "bold"
-              ),
-            legend.position = "top",
-            legend.title =
-              ggplot2::element_blank(),
-            axis.title =
-              ggplot2::element_text(
-                face = "plain"
+              expand = ggplot2::expansion(
+                mult = c(
+                  0.01,
+                  0.03
+                )
               )
-          )
+            ) +
+            
+            ggplot2::labs(
+              title = paste0(
+                "Item: ",
+                itemName
+              ),
+              x = xLabel,
+              y = "Category probability",
+              colour = "Response category",
+              linetype = "Group"
+            ) +
+            
+            ggplot2::theme_minimal(
+              base_size = 11
+            ) +
+            
+            ggplot2::theme(
+              plot.title =
+                ggplot2::element_text(
+                  face = "bold",
+                  hjust = 0
+                ),
+              panel.grid.minor =
+                ggplot2::element_blank(),
+              panel.grid.major.x =
+                ggplot2::element_blank(),
+              legend.position = "top",
+              axis.title =
+                ggplot2::element_text(
+                  face = "plain"
+                )
+            )
+          
+          #===========================================================
+          # Faceted plot
+          #
+          # Category = separate panels
+          # Group    = colour + linetype
+          #===========================================================
+          
+        } else {
+          
+          p <- ggplot2::ggplot(
+            plotData,
+            ggplot2::aes(
+              x = Match,
+              y = Probability,
+              colour = Group,
+              linetype = Group,
+              group = Group
+            )
+          ) +
+            
+            ggplot2::geom_line(
+              linewidth = 0.9,
+              na.rm = TRUE
+            ) +
+            
+            ggplot2::facet_wrap(
+              ~ Category,
+              scales = "fixed"
+            ) +
+            
+            ggplot2::scale_y_continuous(
+              limits = c(0, 1),
+              breaks = seq(
+                0,
+                1,
+                by = 0.25
+              ),
+              expand = ggplot2::expansion(
+                mult = c(
+                  0.01,
+                  0.03
+                )
+              )
+            ) +
+            
+            ggplot2::labs(
+              title = paste0(
+                "Item: ",
+                itemName
+              ),
+              x = xLabel,
+              y = "Category probability",
+              colour = "Group",
+              linetype = "Group"
+            ) +
+            
+            ggplot2::theme_minimal(
+              base_size = 11
+            ) +
+            
+            ggplot2::theme(
+              plot.title =
+                ggplot2::element_text(
+                  face = "bold",
+                  hjust = 0
+                ),
+              panel.grid.minor =
+                ggplot2::element_blank(),
+              panel.grid.major.x =
+                ggplot2::element_blank(),
+              strip.text =
+                ggplot2::element_text(
+                  face = "bold"
+                ),
+              legend.position = "top",
+              legend.title =
+                ggplot2::element_blank(),
+              axis.title =
+                ggplot2::element_text(
+                  face = "plain"
+                )
+            )
+        }
         
         print(p)
         
