@@ -9,6 +9,11 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
       
       .htmlwidget = NULL,
       
+      # Cache for difORD fit
+      .fitCache = NULL,
+      .fitCacheKey = NULL,
+      .fitCacheData = NULL,
+      
       #=============================================================
       
       .init = function() {
@@ -237,99 +242,122 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         }
         
         #===========================================================
-        # Validate focal group coding
+        # Build cache key
+        #
+        # plot and plotItem are intentionally excluded.
+        # Therefore, changing only the displayed DIF item does not
+        # refit the difORD model.
         #===========================================================
         
-        groupLevelLabels <- as.character(
-          groupLevels
+        cacheKey <- list(
+          group = groupVarName,
+          vars = vars,
+          anchor = anchor,
+          anchorMethod = anchorMethod,
+          model = self$options$model,
+          type = self$options$type,
+          match = self$options$match,
+          padjust = self$options$padjust
         )
         
-        if (!("1" %in% groupLevelLabels)) {
-          jmvcore::reject(
-            paste0(
-              "The focal group must be coded as 1 for logistic DIF analysis. ",
-              "The grouping variable currently contains the levels: ",
-              paste(
-                groupLevelLabels,
-                collapse = ", "
-              ),
-              ". Please recode the focal group as 1 and try again."
+        useCachedFit <- (
+          !is.null(private$.fitCache) &&
+            !is.null(private$.fitCacheKey) &&
+            !is.null(private$.fitCacheData) &&
+            identical(
+              private$.fitCacheKey,
+              cacheKey
+            ) &&
+            identical(
+              private$.fitCacheData,
+              data
             )
-          )
-        }
+        )
         
         #===========================================================
         # DIF analysis
         #===========================================================
         
-        fit <- tryCatch(
+        if (useCachedFit) {
           
-          {
+          fit <- private$.fitCache
+          
+        } else {
+          
+          fit <- tryCatch(
             
-            #=======================================================
-            # 1. User-defined Anchor items
-            #=======================================================
+            {
+              
+              #=====================================================
+              # 1. User-defined Anchor items
+              #=====================================================
+              
+              if (identical(anchorMethod, "anchor")) {
+                
+                difNLR::difORD(
+                  Data = data,
+                  group = groupVarName,
+                  focal.name = 1,
+                  model = self$options$model,
+                  type = self$options$type,
+                  match = self$options$match,
+                  anchor = anchor,
+                  p.adjust.method = self$options$padjust
+                )
+                
+                #=====================================================
+                # 2. Item purification
+                #=====================================================
+                
+              } else if (identical(anchorMethod, "purify")) {
+                
+                difNLR::difORD(
+                  Data = data,
+                  group = groupVarName,
+                  focal.name = 1,
+                  model = self$options$model,
+                  type = self$options$type,
+                  match = self$options$match,
+                  purify = TRUE,
+                  p.adjust.method = self$options$padjust
+                )
+                
+                #=====================================================
+                # 3. All items
+                #=====================================================
+                
+              } else {
+                
+                difNLR::difORD(
+                  Data = data,
+                  group = groupVarName,
+                  focal.name = 1,
+                  model = self$options$model,
+                  type = self$options$type,
+                  match = self$options$match,
+                  p.adjust.method = self$options$padjust
+                )
+              }
+            },
             
-            if (identical(anchorMethod, "anchor")) {
+            error = function(e) {
               
-              difNLR::difORD(
-                Data = data,
-                group = groupVarName,
-                focal.name = 1,
-                model = self$options$model,
-                type = self$options$type,
-                match = self$options$match,
-                anchor = anchor,
-                p.adjust.method = self$options$padjust
-              )
-              
-              #=======================================================
-              # 2. Item purification
-              #=======================================================
-              
-            } else if (identical(anchorMethod, "purify")) {
-              
-              difNLR::difORD(
-                Data = data,
-                group = groupVarName,
-                focal.name = 1,
-                model = self$options$model,
-                type = self$options$type,
-                match = self$options$match,
-                purify = TRUE,
-                p.adjust.method = self$options$padjust
-              )
-              
-              #=======================================================
-              # 3. All items
-              #=======================================================
-              
-            } else {
-              
-              difNLR::difORD(
-                Data = data,
-                group = groupVarName,
-                focal.name = 1,
-                model = self$options$model,
-                type = self$options$type,
-                match = self$options$match,
-                p.adjust.method = self$options$padjust
+              jmvcore::reject(
+                paste0(
+                  "The DIF analysis could not be estimated. ",
+                  conditionMessage(e),
+                  " Please check the selected items, grouping variable, ",
+                  "matching reference, and model settings."
+                )
               )
             }
-          },
+          )
           
-          error = function(e) {
-            
-            jmvcore::reject(
-              paste0(
-                "The DIF analysis could not be estimated. ",
-                conditionMessage(e),
-                " Please check the selected items, grouping variable, ",
-                "matching reference, and model settings."
-              )
-            )
-          }
-        )
+          # Save cache only after successful estimation
+          private$.fitCache <- fit
+          private$.fitCacheKey <- cacheKey
+          private$.fitCacheData <- data
+        }
         
         #===========================================================
         # DIF table
@@ -417,7 +445,14 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         #===========================================================
         
         if (isTRUE(self$options$plot)) {
-          self$results$plot$setState(fit)
+          self$results$plot$setState(
+            list(
+              fit = fit,
+              plotItem = self$options$plotItem,
+              plotLayout = self$options$plotLayout,
+              vars = vars
+            )
+          )
         }
       },
       
@@ -440,17 +475,26 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         if (is.null(image$state))
           return(FALSE)
         
-        fit <- image$state
+        plotState <- image$state
+        
+        if (
+          !is.list(plotState) ||
+          is.null(plotState$fit)
+        ) {
+          return(FALSE)
+        }
+        
+        fit <- plotState$fit
         
         #===========================================================
         # Selected DIF item
         #===========================================================
         
         item <- suppressWarnings(
-          as.integer(self$options$plotItem)
+          as.integer(plotState$plotItem)
         )
         
-        vars <- self$options$vars
+        vars <- plotState$vars
         nItems <- length(vars)
         
         if (
@@ -854,7 +898,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Plot layout
         #===========================================================
         
-        plotLayout <- self$options$plotLayout
+        plotLayout <- plotState$plotLayout
         
         if (
           is.null(plotLayout) ||
