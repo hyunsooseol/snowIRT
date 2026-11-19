@@ -12,9 +12,9 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             num = 1,
             num1 = 1,
             group = 3,
-            count = TRUE,
+            count = FALSE,
             prop = FALSE,
-            sum = FALSE,
+            sum = TRUE,
             disc = FALSE,
             sum1 = FALSE,
             plot = FALSE,
@@ -62,7 +62,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..count <- jmvcore::OptionBool$new(
                 "count",
                 count,
-                default=TRUE)
+                default=FALSE)
             private$..prop <- jmvcore::OptionBool$new(
                 "prop",
                 prop,
@@ -70,7 +70,7 @@ itemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..sum <- jmvcore::OptionBool$new(
                 "sum",
                 sum,
-                default=FALSE)
+                default=TRUE)
             private$..disc <- jmvcore::OptionBool$new(
                 "disc",
                 disc,
@@ -181,11 +181,11 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         text = function() private$.items[["text"]],
+        sum = function() private$.items[["sum"]],
         count = function() private$.items[["count"]],
         prop = function() private$.items[["prop"]],
-        sum = function() private$.items[["sum"]],
-        disc = function() private$.items[["disc"]],
         sum1 = function() private$.items[["sum1"]],
+        disc = function() private$.items[["disc"]],
         plot2 = function() private$.items[["plot2"]],
         plot = function() private$.items[["plot"]],
         plot1 = function() private$.items[["plot1"]],
@@ -211,74 +211,9 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title=""))
             self$add(jmvcore::Array$new(
                 options=options,
-                name="count",
-                title="Counts of respondents",
-                visible="(count)",
-                refs="CTT",
-                items="(vars)",
-                template=jmvcore::Table$new(
-                    options=options,
-                    title="Item $key",
-                    rows=0,
-                    clearWith=list(
-                        "vars",
-                        "key"),
-                    columns=list(
-                        list(
-                            `name`="name", 
-                            `title`="", 
-                            `type`="text", 
-                            `content`="($key)"),
-                        list(
-                            `name`="lower", 
-                            `title`="lower", 
-                            `type`="integer"),
-                        list(
-                            `name`="middle", 
-                            `title`="middle", 
-                            `type`="integer"),
-                        list(
-                            `name`="upper", 
-                            `title`="upper", 
-                            `type`="integer")))))
-            self$add(jmvcore::Array$new(
-                options=options,
-                name="prop",
-                title="Proportions of respondents",
-                visible="(prop)",
-                refs="CTT",
-                items="(vars)",
-                template=jmvcore::Table$new(
-                    options=options,
-                    title="Item $key",
-                    rows=0,
-                    clearWith=list(
-                        "vars",
-                        "key"),
-                    columns=list(
-                        list(
-                            `name`="name", 
-                            `title`="", 
-                            `type`="text", 
-                            `content`="($key)"),
-                        list(
-                            `name`="lower", 
-                            `title`="Lower", 
-                            `type`="number"),
-                        list(
-                            `name`="middle", 
-                            `title`="Middle", 
-                            `type`="number"),
-                        list(
-                            `name`="upper", 
-                            `title`="Upper", 
-                            `type`="number")))))
-            self$add(jmvcore::Array$new(
-                options=options,
                 name="sum",
                 title="Item summary",
                 visible="(sum)",
-                refs="CTT",
                 items="(vars)",
                 template=jmvcore::Table$new(
                     options=options,
@@ -286,18 +221,17 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     rows=0,
                     clearWith=list(
                         "vars",
-                        "key"),
+                        "key",
+                        "group"),
                     columns=list(
                         list(
                             `name`="correct", 
                             `title`="Correct", 
-                            `type`="text", 
-                            `content`="($key)"),
+                            `type`="text"),
                         list(
                             `name`="key", 
                             `title`="Response", 
-                            `type`="text", 
-                            `content`="($key)"),
+                            `type`="text"),
                         list(
                             `name`="n", 
                             `title`="Frequency", 
@@ -305,6 +239,99 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         list(
                             `name`="rspP", 
                             `title`="Proportion", 
+                            `type`="number"),
+                        list(
+                            `name`="pBis", 
+                            `title`="Point-biserial r", 
+                            `type`="number"),
+                        list(
+                            `name`="discrim", 
+                            `title`="Upper - lower", 
+                            `type`="number")))))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="count",
+                title="Counts of respondents",
+                visible="(count)",
+                items="(vars)",
+                template=jmvcore::Table$new(
+                    options=options,
+                    title="Item $key",
+                    rows=0,
+                    clearWith=list(
+                        "vars",
+                        "key",
+                        "group"),
+                    columns=list(
+                        list(
+                            `name`="response", 
+                            `title`="Response", 
+                            `type`="text"),
+                        list(
+                            `name`="total", 
+                            `title`="Total", 
+                            `type`="integer")))))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="prop",
+                title="Proportions of respondents",
+                visible="(prop)",
+                items="(vars)",
+                template=jmvcore::Table$new(
+                    options=options,
+                    title="Item $key",
+                    rows=0,
+                    clearWith=list(
+                        "vars",
+                        "key",
+                        "group"),
+                    columns=list(
+                        list(
+                            `name`="response", 
+                            `title`="Response", 
+                            `type`="text"),
+                        list(
+                            `name`="total", 
+                            `title`="Total", 
+                            `type`="number")))))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="sum1",
+                title="Total summary",
+                visible="(sum1)",
+                items="(vars)",
+                template=jmvcore::Table$new(
+                    options=options,
+                    title="Item $key",
+                    rows=0,
+                    clearWith=list(
+                        "vars",
+                        "key",
+                        "group"),
+                    columns=list(
+                        list(
+                            `name`="correct", 
+                            `title`="Correct", 
+                            `type`="text"),
+                        list(
+                            `name`="key", 
+                            `title`="Response", 
+                            `type`="text"),
+                        list(
+                            `name`="n", 
+                            `title`="Frequency", 
+                            `type`="integer"),
+                        list(
+                            `name`="rspP", 
+                            `title`="Proportion", 
+                            `type`="number"),
+                        list(
+                            `name`="pBis", 
+                            `title`="Point-biserial r", 
+                            `type`="number"),
+                        list(
+                            `name`="discrim", 
+                            `title`="Upper - lower", 
                             `type`="number")))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -314,8 +341,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 rows="(vars)",
                 clearWith=list(
                     "vars",
-                    "key"),
-                refs="ShinyItemAnalysis",
+                    "key",
+                    "group"),
                 columns=list(
                     list(
                         `name`="name", 
@@ -334,35 +361,14 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="RIR", 
                         `title`="RIR"))))
-            self$add(jmvcore::Array$new(
-                options=options,
-                name="sum1",
-                title="Total summary",
-                visible="(sum1)",
-                refs="CTT",
-                items="(vars)",
-                template=jmvcore::Table$new(
-                    options=options,
-                    title="Item $key",
-                    clearWith=list(
-                        "vars",
-                        "key"),
-                    columns=list(
-                        list(
-                            `name`="name", 
-                            `title`="", 
-                            `type`="text", 
-                            `content`="($key)")))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot2",
                 title="Histogram of total score",
                 width=600,
                 height=450,
-                requiresData=TRUE,
                 visible="(plot2)",
                 renderFun=".plot2",
-                refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars",
                     "key")))
@@ -372,10 +378,8 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Distractor plot",
                 width=600,
                 height=450,
-                requiresData=TRUE,
                 visible="(plot)",
                 renderFun=".plot",
-                refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars",
                     "num",
@@ -389,12 +393,12 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 height=450,
                 visible="(plot1)",
                 renderFun=".plot1",
-                refs="ShinyItemAnalysis",
                 clearWith=list(
                     "vars",
                     "disi",
                     "angle",
-                    "key")))
+                    "key",
+                    "group")))
             self$add(jmvcore::Output$new(
                 options=options,
                 name="total",
@@ -414,13 +418,11 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="plot3",
-                title="`Empirical Item Characteristic Curve: Item ${num1}`",
+                title="Empirical Item Characteristic Curve",
                 width=600,
                 height=450,
-                requiresData=TRUE,
                 visible="(plot3)",
                 renderFun=".plot3",
-                refs="CTT",
                 clearWith=list(
                     "vars",
                     "num1",
@@ -456,10 +458,12 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param key .
 #' @param num .
 #' @param num1 .
-#' @param group .
+#' @param group Number of remaining-item score groups shared by the group
+#'   tables and distractor plot.
 #' @param count .
 #' @param prop .
-#' @param sum .
+#' @param sum Show overall option counts, proportions, and option-level
+#'   discrimination.
 #' @param disc .
 #' @param sum1 .
 #' @param plot .
@@ -472,11 +476,11 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
-#'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
-#'   \code{results$disc} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sum1} \tab \tab \tab \tab \tab an array of tables \cr
+#'   \code{results$disc} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr
@@ -500,9 +504,9 @@ item <- function(
     num = 1,
     num1 = 1,
     group = 3,
-    count = TRUE,
+    count = FALSE,
     prop = FALSE,
-    sum = FALSE,
+    sum = TRUE,
     disc = FALSE,
     sum1 = FALSE,
     plot = FALSE,

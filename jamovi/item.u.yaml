@@ -61,11 +61,13 @@ children:
               row: 0
             children:
               - type: CheckBox
+                name: sum
+              - type: CheckBox
                 name: count
               - type: CheckBox
                 name: prop
               - type: CheckBox
-                name: sum
+                name: sum1
               - type: CheckBox
                 name: disc
       - type: LayoutBox
@@ -82,12 +84,9 @@ children:
                 name: total
               - type: Output
                 name: scoring
-          - type: Label
-            label: Distractor Analysis
-            fitToGrid: true
-            children:
-              - type: CheckBox
-                name: sum1
+          - name: group
+            type: TextBox
+            format: number
   - type: CollapseBox
     label: Plots
     margin: normal
@@ -110,10 +109,6 @@ children:
                 name: plot
                 children:
                   - name: num
-                    type: TextBox
-                    format: number
-                    enable: (plot)
-                  - name: group
                     type: TextBox
                     format: number
                     enable: (plot)

@@ -42,15 +42,17 @@ options:
       min: 1
       
     - name: group
-      title: Num.of groups
+      title: Number of score groups
       default: 3
       type: Integer
       min: 2
+      description:
+          R: Number of remaining-item score groups shared by the group tables and distractor plot.
 
     - name: count
       title: Counts of respondents
       type: Bool
-      default: TRUE
+      default: FALSE
       
     - name: prop
       title: Proportions of respondents
@@ -60,7 +62,9 @@ options:
     - name: sum
       title: Item summary
       type: Bool
-      default: FALSE  
+      default: TRUE
+      description:
+          R: Show overall option counts, proportions, and option-level discrimination.
 
     - name: disc
       title: Difficulty and Discrimination indexes

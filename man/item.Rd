@@ -12,9 +12,9 @@ item(
   num = 1,
   num1 = 1,
   group = 3,
-  count = TRUE,
+  count = FALSE,
   prop = FALSE,
-  sum = FALSE,
+  sum = TRUE,
   disc = FALSE,
   sum1 = FALSE,
   plot = FALSE,
@@ -38,13 +38,15 @@ item(
 
 \item{num1}{.}
 
-\item{group}{.}
+\item{group}{Number of remaining-item score groups shared by the group
+tables and distractor plot.}
 
 \item{count}{.}
 
 \item{prop}{.}
 
-\item{sum}{.}
+\item{sum}{Show overall option counts, proportions, and option-level
+discrimination.}
 
 \item{disc}{.}
 
@@ -67,11 +69,11 @@ A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
-  \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
-  \code{results$disc} \tab \tab \tab \tab \tab a table \cr
   \code{results$sum1} \tab \tab \tab \tab \tab an array of tables \cr
+  \code{results$disc} \tab \tab \tab \tab \tab a table \cr
   \code{results$plot2} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot} \tab \tab \tab \tab \tab an image \cr
   \code{results$plot1} \tab \tab \tab \tab \tab an image \cr

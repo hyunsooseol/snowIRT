@@ -1,82 +1,22 @@
 ---
-name:  item
+name: item
 title: Distractor analysis
-jrs:   '1.1'
+jrs: '1.1'
 refs: snowIRT
 items:
     - name: instructions
       title: Instructions
       type: Html
-      visible: True
-      
-    - name:  text
+      visible: true
+
+    - name: text
       title: ""
-      type:  Preformatted
-
-    - name: count
-      title: 'Counts of respondents'
-      type: Array
-      visible: (count)
-      refs: CTT
-
-      items: (vars)
-      template:
-          title: Item $key
-          type: Table
-          rows: 0
-          clearWith:
-            - vars
-            - key
-          columns:
-            - name: name
-              title: ''
-              type: 'text'
-              content: ($key)
-            - name: lower
-              title: 'lower'
-              type: integer
-            - name: middle
-              title: 'middle'
-              type: integer
-            - name: upper              
-              title: 'upper'
-              type: integer  
-
-    - name: prop
-      title: 'Proportions of respondents'
-      type: Array
-      visible: (prop)
-      refs: CTT
-
-      items: (vars)
-      template:
-          title: Item $key
-          type: Table
-          rows: 0
-          clearWith:
-            - vars
-            - key
-          columns:
-            - name: name
-              title: ''
-              type: 'text'
-              content: ($key)
-            - name: lower
-              title: 'Lower'
-              type: number
-            - name: middle
-              title: 'Middle'
-              type: number
-            - name: upper              
-              title: 'Upper'
-              type: number 
+      type: Preformatted
 
     - name: sum
-      title: 'Item summary'
+      title: Item summary
       type: Array
       visible: (sum)
-      refs: CTT
-
       items: (vars)
       template:
           title: Item $key
@@ -85,22 +25,84 @@ items:
           clearWith:
             - vars
             - key
-          columns:
+            - group
+          columns: &optionSummaryColumns
             - name: correct
-              title: 'Correct'
-              type: 'text'
-              content: ($key)
+              title: Correct
+              type: text
             - name: key
-              title: 'Response'
-              type: 'text'
-              content: ($key)
+              title: Response
+              type: text
             - name: n
-              title: 'Frequency'
+              title: Frequency
               type: integer
             - name: rspP
-              title: 'Proportion'
+              title: Proportion
               type: number
- 
+            - name: pBis
+              title: Point-biserial r
+              type: number
+            - name: discrim
+              title: Upper - lower
+              type: number
+
+    - name: count
+      title: Counts of respondents
+      type: Array
+      visible: (count)
+      items: (vars)
+      template:
+          title: Item $key
+          type: Table
+          rows: 0
+          clearWith:
+            - vars
+            - key
+            - group
+          columns:
+            - name: response
+              title: Response
+              type: text
+            - name: total
+              title: Total
+              type: integer
+
+    - name: prop
+      title: Proportions of respondents
+      type: Array
+      visible: (prop)
+      items: (vars)
+      template:
+          title: Item $key
+          type: Table
+          rows: 0
+          clearWith:
+            - vars
+            - key
+            - group
+          columns:
+            - name: response
+              title: Response
+              type: text
+            - name: total
+              title: Total
+              type: number
+
+    - name: sum1
+      title: Total summary
+      type: Array
+      visible: (sum1)
+      items: (vars)
+      template:
+          title: Item $key
+          type: Table
+          rows: 0
+          clearWith:
+            - vars
+            - key
+            - group
+          columns: *optionSummaryColumns
+
     - name: disc
       title: Item difficulty and discrimination index
       type: Table
@@ -109,86 +111,58 @@ items:
       clearWith:
         - vars
         - key
-      refs: ShinyItemAnalysis
-        
+        - group
       columns:
         - name: name
-          title: 'Item'
-          type: 'text'
+          title: Item
+          type: text
           content: ($key)
- 
         - name: dif
           title: Difficulty
-          
         - name: ULI
           title: ULI
-          
         - name: RIT
           title: RIT
-          
         - name: RIR
-          title: RIR 
+          title: RIR
 
-    - name: sum1
-      title: 'Total summary'
-      type: Array
-      visible: (sum1)
-      refs: CTT
-
-      items: (vars)
-      template:
-          title: Item $key
-          type: Table
-          clearWith:
-            - vars
-            - key
-          columns:
-            - name: name
-              title: ''
-              type: 'text'
-              content: ($key)
-
-    - name:  plot2
-      title: 'Histogram of total score'
-      type:  Image
+    - name: plot2
+      title: Histogram of total score
+      type: Image
       width: 600
-      height: 450      
-      requiresData: true
+      height: 450
       visible: (plot2)
       renderFun: .plot2
-      refs: ShinyItemAnalysis
       clearWith:
-            - vars
-            - key
+        - vars
+        - key
 
-    - name:  plot
-      title: 'Distractor plot'
-      type:  Image
+    - name: plot
+      title: Distractor plot
+      type: Image
       width: 600
-      height: 450      
-      requiresData: true
+      height: 450
       visible: (plot)
       renderFun: .plot
-      refs: ShinyItemAnalysis
       clearWith:
-            - vars
-            - num 
-            - group
-            - key
+        - vars
+        - num
+        - group
+        - key
 
-    - name:  plot1
-      title: 'Discrimination plot'
-      type:  Image
+    - name: plot1
+      title: Discrimination plot
+      type: Image
       width: 600
-      height: 450      
+      height: 450
       visible: (plot1)
       renderFun: .plot1
-      refs: ShinyItemAnalysis
       clearWith:
-            - vars
-            - disi
-            - angle
-            - key
+        - vars
+        - disi
+        - angle
+        - key
+        - group
 
     - name: total
       title: Total
@@ -206,19 +180,16 @@ items:
         - vars
         - key
 
-    - name:  plot3
-      title: '`Empirical Item Characteristic Curve: Item ${num1}`'      
-      type:  Image
+    - name: plot3
+      title: Empirical Item Characteristic Curve
+      type: Image
       width: 600
-      height: 450      
-      requiresData: true
+      height: 450
       visible: (plot3)
       renderFun: .plot3
-      refs: CTT
       clearWith:
-            - vars
-            - num1
-            - key
-
+        - vars
+        - num1
+        - key
 
 ...

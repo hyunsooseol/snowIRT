@@ -1,582 +1,434 @@
-
 # ITEM ANALYSIS
 
-itemClass <- if (requireNamespace('jmvcore', quietly = TRUE))
+itemClass <- if (requireNamespace("jmvcore", quietly = TRUE))
   R6::R6Class(
     "itemClass",
     inherit = itemBase,
     private = list(
-      .cache = list(),
-      .htmlwidget = NULL,
-      
       .init = function() {
-        private$.htmlwidget <- HTMLWidget$new()
-        if (is.null(self$data) | is.null(self$options$vars)) {
-          # self$results$instructions$setVisible(visible = TRUE)
+        private$.setInstructions()
+      },
+
+      .setInstructions = function(result = NULL) {
+        details <- ""
+        if (!is.null(result)) {
+          items <- result$items
+          itemNames <- .html_escape(rownames(result$indices))
+          nRespondents <- length(result$total)
+          rows <- vapply(seq_along(items), function(i) {
+            item <- items[[i]]
+            sizes <- if (is.null(item$counts)) {
+              "Too few distinct scores"
+            } else {
+              paste(paste0(colnames(item$counts), " = ", colSums(item$counts)), collapse = ", ")
+            }
+            sprintf('<tr><th scope="row">%s</th><td>%d</td><td>%d</td><td>%s</td></tr>',
+                    itemNames[i], item$nValid, nRespondents - item$nValid, sizes)
+          }, character(1L))
+          keyWarnings <- vapply(items, function(item) item$keyUnlisted, logical(1L))
+          keyMessage <- if (any(keyWarnings)) {
+            paste0("<p>Check the answer keys and retained response levels for ",
+                   paste(itemNames[keyWarnings], collapse = ", "), ".</p>")
+          } else {
+            ""
+          }
+          details <- paste0(
+            '<details style="margin-top:12px">',
+            '<summary>Sample sizes by item</summary>',
+            sprintf("<p>Respondents with complete scores: %d of %d.</p>",
+                    result$nComplete, nRespondents),
+            keyMessage,
+            '<table style="border-spacing:12px 5px;text-align:left">',
+            '<thead><tr><th scope="col">Item</th><th scope="col">Valid</th>',
+            '<th scope="col">Missing</th><th scope="col">Score group sizes</th></tr></thead>',
+            '<tbody>', paste0(rows, collapse = ""), '</tbody></table></details>'
+          )
         }
-        self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
+        widget <- HTMLWidget$new()
+        self$results$instructions$setContent(widget$generate_accordion(
           title = "Instructions",
-          content = paste(
-            '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
-            '<div style="text-align:justify;">',
+          content = paste0(
+            '<div style="border:2px solid #e6f4fe;border-radius:15px;padding:15px;background:#e6f4fe">',
             '<ul>',
-            '<li>Enter the correct answer separated by commas, but there must be no spaces between commas.</li>',
-            '<li>The distractor analysis uses a fixed 3-group structure(33%-34%-33%) to ensure stable and reliable results.</li>',
-            '<li>By a rule of thumb, all items with a discrimination lower than 0.2 (threshold in the plot), should be checked for content.</li>',
-            '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
-            '</ul></div></div>'
+            '<li>Enter one correct answer per selected item, in order, separated by commas. Use the response labels displayed in jamovi.</li>',
+            '<li>Define non-responses as missing in jamovi. To show options with zero selections, define their levels and enable <b>Retain unused levels in analyses</b> in the variable settings.</li>',
+            '<li>Overall proportions use valid responses to each item. Point-biserial r correlates option selection (0 or 1) with the total score excluding the current item. This is a corrected point-biserial correlation. Correlations, score groups and the empirical ICC use respondents who answered all selected items.</li>',
+            '<li>Upper - lower is the difference between the highest and lowest groups in the proportion selecting an option. The three-group setting targets 33%, 34% and 33%. Group sizes can differ because equal scores stay together.</li>',
+            '<li>Difficulty is the proportion correct among valid responses. ULI uses the upper-minus-lower value for the correct option. RIT and RIR correlate the item score with the total and remaining-item scores, respectively.</li>',
+            '<li>Saved item scores keep missing responses blank. A total score is saved when all selected items have a response.</li>',
+            '<li>Report issues or request features on <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
+            '</ul></div>',
+            details
           )
         ))
-        if (self$options$disc)
-          self$results$disc$setNote(
-            "Note",
-            "ULI:Upper-Lower Index based on 3 groups, RIT:Item-Total correlation, RIR: Item-Rest correlation. Missing values should be recoded as 0 or incorrect answer in jamovi."
-          )
       },
-      
+
       .run = function() {
-        
-        if (!isTRUE(self$options$run))
+        vars <- self$options$vars
+        if (!isTRUE(self$options$run) || length(vars) == 0L)
           return()
-        
-        if (length(self$options$vars) < 2) return()
-        
-        # missing values warning---
+
+        self$results$text$setContent("")
+        private$.setInstructions()
+        for (image in list(self$results$plot, self$results$plot1,
+                           self$results$plot2, self$results$plot3)) {
+          image$setState(NULL)
+          image$.setPath(NULL)
+        }
         data <- self$data
-        has_missing <- any(is.na(data))
-        
-        if (has_missing) {
-          
-          self$results$instructions$setContent(
-            private$.htmlwidget$generate_accordion(
-              title = "⚠️ Missing Values Detected",
-              content = paste(
-                '<div style="border: 2px solid #ff9800; border-radius: 10px; padding: 12px; background-color: #fff3e0;">',
-                '<p><strong>🔍 Missing responses found - Please verify:</strong></p>',
-                '<ol style="text-align: left; margin: 10px 0; padding-left: 20px;">',
-                '<li><strong>Check original answer sheets first</strong><br>',
-                '<span style="font-size: 0.9em; color: #666;">Enter the actual response if student answered</span></li>',
-                '<li><strong>If truly blank or invalid response</strong><br>',
-                '<span style="font-size: 0.9em; color: #666;">Enter <b>0</b> for incorrect scoring</span></li>',
-                '</ol>',
-                '<p style="margin-top: 10px; font-size: 0.9em; color: #d84315;">',
-                '<strong>⚠️ Analysis cannot proceed until all cells are filled</strong></p>',
-                '</div>'
-              )
-            )
-          )
-          
+        if (is.null(data) || nrow(data) == 0L) {
+          self$results$text$setContent("No respondents are available after applying the data filters.")
           return()
         }
-        
-        
-        
-        key1 <- strsplit(self$options$key, ',')[[1]]
-        
-        if (!identical(private$.cache$options, self$options) ||
-            !identical(private$.cache$data, self$data)) {
-          private$.cache <- list()
-          private$.computeRES(data, key1)
-          private$.cache$is_ready <- TRUE
-          
-          private$.cache$options <- self$options
-          private$.cache$data <- self$data
-        }
-        
-        counts   <- private$.cache$counts
-        ts       <- private$.cache$ts
-        prop     <- private$.cache$prop
-        res      <- private$.cache$res
-        dicho    <- private$.cache$dicho
-        group_ok <- isTRUE(private$.cache$group_ok)
-        group_err <- private$.cache$group_err
-        
-        # If grouping failed, show a simple notice (but DO NOT stop other outputs)
-        if (!group_ok) {
-          
-          self$results$instructions$setVisible(TRUE)
-          self$results$instructions$setContent(
-            private$.htmlwidget$generate_accordion(
-              title = "⚠️ Group-based outputs skipped",
-              content = paste(
-                '<div style="border: 2px solid #ff9800; border-radius: 10px; padding: 12px; background-color: #fff3e0;">',
-                
-                '<p><strong>Group-based outputs were skipped.</strong></p>',
-                
-                '<p>',
-                'Too many respondents had identical total scores, so the data could not be divided ',
-                'into three distinct groups (lower / middle / upper).',
-                '</p>',
-                
-                '<ul>',
-                '<li>Group-based distractor tables and plots were skipped.</li>',
-                '<li>Counts and proportions are shown using <b>TOTAL</b> values only.</li>',
-                '<li>This does not affect total scores or item-level statistics.</li>',
-                '</ul>',
-                
-                if (!is.null(group_err))
-                  paste0(
-                    '<p style="margin-top:6px; font-size:0.9em; color:#6d4c41;">',
-                    group_err,
-                    '</p>'
-                  )
-                else '',
-                
-                '</div>'
-              )
-            )
-          )
-        }
-        
-        
-        # -------------------------------
-        # Counts of respondents
-        # - Normal: lower/middle/upper (from cached counts)
-        # - If group failed: TOTAL only computed directly from data
-        # -------------------------------
-        if (isTRUE(self$options$count)) {
-          
-          vars <- self$options$vars
-          
-          if (group_ok) {
-            
-            if (is.null(counts)) {
-              self$results$count$setVisible(FALSE)
-            } else {
-              
-              tab <- NULL
-              for (i in seq_along(vars)) {
-                tab[[i]] <- as.data.frame.matrix(counts[[i]])
-              }
-              
-              for (i in seq_along(vars)) {
-                table <- self$results$count[[i]]
-                names <- dimnames(tab[[i]])[[1]]
-                dims  <- dimnames(tab[[i]])[[2]]
-                
-                for (name in names) {
-                  row <- list()
-                  for (j in seq_along(dims)) {
-                    row[[dims[j]]] <- tab[[i]][name, j]
-                  }
-                  table$addRow(rowKey = name, values = row)
-                }
-              }
-            }
-            
-          } else {
+        data <- data[, vars, drop = FALSE]
 
-            # TOTAL-only
-            for (i in seq_along(vars)) {
-              
-              table <- self$results$count[[i]]
-              
-              # make sure Total column exists (ignore if already exists)
-              tryCatch({
-                table$addColumn(name = "Total", type = "integer")
-              }, error = function(e) { })
-              
-              x <- data[[vars[i]]]
-              x <- x[!is.na(x)]
-              
-              if (length(x) == 0) {
-                self$results$count$setVisible(FALSE)
-              } else {
-                
-                tt <- table(x, useNA = "no")
-                opts <- names(tt)
-                
-                # ✅ correct option for this item
-                correct <- key1[i]
-                
-                for (k in seq_along(opts)) {
-                  rk <- if (!is.null(correct) && !is.na(correct) && opts[k] == correct)
-                    paste0("*", opts[k]) else opts[k]
-                  
-                  table$addRow(
-                    rowKey = rk,
-                    values = list(Total = as.integer(tt[[k]]))
-                  )
-                }
-              }
-            }
-      
-          }
+        key <- trimws(strsplit(paste0(self$options$key, ","), ",", fixed = TRUE)[[1L]])
+        if (length(key) != length(vars) || any(!nzchar(key))) {
+          self$results$text$setContent("Enter one correct answer for every selected item, separated by commas.")
+          return()
         }
-            
-            
-        # -------------------------------
-        # Proportions of respondents
-        # - Normal: lower/middle/upper (from cached prop)
-        # - If group failed: TOTAL only computed directly from data
-        # -------------------------------
-        if (isTRUE(self$options$prop)) {
-          
-          vars <- self$options$vars
-          
-          if (group_ok) {
-            
-            if (is.null(prop)) {
-              self$results$prop$setVisible(FALSE)
-            } else {
-              
-              tab <- NULL
-              for (i in seq_along(vars)) {
-                tab[[i]] <- as.data.frame.matrix(prop[[i]])
-              }
-              
-              for (i in seq_along(vars)) {
-                table <- self$results$prop[[i]]
-                names <- dimnames(tab[[i]])[[1]]
-                dims  <- dimnames(tab[[i]])[[2]]
-                
-                for (name in names) {
-                  row <- list()
-                  for (j in seq_along(dims)) {
-                    row[[dims[j]]] <- tab[[i]][name, j]
-                  }
-                  table$addRow(rowKey = name, values = row)
-                }
-              }
-            }
-            
-          } else {
 
-            # TOTAL-only proportions
-            for (i in seq_along(vars)) {
-              
-              table <- self$results$prop[[i]]
-              
-              # make sure Total column exists
-              tryCatch({
-                table$addColumn(name = "Total", type = "number")
-              }, error = function(e) { })
-              
-              x <- data[[vars[i]]]
-              x <- x[!is.na(x)]
-              
-              if (length(x) == 0) {
-                self$results$prop$setVisible(FALSE)
-              } else {
-                
-                tt <- table(x, useNA = "no")
-                p  <- tt / sum(tt)
-                opts <- names(tt)
-                
-                # ✅ correct option for this item
-                correct <- key1[i]
-                
-                for (k in seq_along(opts)) {
-                  rk <- if (!is.null(correct) && !is.na(correct) && opts[k] == correct)
-                    paste0("*", opts[k]) else opts[k]
-                  
-                  table$addRow(
-                    rowKey = rk,
-                    values = list(Total = as.numeric(p[[k]]))
-                  )
-                }
-              }
-            }
-            
+        result <- private$.compute(data, key, self$options$group)
+        private$.setInstructions(result)
+        for (i in seq_along(vars)) {
+          item <- result$items[[i]]
+
+          if (isTRUE(self$options$count)) {
+            rows <- data.frame(response = item$displayLabels, total = item$summary$n)
+            private$.writeTable(self$results$count[[i]], rows,
+                                item$counts, "integer")
           }
-        }
-        # -------------------------------
-        # Total summary (group-based) -> only when group_ok
-        # -------------------------------
-        if (isTRUE(self$options$sum1)) {
-          if (!group_ok || is.null(ts)) {
-            self$results$sum1$setVisible(FALSE)
-          } else {
-            vars <- self$options$vars
-            tab <- NULL
-            for (i in seq_along(vars)) {
-              tab[[i]] <- as.data.frame.matrix(ts[[i]])
-            }
-            for (i in seq_along(vars)) {
-              table <- self$results$sum1[[i]]
-              names <- dimnames(tab[[i]])[[1]]
-              dims  <- dimnames(tab[[i]])[[2]]
-              for (dim in dims) {
-                table$addColumn(name = paste0(dim), type = 'text')
-              }
-              for (name in names) {
-                row <- list()
-                for (j in seq_along(dims)) {
-                  row[[dims[j]]] <- tab[[i]][name, j]
-                }
-                table$addRow(rowKey = name, values = row)
-              }
-            }
+          if (isTRUE(self$options$prop)) {
+            rows <- data.frame(response = item$displayLabels, total = item$summary$rspP)
+            private$.writeTable(self$results$prop[[i]], rows, item$proportions)
           }
+          if (isTRUE(self$options$sum))
+            private$.writeTable(self$results$sum[[i]], item$summary)
+          if (isTRUE(self$options$sum1))
+            private$.writeTable(self$results$sum1[[i]], item$summary, item$proportions)
         }
-        
-        # -------------------------------
-        # Item summary (group-based) -> only when group_ok
-        # -------------------------------
-        if (isTRUE(self$options$sum)) {
-          if (!group_ok || is.null(res)) {
-            self$results$sum$setVisible(FALSE)
-          } else {
-            vars <- self$options$vars
-            tab <- NULL
-            for (i in seq_along(vars)) {
-              tab[[i]] <- as.data.frame.matrix(res[[i]][1:4])
-            }
-            for (i in seq_along(vars)) {
-              table <- self$results$sum[[i]]
-              names <- dimnames(tab[[i]])[[1]]
-              dims  <- dimnames(tab[[i]])[[2]]
-              for (name in names) {
-                row <- list()
-                for (j in seq_along(dims)) {
-                  row[[dims[j]]] <- tab[[i]][name, j]
-                }
-                table$addRow(rowKey = name, values = row)
-              }
-            }
-          }
-        }
-        
-        # Scores, scored file
-        dicho_scored <- as.data.frame(dicho$scored) # dichotomous matrix
-        
-        # Total score
-        if (isTRUE(self$options$total)) {
-          score <- as.vector(dicho$score)
-          self$results$total$setRowNums(rownames(data))
-          self$results$total$setValues(score)
-        }
-        
-        # Save scoring
-        if (isTRUE(self$options$scoring)) {
-          keys <- 1:length(self$options$vars)
-          titles <- paste("Item", 1:length(self$options$vars))
-          descriptions <- paste("Item", 1:length(self$options$vars))
-          measureTypes <- rep("continuous", length(self$options$vars))
-          
-          self$results$scoring$set(
-            keys = keys,
-            titles = titles,
-            descriptions = descriptions,
-            measureTypes = measureTypes
-          )
-          
-          self$results$scoring$setRowNums(rownames(data))
-          
-          scoring <- as.data.frame(dicho$scored)
-          
-          for (i in 1:length(self$options$vars)) {
-            scores <- as.numeric(scoring[, i])
-            self$results$scoring$setValues(index = i, scores)
-          }
-        }
-        
-        # Empirical ICC
-        if (isTRUE(self$options$plot3)) {
-          self$results$plot3$setState(dicho)
-        }
-        
-        # Traditional item analysis table
-        if (self$options$disc) {
-          
-          it <- ShinyItemAnalysis::ItemAnalysis(dicho_scored)
-          
-          dif <- it[1]
-          RIT <- it[11]
-          RIR <- it[10]
-          
-          # ULI is group-based: if grouping failed, set NA (keep others)
-          if (group_ok) {
-            ULI <- it[13]
-          } else {
-            ULI <- rep(NA_real_, length(dif))
-          }
-          
-          discri <- data.frame(dif, ULI, RIT, RIR)
-          
-          dif <- discri$Difficulty
-          ULI <- discri$ULI
-          RIT <- discri$RIT
-          RIR <- discri$RIR
-          
-          table <- self$results$disc
-          vars <- self$options$vars
+
+        if (isTRUE(self$options$disc)) {
+          self$results$disc$setNote("indices", NULL)
           for (i in seq_along(vars)) {
-            row <- list()
-            row[["dif"]] <-  dif[i]
-            row[["ULI"]] <-  ULI[i]
-            row[["RIT"]] <-  RIT[i]
-            row[["RIR"]] <-  RIR[i]
-            table$setRow(rowKey = vars[i], values = row)
+            row <- as.list(result$indices[i, , drop = FALSE])
+            self$results$disc$setRow(rowKey = vars[i], values = row)
           }
         }
-        
-        # Plot1
-        if (isTRUE(self$options$plot1)) {
-          self$results$plot1$setState(dicho_scored)
+
+        private$.saveScores(result, rownames(data))
+        private$.preparePlots(result)
+      },
+
+      .compute = function(data, key, nGroups) {
+        responses <- lapply(data, as.character)
+        declared <- lapply(seq_along(responses), function(i) {
+          observed <- responses[[i]]
+          union(levels(data[[i]]), unique(observed[!is.na(observed)]))
+        })
+        # jamovi sends factors with labels and, for integer items, the original codes.
+        for (i in seq_along(key)) {
+          if (!key[i] %in% declared[[i]]) {
+            column <- data[[i]]
+            codeIndex <- match(key[i], attr(column, "values", exact = TRUE))
+            if (!is.na(codeIndex) && codeIndex <= nlevels(column))
+              key[i] <- levels(column)[codeIndex]
+          }
         }
-        
-        # Histogram of total score
-        if (isTRUE(self$options$plot2)) {
-          score <- rowSums(dicho$scored)
-          df <- data.frame(score)
-          state <- list(score, df)
-          self$results$plot2$setState(state)
+
+        scored <- do.call(cbind, lapply(seq_along(responses), function(i) {
+          as.integer(responses[[i]] == key[i])
+        }))
+        dimnames(scored) <- dimnames(data)
+        total <- rowSums(scored)
+        complete <- !is.na(total)
+        completeTotal <- total[complete]
+        completeScored <- scored[complete, , drop = FALSE]
+
+        items <- lapply(seq_along(responses), function(i) {
+          levels <- union(declared[[i]], key[i])
+          levels <- levels[!is.na(levels)]
+          labels <- match(responses[[i]], levels)
+          correct <- levels == key[i]
+          frequency <- tabulate(labels, nbins = length(levels))
+          nValid <- sum(frequency)
+          rspP <- if (nValid > 0L) frequency / nValid else rep(NA_real_, length(levels))
+
+          rest <- completeTotal - completeScored[, i]
+          used <- labels[complete]
+          pBis <- vapply(seq_along(levels), function(option) {
+            private$.correlation(used == option, rest)
+          }, numeric(1L))
+          groups <- private$.formGroups(rest, nGroups)
+          counts <- NULL
+          proportions <- NULL
+          discrim <- rep(NA_real_, length(levels))
+          if (!is.null(groups)) {
+            nOptions <- length(levels)
+            groupLabels <- switch(as.character(nGroups),
+              "2" = c("Lower", "Upper"),
+              "3" = c("Lower", "Middle", "Upper"),
+              c("Lower", paste("Group", seq.int(2L, nGroups - 1L)), "Upper")
+            )
+            cells <- used + nOptions * (groups - 1L)
+            counts <- matrix(tabulate(cells, nbins = nOptions * nGroups),
+                             nrow = nOptions, dimnames = list(levels, groupLabels))
+            proportions <- sweep(counts, 2L, colSums(counts), "/")
+            discrim <- proportions[, nGroups] - proportions[, 1L]
+          }
+
+          summary <- data.frame(
+            correct = ifelse(correct, "*", ""),
+            key = levels,
+            n = frequency,
+            rspP = rspP,
+            pBis = pBis,
+            discrim = unname(discrim),
+            stringsAsFactors = FALSE
+          )
+          indices <- c(
+            dif = rspP[correct],
+            ULI = unname(discrim[correct]),
+            RIT = if (length(responses) > 1L)
+              private$.correlation(completeScored[, i], completeTotal) else NA_real_,
+            RIR = pBis[correct]
+          )
+          list(summary = summary, nValid = nValid, indices = indices,
+               keyUnlisted = !key[i] %in% declared[[i]],
+               displayLabels = ifelse(correct, paste0("*", levels), levels),
+               counts = counts, proportions = proportions)
+        })
+
+        indices <- as.data.frame(do.call(rbind, lapply(items, function(item) item$indices)))
+        rownames(indices) <- names(data)
+        list(items = items, indices = indices, scored = scored, total = total,
+             complete = complete, nComplete = sum(complete))
+      },
+
+      .correlation = function(x, y) {
+        if (length(x) < 2L || all(x == x[1L]) || all(y == y[1L]))
+          return(NA_real_)
+        stats::cor(x, y)
+      },
+
+      .formGroups = function(scores, nGroups) {
+        distinct <- sort(unique(scores))
+        if (length(nGroups) != 1L || !is.finite(nGroups) || nGroups < 2L ||
+            nGroups != floor(nGroups) || length(distinct) < nGroups)
+          return(NULL)
+
+        targets <- if (nGroups == 3L) c(0.33, 0.67) else seq_len(nGroups - 1L) / nGroups
+        scoreRanks <- match(scores, distinct)
+        cumulativeN <- cumsum(tabulate(scoreRanks, nbins = length(distinct)))
+        ends <- integer(nGroups - 1L)
+        previous <- 0L
+        # Choose the nearest eligible break, leaving at least one distinct score per group.
+        for (j in seq_along(targets)) {
+          possible <- seq.int(previous + 1L, length(distinct) - nGroups + j)
+          previous <- possible[which.min(abs(cumulativeN[possible] - length(scores) * targets[j]))]
+          ends[j] <- previous
+        }
+        findInterval(scoreRanks - 1L, ends) + 1L
+      },
+
+      .writeTable = function(table, rows, groupValues = NULL, groupType = "number") {
+        table$deleteRows()
+        for (column in table$columns) {
+          if (startsWith(column$name, "scoreGroup"))
+            column$setVisible(FALSE)
+        }
+        if (!is.null(groupValues)) {
+          for (j in seq_len(ncol(groupValues))) {
+            name <- paste0("scoreGroup", j)
+            table$addColumn(name = name, title = colnames(groupValues)[j], type = groupType)
+            rows[[name]] <- groupValues[, j]
+          }
+        }
+        for (i in seq_len(nrow(rows)))
+          table$addRow(rowKey = i, values = as.list(rows[i, , drop = FALSE]))
+        # Remove notes that jamovi restored from previously saved analyses.
+        table$setNote("sample", NULL)
+      },
+
+      .saveScores = function(result, rowNumbers) {
+        if (isTRUE(self$options$total)) {
+          self$results$total$setRowNums(rowNumbers)
+          self$results$total$setValues(result$total)
+        }
+
+        if (isTRUE(self$options$scoring)) {
+          items <- seq_len(ncol(result$scored))
+          titles <- paste("Item", items)
+          output <- self$results$scoring
+          output$set(keys = items, titles = titles, descriptions = titles,
+                     measureTypes = rep("continuous", length(items)))
+          output$setRowNums(rowNumbers)
+          for (i in items)
+            output$setValues(index = i, values = as.numeric(result$scored[, i]))
         }
       },
-      
-      .plot2 = function(image2, ggtheme, theme, ...) {
-        if (is.null(image2$state))
+
+      .preparePlots = function(result) {
+        notices <- character()
+        indices <- result$indices
+        nItems <- length(result$items)
+
+        if (isTRUE(self$options$plot)) {
+          i <- self$options$num
+          image <- self$results$plot
+          if (length(i) != 1L || is.na(i) || i < 1L || i > nItems) {
+            notices <- c(notices, "Distractor plot: select a valid item number.")
+          } else {
+            item <- result$items[[i]]
+            if (is.null(item$proportions)) {
+              notices <- c(notices, "Distractor plot: too few distinct remaining-item scores to form the requested groups.")
+            } else {
+              groupNames <- colnames(item$proportions)
+              state <- data.frame(
+                scoreGroup = factor(rep(groupNames, each = nrow(item$proportions)), levels = groupNames),
+                response = factor(rep(item$summary$key, times = length(groupNames)), levels = item$summary$key),
+                optionLabel = rep(item$displayLabels, times = length(groupNames)),
+                proportion = as.vector(item$proportions)
+              )
+              attr(state, "itemNumber") <- i
+              image$setState(state)
+            }
+          }
+        }
+
+        if (isTRUE(self$options$plot1)) {
+          statistic <- self$options$disi
+          if (is.null(statistic))
+            statistic <- "ULI"
+          image <- self$results$plot1
+          if (all(is.na(indices$dif))) {
+            notices <- c(notices, "Discrimination plot: no valid item responses are available.")
+          } else {
+            itemNames <- rownames(indices)
+            itemOrder <- itemNames[order(indices$dif, na.last = TRUE)]
+            values <- data.frame(
+              item = factor(rep(itemNames, 2L), levels = itemOrder),
+              measure = factor(rep(c("Difficulty", statistic), each = nItems), levels = c("Difficulty", statistic)),
+              value = c(indices$dif, indices[[statistic]])
+            )
+            if (all(is.na(indices[[statistic]])))
+              notices <- c(notices, paste("Discrimination plot:", statistic, "is unavailable. Difficulty is shown."))
+            image$setState(values[!is.na(values$value), , drop = FALSE])
+          }
+        }
+
+        if (isTRUE(self$options$plot2)) {
+          score <- result$total[result$complete]
+          image <- self$results$plot2
+          if (length(score) == 0L) {
+            notices <- c(notices, "Total score histogram: no respondents answered all selected items.")
+          } else {
+            middle <- stats::median(score)
+            band <- ifelse(score < middle, "Below median", ifelse(score > middle, "Above median", "Median"))
+            image$setState(data.frame(score = score, band = band))
+          }
+        }
+
+        if (isTRUE(self$options$plot3)) {
+          i <- self$options$num1
+          image <- self$results$plot3
+          if (length(i) != 1L || is.na(i) || i < 1L || i > nItems) {
+            notices <- c(notices, "Empirical ICC: select a valid item number.")
+          } else {
+            itemScore <- result$scored[result$complete, i]
+            rest <- result$total[result$complete] - itemScore
+            if (length(unique(rest)) < 2L) {
+              notices <- c(notices, "Empirical ICC: at least two distinct remaining-item scores are needed.")
+            } else {
+              state <- stats::aggregate(list(proportion = itemScore), list(rest = rest), mean)
+              attr(state, "itemNumber") <- i
+              image$setState(state)
+            }
+          }
+        }
+
+        self$results$text$setContent(notices)
+      },
+
+      .plotTheme = function(ggtheme) {
+        # Keep jamovi's theme without its palette scales replacing plot-specific legends.
+        if (inherits(ggtheme, "theme"))
+          return(ggtheme)
+        Filter(function(layer) inherits(layer, "theme"), ggtheme)
+      },
+
+      .plot = function(image, ggtheme = NULL, ...) {
+        data <- image$state
+        if (!is.data.frame(data) || !all(c("scoreGroup", "response", "optionLabel", "proportion") %in% names(data)))
           return(FALSE)
-        
-        score <- image2$state[[1]]
-        df <- image2$state[[2]]
-        
-        cut <- median(score)
-        
-        # 각 점수값에 대한 색상 지정
-        df$color_group <- ifelse(df$score < cut, "Below Median",
-                                 ifelse(df$score == cut, "Median", "Above Median"))
-        
-        plot2 <- ggplot2::ggplot(df, ggplot2::aes(x = score, fill = color_group)) +
-          ggplot2::geom_histogram(binwidth = 1, col = "black") +
-          ggplot2::scale_fill_manual(values = c("Below Median" = "red", 
-                                                "Median" = "gray", 
-                                                "Above Median" = "blue")) +
-          ggplot2::xlab("Total score") +
-          ggplot2::ylab("Number of respondents") +
-          ShinyItemAnalysis::theme_app() +
-          ggplot2::theme(legend.position = "none")
-        
-        plot2 <- plot2 + ggtheme
-        print(plot2)
+
+        itemNumber <- attr(data, "itemNumber", exact = TRUE)
+        if (is.null(itemNumber))
+          itemNumber <- self$options$num
+
+        responses <- as.character(data$response)
+        optionLabels <- ifelse(data$optionLabel == paste0("*", responses),
+                               paste0(responses, "*"), data$optionLabel)
+        labels <- stats::setNames(optionLabels, responses)
+        plot <- ggplot2::ggplot(data, ggplot2::aes(x = scoreGroup, y = proportion, colour = response, group = response)) +
+          ggplot2::geom_line(linewidth = 0.8) +
+          ggplot2::geom_point(size = 2.6) +
+          ggplot2::scale_colour_discrete(labels = function(keys) unname(labels[keys])) +
+          ggplot2::scale_y_continuous(limits = c(0, 1)) +
+          ggplot2::labs(title = paste("Item", itemNumber), x = "Remaining-item score group",
+                        y = "Proportion selecting option", colour = "Response")
+        print(plot + private$.plotTheme(ggtheme))
         TRUE
       },
-      
-      .plot = function(image, ...) {
-        
-        # If 3-group failed, skip distractor plot cleanly
-        if (isFALSE(isTRUE(private$.cache$group_ok)))
+
+      .plot1 = function(image, ggtheme = NULL, ...) {
+        data <- image$state
+        if (!is.data.frame(data) || !all(c("item", "measure", "value") %in% names(data)))
           return(FALSE)
-        
-        data <- self$data
-        key1 <- strsplit(self$options$key, ',')[[1]]
-        nums <- self$options$num
-        group <- self$options$group
-        
-        plot <- tryCatch({
-          ShinyItemAnalysis::plotDistractorAnalysis(data, key1, num.groups = group, item = nums)
-        }, error = function(e) {
-          
-          msg <- paste0(
-            "Plot could not be generated: ", e$message, "<br><br>",
-            "This often happens when total scores have too few distinct values (many ties), ",
-            "so group cut-points are not unique.<br>",
-            "Group-based outputs were skipped."
-          )
-          
-          self$results$instructions$setVisible(TRUE)
-          self$results$instructions$setContent(private$.htmlwidget$generate_accordion(
-            title = "⚠️ Plot skipped",
-            content = paste(
-              '<div style="border: 2px solid #ff9800; border-radius: 10px; padding: 12px; background-color: #fff3e0;">',
-              '<p style="margin:0;">', msg, '</p>',
-              '</div>'
-            )
-          ))
-          
-          return(NULL)
-        })
-        
-        if (is.null(plot))
-          return(FALSE)
-        
+
+        plot <- ggplot2::ggplot(data, ggplot2::aes(x = item, y = value, fill = measure)) +
+          ggplot2::geom_col(position = ggplot2::position_dodge(preserve = "single"), width = 0.8) +
+          ggplot2::geom_hline(yintercept = 0.2, linetype = "dashed", colour = "#666666") +
+          ggplot2::scale_fill_manual(values = c("#4477aa", "#ce6248"), drop = FALSE) +
+          ggplot2::scale_x_discrete(drop = FALSE) +
+          ggplot2::labs(x = "Item (ordered by difficulty)", y = "Difficulty / discrimination", fill = NULL) +
+          private$.plotTheme(ggtheme) +
+          ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
         print(plot)
         TRUE
       },
-      
-      .plot1 = function(image, ggtheme, theme, ...) {
-        if (is.null(image$state))
+
+      .plot2 = function(image, ggtheme = NULL, ...) {
+        data <- image$state
+        if (!is.data.frame(data) || !all(c("score", "band") %in% names(data)))
           return(FALSE)
-        
-        dicho <- image$state
-        disi <- self$options$disi
-        
-        plot1 <- ShinyItemAnalysis::DDplot(
-          dicho,
-          discrim = disi,
-          k = 3,
-          l = 1,
-          u = 3
-        )
-        
-        if (self$options$angle > 0) {
-          plot1 <- plot1 + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = self$options$angle, hjust = 1))
-        }
-        
-        print(plot1)
+
+        plot <- ggplot2::ggplot(data, ggplot2::aes(x = score, fill = band)) +
+          ggplot2::geom_histogram(binwidth = 1, boundary = -0.5, colour = "black") +
+          ggplot2::scale_fill_manual(values = c("Below median" = "#ce6248", "Median" = "#999999",
+                                               "Above median" = "#4477aa"), guide = "none") +
+          ggplot2::labs(x = "Total score", y = "Number of respondents")
+        print(plot + private$.plotTheme(ggtheme))
         TRUE
       },
-      
-      .plot3 = function(image3, ...) {
-        if (is.null(image3$state))
+
+      .plot3 = function(image, ggtheme = NULL, ...) {
+        data <- image$state
+        if (!is.data.frame(data) || !all(c("rest", "proportion") %in% names(data)))
           return(FALSE)
-        
-        num1 <- self$options$num1
-        myScores <- image3$state
-        
-        plot3 <- CTT::cttICC(
-          myScores$score,
-          myScores$scored[, num1],
-          plotTitle = '',
-          colTheme = "spartans",
-          cex = 1.5
-        )
-        
-        print(plot3)
+
+        itemNumber <- attr(data, "itemNumber", exact = TRUE)
+        if (is.null(itemNumber))
+          itemNumber <- self$options$num1
+
+        plot <- ggplot2::ggplot(data, ggplot2::aes(x = rest, y = proportion)) +
+          ggplot2::geom_line(colour = "#4477aa", linewidth = 0.8) +
+          ggplot2::geom_point(colour = "#4477aa", size = 2.6) +
+          ggplot2::scale_y_continuous(limits = c(0, 1)) +
+          ggplot2::labs(title = paste("Item", itemNumber),
+                        x = "Remaining-item score", y = "Proportion correct")
+        print(plot + private$.plotTheme(ggtheme))
         TRUE
-      },
-      
-      .computeRES = function(data, key1) {
-        
-        # ---- scoring always first
-        dicho <- CTT::score(data, key1, output.scored = TRUE)
-        private$.cache$dicho <- dicho
-        
-        # ---- counts/prop are NOT group-based in our fallback plan
-        # Always compute them from raw responses (so they never crash the whole analysis)
-        private$.cache$counts <- tryCatch(
-          CTT::distractor.analysis(data, key1),
-          error = function(e) NULL
-        )
-        
-        private$.cache$prop <- tryCatch(
-          CTT::distractor.analysis(data, key1, p.table = TRUE),
-          error = function(e) NULL
-        )
-        
-        # ---- group status for group-based outputs only
-        private$.cache$group_ok  <- TRUE
-        private$.cache$group_err <- NULL
-        
-        safe_group <- function(expr) {
-          tryCatch(expr, error = function(e) {
-            if (grepl("breaks.*not unique", e$message, ignore.case = TRUE) ||
-                grepl("not unique.*breaks", e$message, ignore.case = TRUE)) {
-              private$.cache$group_ok  <<- FALSE
-              private$.cache$group_err <<- e$message
-              return(NULL)
-            }
-            stop(e)
-          })
-        }
-        
-        # group-based outputs (may fail; if so, we keep running)
-        private$.cache$res <- safe_group(CTT::distractorAnalysis(data, key1))
-        
-        private$.cache$ts  <- safe_group(
-          CTT::distractorAnalysis(data, key1, defineGroups = c(0.33, 0.34, 0.33))
-        )
       }
     )
   )
