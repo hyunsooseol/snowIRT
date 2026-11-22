@@ -77,9 +77,12 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateMatrixTable(results)
           # Populate residual PCA table-----
           private$.populateResidualPCATable(results)
-          # prepare Expected score curve plot---------
-          #private$.prepareEscPlot(data)
-          
+          if (isTRUE(self$options$plot4)) {
+            vars <- self$options$vars
+            .prepareTamCurves(tamobj, seq_along(vars), "expected", observed = TRUE,
+                              imageForItem = function(i) self$results$plot4$get(key = vars[i]))
+          }
+
           # Summary of total score-----
           private$.populateToTable(results)
           #Standard score---------
@@ -552,46 +555,9 @@ adjustment; Ho= the data fit the Rasch model."
       
       
       .plot4 = function(image, ...) {
-        
-        if (!self$options$plot4)
-          return(FALSE)
-        
-        tamobj <- private$.cache$tamobj
-        if (is.null(tamobj))
-          return(FALSE)
-        
-        all_items <- self$options$vars
-        n_items <- length(all_items)
-        
-        # 🔴 핵심 수정 부분
-        current_item <- match(image$key, all_items)
-        
-        if (is.na(current_item) || current_item > n_items)
-          return(FALSE)
-        
-        tryCatch({
-          plot(
-            tamobj,
-            items  = current_item,
-            type   = "expected",
-            export = FALSE,
-            package = "graphics"
-          )
-          return(TRUE)
-        }, error = function(e) {
-          cat(
-            paste(
-              "Error plotting item", image$key,
-              "(index:", current_item, "):",
-              e$message, "\n"
-            )
-          )
-          return(FALSE)
-        })
+        .drawTamCurve(image$state)
       },
-      
-      
-      
+
       .inPlot = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))
           return(FALSE)

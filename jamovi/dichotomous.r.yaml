@@ -271,7 +271,6 @@ items:
       type:  Image
       width: 600
       height: 450      
-      requiresData: true
       visible: (plot3)
       renderFun: .plot3
       refs: snowIRT 
@@ -283,7 +282,6 @@ items:
       type:  Image
       width: 600
       height: 450      
-      requiresData: true
       visible: (plot2)
       renderFun: .plot2
       refs: snowIRT 

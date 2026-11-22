@@ -29,22 +29,14 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             title = "Instructions",
             content = paste(
               '<div style="border: 2px solid #e6f4fe; border-radius: 15px; padding: 15px; background-color: #e6f4fe; margin-top: 10px;">',
-              '<div style="text-align:justify;">',
               '<ul>',
-              '<li>Performs DIF detection procedure for ordinal data based either on adjacent category logit model or on cumulative logit model.</li>',
-              '<li>The focal group should be coded as 1.</li>',
-              '<li>DIF likelihood ratio statistics are estimated by using <b>difNLR::difORD</b> function.</li>',
-              '<li><b>Matching reference</b> determines how the matching criterion is constructed: All items, Item purification, or user-defined Anchor items.</li>',
-              '<li><b>All items:</b> all selected DIF items are used to compute the matching criterion.</li>',
-              '<li><b>Item purification:</b> the matching set is iteratively refined by excluding items identified as DIF.</li>',
-              '<li><b>Anchor items:</b> select one or more items assumed to be DIF-free. These items are used to compute the matching criterion.</li>',
-              '<li>Item purification and user-defined Anchor items are alternative procedures and should not be used simultaneously.</li>',
-              '<li>DIF plots display model-based predicted category probabilities for the reference and focal groups.</li>',
-              '<li><b>Caution for interpretation:</b> statistical significance should be interpreted together with the size and shape of the probability-curve differences.</li>',
-              '<li><b>Caution for interpretation:</b> the DIF plot shows predicted probabilities, not raw observed response proportions.</li>',
-              '<li><b>Caution for interpretation:</b> if the reference and focal curves largely overlap, the practical magnitude of DIF may be small even when numerical differences are present.</li>',
-              '<li>Feature requests and bug reports can be made on my <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
-              '</ul></div></div>'
+              '<li>Move the ordinal items to <b>Variables</b>. Select <b>adjacent</b> or <b>cumulative</b> under <b>Model</b>.</li>',
+              '<li>Choose a <b>Grouping Variable</b> with two groups. Both groups need complete responses across the selected DIF and anchor items. For labels such as Male and Female, set the variable to Nominal, check <b>Choose focal group</b>, and select a label. The other group is the reference group. With the box unchecked, the label 1 identifies the focal group.</li>',
+              '<li><b>Matching reference</b> sets which items form the total score. <b>All items</b> uses the selected DIF items. <b>Item purification</b> refines that set by excluding items flagged for DIF. <b>Anchor items</b> uses the items you place in the <b>Anchor Items</b> box. Leave that box empty when using the other methods.</li>',
+              '<li>Under <b>Matching criterion</b>, <b>score</b> uses the total score and <b>zscore</b> standardizes it. The <b>DIF</b> table reports the likelihood-ratio test statistic, p-value, and p-value adjusted by the selected multiple-comparison method.</li>',
+              '<li>Under <b>DIF plot</b>, <b>Item</b> is the position in the <b>Variables</b> list. <b>Faceted</b> shows one panel per response category. <b>Overlay</b> shows all categories on one panel. Compare the predicted category probabilities of the two groups at the same matching score to judge the size and pattern of DIF.</li>',
+              '<li><a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">Report an issue or request a feature</a>.</li>',
+              '</ul></div>'
             )
           )
         )
@@ -224,23 +216,15 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         # Validate grouping variable
         #===========================================================
         
-        groupLevels <- unique(
-          data[[groupVarName]]
+        groupValues <- as.character(data[[groupVarName]])
+        focal <- private$.resolveFocalGroup(
+          groupValues, self$options$useFocalGroup, self$options$focalGroup
         )
-        
-        groupLevels <- groupLevels[
-          !is.na(groupLevels)
-        ]
-        
-        if (length(groupLevels) != 2) {
-          jmvcore::reject(
-            paste(
-              "The grouping variable must have exactly 2 levels",
-              "for logistic DIF analysis."
-            )
-          )
-        }
-        
+        reference <- setdiff(unique(groupValues), as.character(focal))
+        completeGroups <- unique(groupValues[stats::complete.cases(data[, allItems, drop = FALSE])])
+        if (length(completeGroups) != 2L)
+          jmvcore::reject("Both groups must have complete responses across the selected DIF and anchor items.")
+
         #===========================================================
         # Build cache key
         #
@@ -251,6 +235,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         
         cacheKey <- list(
           group = groupVarName,
+          focal = focal,
           vars = vars,
           anchor = anchor,
           anchorMethod = anchorMethod,
@@ -297,7 +282,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                 difNLR::difORD(
                   Data = data,
                   group = groupVarName,
-                  focal.name = 1,
+                  focal.name = focal,
                   model = self$options$model,
                   type = self$options$type,
                   match = self$options$match,
@@ -314,7 +299,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                 difNLR::difORD(
                   Data = data,
                   group = groupVarName,
-                  focal.name = 1,
+                  focal.name = focal,
                   model = self$options$model,
                   type = self$options$type,
                   match = self$options$match,
@@ -331,7 +316,7 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                 difNLR::difORD(
                   Data = data,
                   group = groupVarName,
-                  focal.name = 1,
+                  focal.name = focal,
                   model = self$options$model,
                   type = self$options$type,
                   match = self$options$match,
@@ -440,6 +425,15 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           )
         }
         
+        groupLabels <- c(
+          Reference = paste0("Reference (", reference, ")"),
+          Focal = paste0("Focal (", focal, ")")
+        )
+        if (isTRUE(self$options$method)) {
+          table$setNote("groups", paste(.html_escape(groupLabels), collapse = " · "),
+                        init = FALSE)
+        }
+
         #===========================================================
         # DIF custom plot state
         #===========================================================
@@ -450,12 +444,41 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               fit = fit,
               plotItem = self$options$plotItem,
               plotLayout = self$options$plotLayout,
+              groupLabels = groupLabels,
               vars = vars
             )
           )
         }
       },
       
+      .resolveFocalGroup = function(groupValues, useFocalGroup, selected) {
+        levels <- unique(groupValues[!is.na(groupValues)])
+        listed <- if (length(levels) == 0L) "(none)" else paste(sQuote(levels), collapse = ", ")
+        if (length(levels) != 2L) {
+          jmvcore::reject(paste0(
+            "The grouping variable must have exactly two observed levels. Found: ", listed, "."
+          ))
+        }
+
+        if (!isTRUE(useFocalGroup) && "1" %in% levels)
+          return(1)
+
+        if (!isTRUE(useFocalGroup) || length(selected) != 1L || is.na(selected) || !nzchar(selected)) {
+          jmvcore::reject(paste0(
+            "Use 'Choose focal group' to select one of the observed groups: ", listed,
+            ". Set the grouping variable to Nominal if its levels are unavailable."
+          ))
+        }
+        if (!as.character(selected) %in% levels) {
+          jmvcore::reject(paste0(
+            "The selected focal group ", sQuote(selected),
+            " has no observations in the current data. Available groups: ", listed, "."
+          ))
+        }
+
+        as.character(selected)
+      },
+
       #=============================================================
       # Custom DIF plot
       #
@@ -860,14 +883,12 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           levels = commonCategories
         )
         
-        plotData$Group <- factor(
-          plotData$Group,
-          levels = c(
-            "Reference",
-            "Focal"
-          )
-        )
-        
+        groupRoles <- c("Reference", "Focal")
+        groupLabels <- plotState$groupLabels
+        if (is.null(groupLabels))
+          groupLabels <- groupRoles
+        plotData$Group <- factor(plotData$Group, levels = groupRoles, labels = groupLabels)
+
         #===========================================================
         # Axis label
         #===========================================================
@@ -964,7 +985,10 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               colour = "Response category",
               linetype = "Group"
             ) +
-            
+            ggplot2::guides(
+              colour = ggplot2::guide_legend(order = 1, ncol = 3, byrow = TRUE),
+              linetype = ggplot2::guide_legend(order = 2, nrow = 1)
+            ) +
             ggplot2::theme_minimal(
               base_size = 11
             ) +
@@ -980,6 +1004,8 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
               panel.grid.major.x =
                 ggplot2::element_blank(),
               legend.position = "top",
+              legend.box = "vertical",
+              legend.box.just = "left",
               axis.title =
                 ggplot2::element_text(
                   face = "plain"
@@ -1070,6 +1096,15 @@ logitClass <- if (requireNamespace('jmvcore', quietly = TRUE))
             )
         }
         
+        # Cairo vector devices on Windows can miss Hangul with the default sans font.
+        if (.Platform$OS.type == "windows" &&
+            names(grDevices::dev.cur()) %in% c("svg", "cairo_pdf", "cairo_ps") &&
+            any(grepl("[\u1100-\u11ff\u3130-\u318f\uac00-\ud7a3]", groupLabels))) {
+          p <- p + ggplot2::theme(
+            legend.text = ggplot2::element_text(family = "Malgun Gothic")
+          )
+        }
+
         print(p)
         
         TRUE

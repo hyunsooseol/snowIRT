@@ -17,7 +17,9 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             plot = FALSE,
             plotItem = 1,
             anchorMethod = "all",
-            plotLayout = "faceted", ...) {
+            plotLayout = "faceted",
+            useFocalGroup = FALSE,
+            focalGroup = "", ...) {
 
             super$initialize(
                 package="snowIRT",
@@ -110,6 +112,14 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "faceted",
                     "overlay"),
                 default="faceted")
+            private$..useFocalGroup <- jmvcore::OptionBool$new(
+                "useFocalGroup",
+                useFocalGroup,
+                default=FALSE)
+            private$..focalGroup <- jmvcore::OptionString$new(
+                "focalGroup",
+                focalGroup,
+                default="")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..anchor)
@@ -123,6 +133,8 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..plotItem)
             self$.addOption(private$..anchorMethod)
             self$.addOption(private$..plotLayout)
+            self$.addOption(private$..useFocalGroup)
+            self$.addOption(private$..focalGroup)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -136,7 +148,9 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         plot = function() private$..plot$value,
         plotItem = function() private$..plotItem$value,
         anchorMethod = function() private$..anchorMethod$value,
-        plotLayout = function() private$..plotLayout$value),
+        plotLayout = function() private$..plotLayout$value,
+        useFocalGroup = function() private$..useFocalGroup$value,
+        focalGroup = function() private$..focalGroup$value),
     private = list(
         ..vars = NA,
         ..anchor = NA,
@@ -149,7 +163,9 @@ logitOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..plot = NA,
         ..plotItem = NA,
         ..anchorMethod = NA,
-        ..plotLayout = NA)
+        ..plotLayout = NA,
+        ..useFocalGroup = NA,
+        ..focalGroup = NA)
 )
 
 logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -181,6 +197,8 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
+                    "useFocalGroup",
+                    "focalGroup",
                     "model",
                     "type",
                     "match",
@@ -217,6 +235,8 @@ logitResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "vars",
                     "group",
+                    "useFocalGroup",
+                    "focalGroup",
                     "model",
                     "type",
                     "match",
@@ -263,6 +283,9 @@ logitBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param plotItem .
 #' @param anchorMethod .
 #' @param plotLayout .
+#' @param useFocalGroup Select the focal group explicitly. Otherwise the group
+#'   labelled 1 is used.
+#' @param focalGroup The focal group label when useFocalGroup is TRUE.
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
@@ -290,7 +313,9 @@ logit <- function(
     plot = FALSE,
     plotItem = 1,
     anchorMethod = "all",
-    plotLayout = "faceted") {
+    plotLayout = "faceted",
+    useFocalGroup = FALSE,
+    focalGroup = "") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logit requires jmvcore to be installed (restart may be required)")
@@ -318,7 +343,9 @@ logit <- function(
         plot = plot,
         plotItem = plotItem,
         anchorMethod = anchorMethod,
-        plotLayout = plotLayout)
+        plotLayout = plotLayout,
+        useFocalGroup = useFocalGroup,
+        focalGroup = focalGroup)
 
     analysis <- logitClass$new(
         options = options,

@@ -134,4 +134,18 @@ options:
         - name: overlay
           title: Overlay
       default: faceted
+
+    - name: useFocalGroup
+      title: Choose focal group
+      type: Bool
+      default: false
+      description:
+        R: Select the focal group explicitly. Otherwise the group labelled 1 is used.
+
+    - name: focalGroup
+      title: Focal group
+      type: String
+      default: ''
+      description:
+        R: The focal group label when useFocalGroup is TRUE.
 ...

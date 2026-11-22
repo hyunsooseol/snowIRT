@@ -931,7 +931,6 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(plot5)",
                 renderFun=".plot5",
                 refs="snowIRT",
-                requiresData=TRUE,
                 clearWith=list(
                     "dep",
                     "id",
@@ -947,7 +946,6 @@ facetResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(plot6)",
                 renderFun=".plot6",
                 refs="snowIRT",
-                requiresData=TRUE,
                 clearWith=list(
                     "dep",
                     "id",

@@ -597,7 +597,6 @@ items:
       visible: (plot5)
       renderFun: .plot5
       refs: snowIRT
-      requiresData: true
       clearWith:
         - dep
         - id
@@ -613,7 +612,6 @@ items:
       visible: (plot6)
       renderFun: .plot6
       refs: snowIRT
-      requiresData: true
       clearWith:
         - dep
         - id

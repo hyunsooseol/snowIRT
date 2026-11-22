@@ -13,6 +13,28 @@ items:
       title: ""
       type: Preformatted
 
+    - name: sampleSizes
+      title: Sample sizes by item
+      type: Table
+      visible: false
+      rows: (vars)
+      clearWith:
+        - run
+        - vars
+        - key
+        - group
+      columns:
+        - name: item
+          title: Item
+          type: text
+          content: ($key)
+        - name: valid
+          title: Valid
+          type: integer
+        - name: missing
+          title: Missing
+          type: integer
+
     - name: sum
       title: Item summary
       type: Array

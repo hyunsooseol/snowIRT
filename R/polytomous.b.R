@@ -134,6 +134,17 @@ adjustment; Ho= the data fit the Rasch model."
           private$.populateModelTable(results)
           private$.populateLrTable(results)
           
+          vars <- self$options$vars
+          if (isTRUE(self$options$plot4)) {
+            .prepareTamCurves(tamobj, seq_along(vars), "expected", observed = TRUE,
+                              imageForItem = function(i) self$results$plot4$get(key = vars[i]))
+          }
+          if (isTRUE(self$options$plot6)) {
+            .prepareTamCurves(private$.cache$pcmobj, seq_along(vars), "items",
+                              observed = isTRUE(as.logical(self$options$obs)),
+                              imageForItem = function(i) self$results$plot6$get(key = vars[i]))
+          }
+
           # prepare person-item map
           private$.preparepiPlot(data)
           
@@ -991,93 +1002,13 @@ adjustment; Ho= the data fit the Rasch model."
       },
       
       .plot4 = function(image, ...) {
-        if (!self$options$plot4)
-          return(FALSE)
-        
-        tamobj <- private$.cache$tamobj
-        if (is.null(tamobj))
-          return(FALSE)
-        
-        all_items <- self$options$vars
-        n_items <- length(all_items)
-        
-        # ✅ 핵심: 변수명(key) -> vars에서의 위치(index)
-        current_item <- match(image$key, all_items)
-        
-        if (is.na(current_item) || current_item > n_items)
-          return(FALSE)
-        
-        tryCatch({
-          plot(
-            tamobj,
-            items   = current_item,
-            type    = "expected",
-            export  = FALSE,
-            package = "graphics"
-          )
-          return(TRUE)
-        }, error = function(e) {
-          cat(paste0(
-            "Error plotting item ", image$key,
-            " (index: ", current_item, "): ",
-            e$message, "\n"
-          ))
-          return(FALSE)
-        })
+        .drawTamCurve(image$state)
       },
-      
-      
+
       .plot6 = function(image, ...) {
-        
-        if (!isTRUE(self$options$plot6))
-          return(FALSE)
-        
-        pcmobj <- private$.cache$pcmobj
-        
-        if (is.null(pcmobj))
-          return(FALSE)
-        
-        allItems <- self$options$vars
-        currentItem <- match(image$key, allItems)
-        
-        if (is.na(currentItem) ||
-            currentItem < 1L ||
-            currentItem > length(allItems)) {
-          return(FALSE)
-        }
-        
-        tryCatch({
-          
-          plot(
-            pcmobj,
-            items = currentItem,
-            type = "items",
-            export = FALSE,
-            package = "graphics",
-            observed = self$options$obs
-          )
-          
-          TRUE
-          
-        }, error = function(e) {
-          
-          cat(
-            paste0(
-              "Error plotting item ",
-              image$key,
-              " (index: ",
-              currentItem,
-              "): ",
-              conditionMessage(e),
-              "\n"
-            )
-          )
-          
-          FALSE
-        })
+        .drawTamCurve(image$state)
       },
-      
-  
+
       # infit plot---------------
       
       .prepareInfitPlot = function(results) {

@@ -7,43 +7,22 @@ itemClass <- if (requireNamespace("jmvcore", quietly = TRUE))
     private = list(
       .init = function() {
         private$.setInstructions()
+        nGroups <- self$options$group
+        if (nGroups <= length(self$options$vars)) {
+          labels <- private$.groupLabels(nGroups)
+          for (j in seq_along(labels)) {
+            self$results$sampleSizes$addColumn(name = paste0("scoreGroup", j),
+              title = labels[j], type = "integer", superTitle = "Score group sizes")
+          }
+        }
       },
 
-      .setInstructions = function(result = NULL) {
-        details <- ""
-        if (!is.null(result)) {
-          items <- result$items
-          itemNames <- .html_escape(rownames(result$indices))
-          nRespondents <- length(result$total)
-          rows <- vapply(seq_along(items), function(i) {
-            item <- items[[i]]
-            sizes <- if (is.null(item$counts)) {
-              "Too few distinct scores"
-            } else {
-              paste(paste0(colnames(item$counts), " = ", colSums(item$counts)), collapse = ", ")
-            }
-            sprintf('<tr><th scope="row">%s</th><td>%d</td><td>%d</td><td>%s</td></tr>',
-                    itemNames[i], item$nValid, nRespondents - item$nValid, sizes)
-          }, character(1L))
-          keyWarnings <- vapply(items, function(item) item$keyUnlisted, logical(1L))
-          keyMessage <- if (any(keyWarnings)) {
-            paste0("<p>Check the answer keys and retained response levels for ",
-                   paste(itemNames[keyWarnings], collapse = ", "), ".</p>")
-          } else {
-            ""
-          }
-          details <- paste0(
-            '<details style="margin-top:12px">',
-            '<summary>Sample sizes by item</summary>',
-            sprintf("<p>Respondents with complete scores: %d of %d.</p>",
-                    result$nComplete, nRespondents),
-            keyMessage,
-            '<table style="border-spacing:12px 5px;text-align:left">',
-            '<thead><tr><th scope="col">Item</th><th scope="col">Valid</th>',
-            '<th scope="col">Missing</th><th scope="col">Score group sizes</th></tr></thead>',
-            '<tbody>', paste0(rows, collapse = ""), '</tbody></table></details>'
-          )
-        }
+      .postInit = function() {
+        table <- self$results$sampleSizes
+        table$setVisible(isTRUE(table$state))
+      },
+
+      .setInstructions = function() {
         widget <- HTMLWidget$new()
         self$results$instructions$setContent(widget$generate_accordion(
           title = "Instructions",
@@ -57,8 +36,7 @@ itemClass <- if (requireNamespace("jmvcore", quietly = TRUE))
             '<li>Difficulty is the proportion correct among valid responses. ULI uses the upper-minus-lower value for the correct option. RIT and RIR correlate the item score with the total and remaining-item scores, respectively.</li>',
             '<li>Saved item scores keep missing responses blank. A total score is saved when all selected items have a response.</li>',
             '<li>Report issues or request features on <a href="https://github.com/hyunsooseol/snowIRT/issues" target="_blank">GitHub</a>.</li>',
-            '</ul></div>',
-            details
+            '</ul></div>'
           )
         ))
       },
@@ -89,7 +67,7 @@ itemClass <- if (requireNamespace("jmvcore", quietly = TRUE))
         }
 
         result <- private$.compute(data, key, self$options$group)
-        private$.setInstructions(result)
+        private$.writeSampleSizes(result, vars)
         for (i in seq_along(vars)) {
           item <- result$items[[i]]
 
@@ -118,6 +96,44 @@ itemClass <- if (requireNamespace("jmvcore", quietly = TRUE))
 
         private$.saveScores(result, rownames(data))
         private$.preparePlots(result)
+      },
+
+      .writeSampleSizes = function(result, vars) {
+        table <- self$results$sampleSizes
+        total <- length(result$total)
+        for (i in seq_along(vars)) {
+          item <- result$items[[i]]
+          row <- list(valid = item$nValid, missing = total - item$nValid)
+          if (!is.null(item$counts)) {
+            sizes <- colSums(item$counts)
+            names(sizes) <- paste0("scoreGroup", seq_along(sizes))
+            row <- c(row, as.list(sizes))
+          }
+          table$setRow(rowKey = vars[i], values = row)
+        }
+
+        table$setNote("complete", sprintf("Respondents with complete scores: %d of %d.",
+                                          result$nComplete, total), init = FALSE)
+        if (any(vapply(result$items, function(item) is.null(item$counts), logical(1L)))) {
+          table$setNote("groups", "Score group sizes are unavailable when there are too few distinct remaining-item scores.",
+                        init = FALSE)
+        }
+        unlisted <- vapply(result$items, function(item) item$keyUnlisted, logical(1L))
+        if (any(unlisted)) {
+          table$setNote("keys", paste0("Check the answer keys and retained response levels for ",
+                                       paste(.html_escape(vars[unlisted]), collapse = ", "), "."),
+                        init = FALSE)
+        }
+        table$setState(TRUE)
+        table$setVisible(TRUE)
+      },
+
+      .groupLabels = function(nGroups) {
+        switch(as.character(nGroups),
+          "2" = c("Lower", "Upper"),
+          "3" = c("Lower", "Middle", "Upper"),
+          c("Lower", paste("Group", seq.int(2L, nGroups - 1L)), "Upper")
+        )
       },
 
       .compute = function(data, key, nGroups) {
@@ -165,11 +181,7 @@ itemClass <- if (requireNamespace("jmvcore", quietly = TRUE))
           discrim <- rep(NA_real_, length(levels))
           if (!is.null(groups)) {
             nOptions <- length(levels)
-            groupLabels <- switch(as.character(nGroups),
-              "2" = c("Lower", "Upper"),
-              "3" = c("Lower", "Middle", "Upper"),
-              c("Lower", paste("Group", seq.int(2L, nGroups - 1L)), "Upper")
-            )
+            groupLabels <- private$.groupLabels(nGroups)
             cells <- used + nOptions * (groups - 1L)
             counts <- matrix(tabulate(cells, nbins = nOptions * nGroups),
                              nrow = nOptions, dimnames = list(levels, groupLabels))

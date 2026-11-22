@@ -17,6 +17,8 @@ items:
       clearWith:
         - vars
         - group
+        - useFocalGroup
+        - focalGroup
         - model
         - type
         - match
@@ -50,6 +52,8 @@ items:
       clearWith:
         - vars
         - group
+        - useFocalGroup
+        - focalGroup
         - model
         - type
         - match

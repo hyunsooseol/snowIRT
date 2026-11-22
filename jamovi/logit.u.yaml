@@ -29,6 +29,14 @@ children:
             name: anchor
             isTarget: true
 
+  - type: CheckBox
+    name: useFocalGroup
+    children:
+      - type: LevelSelector
+        name: focalGroup
+        variable: (group)
+        enable: (useFocalGroup:1)
+
   - type: CollapseBox
     label: 'Model Options'
     margin: normal

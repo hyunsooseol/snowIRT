@@ -137,6 +137,17 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
           return()
         
         
+        if (isTRUE(self$options$plot5)) {
+          item <- suppressWarnings(as.integer(self$options$num))
+          .prepareTamCurves(res, item, "expected", observed = TRUE,
+                            imageForItem = function(i) self$results$plot5)
+        }
+        if (isTRUE(self$options$plot6)) {
+          item <- suppressWarnings(as.integer(self$options$num1))
+          .prepareTamCurves(res, item, "items", observed = FALSE,
+                            imageForItem = function(i) self$results$plot6)
+        }
+
         ifit_res <- TAM::msq.itemfit(res)
         pfit_res <- TAM::tam.personfit(res)
         
@@ -1097,77 +1108,16 @@ facetClass <- if (requireNamespace('jmvcore', quietly = TRUE))
         TRUE
       },
       
-      # Expected score curves-------------------
+      # Expected score curve
       .plot5 = function(image, ...) {
-        
-        if (!self$options$plot5)
-          return(FALSE)
-        
-        res <- private$.allCache
-        if (is.null(res)) {
-          graphics::plot.new()
-          graphics::text(0.5, 0.5, "Model is not available.", cex = 1.0)
-          return(TRUE)
-        }
-        
-        num <- suppressWarnings(as.integer(self$options$num))
-        if (is.na(num) || num < 1) {
-          graphics::plot.new()
-          graphics::text(0.5, 0.5, "Select a valid item index.", cex = 1.0)
-          return(TRUE)
-        }
-        
-        tryCatch({
-          p <- plot(res, items = num, type = "expected", export = FALSE)
-          if (!is.null(p))
-            print(p)
-          TRUE
-        }, error = function(e) {
-          graphics::plot.new()
-          graphics::text(0.5, 0.5, paste("Plot error:\n", e$message), cex = 0.9)
-          TRUE
-        })
+        .drawTamCurve(image$state)
       },
-      
-      
-      
-      
-      # Item response curve-------------------
+
+      # Item response curve
       .plot6 = function(image, ...) {
-        
-        if (!self$options$plot6)
-          return(FALSE)
-        
-        res <- private$.allCache
-        if (is.null(res)) {
-          graphics::plot.new()
-          graphics::text(0.5, 0.5, "Model is not available.", cex = 1.0)
-          return(TRUE)
-        }
-        
-        num1 <- suppressWarnings(as.integer(self$options$num1))
-        if (is.na(num1) || num1 < 1) {
-          graphics::plot.new()
-          graphics::text(0.5, 0.5, "Select a valid item index.", cex = 1.0)
-          return(TRUE)
-        }
-        
-        tryCatch({
-          p <- plot(res, items = num1, type = "items", export = FALSE)
-          
-          # plot() may return an object (lattice). If so, print it.
-          if (!is.null(p))
-            print(p)
-          
-          TRUE
-        }, error = function(e) {
-          graphics::plot.new()
-          graphics::text(0.5, 0.5, paste("Plot error:\n", e$message), cex = 0.9)
-          TRUE
-        })
+        .drawTamCurve(image$state, legendOutside = FALSE)
       },
-      
-      
+
       # interaction fit plot--------------
       .plot7 = function(image, ggtheme, theme, ...) {
         if (is.null(image$state))

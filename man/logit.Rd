@@ -17,7 +17,9 @@ logit(
   plot = FALSE,
   plotItem = 1,
   anchorMethod = "all",
-  plotLayout = "faceted"
+  plotLayout = "faceted",
+  useFocalGroup = FALSE,
+  focalGroup = ""
 )
 }
 \arguments{
@@ -46,6 +48,11 @@ logit(
 \item{anchorMethod}{.}
 
 \item{plotLayout}{.}
+
+\item{useFocalGroup}{Select the focal group explicitly. Otherwise the group
+labelled 1 is used.}
+
+\item{focalGroup}{The focal group label when useFocalGroup is TRUE.}
 }
 \value{
 A results object containing:

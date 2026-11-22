@@ -181,6 +181,7 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         instructions = function() private$.items[["instructions"]],
         text = function() private$.items[["text"]],
+        sampleSizes = function() private$.items[["sampleSizes"]],
         sum = function() private$.items[["sum"]],
         count = function() private$.items[["count"]],
         prop = function() private$.items[["prop"]],
@@ -209,6 +210,31 @@ itemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="text",
                 title=""))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="sampleSizes",
+                title="Sample sizes by item",
+                visible=FALSE,
+                rows="(vars)",
+                clearWith=list(
+                    "run",
+                    "vars",
+                    "key",
+                    "group"),
+                columns=list(
+                    list(
+                        `name`="item", 
+                        `title`="Item", 
+                        `type`="text", 
+                        `content`="($key)"),
+                    list(
+                        `name`="valid", 
+                        `title`="Valid", 
+                        `type`="integer"),
+                    list(
+                        `name`="missing", 
+                        `title`="Missing", 
+                        `type`="integer"))))
             self$add(jmvcore::Array$new(
                 options=options,
                 name="sum",
@@ -476,6 +502,7 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' \tabular{llllll}{
 #'   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$sampleSizes} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
 #'   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
@@ -491,9 +518,9 @@ itemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$disc$asDF}
+#' \code{results$sampleSizes$asDF}
 #'
-#' \code{as.data.frame(results$disc)}
+#' \code{as.data.frame(results$sampleSizes)}
 #'
 #' @export
 item <- function(

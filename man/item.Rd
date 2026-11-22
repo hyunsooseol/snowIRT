@@ -69,6 +69,7 @@ A results object containing:
 \tabular{llllll}{
   \code{results$instructions} \tab \tab \tab \tab \tab a html \cr
   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+  \code{results$sampleSizes} \tab \tab \tab \tab \tab a table \cr
   \code{results$sum} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$count} \tab \tab \tab \tab \tab an array of tables \cr
   \code{results$prop} \tab \tab \tab \tab \tab an array of tables \cr
@@ -84,9 +85,9 @@ A results object containing:
 
 Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 
-\code{results$disc$asDF}
+\code{results$sampleSizes$asDF}
 
-\code{as.data.frame(results$disc)}
+\code{as.data.frame(results$sampleSizes)}
 }
 \description{
 Distractor analysis
